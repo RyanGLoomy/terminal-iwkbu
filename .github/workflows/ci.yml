@@ -43,8 +43,8 @@ jobs:
          - name: Type check
            run: pnpm typecheck
 
-         - name: Build
-           run: pnpm build
+          - name: Build
+            run: pnpm build
 
           - name: Start production server
             run: |

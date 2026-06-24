@@ -31,12 +31,12 @@ jobs:
               name: db-backup
               path: backup-*.dump
 
-         - name: Create issue on backup failure
+          - name: Create issue on backup failure
             if: failure()
             uses: peter-evans/create-issue@v4
             with:
-               title: "Nightly DB Backup failed"
-               body: |
-                  The nightly backup workflow failed.
-                  Please inspect the latest workflow run logs and restore backup health.
-               labels: automated, backup, incident
+              title: "Nightly DB Backup failed"
+              body: |
+                The nightly backup workflow failed.
+                Please inspect the latest workflow run logs and restore backup health.
+              labels: automated, backup, incident
