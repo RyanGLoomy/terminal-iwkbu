@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/iwkbu-fetch",
+      "schedule": "0 1 * * *"
+    }
+  ]
+}
