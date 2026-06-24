@@ -1,0 +1,75 @@
+name: CI
+
+on:
+   push:
+      branches: [main, master]
+   pull_request:
+
+jobs:
+   app:
+      name: App checks
+      runs-on: ubuntu-latest
+      timeout-minutes: 20
+
+      steps:
+         - name: Checkout
+           uses: actions/checkout@v4
+
+         - name: Setup pnpm
+           uses: pnpm/action-setup@v4
+           with:
+              version: 10.29.1
+
+         - name: Setup Node.js
+           uses: actions/setup-node@v4
+           with:
+              node-version: 20
+              cache: pnpm
+
+         - name: Install dependencies
+           run: pnpm install --frozen-lockfile
+
+         - name: Audit dependencies
+           run: pnpm audit --audit-level=moderate
+           continue-on-error: false
+
+         - name: Bundle size check
+           run: pnpm run size
+
+         - name: Lint
+           continue-on-error: true
+           run: pnpm lint
+
+         - name: Type check
+           run: pnpm typecheck
+
+         - name: Build
+           run: pnpm build
+
+          - name: Start production server
+            run: |
+               nohup pnpm exec next start -H 127.0.0.1 -p 3000 > /tmp/terminal-iwkbu.log 2>&1 &
+
+         - name: Wait for server
+           run: |
+              for i in {1..30}; do
+                if curl -fsS http://127.0.0.1:3000 >/dev/null; then
+                  exit 0
+                fi
+                sleep 2
+              done
+              echo "Server did not start in time"
+              cat /tmp/terminal-iwkbu.log
+              exit 1
+
+         - name: Integration smoke tests
+           run: BASE_URL=http://127.0.0.1:3000 pnpm test:integration
+
+         - name: Lighthouse performance check
+           uses: treosh/lighthouse-ci-action@v9
+           with:
+              urls: "http://127.0.0.1:3000"
+              config: '{"settings": {"onlyCategories": ["performance"]}}'
+              thresholds: '{"performance": 0.6}'
+
+

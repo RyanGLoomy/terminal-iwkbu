@@ -1,0 +1,62 @@
+name: Scheduled Dependency Audit
+
+on:
+   schedule:
+      - cron: "0 3 * * *" # daily at 03:00 UTC
+   workflow_dispatch:
+
+jobs:
+   audit:
+      runs-on: ubuntu-latest
+      steps:
+         - name: Checkout
+           uses: actions/checkout@v4
+
+         - name: Setup pnpm
+           uses: pnpm/action-setup@v4
+           with:
+              version: 10.29.1
+
+         - name: Setup Node.js
+           uses: actions/setup-node@v4
+           with:
+              node-version: 20
+              cache: pnpm
+
+         - name: Install dependencies
+           run: pnpm install --frozen-lockfile
+
+         - name: Run pnpm audit (json)
+           run: |
+              pnpm audit --json > audit.json || true
+
+         - name: Upload audit results
+           uses: actions/upload-artifact@v4
+           with:
+              name: pnpm-audit
+              path: audit.json
+
+         - name: Check audit for vulnerabilities
+           id: check
+           run: |
+              AUDIT_HAS_VULN=$(node -e "const fs=require('fs'); try{const a=JSON.parse(fs.readFileSync('audit.json')); const v=a.metadata && Object.values(a.metadata.vulnerabilities).some(n=>n>0); console.log(v? 'true':'false');}catch(e){console.log('false');}")
+              echo "found=$AUDIT_HAS_VULN" >> $GITHUB_OUTPUT
+
+         - name: Create issue for vulnerabilities
+           if: steps.check.outputs.found == 'true'
+           uses: peter-evans/create-issue@v4
+           with:
+              title: "Automated Dependency Audit: vulnerabilities detected"
+              body: |
+                 The scheduled dependency audit detected vulnerabilities. See attached `audit.json` artifact in the workflow run for details.
+              labels: security, automated
+
+         - name: Create issue on audit workflow failure
+           if: failure()
+           uses: peter-evans/create-issue@v4
+           with:
+              title: "Scheduled dependency audit workflow failed"
+              body: |
+                 The scheduled dependency audit workflow failed before completing successfully.
+                 Please inspect the latest run logs and fix the pipeline.
+              labels: security, automated, incident
