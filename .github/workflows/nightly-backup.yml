@@ -1,42 +1,42 @@
 name: Nightly DB Backup
 
 on:
-   schedule:
-      - cron: "0 2 * * *" # daily at 02:00 UTC
-   workflow_dispatch:
+  schedule:
+    - cron: "0 2 * * *" # daily at 02:00 UTC
+  workflow_dispatch:
 
 jobs:
-   backup:
-      runs-on: ubuntu-latest
-      if: ${{ secrets.SUPABASE_DB_URL != '' }}
-      steps:
-         - name: Checkout
-           uses: actions/checkout@v4
+  backup:
+    runs-on: ubuntu-latest
+    if: ${{ secrets.SUPABASE_DB_URL != '' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-         - name: Install pg client
-           run: sudo apt-get update && sudo apt-get install -y postgresql-client
+      - name: Install pg client
+        run: sudo apt-get update && sudo apt-get install -y postgresql-client
 
-         - name: Run pg_dump
-           env:
-              SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
-           run: |
-              TIMESTAMP=$(date -u +"%Y%m%d-%H%M%S")
-              OUTFILE="backup-$TIMESTAMP.dump"
-              pg_dump --format=custom --file=$OUTFILE "$SUPABASE_DB_URL"
-              ls -lh $OUTFILE
+      - name: Run pg_dump
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          TIMESTAMP=$(date -u +"%Y%m%d-%H%M%S")
+          OUTFILE="backup-$TIMESTAMP.dump"
+          pg_dump --format=custom --file=$OUTFILE "$SUPABASE_DB_URL"
+          ls -lh $OUTFILE
 
-         - name: Upload backup artifact
-           uses: actions/upload-artifact@v4
-           with:
-              name: db-backup
-              path: backup-*.dump
+      - name: Upload backup artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: db-backup
+          path: backup-*.dump
 
-          - name: Create issue on backup failure
-            if: failure()
-            uses: peter-evans/create-issue@v4
-            with:
-              title: "Nightly DB Backup failed"
-              body: |
-                The nightly backup workflow failed.
-                Please inspect the latest workflow run logs and restore backup health.
-              labels: automated, backup, incident
+      - name: Create issue on backup failure
+        if: failure()
+        uses: peter-evans/create-issue@v4
+        with:
+          title: "Nightly DB Backup failed"
+          body: |
+            The nightly backup workflow failed.
+            Please inspect the latest workflow run logs and restore backup health.
+          labels: automated, backup, incident
