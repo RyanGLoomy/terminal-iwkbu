@@ -10,6 +10,14 @@ jobs:
     name: App checks
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    env:
+      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+      NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
+      SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      IWKBU_API_URL: ${{ secrets.IWKBU_API_URL }}
+      IWKBU_API_KEY: ${{ secrets.IWKBU_API_KEY }}
+      IWKBU_SYNC_CRON_SECRET: ${{ secrets.IWKBU_SYNC_CRON_SECRET }}
 
     steps:
       - name: Checkout
