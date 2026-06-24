@@ -1,0 +1,97 @@
+@startuml
+title Use Case Diagram - Terminal IWKBU
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Perusahaan Otobus\n(PO)" as PO
+actor "Petugas Loket" as Loket
+actor "Admin Terminal" as AdminTerminal
+actor "Staf IW" as StafIW
+actor "Scheduler Cron" as Cron
+
+rectangle "Sistem Terminal IWKBU" {
+  usecase "Registrasi PO" as UCRegistrasiPO
+  usecase "Login" as UCLogin
+  usecase "Lupa / Reset Password" as UCResetPassword
+  usecase "Logout" as UCLogout
+  usecase "Kelola Profil\ndan Kredensial" as UCProfile
+
+  usecase "Lihat Dashboard PO" as UCDashboardPO
+  usecase "Lihat Rekonsiliasi PO" as UCRekonsiliasiPO
+  usecase "Tanggapi Temuan\ndan Klarifikasi" as UCTanggapiTemuan
+
+  usecase "Verifikasi PIN Petugas" as UCVerifyPin
+  usecase "Buka Sesi Kerja" as UCBukaSesi
+  usecase "Catat Kendaraan Masuk" as UCCatatMasuk
+  usecase "Catat Kendaraan Keluar" as UCCatatKeluar
+  usecase "Tutup Sesi Kerja" as UCTutupSesi
+  usecase "Lihat Riwayat Transaksi" as UCRiwayat
+
+  usecase "Lihat Dashboard\nAdmin Terminal" as UCDashboardAdmin
+  usecase "Kelola Petugas\ndan PIN" as UCKelolaPetugas
+  usecase "Kelola Master Data\nTerminal" as UCMasterTerminal
+  usecase "Rekap Operasional\nTerminal" as UCRekapOperasional
+  usecase "Rekap Sesi Kerja" as UCRekapSesi
+  usecase "Cetak Laporan Terminal" as UCLaporanTerminal
+
+  usecase "Lihat Dashboard\nStaf IW" as UCDashboardStaf
+  usecase "Kelola Akun Terminal" as UCKelolaAkun
+  usecase "Rekonsiliasi Data Sumber" as UCRekonsiliasiSumber
+  usecase "Kelola Sinkronisasi IWKBU" as UCIwkbuSync
+  usecase "Kelola Master Data Global" as UCMasterGlobal
+  usecase "Pantau Audit Trail" as UCAuditTrail
+  usecase "Kelola Temuan\ndan Klarifikasi" as UCKelolaTemuan
+  usecase "Sinkronisasi Otomatis\nData IWKBU" as UCSyncOtomatis
+}
+
+PO --> UCRegistrasiPO
+PO --> UCLogin
+PO --> UCResetPassword
+PO --> UCLogout
+PO --> UCProfile
+PO --> UCDashboardPO
+PO --> UCRekonsiliasiPO
+PO --> UCTanggapiTemuan
+
+Loket --> UCLogin
+Loket --> UCLogout
+Loket --> UCProfile
+Loket --> UCVerifyPin
+Loket --> UCBukaSesi
+Loket --> UCCatatMasuk
+Loket --> UCCatatKeluar
+Loket --> UCTutupSesi
+Loket --> UCRiwayat
+
+AdminTerminal --> UCLogin
+AdminTerminal --> UCLogout
+AdminTerminal --> UCProfile
+AdminTerminal --> UCDashboardAdmin
+AdminTerminal --> UCKelolaPetugas
+AdminTerminal --> UCMasterTerminal
+AdminTerminal --> UCRekapOperasional
+AdminTerminal --> UCRekapSesi
+AdminTerminal --> UCLaporanTerminal
+
+StafIW --> UCLogin
+StafIW --> UCLogout
+StafIW --> UCProfile
+StafIW --> UCDashboardStaf
+StafIW --> UCKelolaAkun
+StafIW --> UCRekonsiliasiSumber
+StafIW --> UCIwkbuSync
+StafIW --> UCMasterGlobal
+StafIW --> UCAuditTrail
+StafIW --> UCKelolaTemuan
+
+Cron --> UCSyncOtomatis
+
+UCBukaSesi .> UCVerifyPin : <<include>>
+UCCatatMasuk .> UCVerifyPin : <<include>>
+UCCatatKeluar .> UCVerifyPin : <<include>>
+UCTutupSesi .> UCVerifyPin : <<include>>
+UCIwkbuSync .> UCRekonsiliasiSumber : <<include>>
+UCSyncOtomatis .> UCRekonsiliasiSumber : <<include>>
+UCKelolaTemuan .> UCTanggapiTemuan : <<extend>>
+
+@enduml

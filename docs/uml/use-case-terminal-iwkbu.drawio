@@ -1,0 +1,268 @@
+<mxfile host="app.diagrams.net" modified="2026-06-22T00:00:00.000Z" agent="OpenCode" version="24.7.17" type="device" pages="5">
+  <diagram id="overview-terminal-iwkbu" name="Overview">
+    <mxGraphModel dx="1800" dy="1200" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="ov-title" value="Use Case Overview - Sistem Terminal IWKBU" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=22;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="460" y="20" width="680" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ov-system" value="Sistem Terminal IWKBU" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#64748b;dashed=1;fontStyle=1;verticalAlign=top;spacingTop=10;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="290" y="80" width="980" height="820" as="geometry" />
+        </mxCell>
+
+        <mxCell id="ov-pengguna" value="Pengguna" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="75" y="125" width="70" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="ov-po" value="PO" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="75" y="340" width="70" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="ov-loket" value="Petugas Loket" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="75" y="610" width="70" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="ov-admin" value="Admin Terminal" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="1390" y="250" width="70" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="ov-staf" value="Staf IW" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="1390" y="525" width="70" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="ov-cron" value="Scheduler Cron" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="1390" y="760" width="70" height="95" as="geometry" />
+        </mxCell>
+
+        <mxCell id="ov-auth-box" value="Autentikasi" style="swimlane;html=1;rounded=1;strokeColor=#94a3b8;fillColor=#f8fafc;startSize=28;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="330" y="120" width="240" height="285" as="geometry" />
+        </mxCell>
+        <mxCell id="ov-login" value="Login" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#334155;" vertex="1" parent="1">
+          <mxGeometry x="360" y="165" width="180" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="ov-reset" value="Lupa / Reset Password" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#334155;" vertex="1" parent="1">
+          <mxGeometry x="360" y="235" width="180" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="ov-profile" value="Kelola Profil&lt;br&gt;dan Kredensial" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#334155;" vertex="1" parent="1">
+          <mxGeometry x="360" y="305" width="180" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="ov-po-box" value="PO" style="swimlane;html=1;rounded=1;strokeColor=#86efac;fillColor=#f0fdf4;startSize=28;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="330" y="465" width="240" height="245" as="geometry" />
+        </mxCell>
+        <mxCell id="ov-po-dashboard" value="Lihat Dashboard PO" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#166534;" vertex="1" parent="1">
+          <mxGeometry x="360" y="510" width="180" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="ov-po-rekon" value="Lihat Rekonsiliasi PO" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#166534;" vertex="1" parent="1">
+          <mxGeometry x="360" y="580" width="180" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="ov-po-temuan" value="Tanggapi Temuan&lt;br&gt;dan Klarifikasi" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#166534;" vertex="1" parent="1">
+          <mxGeometry x="360" y="650" width="180" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="ov-loket-box" value="Loket" style="swimlane;html=1;rounded=1;strokeColor=#7dd3fc;fillColor=#f0f9ff;startSize=28;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="640" y="120" width="260" height="340" as="geometry" />
+        </mxCell>
+        <mxCell id="ov-loket-pin" value="Verifikasi PIN Petugas" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0369a1;" vertex="1" parent="1">
+          <mxGeometry x="680" y="165" width="180" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="ov-loket-sesi" value="Kelola Sesi Kerja" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0369a1;" vertex="1" parent="1">
+          <mxGeometry x="680" y="245" width="180" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="ov-loket-catat" value="Catat Operasional&lt;br&gt;Kendaraan" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0369a1;" vertex="1" parent="1">
+          <mxGeometry x="680" y="325" width="180" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="ov-loket-riwayat" value="Lihat Riwayat Transaksi" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0369a1;" vertex="1" parent="1">
+          <mxGeometry x="680" y="405" width="180" height="52" as="geometry" />
+        </mxCell>
+
+        <mxCell id="ov-admin-box" value="Admin Terminal" style="swimlane;html=1;rounded=1;strokeColor=#fbbf24;fillColor=#fffbeb;startSize=28;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="980" y="120" width="240" height="340" as="geometry" />
+        </mxCell>
+        <mxCell id="ov-admin-petugas" value="Kelola Petugas&lt;br&gt;dan PIN" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#92400e;" vertex="1" parent="1">
+          <mxGeometry x="1010" y="165" width="180" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="ov-admin-master" value="Kelola Master Data&lt;br&gt;Terminal" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#92400e;" vertex="1" parent="1">
+          <mxGeometry x="1010" y="245" width="180" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="ov-admin-rekap" value="Rekap Operasional&lt;br&gt;dan Sesi" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#92400e;" vertex="1" parent="1">
+          <mxGeometry x="1010" y="325" width="180" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="ov-admin-laporan" value="Cetak Laporan Terminal" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#92400e;" vertex="1" parent="1">
+          <mxGeometry x="1010" y="405" width="180" height="52" as="geometry" />
+        </mxCell>
+
+        <mxCell id="ov-staf-box" value="Staf IW" style="swimlane;html=1;rounded=1;strokeColor=#c084fc;fillColor=#faf5ff;startSize=28;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="680" y="520" width="540" height="330" as="geometry" />
+        </mxCell>
+        <mxCell id="ov-staf-akun" value="Kelola Akun Terminal" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6b21a8;" vertex="1" parent="1">
+          <mxGeometry x="720" y="565" width="190" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="ov-staf-rekon" value="Rekonsiliasi Data Sumber" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6b21a8;" vertex="1" parent="1">
+          <mxGeometry x="720" y="640" width="190" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="ov-staf-sync" value="Kelola Sinkronisasi IWKBU" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6b21a8;" vertex="1" parent="1">
+          <mxGeometry x="720" y="715" width="190" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="ov-staf-master" value="Kelola Master Data Global" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6b21a8;" vertex="1" parent="1">
+          <mxGeometry x="980" y="565" width="190" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="ov-staf-audit" value="Pantau Audit Trail" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6b21a8;" vertex="1" parent="1">
+          <mxGeometry x="980" y="640" width="190" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="ov-staf-temuan" value="Kelola Temuan&lt;br&gt;dan Klarifikasi" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6b21a8;" vertex="1" parent="1">
+          <mxGeometry x="980" y="715" width="190" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="ov-sync-auto" value="Sinkronisasi Otomatis&lt;br&gt;Data IWKBU" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6b21a8;" vertex="1" parent="1">
+          <mxGeometry x="980" y="795" width="190" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="ov-edge-user-login" value="" style="endArrow=none;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;strokeColor=#334155;" edge="1" parent="1" source="ov-pengguna" target="ov-login"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ov-edge-user-reset" value="" style="endArrow=none;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;strokeColor=#334155;" edge="1" parent="1" source="ov-pengguna" target="ov-reset"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ov-edge-user-profile" value="" style="endArrow=none;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;strokeColor=#334155;" edge="1" parent="1" source="ov-pengguna" target="ov-profile"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ov-gen-po" value="" style="endArrow=block;endFill=0;html=1;rounded=0;strokeColor=#64748b;" edge="1" parent="1" source="ov-po" target="ov-pengguna"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ov-gen-loket" value="" style="endArrow=block;endFill=0;html=1;rounded=0;strokeColor=#64748b;" edge="1" parent="1" source="ov-loket" target="ov-pengguna"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ov-gen-admin" value="" style="endArrow=block;endFill=0;html=1;rounded=0;strokeColor=#64748b;" edge="1" parent="1" source="ov-admin" target="ov-pengguna"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1425" y="95" /><mxPoint x="110" y="95" /></Array></mxGeometry></mxCell>
+        <mxCell id="ov-gen-staf" value="" style="endArrow=block;endFill=0;html=1;rounded=0;strokeColor=#64748b;" edge="1" parent="1" source="ov-staf" target="ov-pengguna"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1490" y="575" /><mxPoint x="1490" y="95" /><mxPoint x="110" y="95" /></Array></mxGeometry></mxCell>
+
+        <mxCell id="ov-edge-po-dashboard" value="" style="endArrow=none;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;strokeColor=#166534;" edge="1" parent="1" source="ov-po" target="ov-po-dashboard"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ov-edge-po-rekon" value="" style="endArrow=none;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;strokeColor=#166534;" edge="1" parent="1" source="ov-po" target="ov-po-rekon"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ov-edge-po-temuan" value="" style="endArrow=none;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;strokeColor=#166534;" edge="1" parent="1" source="ov-po" target="ov-po-temuan"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ov-edge-loket-pin" value="" style="endArrow=none;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;strokeColor=#0369a1;" edge="1" parent="1" source="ov-loket" target="ov-loket-pin"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="210" y="660" /><mxPoint x="210" y="191" /></Array></mxGeometry></mxCell>
+        <mxCell id="ov-edge-loket-sesi" value="" style="endArrow=none;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;strokeColor=#0369a1;" edge="1" parent="1" source="ov-loket" target="ov-loket-sesi"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="240" y="660" /><mxPoint x="240" y="271" /></Array></mxGeometry></mxCell>
+        <mxCell id="ov-edge-loket-catat" value="" style="endArrow=none;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;strokeColor=#0369a1;" edge="1" parent="1" source="ov-loket" target="ov-loket-catat"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="610" y="660" /><mxPoint x="610" y="355" /></Array></mxGeometry></mxCell>
+        <mxCell id="ov-edge-loket-riwayat" value="" style="endArrow=none;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;strokeColor=#0369a1;" edge="1" parent="1" source="ov-loket" target="ov-loket-riwayat"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="625" y="660" /><mxPoint x="625" y="431" /></Array></mxGeometry></mxCell>
+
+        <mxCell id="ov-edge-admin-petugas" value="" style="endArrow=none;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;strokeColor=#92400e;" edge="1" parent="1" source="ov-admin" target="ov-admin-petugas"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ov-edge-admin-master" value="" style="endArrow=none;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;strokeColor=#92400e;" edge="1" parent="1" source="ov-admin" target="ov-admin-master"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ov-edge-admin-rekap" value="" style="endArrow=none;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;strokeColor=#92400e;" edge="1" parent="1" source="ov-admin" target="ov-admin-rekap"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ov-edge-admin-laporan" value="" style="endArrow=none;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;strokeColor=#92400e;" edge="1" parent="1" source="ov-admin" target="ov-admin-laporan"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1350" y="298" /><mxPoint x="1350" y="431" /></Array></mxGeometry></mxCell>
+
+        <mxCell id="ov-edge-staf-akun" value="" style="endArrow=none;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;strokeColor=#6b21a8;" edge="1" parent="1" source="ov-staf" target="ov-staf-akun"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ov-edge-staf-rekon" value="" style="endArrow=none;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;strokeColor=#6b21a8;" edge="1" parent="1" source="ov-staf" target="ov-staf-rekon"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ov-edge-staf-sync" value="" style="endArrow=none;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;strokeColor=#6b21a8;" edge="1" parent="1" source="ov-staf" target="ov-staf-sync"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ov-edge-staf-master" value="" style="endArrow=none;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;strokeColor=#6b21a8;" edge="1" parent="1" source="ov-staf" target="ov-staf-master"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ov-edge-staf-audit" value="" style="endArrow=none;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;strokeColor=#6b21a8;" edge="1" parent="1" source="ov-staf" target="ov-staf-audit"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ov-edge-staf-temuan" value="" style="endArrow=none;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;strokeColor=#6b21a8;" edge="1" parent="1" source="ov-staf" target="ov-staf-temuan"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ov-edge-cron-sync" value="" style="endArrow=none;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;strokeColor=#6b21a8;" edge="1" parent="1" source="ov-cron" target="ov-sync-auto"><mxGeometry relative="1" as="geometry" /></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+
+  <diagram id="detail-loket-terminal-iwkbu" name="Detail Loket">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="760" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="lo-title" value="Use Case Detail - Petugas Loket" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=20;fontStyle=1" vertex="1" parent="1"><mxGeometry x="360" y="20" width="480" height="40" as="geometry" /></mxCell>
+        <mxCell id="lo-system" value="Sistem Terminal IWKBU - Modul Loket" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#64748b;dashed=1;fontStyle=1;verticalAlign=top;spacingTop=10" vertex="1" parent="1"><mxGeometry x="260" y="80" width="820" height="590" as="geometry" /></mxCell>
+        <mxCell id="lo-actor" value="Petugas Loket" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;whiteSpace=wrap;" vertex="1" parent="1"><mxGeometry x="80" y="330" width="70" height="95" as="geometry" /></mxCell>
+        <mxCell id="lo-pin" value="Verifikasi PIN Petugas" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f0f9ff;strokeColor=#0369a1;" vertex="1" parent="1"><mxGeometry x="330" y="140" width="210" height="60" as="geometry" /></mxCell>
+        <mxCell id="lo-buka" value="Buka Sesi Kerja" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#334155;" vertex="1" parent="1"><mxGeometry x="330" y="270" width="210" height="60" as="geometry" /></mxCell>
+        <mxCell id="lo-masuk" value="Catat Kendaraan Masuk" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#334155;" vertex="1" parent="1"><mxGeometry x="330" y="370" width="210" height="60" as="geometry" /></mxCell>
+        <mxCell id="lo-keluar" value="Catat Kendaraan Keluar" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#334155;" vertex="1" parent="1"><mxGeometry x="690" y="270" width="210" height="60" as="geometry" /></mxCell>
+        <mxCell id="lo-tutup" value="Tutup Sesi Kerja" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#334155;" vertex="1" parent="1"><mxGeometry x="690" y="370" width="210" height="60" as="geometry" /></mxCell>
+        <mxCell id="lo-riwayat" value="Lihat Riwayat Transaksi" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#334155;" vertex="1" parent="1"><mxGeometry x="510" y="520" width="210" height="60" as="geometry" /></mxCell>
+        <mxCell id="lo-edge-pin" value="" style="endArrow=none;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="lo-actor" target="lo-pin"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="210" y="378" /><mxPoint x="210" y="170" /></Array></mxGeometry></mxCell>
+        <mxCell id="lo-edge-buka" value="" style="endArrow=none;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="lo-actor" target="lo-buka"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="lo-edge-masuk" value="" style="endArrow=none;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="lo-actor" target="lo-masuk"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="lo-edge-keluar" value="" style="endArrow=none;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="lo-actor" target="lo-keluar"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="210" y="378" /><mxPoint x="210" y="235" /><mxPoint x="610" y="235" /><mxPoint x="610" y="300" /></Array></mxGeometry></mxCell>
+        <mxCell id="lo-edge-tutup" value="" style="endArrow=none;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="lo-actor" target="lo-tutup"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="210" y="378" /><mxPoint x="610" y="378" /></Array></mxGeometry></mxCell>
+        <mxCell id="lo-edge-riwayat" value="" style="endArrow=none;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="lo-actor" target="lo-riwayat"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="210" y="378" /><mxPoint x="210" y="550" /></Array></mxGeometry></mxCell>
+        <mxCell id="lo-inc-buka" value="&lt;&lt;include&gt;&gt;" style="endArrow=open;html=1;rounded=0;dashed=1;edgeStyle=orthogonalEdgeStyle;strokeColor=#64748b;" edge="1" parent="1" source="lo-buka" target="lo-pin"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="lo-inc-masuk" value="&lt;&lt;include&gt;&gt;" style="endArrow=open;html=1;rounded=0;dashed=1;edgeStyle=orthogonalEdgeStyle;strokeColor=#64748b;" edge="1" parent="1" source="lo-masuk" target="lo-pin"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="580" y="400" /><mxPoint x="580" y="170" /></Array></mxGeometry></mxCell>
+        <mxCell id="lo-inc-keluar" value="&lt;&lt;include&gt;&gt;" style="endArrow=open;html=1;rounded=0;dashed=1;edgeStyle=orthogonalEdgeStyle;strokeColor=#64748b;" edge="1" parent="1" source="lo-keluar" target="lo-pin"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="795" y="230" /><mxPoint x="435" y="230" /></Array></mxGeometry></mxCell>
+        <mxCell id="lo-inc-tutup" value="&lt;&lt;include&gt;&gt;" style="endArrow=open;html=1;rounded=0;dashed=1;edgeStyle=orthogonalEdgeStyle;strokeColor=#64748b;" edge="1" parent="1" source="lo-tutup" target="lo-pin"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="940" y="400" /><mxPoint x="940" y="170" /></Array></mxGeometry></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+
+  <diagram id="detail-po-admin-terminal-iwkbu" name="Detail PO &amp; Admin">
+    <mxGraphModel dx="1500" dy="950" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1300" pageHeight="820" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="pa-title" value="Use Case Detail - PO dan Admin Terminal" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=20;fontStyle=1" vertex="1" parent="1"><mxGeometry x="390" y="20" width="520" height="40" as="geometry" /></mxCell>
+        <mxCell id="pa-system" value="Sistem Terminal IWKBU" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#64748b;dashed=1;fontStyle=1;verticalAlign=top;spacingTop=10" vertex="1" parent="1"><mxGeometry x="230" y="80" width="840" height="650" as="geometry" /></mxCell>
+        <mxCell id="pa-po" value="Perusahaan Otobus&lt;br&gt;(PO)" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;whiteSpace=wrap;" vertex="1" parent="1"><mxGeometry x="70" y="210" width="70" height="95" as="geometry" /></mxCell>
+        <mxCell id="pa-admin" value="Admin Terminal" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;whiteSpace=wrap;" vertex="1" parent="1"><mxGeometry x="1140" y="430" width="70" height="95" as="geometry" /></mxCell>
+        <mxCell id="pa-reg-po" value="Registrasi PO" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f0fdf4;strokeColor=#166534;" vertex="1" parent="1"><mxGeometry x="310" y="130" width="210" height="60" as="geometry" /></mxCell>
+        <mxCell id="pa-dashboard-po" value="Lihat Dashboard PO" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f0fdf4;strokeColor=#166534;" vertex="1" parent="1"><mxGeometry x="310" y="220" width="210" height="60" as="geometry" /></mxCell>
+        <mxCell id="pa-rekon-po" value="Lihat Rekonsiliasi PO" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f0fdf4;strokeColor=#166534;" vertex="1" parent="1"><mxGeometry x="310" y="310" width="210" height="60" as="geometry" /></mxCell>
+        <mxCell id="pa-tanggap" value="Tanggapi Temuan&lt;br&gt;dan Klarifikasi" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f0fdf4;strokeColor=#166534;" vertex="1" parent="1"><mxGeometry x="310" y="400" width="210" height="70" as="geometry" /></mxCell>
+        <mxCell id="pa-dashboard-admin" value="Lihat Dashboard&lt;br&gt;Admin Terminal" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fffbeb;strokeColor=#92400e;" vertex="1" parent="1"><mxGeometry x="730" y="130" width="220" height="70" as="geometry" /></mxCell>
+        <mxCell id="pa-petugas" value="Kelola Petugas&lt;br&gt;dan PIN" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fffbeb;strokeColor=#92400e;" vertex="1" parent="1"><mxGeometry x="730" y="220" width="220" height="70" as="geometry" /></mxCell>
+        <mxCell id="pa-master" value="Kelola Master Data&lt;br&gt;Terminal" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fffbeb;strokeColor=#92400e;" vertex="1" parent="1"><mxGeometry x="730" y="310" width="220" height="70" as="geometry" /></mxCell>
+        <mxCell id="pa-rekap" value="Rekap Operasional&lt;br&gt;Terminal" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fffbeb;strokeColor=#92400e;" vertex="1" parent="1"><mxGeometry x="730" y="400" width="220" height="70" as="geometry" /></mxCell>
+        <mxCell id="pa-sesi" value="Rekap Sesi Kerja" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fffbeb;strokeColor=#92400e;" vertex="1" parent="1"><mxGeometry x="730" y="490" width="220" height="60" as="geometry" /></mxCell>
+        <mxCell id="pa-laporan" value="Cetak Laporan Terminal" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fffbeb;strokeColor=#92400e;" vertex="1" parent="1"><mxGeometry x="730" y="570" width="220" height="60" as="geometry" /></mxCell>
+        <mxCell id="pa-edge-po-reg" value="" style="endArrow=none;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;strokeColor=#166534;" edge="1" parent="1" source="pa-po" target="pa-reg-po"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="pa-edge-po-dashboard" value="" style="endArrow=none;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;strokeColor=#166534;" edge="1" parent="1" source="pa-po" target="pa-dashboard-po"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="pa-edge-po-rekon" value="" style="endArrow=none;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;strokeColor=#166534;" edge="1" parent="1" source="pa-po" target="pa-rekon-po"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="pa-edge-po-tanggap" value="" style="endArrow=none;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;strokeColor=#166534;" edge="1" parent="1" source="pa-po" target="pa-tanggap"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="pa-edge-admin-dashboard" value="" style="endArrow=none;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;strokeColor=#92400e;" edge="1" parent="1" source="pa-admin" target="pa-dashboard-admin"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1110" y="478" /><mxPoint x="1110" y="165" /></Array></mxGeometry></mxCell>
+        <mxCell id="pa-edge-admin-petugas" value="" style="endArrow=none;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;strokeColor=#92400e;" edge="1" parent="1" source="pa-admin" target="pa-petugas"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1090" y="478" /><mxPoint x="1090" y="255" /></Array></mxGeometry></mxCell>
+        <mxCell id="pa-edge-admin-master" value="" style="endArrow=none;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;strokeColor=#92400e;" edge="1" parent="1" source="pa-admin" target="pa-master"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1075" y="478" /><mxPoint x="1075" y="345" /></Array></mxGeometry></mxCell>
+        <mxCell id="pa-edge-admin-rekap" value="" style="endArrow=none;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;strokeColor=#92400e;" edge="1" parent="1" source="pa-admin" target="pa-rekap"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="pa-edge-admin-sesi" value="" style="endArrow=none;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;strokeColor=#92400e;" edge="1" parent="1" source="pa-admin" target="pa-sesi"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="pa-edge-admin-laporan" value="" style="endArrow=none;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;strokeColor=#92400e;" edge="1" parent="1" source="pa-admin" target="pa-laporan"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1105" y="478" /><mxPoint x="1105" y="600" /></Array></mxGeometry></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+
+  <diagram id="detail-staf-iw-terminal-iwkbu" name="Detail Staf IW">
+    <mxGraphModel dx="1500" dy="950" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1300" pageHeight="820" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="st-title" value="Use Case Detail - Staf IW dan Sinkronisasi" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=20;fontStyle=1" vertex="1" parent="1"><mxGeometry x="380" y="20" width="540" height="40" as="geometry" /></mxCell>
+        <mxCell id="st-system" value="Sistem Terminal IWKBU - Modul Staf IW" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#64748b;dashed=1;fontStyle=1;verticalAlign=top;spacingTop=10" vertex="1" parent="1"><mxGeometry x="230" y="80" width="840" height="660" as="geometry" /></mxCell>
+        <mxCell id="st-staf" value="Staf IW" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;whiteSpace=wrap;" vertex="1" parent="1"><mxGeometry x="70" y="300" width="70" height="95" as="geometry" /></mxCell>
+        <mxCell id="st-cron" value="Scheduler Cron" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;whiteSpace=wrap;" vertex="1" parent="1"><mxGeometry x="1140" y="595" width="70" height="95" as="geometry" /></mxCell>
+        <mxCell id="st-dashboard" value="Lihat Dashboard&lt;br&gt;Staf IW" style="ellipse;whiteSpace=wrap;html=1;fillColor=#faf5ff;strokeColor=#6b21a8;" vertex="1" parent="1"><mxGeometry x="320" y="130" width="220" height="70" as="geometry" /></mxCell>
+        <mxCell id="st-akun" value="Kelola Akun Terminal" style="ellipse;whiteSpace=wrap;html=1;fillColor=#faf5ff;strokeColor=#6b21a8;" vertex="1" parent="1"><mxGeometry x="320" y="230" width="220" height="60" as="geometry" /></mxCell>
+        <mxCell id="st-rekon" value="Rekonsiliasi Data Sumber" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f0f9ff;strokeColor=#0369a1;" vertex="1" parent="1"><mxGeometry x="320" y="330" width="220" height="60" as="geometry" /></mxCell>
+        <mxCell id="st-sync" value="Kelola Sinkronisasi IWKBU" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f0f9ff;strokeColor=#0369a1;" vertex="1" parent="1"><mxGeometry x="320" y="430" width="220" height="60" as="geometry" /></mxCell>
+        <mxCell id="st-master" value="Kelola Master Data Global" style="ellipse;whiteSpace=wrap;html=1;fillColor=#faf5ff;strokeColor=#6b21a8;" vertex="1" parent="1"><mxGeometry x="730" y="130" width="230" height="60" as="geometry" /></mxCell>
+        <mxCell id="st-audit" value="Pantau Audit Trail" style="ellipse;whiteSpace=wrap;html=1;fillColor=#faf5ff;strokeColor=#6b21a8;" vertex="1" parent="1"><mxGeometry x="730" y="230" width="230" height="60" as="geometry" /></mxCell>
+        <mxCell id="st-temuan" value="Kelola Temuan&lt;br&gt;dan Klarifikasi" style="ellipse;whiteSpace=wrap;html=1;fillColor=#faf5ff;strokeColor=#6b21a8;" vertex="1" parent="1"><mxGeometry x="730" y="330" width="230" height="70" as="geometry" /></mxCell>
+        <mxCell id="st-auto" value="Sinkronisasi Otomatis&lt;br&gt;Data IWKBU" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f0f9ff;strokeColor=#0369a1;" vertex="1" parent="1"><mxGeometry x="730" y="595" width="230" height="70" as="geometry" /></mxCell>
+        <mxCell id="st-edge-dashboard" value="" style="endArrow=none;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;strokeColor=#6b21a8;" edge="1" parent="1" source="st-staf" target="st-dashboard"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="190" y="348" /><mxPoint x="190" y="165" /></Array></mxGeometry></mxCell>
+        <mxCell id="st-edge-akun" value="" style="endArrow=none;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;strokeColor=#6b21a8;" edge="1" parent="1" source="st-staf" target="st-akun"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="200" y="348" /><mxPoint x="200" y="260" /></Array></mxGeometry></mxCell>
+        <mxCell id="st-edge-rekon" value="" style="endArrow=none;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;strokeColor=#0369a1;" edge="1" parent="1" source="st-staf" target="st-rekon"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="st-edge-sync" value="" style="endArrow=none;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;strokeColor=#0369a1;" edge="1" parent="1" source="st-staf" target="st-sync"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="st-edge-master" value="" style="endArrow=none;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;strokeColor=#6b21a8;" edge="1" parent="1" source="st-staf" target="st-master"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="200" y="348" /><mxPoint x="200" y="95" /><mxPoint x="845" y="95" /></Array></mxGeometry></mxCell>
+        <mxCell id="st-edge-audit" value="" style="endArrow=none;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;strokeColor=#6b21a8;" edge="1" parent="1" source="st-staf" target="st-audit"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="205" y="348" /><mxPoint x="205" y="260" /></Array></mxGeometry></mxCell>
+        <mxCell id="st-edge-temuan" value="" style="endArrow=none;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;strokeColor=#6b21a8;" edge="1" parent="1" source="st-staf" target="st-temuan"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="st-edge-cron" value="" style="endArrow=none;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;strokeColor=#0369a1;" edge="1" parent="1" source="st-cron" target="st-auto"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="st-inc-sync" value="&lt;&lt;include&gt;&gt;" style="endArrow=open;html=1;rounded=0;dashed=1;edgeStyle=orthogonalEdgeStyle;strokeColor=#64748b;" edge="1" parent="1" source="st-sync" target="st-rekon"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="st-inc-auto" value="&lt;&lt;include&gt;&gt;" style="endArrow=open;html=1;rounded=0;dashed=1;edgeStyle=orthogonalEdgeStyle;strokeColor=#64748b;" edge="1" parent="1" source="st-auto" target="st-rekon"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="845" y="550" /><mxPoint x="430" y="550" /></Array></mxGeometry></mxCell>
+        <mxCell id="st-note" value="Catatan: proses sinkronisasi manual dan otomatis sama-sama memperbarui data yang dipakai pada rekonsiliasi." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8fafc;strokeColor=#94a3b8;fontSize=12;" vertex="1" parent="1"><mxGeometry x="300" y="610" width="300" height="70" as="geometry" /></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+
+  <diagram id="detail-auth-terminal-iwkbu" name="Detail Autentikasi">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1000" pageHeight="650" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="au-title" value="Use Case Detail - Autentikasi dan Profil" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=20;fontStyle=1" vertex="1" parent="1"><mxGeometry x="260" y="20" width="480" height="40" as="geometry" /></mxCell>
+        <mxCell id="au-system" value="Sistem Terminal IWKBU - Autentikasi" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#64748b;dashed=1;fontStyle=1;verticalAlign=top;spacingTop=10" vertex="1" parent="1"><mxGeometry x="240" y="80" width="560" height="470" as="geometry" /></mxCell>
+        <mxCell id="au-user" value="Pengguna" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;whiteSpace=wrap;" vertex="1" parent="1"><mxGeometry x="70" y="270" width="70" height="95" as="geometry" /></mxCell>
+        <mxCell id="au-po" value="PO" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;whiteSpace=wrap;" vertex="1" parent="1"><mxGeometry x="860" y="100" width="60" height="85" as="geometry" /></mxCell>
+        <mxCell id="au-loket" value="Petugas Loket" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;whiteSpace=wrap;" vertex="1" parent="1"><mxGeometry x="860" y="230" width="60" height="85" as="geometry" /></mxCell>
+        <mxCell id="au-admin" value="Admin Terminal" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;whiteSpace=wrap;" vertex="1" parent="1"><mxGeometry x="860" y="360" width="60" height="85" as="geometry" /></mxCell>
+        <mxCell id="au-staf" value="Staf IW" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;whiteSpace=wrap;" vertex="1" parent="1"><mxGeometry x="860" y="490" width="60" height="85" as="geometry" /></mxCell>
+        <mxCell id="au-login" value="Login" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#334155;" vertex="1" parent="1"><mxGeometry x="410" y="135" width="210" height="60" as="geometry" /></mxCell>
+        <mxCell id="au-reset" value="Lupa / Reset Password" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#334155;" vertex="1" parent="1"><mxGeometry x="410" y="235" width="210" height="60" as="geometry" /></mxCell>
+        <mxCell id="au-logout" value="Logout" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#334155;" vertex="1" parent="1"><mxGeometry x="410" y="335" width="210" height="60" as="geometry" /></mxCell>
+        <mxCell id="au-profile" value="Kelola Profil&lt;br&gt;dan Kredensial" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#334155;" vertex="1" parent="1"><mxGeometry x="410" y="435" width="210" height="70" as="geometry" /></mxCell>
+        <mxCell id="au-edge-login" value="" style="endArrow=none;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="au-user" target="au-login"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="190" y="318" /><mxPoint x="190" y="165" /></Array></mxGeometry></mxCell>
+        <mxCell id="au-edge-reset" value="" style="endArrow=none;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="au-user" target="au-reset"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="au-edge-logout" value="" style="endArrow=none;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="au-user" target="au-logout"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="au-edge-profile" value="" style="endArrow=none;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="au-user" target="au-profile"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="190" y="318" /><mxPoint x="190" y="470" /></Array></mxGeometry></mxCell>
+        <mxCell id="au-gen-po" value="" style="endArrow=block;endFill=0;html=1;rounded=0;strokeColor=#64748b;" edge="1" parent="1" source="au-po" target="au-user"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="890" y="70" /><mxPoint x="105" y="70" /></Array></mxGeometry></mxCell>
+        <mxCell id="au-gen-loket" value="" style="endArrow=block;endFill=0;html=1;rounded=0;strokeColor=#64748b;" edge="1" parent="1" source="au-loket" target="au-user"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="890" y="205" /><mxPoint x="105" y="205" /></Array></mxGeometry></mxCell>
+        <mxCell id="au-gen-admin" value="" style="endArrow=block;endFill=0;html=1;rounded=0;strokeColor=#64748b;" edge="1" parent="1" source="au-admin" target="au-user"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="890" y="350" /><mxPoint x="105" y="350" /></Array></mxGeometry></mxCell>
+        <mxCell id="au-gen-staf" value="" style="endArrow=block;endFill=0;html=1;rounded=0;strokeColor=#64748b;" edge="1" parent="1" source="au-staf" target="au-user"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="890" y="600" /><mxPoint x="105" y="600" /></Array></mxGeometry></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

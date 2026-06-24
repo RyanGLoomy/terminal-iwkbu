@@ -1,0 +1,16 @@
+version: 2
+updates:
+   - package-ecosystem: "npm"
+     directory: "/"
+     schedule:
+        interval: "weekly"
+     open-pull-requests-limit: 6
+     commit-message:
+        prefix: "chore(deps)"
+     labels:
+        - "dependencies"
+     reviewers: []
+     allow:
+        - dependency-type: "all"
+     # Minor and patch updates will be opened automatically.
+     # Major updates should be reviewed manually (see docs/DEPENDENCY_RELEASE_POLICY.md).

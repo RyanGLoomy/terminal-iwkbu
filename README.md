@@ -1,36 +1,152 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Sistem Terminal IWKBU
 
-## Getting Started
+Sistem pengawasan dan rekonsiliasi Integrasi Wilayah Kota Bulan (IWKBU) untuk terminal. Dibangun dengan Next.js 16, React 19, Supabase, dan TypeScript.
 
-First, run the development server:
+## Fitur Utama
+
+- **4 Role Pengguna**: Perusahaan Otobus (PO), Petugas Loket, Admin Terminal, Staf IW
+- **Manajemen Armada**: CRUD armada + upload dokumen (STCK, KIR, Asuransi)
+- **Pencatatan Operasional**: Sesi kerja, pencatatan kendaraan masuk/keluar dengan PIN verification
+- **Rekonsiliasi IWKBU**: Perbandingan data source IWKBU dengan data terminal, detail per-armada
+- **Sinkronisasi Otomatis**: Cron endpoint untuk fetch dan sync data IWKBU (mock/real mode)
+- **Temuan & Klarifikasi**: Workflow temuan dengan severity, klarifikasi + upload bukti, tindak lanjut
+- **Manajemen Role**: CRUD role pengguna oleh Staf IW
+- **Notifikasi Realtime**: Badge notifikasi live via Supabase Realtime
+- **Audit Trail**: Logging semua aksi penting
+- **Dashboard Charts**: Visualisasi distribusi PO dan armada
+
+## Tech Stack
+
+| Layer | Teknologi |
+|-------|-----------|
+| Frontend | Next.js 16 (App Router), React 19, TypeScript (strict) |
+| Styling | Tailwind CSS v4, shadcn/ui (new-york) |
+| Backend | Next.js Route Handlers (65 API routes) |
+| Database | Supabase Postgres 17 (21 tabel, RLS, CHECK constraints) |
+| Auth | Supabase Auth (GoTrue) + role-based access control |
+| Storage | Supabase Storage (armada-dokumen, finding-evidence) |
+| Realtime | Supabase Realtime (notifications) |
+| Charts | Recharts |
+| Monitoring | Sentry (opsional, no-op tanpa DSN) |
+
+## Persyaratan
+
+- Node.js 20+
+- pnpm 10+
+- Akun Supabase (URL + anon/publishable key + service role key)
+
+## Setup Lokal
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+# Clone repo
+git clone <repo-url>
+cd terminal-iwkbu
+
+# Install dependencies
+pnpm install
+
+# Buat .env.local
+cat > .env.local << 'EOF'
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your-publishable-key
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+EOF
+
+# Jalankan dev server
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Buka [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Environment Variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Variable | Wajib | Deskripsi |
+|----------|-------|-----------|
+| `NEXT_PUBLIC_SUPABASE_URL` | Ya | URL project Supabase |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Ya* | Anon key (legacy) |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Ya* | Publishable key (modern) |
+| `SUPABASE_SERVICE_ROLE_KEY` | Ya | Service role key (server-only, jangan prefix NEXT_PUBLIC_) |
+| `SUPABASE_URL` | Tidak | Backup URL untuk admin client |
+| `IWKBU_SYNC_CRON_SECRET` | Tidak | Bearer token untuk cron endpoints |
+| `CRON_SECRET` | Tidak | Fallback cron secret |
+| `IWKBU_API_URL` | Tidak | URL API IWKBU real (kosong = mock mode) |
+| `IWKBU_API_KEY` | Tidak | API key IWKBU real |
+| `SENTRY_DSN` | Tidak | DSN Sentry server-side |
+| `NEXT_PUBLIC_SENTRY_DSN` | Tidak | DSN Sentry client-side |
 
-## Learn More
+\* Salah satu dari anon/publishable key cukup, tetapi sebaiknya set keduanya.
 
-To learn more about Next.js, take a look at the following resources:
+## Scripts
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+pnpm dev                    # Dev server di 0.0.0.0:3000
+pnpm typecheck              # TypeScript strict check (tsc --noEmit)
+pnpm lint                   # ESLint (flat config, Next core-web-vitals + TS)
+pnpm build                  # Production build
+pnpm run size               # Build + size-limit check (900 KB chunks)
+pnpm audit                  # Dependency audit (moderate level)
+pnpm test:integration       # Auth smoke test (butuh prod server)
+pnpm test:e2e               # Build + setup data + Playwright E2E
+pnpm test:e2e:dev           # Setup data + Playwright E2E (tanpa build)
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Struktur Folder
 
-## Deploy on Vercel
+```
+src/
+├── app/                      # Next.js App Router
+│   ├── (dashboard)/          # Role-scoped pages (po/, loket/, admin-terminal/, staf-iw/)
+│   ├── api/                  # 65 API route handlers
+│   ├── globals.css           # Tailwind v4 + brand tokens
+│   └── layout.tsx            # Root layout (dark mode, suppressHydrationWarning)
+├── components/               # React components
+│   ├── ui/                   # shadcn/ui base components
+│   ├── dashboard/            # Dashboard cards, charts, sidebar, notifications
+│   ├── operasional/          # Findings, rekonsiliasi, pencatatan, etc.
+│   └── verification/         # Armada table, PO manager, dokumen dialog
+├── config/                   # roles.ts, design-tokens.ts, typography.tsx
+├── lib/
+│   ├── auth/                 # server-actor, requireRole, rate-limiter, safe-compare
+│   ├── iwkbu/                # IWKBU adaptor (mock/real)
+│   ├── supabase/             # server.ts, client.ts, admin.ts, queries/
+│   └── monitoring.ts         # Sentry wrapper
+├── proxy.ts                  # Middleware (auth, roles, security headers)
+e2e/                          # Playwright E2E tests
+supabase/migrations/          # 14 SQL migrations (0001-0014)
+docs/                         # Dokumentasi teknis
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Roles & Access Control
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| Role | Akses | Route Prefix |
+|------|-------|--------------|
+| PO | Dashboard armada, rekonsiliasi, temuan & klarifikasi | `/po` |
+| Loket | Dashboard, pencatatan, riwayat (butuh PIN session) | `/loket` |
+| Admin Terminal | Dashboard, petugas, master data, rekap, laporan | `/admin-terminal` |
+| Staf IW | Dashboard, findings, rekonsiliasi, audit trail, sync, akun | `/staf-iw` |
+
+Role didefinisikan di `src/config/roles.ts`. Middleware `src/proxy.ts` menangani auth dan role-based routing untuk pages. Setiap API route melakukan auth + role check sendiri via `getAuthenticatedActor()` + `ensureRoleOrThrow()`.
+
+## Database
+
+14 migration files di `supabase/migrations/`. Lihat [docs/DATABASE.md](docs/DATABASE.md) untuk skema lengkap.
+
+## Dokumentasi
+
+- [API Reference](docs/API.md) — Semua 65 endpoint
+- [Deployment Guide](docs/DEPLOYMENT.md) — Setup production
+- [Database Schema](docs/DATABASE.md) — 21 tabel + RLS
+- [Security](docs/SECURITY.md) — OWASP Top 10 hardening checklist
+
+## E2E Testing
+
+```bash
+# Setup test accounts + seed data
+pnpm test:e2e:setup
+
+# Run all tests (requires running server)
+BASE_URL=http://127.0.0.1:3000 pnpm test:e2e:dev
+```
+
+Test coverage: 6 spec files (~70 test cases) — auth, security (role isolation, IDOR, headers), PO, Loket, Admin Terminal, Staf IW.

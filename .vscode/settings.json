@@ -1,0 +1,7 @@
+{
+   "github.copilot.codeReview.enabled": true,
+   "[supabase]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+      "editor.formatOnSave": true
+   }
+}

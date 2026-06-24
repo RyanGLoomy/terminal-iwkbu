@@ -12,6 +12,15 @@
 
 # testing
 /coverage
+/test-results
+/.playwright-mcp
+
+# local artifacts
+/artifacts
+/build.log
+/*.png
+/*.jpg
+/*.jpeg
 
 # next.js
 /.next/
@@ -32,6 +41,18 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
+
+# local agent/config files may contain tokens
+/opencode.json
+/.opencode
+/.claude
+/.cursor
+
+# misc local files
+/PROSKIP VINI.docx
+/supabase-mcp.sh
+/skills-lock.json
 
 # vercel
 .vercel

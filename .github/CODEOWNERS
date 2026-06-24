@@ -1,0 +1,19 @@
+# CODEOWNERS: edit this file to assign reviewers for dependency and infra changes
+
+# Example:
+
+# /src/ @your-org/frontend-team
+
+# /.github/ @your-org/devops-team
+
+# Default (no owners configured) — update before enabling auto-merge for Dependabot
+
+- @abuy12101
+
+# Owners for dependency and infra files (please replace with real teams)
+
+/package.json @abuy12101
+/.github/dependabot.yml @abuy12101
+/.github/workflows/dependabot-automerge.yml @abuy12101
+/.github/workflows/scheduled-audit.yml @abuy12101
+/.github/workflows/nightly-backup.yml @abuy12101
