@@ -22,6 +22,8 @@ jobs:
         env:
           SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
         run: |
+          export PATH="/usr/lib/postgresql/17/bin:$PATH"
+          pg_dump --version
           TIMESTAMP=$(date -u +"%Y%m%d-%H%M%S")
           OUTFILE="backup-$TIMESTAMP.dump"
           pg_dump --format=custom --file=$OUTFILE "$SUPABASE_DB_URL"
