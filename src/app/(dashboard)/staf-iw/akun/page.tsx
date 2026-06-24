@@ -32,14 +32,15 @@ export default async function StafIwAkunPage({
 
    return (
       <section className="space-y-6">
-         <div>
-            <h1 className="text-xl font-bold tracking-tight text-foreground">
-               Manajemen Akun Terminal
-            </h1>
-            <p className="text-sm text-muted-foreground mt-1 max-w-2xl">
-               Kelola akun loket dan PIN petugas untuk seluruh terminal.
-            </p>
-         </div>
+          <div>
+             <h1 className="text-xl font-bold tracking-tight text-foreground">
+                Manajemen Akun
+             </h1>
+             <p className="text-sm text-muted-foreground mt-1 max-w-2xl">
+                Kelola akun pengguna sistem, verifikasi PO, serta pengawasan
+                petugas loket untuk seluruh terminal.
+             </p>
+          </div>
 
           {terminalOptions.length === 0 ? (
              <div className="rounded-lg border border-border bg-card p-6 text-sm text-muted-foreground">

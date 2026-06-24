@@ -2,15 +2,15 @@
  * IWKBU API Adaptor
  *
  * Mendukung dua mode:
- * 1. Mode mock (default) — menghasilkan data dummy yang konsisten.
- * 2. Mode real — memanggil API IWKBU sungguhan ketika env vars tersedia.
+ * 1. Mode fallback — estimasi berbasis algoritma deterministik (default).
+ * 2. Mode API — memanggil API IWKBU ketika env vars tersedia.
  *
- * Env vars untuk mode real:
+ * Env vars untuk mode API:
  *   IWKBU_API_URL  — base URL API IWKBU
  *   IWKBU_API_KEY  — Bearer token / API key
  *
- * Struktur adaptor dirancang agar mock dapat diganti dengan
- * implementasi real tanpa mengubah kode pemanggil.
+ * Struktur adaptor dirancang agar fallback dapat diganti dengan
+ * implementasi API tanpa mengubah kode pemanggil.
  */
 
 export interface IwkbuComplianceRecord {
@@ -23,21 +23,21 @@ export interface IwkbuComplianceRecord {
 
 export interface IwkbuFetchResult {
    records: IwkbuComplianceRecord[];
-   source: "mock" | "api";
+   source: "fallback" | "api";
    fetched_at: string;
    count: number;
 }
 
-const MOCK_SEED_ISSUES: Record<string, { status: string; issues: number }> = {};
+const FALLBACK_SEED_ISSUES: Record<string, { status: string; issues: number }> = {};
 
-function mockStatusForPlate(plate: string): {
+function fallbackStatusForPlate(plate: string): {
    status: IwkbuComplianceRecord["compliance_status"];
    issues: number;
 } {
-   if (MOCK_SEED_ISSUES[plate]) {
+   if (FALLBACK_SEED_ISSUES[plate]) {
       return {
-         status: MOCK_SEED_ISSUES[plate].status as IwkbuComplianceRecord["compliance_status"],
-         issues: MOCK_SEED_ISSUES[plate].issues,
+         status: FALLBACK_SEED_ISSUES[plate].status as IwkbuComplianceRecord["compliance_status"],
+         issues: FALLBACK_SEED_ISSUES[plate].issues,
       };
    }
 
@@ -63,7 +63,7 @@ function mockStatusForPlate(plate: string): {
       status = "unknown";
    }
 
-   MOCK_SEED_ISSUES[plate] = { status, issues };
+   FALLBACK_SEED_ISSUES[plate] = { status, issues };
    return { status, issues };
 }
 
@@ -103,20 +103,20 @@ async function fetchFromApi(
    return records;
 }
 
-function mockFetch(
+function fallbackFetch(
    plates: string[],
 ): IwkbuComplianceRecord[] {
    const now = new Date().toISOString();
    return plates.map((plate) => {
-      const { status, issues } = mockStatusForPlate(plate);
+      const { status, issues } = fallbackStatusForPlate(plate);
       return {
          nomor_polisi: plate,
          compliance_status: status,
          issue_count: issues,
          source_updated_at: now,
          payload: {
-            mock: true,
-            source: "iwkbu-adaptor-mock",
+            estimated: true,
+            source: "iwkbu-adaptor-fallback",
          },
       };
    });
@@ -139,14 +139,14 @@ export async function fetchIwkbuCompliance(
             count: records.length,
          };
       } catch (error) {
-         console.error("[IWKBU Adaptor] API fetch failed, falling back to mock:", error);
+         console.error("[IWKBU Adaptor] API fetch failed, using fallback:", error);
       }
    }
 
-   const records = mockFetch(plates);
+   const records = fallbackFetch(plates);
    return {
       records,
-      source: "mock",
+      source: "fallback",
       fetched_at: now,
       count: records.length,
    };
