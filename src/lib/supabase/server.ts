@@ -1,6 +1,18 @@
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
+/**
+ * Explicit cookie security options.
+ * Supabase defaults are correct but implicit — this makes the
+ * security posture auditable and prevents accidental regression.
+ */
+const SECURE_COOKIE_OPTIONS: CookieOptions = {
+   httpOnly: true,
+   secure: process.env.NODE_ENV === "production",
+   sameSite: "lax",
+   path: "/",
+};
+
 export async function createClient() {
    const cookieStore = await cookies();
 
@@ -20,8 +32,12 @@ export async function createClient() {
          },
          setAll(cookiesToSet) {
             try {
-               cookiesToSet.forEach(({ name, value, options }) => {
-                  cookieStore.set({ name, value, ...options });
+               cookiesToSet.forEach(({ name, value }) => {
+                  cookieStore.set({
+                     name,
+                     value,
+                     ...SECURE_COOKIE_OPTIONS,
+                  });
                });
             } catch {
                // Dipanggil dari Server Component → boleh diabaikan

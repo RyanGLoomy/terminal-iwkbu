@@ -21,7 +21,12 @@ export async function GET(request: NextRequest) {
          );
       }
 
-      if (filePath.includes("..")) {
+      // Strict allowlist: path must be `UUID/timestamp-filename`
+      // Rejects path traversal, null bytes, oversized paths, and unexpected formats.
+      const EVIDENCE_PATH_RE =
+         /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\/[0-9]+-[\w.-]+$/i;
+
+      if (!EVIDENCE_PATH_RE.test(filePath)) {
          return NextResponse.json(
             { message: "Path tidak valid" },
             { status: 400 },
