@@ -36,6 +36,10 @@ export async function PATCH(request: NextRequest) {
          updateData.full_name = fullName || null;
       }
 
+      // Only full_name/updated_at are ever written here. terminal_id / is_active /
+      // email are intentionally never set by this route (RLS-01: those columns
+      // drive authorization scope and must only change via service-role admin
+      // routes). The DB also enforces a BEFORE UPDATE trigger as backstop.
       const { error } = await supabase
          .from("profiles")
          .update(updateData)

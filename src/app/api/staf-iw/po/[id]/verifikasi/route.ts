@@ -64,6 +64,24 @@ export async function POST(
          return NextResponse.json({ message: sanitizeDbError(error) }, { status: 500 });
       }
 
+      // Saat PO disetujui, pastikan role `po` terpasang di user_roles.
+      // Self-registration tidak lagi menugaskan role otomatis (AUTH-01 fix:
+      // trigger hanya membaca app_metadata yang server-only), jadi role harus
+      // dipasang eksplisit saat verifikasi.
+      if (status === "aktif") {
+         const { data: poRole } = await admin
+            .from("roles")
+            .select("id")
+            .eq("name", "po")
+            .single();
+         if (poRole) {
+            await admin.from("user_roles").upsert(
+               { user_id: id, role_id: poRole.id },
+               { onConflict: "user_id,role_id" },
+            );
+         }
+      }
+
       await logActivity(
          "VERIFIKASI_PO",
          status === "aktif" ? "Memverifikasi PO" : "Menolak PO",

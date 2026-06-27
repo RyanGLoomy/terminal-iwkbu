@@ -4,36 +4,30 @@ import type { RoleType } from "@/config/roles";
 export type RoleResolution = {
    role?: RoleType;
    terminalId?: string | null | undefined;
-   source?: "profile" | "user_metadata" | "app_metadata" | "unknown";
+   source?: "profile" | "unknown";
 };
 
 /**
- * Resolve role and terminal context from Supabase user + optional profile.
- * Does not create clients or perform DB calls—pure resolver to keep logic central.
+ * Resolve role and terminal context from the user's DB profile only.
+ *
+ * SECURITY (AUTH-01): Supabase `user_metadata` is user-editable via
+ * `auth.updateUser()` / `signUp` options, so it MUST NOT be trusted for
+ * authorization — doing so allowed a roleless user to escalate by writing
+ * `user_metadata.role`. Role is resolved exclusively from the `user_roles`
+ * join on the profile (DB source of truth). Callers that need a fallback
+ * use the `get_current_user_role` RPC (see server-actor / login / proxy).
  */
 export function resolveRoleFromUserAndProfile(
-   user: any,
+   user: unknown,
    profile?: any,
 ): RoleResolution {
+   void user;
    const roleFromProfile = getRoleNameFromProfile(profile);
-   const roleFromUserMeta = user?.user_metadata?.role as string | undefined;
-   const roleFromAppMeta = user?.app_metadata?.role as string | undefined;
-
-   const normalized = (
-      roleFromProfile ??
-      roleFromUserMeta ??
-      roleFromAppMeta
-   )?.replace(/_/g, "-");
+   const normalized = roleFromProfile?.replace(/_/g, "-");
 
    return {
       role: (normalized as RoleType) ?? undefined,
       terminalId: profile?.terminal_id ?? undefined,
-      source: roleFromProfile
-         ? "profile"
-         : roleFromUserMeta
-           ? "user_metadata"
-           : roleFromAppMeta
-             ? "app_metadata"
-             : "unknown",
+      source: roleFromProfile ? "profile" : "unknown",
    };
 }

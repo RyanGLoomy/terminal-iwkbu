@@ -203,7 +203,7 @@ export async function POST(request: Request) {
             email,
             password,
             email_confirm: true,
-            user_metadata: { role },
+            app_metadata: { role },
          });
 
       if (authError || !authData?.user?.id) {

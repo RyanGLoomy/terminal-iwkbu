@@ -94,7 +94,7 @@ export async function PATCH(
          .neq("role_id", roleRow.id);
 
       await admin.auth.admin.updateUserById(id, {
-         user_metadata: { role: newRoleName },
+         app_metadata: { role: newRoleName },
       });
 
       await logActivity(
