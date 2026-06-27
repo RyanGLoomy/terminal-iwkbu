@@ -143,6 +143,7 @@ export type AksiLog =
    | "UPDATE_TEMUAN"
    | "KIRIM_KLARIFIKASI"
    | "LOGIN"
+   | "LOGIN_GAGAL"
    | "LOGOUT"
    | "UBAH_PASSWORD"
    | "BUAT_USER"
@@ -164,7 +165,9 @@ export type AksiLog =
    | "VERIFIKASI_ARMADA"
    | "EDIT_PO"
    | "VERIFIKASI_PO"
-   | "PERIODE_REKONSILIASI";
+   | "PERIODE_REKONSILIASI"
+   | "VERIFIKASI_PIN"
+   | "UPLOAD_DOKUMEN_ARMADA";
 
 export interface ActivityLog {
    id: string;

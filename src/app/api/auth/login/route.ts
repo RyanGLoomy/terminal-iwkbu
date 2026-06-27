@@ -73,6 +73,12 @@ export async function POST(request: NextRequest) {
 
       if (signInError || !data.user) {
          await recordFailedAttempt(ipKey, LOGIN_LIMIT);
+         await logActivity(
+            "LOGIN_GAGAL",
+            "Login gagal: kredensial salah",
+            { email, ip: ipKey },
+            { actorUserId: data.user?.id ?? "unknown" },
+         );
          const message = signInError?.message ?? "";
 
          return NextResponse.json(
@@ -94,9 +100,15 @@ export async function POST(request: NextRequest) {
          .eq("id", data.user.id)
          .maybeSingle();
 
-        if (profile?.is_active === false) {
-           await recordFailedAttempt(ipKey, LOGIN_LIMIT);
-          await supabase.auth.signOut();
+         if (profile?.is_active === false) {
+            await recordFailedAttempt(ipKey, LOGIN_LIMIT);
+           await logActivity(
+              "LOGIN_GAGAL",
+              "Login gagal: akun tidak aktif",
+              { email, user_id: data.user.id },
+              { actorUserId: data.user.id },
+           );
+           await supabase.auth.signOut();
          return NextResponse.json(
             { message: "Akun tidak aktif. Hubungi admin." },
             { status: 403 },

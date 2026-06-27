@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { sanitizeDbError } from "@/lib/db-error";
 import { getAuthenticatedActor } from "@/lib/auth/server-actor";
 import { ensureRoleOrThrow } from "@/lib/auth/requireRole.server";
+import { logActivity } from "@/lib/supabase/queries/operasional.server";
 
 const PIN_SESSION_DURATION_MS = 8 * 60 * 60 * 1000;
 
@@ -84,6 +85,13 @@ export async function POST(request: Request) {
       if (error) {
          return NextResponse.json({ message: sanitizeDbError(error) }, { status: 500 });
       }
+
+      await logActivity(
+         "VERIFIKASI_PIN",
+         "Verifikasi PIN petugas berhasil",
+         { petugas_terminal_id: petugasTerminalId, terminal_id: actor.terminalId },
+         { actorUserId: actor.user.id },
+      );
 
       return NextResponse.json({ session: data });
     } catch (error: unknown) {

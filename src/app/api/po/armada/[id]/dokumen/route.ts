@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sanitizeDbError } from "@/lib/db-error";
+import { logActivity } from "@/lib/supabase/queries/operasional.server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getAuthenticatedActor } from "@/lib/auth/server-actor";
 import {
@@ -130,6 +131,13 @@ export async function POST(
             { status: 500 },
          );
       }
+
+      await logActivity(
+         "UPLOAD_DOKUMEN_ARMADA",
+         "Mengunggah dokumen armada",
+         { armada_id: armadaId, jenis_dokumen: jenis, file_name: file.name, file_size: file.size },
+         { actorUserId: actor.user.id },
+      );
 
       return NextResponse.json({ data }, { status: 201 });
    } catch (error: any) {
