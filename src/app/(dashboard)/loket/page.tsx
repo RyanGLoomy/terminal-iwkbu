@@ -1,14 +1,10 @@
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { getAuthenticatedActor } from "@/lib/auth/server-actor";
 import { PetugasDashboardPanel } from "@/components/operasional/petugas-dashboard-panel";
 
 export default async function LoketDashboardPage() {
-   const supabase = await createClient();
-   const {
-      data: { user },
-   } = await supabase.auth.getUser();
-
-   if (!user) {
+   const actor = await getAuthenticatedActor();
+   if (!actor) {
       redirect("/login");
    }
 

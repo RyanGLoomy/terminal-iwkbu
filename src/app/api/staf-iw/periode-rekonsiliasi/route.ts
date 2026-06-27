@@ -15,10 +15,7 @@ export async function GET() {
       }
 
       try {
-         ensureRoleOrThrow(actor.user, actor.profile, [
-            "staf-iw",
-            "admin-terminal",
-         ]);
+         ensureRoleOrThrow(actor.user, actor.profile, "staf-iw");
       } catch (e) {
          if (e instanceof AuthorizationError) {
             return NextResponse.json(

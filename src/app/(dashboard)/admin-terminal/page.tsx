@@ -1,44 +1,24 @@
-import dynamic from "next/dynamic";
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { getAuthenticatedActor } from "@/lib/auth/server-actor";
 import {
-   getAdminTerminalStats,
    getPetugasPinCount,
    getAkunLoketCount,
 } from "@/lib/supabase/queries/operasional.server";
-import { DashboardCard } from "@/components/dashboard/dashboard-card";
 import { AdminTerminalSummary } from "@/components/operasional/admin-terminal-summary";
-const WeeklyTrendChart = dynamic(
-   () =>
-      import("@/components/operasional/weekly-trend-chart").then(
-         (m) => m.WeeklyTrendChart,
-      ),
-   {
-      loading: () => <div className="h-[300px] rounded-xl bg-muted/30 animate-pulse" />,
-   },
-);
+import { WeeklyTrendChartClient } from "@/components/operasional/weekly-trend-chart-client";
 
 export default async function AdminTerminalPage() {
-   const supabase = await createClient();
-   const {
-      data: { user },
-   } = await supabase.auth.getUser();
+   const actor = await getAuthenticatedActor();
+   if (!actor) redirect("/login");
+   const terminalId = actor.terminalId;
 
-   if (!user) redirect("/login");
-
-   const { data: profile } = await supabase
-      .from("profiles")
-      .select("terminal_id")
-      .eq("id", user.id)
-      .single();
-
-   const terminalId = profile?.terminal_id;
-
-   const stats = terminalId ? await getAdminTerminalStats(terminalId) : null;
-   const petugasPinCount = terminalId
-      ? await getPetugasPinCount(terminalId)
-      : 0;
-   const akunLoketCount = terminalId ? await getAkunLoketCount(terminalId) : 0;
+   // Paralelkan RPC yang independen (sebelumnya berurutan).
+   const [petugasPinCount, akunLoketCount] = terminalId
+      ? await Promise.all([
+           getPetugasPinCount(terminalId),
+           getAkunLoketCount(terminalId),
+        ])
+      : [0, 0];
 
    return (
       <section className="space-y-6">
@@ -55,7 +35,7 @@ export default async function AdminTerminalPage() {
             initialPetugasPinCount={petugasPinCount}
             initialAkunLoketCount={akunLoketCount}
          />
-         <WeeklyTrendChart />
+         <WeeklyTrendChartClient />
       </section>
    );
 }

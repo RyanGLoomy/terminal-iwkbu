@@ -6,6 +6,7 @@ import {
    AuthorizationError,
 } from "@/lib/auth/requireRole.server";
 import { logActivity } from "@/lib/supabase/queries/operasional.server";
+import { createNotification } from "@/lib/supabase/queries/notifications.server";
 
 const ALLOWED_MIME = [
    "application/pdf",
@@ -59,7 +60,7 @@ export async function POST(
 
       const { data: finding, error: findingError } = await admin
          .from("findings")
-         .select("id, po_id, status")
+         .select("id, po_id, status, created_by, judul, nomor_polisi")
          .eq("id", id)
          .eq("po_id", actor.user.id)
          .single();
@@ -135,7 +136,7 @@ export async function POST(
 
        const { error: statusError } = await admin
           .from("findings")
-          .update({ status: "on_progress" })
+          .update({ status: decision === "menolak" ? "open" : "on_progress" })
           .eq("id", id)
           .eq("po_id", actor.user.id);
 
@@ -158,10 +159,20 @@ export async function POST(
              has_evidence_link: Boolean(evidenceLink),
              has_evidence_file: Boolean(evidenceFile),
           },
-          { actorUserId: actor.user.id },
-       );
+           { actorUserId: actor.user.id },
+        );
 
-      return NextResponse.json({ data }, { status: 201 });
+       if (finding.created_by) {
+          await createNotification({
+             userId: finding.created_by,
+             title: "PO Mengirim Klarifikasi",
+             message: `PO merespon temuan "${finding.judul}" (${decision})`,
+             type: "info",
+             link: "/staf-iw/temuan",
+          });
+       }
+
+       return NextResponse.json({ data }, { status: 201 });
    } catch (error: any) {
       if (error instanceof AuthorizationError) {
          return NextResponse.json(

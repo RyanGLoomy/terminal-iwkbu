@@ -393,7 +393,7 @@ async function requireStaffActor() {
       return { error: NextResponse.json({ message: "Unauthorized" }, { status: 401 }) };
    }
 
-   if (actor.role !== "staf-iw" && actor.role !== "admin-terminal") {
+   if (actor.role !== "staf-iw") {
       return {
          error: NextResponse.json(
             { message: "Forbidden" },

@@ -280,11 +280,11 @@ export function MasterDataPanel({ initialTerminals, initialJenisKendaraan, initi
                <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                   <div>
                      <CardTitle className="text-base">Kelola Terminal</CardTitle>
-                     <CardDescription>
-                        {canCreateDelete
-                           ? "Tambah, ubah, dan hapus master terminal."
-                           : "Ubah data terminal yang terhubung dengan akun admin ini."}
-                     </CardDescription>
+                      <CardDescription>
+                         {canCreateDelete
+                            ? "Tambah, ubah, dan hapus master terminal."
+                            : "Daftar terminal (read-only). Pengelolaan master data dilakukan oleh Staf IW."}
+                      </CardDescription>
                   </div>
                   <Button variant="outline" size="sm" onClick={reloadTerminals} disabled={loading}>
                      <RefreshCw className="h-4 w-4" />
@@ -300,40 +300,42 @@ export function MasterDataPanel({ initialTerminals, initialJenisKendaraan, initi
                   </div>
                )}
 
-               <div className="grid gap-3 rounded-2xl border border-border bg-muted/50 p-4 md:grid-cols-[160px_1fr_auto]">
-                  <label className="space-y-1.5 text-sm">
-                     <span className="font-semibold text-foreground">Kode</span>
-                     <Input
-                        value={form.kode}
-                        onChange={(event) =>
-                           setForm((current) => ({ ...current, kode: event.target.value.toUpperCase() }))
-                        }
-                        placeholder="JKT"
-                        maxLength={20}
-                     />
-                  </label>
-                  <label className="space-y-1.5 text-sm">
-                     <span className="font-semibold text-foreground">Nama Terminal</span>
-                     <Input
-                        value={form.nama}
-                        onChange={(event) =>
-                           setForm((current) => ({ ...current, nama: event.target.value }))
-                        }
-                        placeholder="Terminal Kampung Rambutan"
-                     />
-                  </label>
-                  <div className="flex items-end gap-2">
-                     <Button onClick={saveTerminal} disabled={saving}>
-                        {isEditing ? <Pencil className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
-                        {saving ? "Menyimpan..." : isEditing ? "Simpan" : "Tambah"}
-                     </Button>
-                     {isEditing && (
-                        <Button variant="outline" onClick={resetForm} disabled={saving}>
-                           Batal
-                        </Button>
-                     )}
-                  </div>
-               </div>
+                {canCreateDelete && (
+                <div className="grid gap-3 rounded-2xl border border-border bg-muted/50 p-4 md:grid-cols-[160px_1fr_auto]">
+                   <label className="space-y-1.5 text-sm">
+                      <span className="font-semibold text-foreground">Kode</span>
+                      <Input
+                         value={form.kode}
+                         onChange={(event) =>
+                            setForm((current) => ({ ...current, kode: event.target.value.toUpperCase() }))
+                         }
+                         placeholder="JKT"
+                         maxLength={20}
+                      />
+                   </label>
+                   <label className="space-y-1.5 text-sm">
+                      <span className="font-semibold text-foreground">Nama Terminal</span>
+                      <Input
+                         value={form.nama}
+                         onChange={(event) =>
+                            setForm((current) => ({ ...current, nama: event.target.value }))
+                         }
+                         placeholder="Terminal Kampung Rambutan"
+                      />
+                   </label>
+                   <div className="flex items-end gap-2">
+                      <Button onClick={saveTerminal} disabled={saving}>
+                         {isEditing ? <Pencil className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
+                         {saving ? "Menyimpan..." : isEditing ? "Simpan" : "Tambah"}
+                      </Button>
+                      {isEditing && (
+                         <Button variant="outline" onClick={resetForm} disabled={saving}>
+                            Batal
+                         </Button>
+                      )}
+                   </div>
+                </div>
+                )}
 
                <Table caption="Daftar terminal aktif">
                   <TableHeader>
@@ -355,25 +357,30 @@ export function MasterDataPanel({ initialTerminals, initialJenisKendaraan, initi
                            <TableRow key={terminal.id}>
                               <TableCell className="font-semibold">{terminal.kode}</TableCell>
                               <TableCell>{terminal.nama}</TableCell>
-                              <TableCell>
-                                 <div className="flex flex-wrap gap-2">
-                                    <Button variant="outline" size="sm" onClick={() => editTerminal(terminal)}>
-                                       <Pencil className="h-4 w-4" />
-                                       Edit
-                                    </Button>
-                                    {canCreateDelete && (
-                                       <Button
-                                          variant="destructive"
-                                          size="sm"
-                                          onClick={() => deleteTerminal(terminal)}
-                                          disabled={loading}
-                                       >
-                                          <Trash2 className="h-4 w-4" />
-                                          Hapus
-                                       </Button>
-                                    )}
-                                 </div>
-                              </TableCell>
+                               <TableCell>
+                                  <div className="flex flex-wrap gap-2">
+                                     {canCreateDelete && (
+                                        <Button variant="outline" size="sm" onClick={() => editTerminal(terminal)}>
+                                           <Pencil className="h-4 w-4" />
+                                           Edit
+                                        </Button>
+                                     )}
+                                     {canCreateDelete && (
+                                        <Button
+                                           variant="destructive"
+                                           size="sm"
+                                           onClick={() => deleteTerminal(terminal)}
+                                           disabled={loading}
+                                        >
+                                           <Trash2 className="h-4 w-4" />
+                                           Hapus
+                                        </Button>
+                                     )}
+                                     {!canCreateDelete && (
+                                        <span className="text-xs text-muted-foreground">Read-only</span>
+                                     )}
+                                  </div>
+                               </TableCell>
                            </TableRow>
                         ))
                      )}

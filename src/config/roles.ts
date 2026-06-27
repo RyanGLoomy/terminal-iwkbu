@@ -34,6 +34,7 @@ export const ROLE_ROUTES: Record<RoleType, string[]> = {
       "/staf-iw/master-data",
       "/staf-iw/audit-trail",
       "/staf-iw/temuan",
+      "/staf-iw/laporan",
       "/profile",
    ],
 };

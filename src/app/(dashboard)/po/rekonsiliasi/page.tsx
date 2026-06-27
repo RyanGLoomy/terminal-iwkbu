@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { getAuthenticatedActor } from "@/lib/auth/server-actor";
 import { getAllArmada } from "@/lib/supabase/queries/verification.server";
 import type { Armada } from "@/lib/supabase/queries/verification.types";
 import { getPoIwkbuStatus } from "@/lib/supabase/queries/iwkbu-sync.server";
@@ -7,17 +7,16 @@ import { DashboardCard } from "@/components/dashboard/dashboard-card";
 import { RekonsiliasiArmadaTable } from "@/components/operasional/rekonsiliasi-armada-table";
 
 export default async function PoRekonsiliasiPage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const actor = await getAuthenticatedActor();
+  if (!actor) redirect("/login");
+  const user = actor.user;
 
-  if (!user) redirect("/login");
-
-  const armada = await getAllArmada({ po_id: user.id }) as Armada[];
-
-  const { statuses: iwkbuStatuses, summary: iwkbuSummary } =
-    await getPoIwkbuStatus(user.id);
+  const [armadaRaw, iwkbu] = await Promise.all([
+    getAllArmada({ po_id: user.id }),
+    getPoIwkbuStatus(user.id),
+  ]);
+  const armada = armadaRaw as Armada[];
+  const { statuses: iwkbuStatuses, summary: iwkbuSummary } = iwkbu;
 
   const iwkbuMap: Record<string, any> = {};
   for (const s of iwkbuStatuses) {

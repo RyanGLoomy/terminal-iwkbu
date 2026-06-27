@@ -283,7 +283,7 @@ export function PencatatanPanel() {
          )}
 
          <div className="grid gap-5 lg:grid-cols-2">
-            <Card className="card-interactive border-border glow-blue">
+            <Card className="card-interactive border-base-300">
                <CardHeader className="pb-4">
                   <CardTitle className="text-base flex items-center gap-2">
                      <LogIn className="h-4 w-4 text-primary" />
@@ -362,7 +362,7 @@ export function PencatatanPanel() {
                </CardContent>
             </Card>
 
-            <Card className="card-interactive border-border glow-violet">
+            <Card className="card-interactive border-base-300">
                <CardHeader className="pb-4">
                   <CardTitle className="text-base flex items-center gap-2">
                      <LogOut className="h-4 w-4 text-violet-500" />

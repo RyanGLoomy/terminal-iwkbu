@@ -51,27 +51,46 @@ export function NotificationBell() {
    }, []);
 
    useEffect(() => {
+      const supabase = createClient();
+      let channel: ReturnType<typeof supabase.channel> | null = null;
+      let active = true;
+
       loadNotifications();
 
-      const supabase = createClient();
-      const channelName = `notifications:${Date.now()}:${Math.random().toString(36).slice(2)}`;
-      const channel = supabase
-         .channel(channelName)
-         .on(
-            "postgres_changes",
-            {
-               event: "INSERT",
-               schema: "public",
-               table: "notifications",
-            },
-            () => {
-               loadNotifications();
-            },
-         )
-         .subscribe();
+      // Hanya langganan INSERT notifikasi MILIK USER INI (bukan broadcast semua user).
+      supabase.auth.getUser().then((res: { data: { user: { id: string } | null } }) => {
+         const user = res.data.user;
+         if (!user || !active) return;
+         channel = supabase
+            .channel(`notif:${user.id}:${Math.random().toString(36).slice(2)}`)
+            .on(
+               "postgres_changes",
+               {
+                  event: "INSERT",
+                  schema: "public",
+                  table: "notifications",
+                  filter: `user_id=eq.${user.id}`,
+               },
+               (payload: { new: Notification | null }) => {
+                  const newRow = payload.new;
+                  if (!newRow) {
+                     loadNotifications();
+                     return;
+                  }
+                  setNotifications((prev) =>
+                     prev.some((n) => n.id === newRow.id)
+                        ? prev
+                        : [newRow, ...prev].slice(0, 20),
+                  );
+                  if (!newRow.is_read) setUnreadCount((prev) => prev + 1);
+               },
+            )
+            .subscribe();
+      });
 
       return () => {
-         supabase.removeChannel(channel);
+         active = false;
+         if (channel) supabase.removeChannel(channel);
       };
    }, [loadNotifications]);
 

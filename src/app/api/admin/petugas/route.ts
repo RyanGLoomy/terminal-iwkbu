@@ -4,7 +4,9 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { getAuthenticatedActor } from "@/lib/auth/server-actor";
 import { logActivity } from "@/lib/supabase/queries/operasional.server";
 
-const ALLOWED_ROLES = ["admin-terminal", "staf-iw"] as const;
+// Per spec (UC-12): manajemen akun petugas/loket adalah peran Admin Terminal.
+// Staf IW tidak boleh membuat/mengelola akun petugas/loket.
+const ALLOWED_ROLES = ["admin-terminal"] as const;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PASSWORD_MIN_LENGTH = 8;
 

@@ -1,29 +1,14 @@
-import dynamic from "next/dynamic";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { VerifikasiPOTable } from "@/components/verification/verifikasi-po-table";
 import { VerifikasiArmadaTable } from "@/components/verification/verifikasi-armada-table";
 import { DashboardCard } from "@/components/dashboard/dashboard-card";
 import { Card, CardContent } from "@/components/ui/card";
+import { StafIWStatsChartClient } from "@/components/dashboard/staf-iw-stats-chart-client";
 import Link from "next/link";
 import {
    getAllPO,
    getAllArmada,
 } from "@/lib/supabase/queries/verification.server";
-
-const StafIWStatsChart = dynamic(
-   () =>
-      import("@/components/dashboard/staf-iw-stats-chart").then(
-         (m) => m.StafIWStatsChart,
-      ),
-   {
-      loading: () => (
-         <div className="grid gap-5 lg:grid-cols-2">
-            <div className="h-[300px] rounded-xl bg-muted/30 animate-pulse" />
-            <div className="h-[300px] rounded-xl bg-muted/30 animate-pulse" />
-         </div>
-      ),
-   },
-);
 
 export default async function StafIWDashboard() {
    // Batch all queries in parallel for faster load
@@ -83,7 +68,7 @@ export default async function StafIWDashboard() {
                />
              </div>
 
-             <StafIWStatsChart
+             <StafIWStatsChartClient
                 poMenunggu={poMenunggu.length}
                 poAktif={poAktif.length}
                 armadaMenunggu={armadaMenunggu.length}
@@ -121,10 +106,10 @@ export default async function StafIWDashboard() {
          </div>
 
          <Tabs defaultValue="po-menunggu" className="space-y-4">
-            <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 lg:w-[640px] h-auto p-1">
+            <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 lg:w-[760px] h-auto p-1">
                <TabsTrigger
                   value="po-menunggu"
-                  className="text-xs sm:text-sm py-2"
+                   className="text-xs sm:text-sm py-2 flex-nowrap whitespace-nowrap"
                >
                   PO Menunggu
                   <span className="ml-1.5 inline-flex items-center justify-center w-5 h-5 rounded-full bg-amber-100 text-accent dark:bg-amber-950/50 dark:text-amber-300 text-[11px] font-semibold">
@@ -133,7 +118,7 @@ export default async function StafIWDashboard() {
                </TabsTrigger>
                <TabsTrigger
                   value="po-aktif"
-                  className="text-xs sm:text-sm py-2"
+                   className="text-xs sm:text-sm py-2 flex-nowrap whitespace-nowrap"
                >
                   PO Aktif
                   <span className="ml-1.5 inline-flex items-center justify-center w-5 h-5 rounded-full bg-emerald-100 text-brand-green dark:bg-green-950/50 dark:text-green-300 text-[11px] font-semibold">
@@ -142,7 +127,7 @@ export default async function StafIWDashboard() {
                </TabsTrigger>
                <TabsTrigger
                   value="armada-menunggu"
-                  className="text-xs sm:text-sm py-2"
+                   className="text-xs sm:text-sm py-2 flex-nowrap whitespace-nowrap"
                >
                   Armada Menunggu
                   <span className="ml-1.5 inline-flex items-center justify-center w-5 h-5 rounded-full bg-amber-100 text-accent dark:bg-amber-950/50 dark:text-amber-300 text-[11px] font-semibold">
@@ -151,7 +136,7 @@ export default async function StafIWDashboard() {
                </TabsTrigger>
                <TabsTrigger
                   value="armada-terverifikasi"
-                  className="text-xs sm:text-sm py-2"
+                   className="text-xs sm:text-sm py-2 flex-nowrap whitespace-nowrap"
                >
                   Armada Terverifikasi
                   <span className="ml-1.5 inline-flex items-center justify-center w-5 h-5 rounded-full bg-emerald-100 text-brand-green dark:bg-green-950/50 dark:text-green-300 text-[11px] font-semibold">

@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import { getAuthenticatedActor } from "@/lib/auth/server-actor";
 import { POArmadaManager } from "@/components/verification/po-armada-manager";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
@@ -8,11 +9,9 @@ import { getPoIwkbuStatus } from "@/lib/supabase/queries/iwkbu-sync.server";
 
 export default async function PODashboard() {
    const supabase = await createClient();
-
-   const {
-      data: { user },
-   } = await supabase.auth.getUser();
-   if (!user) redirect("/login");
+   const actor = await getAuthenticatedActor();
+   if (!actor) redirect("/login");
+   const user = actor.user;
 
     const { data: poData } = await supabase
       .from("po")

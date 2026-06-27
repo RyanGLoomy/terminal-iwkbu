@@ -52,10 +52,7 @@ export async function GET(request: NextRequest) {
       }
 
       try {
-         ensureRoleOrThrow(actor.user, actor.profile, [
-            "staf-iw",
-            "admin-terminal",
-         ]);
+         ensureRoleOrThrow(actor.user, actor.profile, "staf-iw");
       } catch {
          if (finding.po_id !== actor.user.id) {
             return NextResponse.json(

@@ -6,9 +6,10 @@ import SentryInit from "@/components/sentry-init";
 import "./globals.css";
 
 const jakartaSans = Plus_Jakarta_Sans({
-   variable: "--font-geist-sans",
+   variable: "--font-jakarta",
    subsets: ["latin"],
-   weight: ["400", "500", "600", "700", "800"],
+   display: "swap",
+   preload: true,
 });
 
 const geistMono = Geist_Mono({
@@ -28,10 +29,17 @@ export default function RootLayout({
    children: React.ReactNode;
 }>) {
    return (
-      <html lang="id" suppressHydrationWarning>
-         <body
-            className={`${jakartaSans.variable} ${geistMono.variable} antialiased`}
-         >
+      <html lang="id" data-theme="jr" suppressHydrationWarning>
+          <head>
+             <script
+                dangerouslySetInnerHTML={{
+                   __html: `(function(){try{var s=localStorage.getItem('theme');var d=window.matchMedia('(prefers-color-scheme: dark)').matches;if(s==='dark'||(!s&&d)){document.documentElement.setAttribute('data-theme','jr-dark');}}catch(e){}})();`,
+                }}
+             />
+          </head>
+          <body
+             className={`${jakartaSans.variable} ${geistMono.variable} font-sans antialiased`}
+          >
              <ThemeProvider>
                 <SentryInit />
                 {children}

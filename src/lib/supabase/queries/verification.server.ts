@@ -36,8 +36,6 @@ export async function getAllArmada(filters?: {
    return data as Armada[];
 }
 
-export const getArmadaForAdmin = getAllArmada;
-
 // ============================================================
 // LIST PO UNTUK STAF IW (dengan filter status)
 // ============================================================

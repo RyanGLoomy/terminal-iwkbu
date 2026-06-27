@@ -11,6 +11,10 @@ const nextConfig: NextConfig = {
       "http://localhost:3001",
    ],
    reactCompiler: true,
+   experimental: {
+      // Tree-shake import per-ikon dari lucide-react (dipakai di banyak file).
+      optimizePackageImports: ["lucide-react"],
+   },
 };
 
 export default nextConfig;

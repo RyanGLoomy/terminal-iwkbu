@@ -93,12 +93,12 @@ export function WeeklyTrendChart({
                             >
                               <stop
                                  offset="5%"
-                                 stopColor="hsl(var(--brand-sky))"
+                                 stopColor="var(--color-brand-sky)"
                                  stopOpacity={0.3}
                               />
                               <stop
                                  offset="95%"
-                                 stopColor="hsl(var(--brand-sky))"
+                                 stopColor="var(--color-brand-sky)"
                                  stopOpacity={0}
                               />
                            </linearGradient>
@@ -111,12 +111,12 @@ export function WeeklyTrendChart({
                             >
                               <stop
                                  offset="5%"
-                                 stopColor="hsl(var(--brand-green))"
+                                 stopColor="var(--color-brand-green)"
                                  stopOpacity={0.3}
                               />
                               <stop
                                  offset="95%"
-                                 stopColor="hsl(var(--brand-green))"
+                                 stopColor="var(--color-brand-green)"
                                  stopOpacity={0}
                               />
                            </linearGradient>
@@ -162,14 +162,14 @@ export function WeeklyTrendChart({
                         <Area
                            type="monotone"
                            dataKey="masuk"
-                           stroke="hsl(var(--brand-sky))"
+                           stroke="var(--color-brand-sky)"
                            strokeWidth={2}
                             fill={`url(#${masukGradientId})`}
                         />
                         <Area
                            type="monotone"
                            dataKey="keluar"
-                           stroke="hsl(var(--brand-green))"
+                           stroke="var(--color-brand-green)"
                            strokeWidth={2}
                             fill={`url(#${keluarGradientId})`}
                         />
@@ -238,13 +238,13 @@ export function WeeklyTrendChart({
                         />
                         <Bar
                            dataKey="masuk"
-                           fill="hsl(var(--brand-sky))"
+                           fill="var(--color-brand-sky)"
                            radius={[4, 4, 0, 0]}
                            barSize={20}
                         />
                         <Bar
                            dataKey="keluar"
-                           fill="hsl(var(--brand-green))"
+                           fill="var(--color-brand-green)"
                            radius={[4, 4, 0, 0]}
                            barSize={20}
                         />

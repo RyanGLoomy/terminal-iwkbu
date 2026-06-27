@@ -22,8 +22,8 @@ export default function RegistrasiPOPage() {
           </Link>
 
           <div className="mt-6 space-y-5 sm:mt-10 sm:space-y-6">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-navy to-brand-sky shadow-elevation-3 sm:h-16 sm:w-16 sm:rounded-3xl">
-              <Bus className="h-6 w-6 text-white sm:h-8 sm:w-8" />
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary text-primary-content sm:h-16 sm:w-16 sm:rounded-3xl">
+               <Bus className="h-6 w-6 sm:h-8 sm:w-8" />
             </div>
             <div>
               <p className="mb-3 text-xs font800 uppercase tracking-[0.14em] text-brand-sky">

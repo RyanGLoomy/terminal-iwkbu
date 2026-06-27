@@ -1,57 +1,113 @@
+"use client";
+
 import * as React from "react";
-import { Tabs as TabsPrimitive } from "radix-ui";
 
 import { cn } from "@/lib/utils";
 
-const Tabs = TabsPrimitive.Root;
+interface TabsContextValue {
+  value: string;
+  setValue: (value: string) => void;
+  baseId: string;
+}
 
-function TabsList({
-   className,
-   ...props
-}: React.ComponentProps<typeof TabsPrimitive.List>) {
-   return (
-      <TabsPrimitive.List
-         data-slot="tabs-list"
-         className={cn(
-            "bg-muted text-muted-foreground inline-flex h-9 items-center justify-center rounded-lg p-1",
-            className,
-         )}
-         {...props}
-      />
-   );
+const TabsContext = React.createContext<TabsContextValue | null>(null);
+
+function useTabsContext(component: string) {
+  const ctx = React.useContext(TabsContext);
+  if (!ctx) {
+    throw new Error(`<${component}> harus digunakan di dalam <Tabs>`);
+  }
+  return ctx;
+}
+
+function Tabs({
+  value,
+  defaultValue,
+  onValueChange,
+  className,
+  children,
+  ...props
+}: React.ComponentProps<"div"> & {
+  value?: string;
+  defaultValue?: string;
+  onValueChange?: (value: string) => void;
+}) {
+  const isControlled = value !== undefined;
+  const [internal, setInternal] = React.useState(defaultValue ?? "");
+  const active = isControlled ? value : internal;
+  const baseId = React.useId();
+
+  const setValue = React.useCallback(
+    (next: string) => {
+      if (!isControlled) setInternal(next);
+      onValueChange?.(next);
+    },
+    [isControlled, onValueChange],
+  );
+
+  return (
+    <TabsContext.Provider value={{ value: active, setValue, baseId }}>
+      <div className={className} {...props}>
+        {children}
+      </div>
+    </TabsContext.Provider>
+  );
+}
+
+function TabsList({ className, ...props }: React.ComponentProps<"div">) {
+  return (
+    <div
+      role="tablist"
+      data-slot="tabs-list"
+      className={cn("tabs tabs-boxed inline-flex w-fit", className)}
+      {...props}
+    />
+  );
 }
 
 function TabsTrigger({
-   className,
-   ...props
-}: React.ComponentProps<typeof TabsPrimitive.Trigger>) {
-   return (
-      <TabsPrimitive.Trigger
-         data-slot="tabs-trigger"
-         className={cn(
-            "inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium transition-all",
-            "text-muted-foreground hover:text-foreground",
-            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-            "disabled:pointer-events-none disabled:opacity-50",
-            "data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm data-[state=active]:ring-1 data-[state=active]:ring-border",
-            className,
-         )}
-         {...props}
-      />
-   );
+  className,
+  value,
+  ...props
+}: React.ComponentProps<"button"> & { value: string }) {
+  const ctx = useTabsContext("TabsTrigger");
+  const active = ctx.value === value;
+  return (
+    <button
+      type="button"
+      role="tab"
+      id={`${ctx.baseId}-tab-${value}`}
+      aria-selected={active}
+      aria-controls={`${ctx.baseId}-panel-${value}`}
+      data-slot="tabs-trigger"
+      onClick={() => ctx.setValue(value)}
+      className={cn(
+        "tab",
+        active && "tab-active",
+        className,
+      )}
+      {...props}
+    />
+  );
 }
 
 function TabsContent({
-   className,
-   ...props
-}: React.ComponentProps<typeof TabsPrimitive.Content>) {
-   return (
-      <TabsPrimitive.Content
-         data-slot="tabs-content"
-         className={cn("mt-2 focus-visible:outline-none", className)}
-         {...props}
-      />
-   );
+  className,
+  value,
+  ...props
+}: React.ComponentProps<"div"> & { value: string }) {
+  const ctx = useTabsContext("TabsContent");
+  if (ctx.value !== value) return null;
+  return (
+    <div
+      role="tabpanel"
+      id={`${ctx.baseId}-panel-${value}`}
+      aria-labelledby={`${ctx.baseId}-tab-${value}`}
+      data-slot="tabs-content"
+      className={cn("mt-3", className)}
+      {...props}
+    />
+  );
 }
 
 export { Tabs, TabsList, TabsTrigger, TabsContent };

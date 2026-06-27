@@ -153,10 +153,11 @@ export async function DELETE(
          );
       }
 
-      const isStafOrAdmin =
-         actor.role === "staf-iw" || actor.role === "admin-terminal";
+      // Hanya Staf IW yang boleh menghapus armada milik PO lain secara administratif.
+      // Admin Terminal tidak memiliki use case penghapusan armada (spec).
+      const isStaf = actor.role === "staf-iw";
 
-      if (!isStafOrAdmin) {
+      if (!isStaf) {
          ensureRoleOrThrow(actor.user, actor.profile, "po");
 
          if (existing.po_id !== actor.user.id) {

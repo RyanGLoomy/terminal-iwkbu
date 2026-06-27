@@ -13,6 +13,13 @@ export async function GET() {
          );
       }
 
+      if (actor.role !== "staf-iw" && actor.role !== "admin-terminal") {
+         return NextResponse.json(
+            { message: "Forbidden" },
+            { status: 403 },
+         );
+      }
+
       const admin = createAdminClient();
       const { data, error } = await admin
          .from("jenis_kendaraan")

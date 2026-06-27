@@ -6,6 +6,7 @@ import {
    AuthorizationError,
 } from "@/lib/auth/requireRole.server";
 import { logActivity } from "@/lib/supabase/queries/operasional.server";
+import { createNotification } from "@/lib/supabase/queries/notifications.server";
 
 export async function PATCH(
    request: NextRequest,
@@ -17,10 +18,7 @@ export async function PATCH(
          return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
       }
 
-      ensureRoleOrThrow(actor.user, actor.profile, [
-         "staf-iw",
-         "admin-terminal",
-      ]);
+      ensureRoleOrThrow(actor.user, actor.profile, "staf-iw");
 
       const { id } = await context.params;
       const body = await request.json();
@@ -150,10 +148,26 @@ export async function PATCH(
              due_date: data.due_date,
              resolved_at: data.resolved_at,
           },
-          { actorUserId: actor.user.id },
-       );
+           { actorUserId: actor.user.id },
+        );
 
-      return NextResponse.json({ data });
+       if (data.po_id) {
+          const isReopen = isReopening;
+          const isClosedNow = data.status === "closed" && !wasClosed;
+          if (isReopen || isClosedNow) {
+             await createNotification({
+                userId: data.po_id,
+                title: isReopen ? "Temuan Dibuka Kembali" : "Temuan Diselesaikan",
+                message: isReopen
+                   ? `Temuan "${data.judul}" untuk armada ${data.nomor_polisi} dibuka kembali.`
+                   : `Temuan "${data.judul}" untuk armada ${data.nomor_polisi} telah diselesaikan.`,
+                type: isReopen ? "warning" : "success",
+                link: "/po/temuan",
+             });
+          }
+       }
+
+       return NextResponse.json({ data });
    } catch (error: any) {
       if (error instanceof AuthorizationError) {
          return NextResponse.json(

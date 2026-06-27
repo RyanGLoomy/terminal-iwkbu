@@ -12,7 +12,7 @@ export async function GET() {
          );
       }
 
-      if (actor.role !== "staf-iw" && actor.role !== "admin-terminal") {
+      if (actor.role !== "staf-iw") {
          return NextResponse.json(
             { message: "Forbidden" },
             { status: 403 },

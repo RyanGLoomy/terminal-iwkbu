@@ -18,10 +18,7 @@ export async function POST(
          return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
       }
 
-      ensureRoleOrThrow(actor.user, actor.profile, [
-         "staf-iw",
-         "admin-terminal",
-      ]);
+      ensureRoleOrThrow(actor.user, actor.profile, "staf-iw");
 
       const { id } = await context.params;
       const body = await request.json();

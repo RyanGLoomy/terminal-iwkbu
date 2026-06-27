@@ -6,12 +6,13 @@ import {
    AuthorizationError,
 } from "@/lib/auth/requireRole.server";
 import { logActivity } from "@/lib/supabase/queries/operasional.server";
+import { createNotification } from "@/lib/supabase/queries/notifications.server";
 
 async function requireStafActor() {
    const actor = await getAuthenticatedActor();
    if (!actor) return null;
 
-   ensureRoleOrThrow(actor.user, actor.profile, ["staf-iw", "admin-terminal"]);
+   ensureRoleOrThrow(actor.user, actor.profile, "staf-iw");
    return actor;
 }
 
@@ -158,10 +159,18 @@ export async function POST(request: Request) {
               source_type: data.source_type,
               due_date: data.due_date,
            },
-          { actorUserId: actor.user.id },
-       );
+           { actorUserId: actor.user.id },
+        );
 
-      return NextResponse.json({ data }, { status: 201 });
+       await createNotification({
+          userId: data.po_id,
+          title: "Temuan Baru",
+          message: `Temuan untuk armada ${data.nomor_polisi}: ${data.judul}`,
+          type: "warning",
+          link: "/po/temuan",
+       });
+
+       return NextResponse.json({ data }, { status: 201 });
    } catch (error: any) {
       if (error instanceof AuthorizationError) {
          return NextResponse.json(

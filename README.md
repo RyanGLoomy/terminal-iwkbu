@@ -20,7 +20,7 @@ Sistem pengawasan dan rekonsiliasi Integrasi Wilayah Kota Bulan (IWKBU) untuk te
 | Layer | Teknologi |
 |-------|-----------|
 | Frontend | Next.js 16 (App Router), React 19, TypeScript (strict) |
-| Styling | Tailwind CSS v4, shadcn/ui (new-york) |
+| Styling | Tailwind CSS v4, DaisyUI v5 (tema jr/jr-dark) |
 | Backend | Next.js Route Handlers (65 API routes) |
 | Database | Supabase Postgres 17 (21 tabel, RLS, CHECK constraints) |
 | Auth | Supabase Auth (GoTrue) + role-based access control |
@@ -84,7 +84,7 @@ pnpm dev                    # Dev server di 0.0.0.0:3000
 pnpm typecheck              # TypeScript strict check (tsc --noEmit)
 pnpm lint                   # ESLint (flat config, Next core-web-vitals + TS)
 pnpm build                  # Production build
-pnpm run size               # Build + size-limit check (900 KB chunks)
+pnpm run size               # Build + size-limit check (1.1 MB chunks)
 pnpm audit                  # Dependency audit (moderate level)
 pnpm test:integration       # Auth smoke test (butuh prod server)
 pnpm test:e2e               # Build + setup data + Playwright E2E
@@ -98,10 +98,10 @@ src/
 ├── app/                      # Next.js App Router
 │   ├── (dashboard)/          # Role-scoped pages (po/, loket/, admin-terminal/, staf-iw/)
 │   ├── api/                  # 65 API route handlers
-│   ├── globals.css           # Tailwind v4 + brand tokens
+│   ├── globals.css           # Tailwind v4 + DaisyUI v5 themes (jr/jr-dark)
 │   └── layout.tsx            # Root layout (dark mode, suppressHydrationWarning)
 ├── components/               # React components
-│   ├── ui/                   # shadcn/ui base components
+│   ├── ui/                   # DaisyUI-backed thin wrappers
 │   ├── dashboard/            # Dashboard cards, charts, sidebar, notifications
 │   ├── operasional/          # Findings, rekonsiliasi, pencatatan, etc.
 │   └── verification/         # Armada table, PO manager, dokumen dialog
@@ -113,7 +113,7 @@ src/
 │   └── monitoring.ts         # Sentry wrapper
 ├── proxy.ts                  # Middleware (auth, roles, security headers)
 e2e/                          # Playwright E2E tests
-supabase/migrations/          # 14 SQL migrations (0001-0014)
+supabase/migrations/          # 21 SQL migrations (0000_01-0015)
 docs/                         # Dokumentasi teknis
 ```
 
@@ -123,14 +123,14 @@ docs/                         # Dokumentasi teknis
 |------|-------|--------------|
 | PO | Dashboard armada, rekonsiliasi, temuan & klarifikasi | `/po` |
 | Loket | Dashboard, pencatatan, riwayat (butuh PIN session) | `/loket` |
-| Admin Terminal | Dashboard, petugas, master data, rekap, laporan | `/admin-terminal` |
-| Staf IW | Dashboard, findings, rekonsiliasi, audit trail, sync, akun | `/staf-iw` |
+| Admin Terminal | Dashboard, petugas/loket, rekap, sesi, laporan, master-data (read-only) | `/admin-terminal` |
+| Staf IW | Dashboard, akun (admin-terminal/staf-iw), verifikasi PO, master data, rekonsiliasi, findings, IWKBU sync, laporan, audit trail | `/staf-iw` |
 
 Role didefinisikan di `src/config/roles.ts`. Middleware `src/proxy.ts` menangani auth dan role-based routing untuk pages. Setiap API route melakukan auth + role check sendiri via `getAuthenticatedActor()` + `ensureRoleOrThrow()`.
 
 ## Database
 
-14 migration files di `supabase/migrations/`. Lihat [docs/DATABASE.md](docs/DATABASE.md) untuk skema lengkap.
+21 migration files di `supabase/migrations/`. Lihat [docs/DATABASE.md](docs/DATABASE.md) untuk skema lengkap.
 
 ## Dokumentasi
 

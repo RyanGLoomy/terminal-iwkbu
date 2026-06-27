@@ -52,7 +52,8 @@ function getRoleName(user: UserProfile): string | null {
    return ur?.role?.name ?? null;
 }
 
-const ROLE_OPTIONS = ["po", "loket", "admin-terminal", "staf-iw"];
+// Per spec (UC-13): Staf IW hanya mengelola role admin-terminal & staf-iw.
+const ROLE_OPTIONS = ["admin-terminal", "staf-iw"];
 
 export function RoleManagementPanel() {
    const [users, setUsers] = useState<UserProfile[]>([]);

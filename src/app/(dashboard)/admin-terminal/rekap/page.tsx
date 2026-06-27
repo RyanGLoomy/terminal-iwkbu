@@ -1,22 +1,11 @@
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { getAuthenticatedActor } from "@/lib/auth/server-actor";
 import { AdminRekapPanel } from "@/components/operasional/admin-rekap-panel";
 
 export default async function AdminTerminalRekapPage() {
-   const supabase = await createClient();
-   const {
-      data: { user },
-   } = await supabase.auth.getUser();
-
-   if (!user) redirect("/login");
-
-   const { data: profile } = await supabase
-      .from("profiles")
-      .select("terminal_id")
-      .eq("id", user.id)
-      .single();
-
-   if (!profile?.terminal_id) {
+   const actor = await getAuthenticatedActor();
+   if (!actor) redirect("/login");
+   if (!actor.terminalId) {
       redirect("/error");
    }
 
@@ -31,7 +20,7 @@ export default async function AdminTerminalRekapPage() {
                ini.
             </p>
          </div>
-         <AdminRekapPanel terminalId={profile.terminal_id} />
+         <AdminRekapPanel terminalId={actor.terminalId} />
       </section>
    );
 }

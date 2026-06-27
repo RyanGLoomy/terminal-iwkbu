@@ -6,6 +6,7 @@ import {
    AuthorizationError,
 } from "@/lib/auth/requireRole.server";
 import { logActivity } from "@/lib/supabase/queries/operasional.server";
+import { createNotification } from "@/lib/supabase/queries/notifications.server";
 
 const ALLOWED_MIME = [
    "application/pdf",
@@ -25,10 +26,7 @@ export async function POST(
          return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
       }
 
-      ensureRoleOrThrow(actor.user, actor.profile, [
-         "staf-iw",
-         "admin-terminal",
-      ]);
+      ensureRoleOrThrow(actor.user, actor.profile, "staf-iw");
 
       const { id } = await context.params;
       const formData = await request.formData();
@@ -62,7 +60,7 @@ export async function POST(
 
       const { data: finding, error: findingError } = await admin
          .from("findings")
-         .select("id, po_id, status")
+         .select("id, po_id, status, created_by, judul, nomor_polisi")
          .eq("id", id)
          .single();
 
@@ -159,10 +157,18 @@ export async function POST(
              has_evidence_link: Boolean(evidenceLink),
              has_evidence_file: Boolean(evidenceFile),
          },
-         { actorUserId: actor.user.id },
-      );
+          { actorUserId: actor.user.id },
+       );
 
-      return NextResponse.json({ data }, { status: 201 });
+       await createNotification({
+          userId: finding.po_id,
+          title: "Staf IW Merespon Klarifikasi",
+          message: `Staf IW merespon klarifikasi temuan: ${finding.judul}`,
+          type: "info",
+          link: "/po/temuan",
+       });
+
+       return NextResponse.json({ data }, { status: 201 });
    } catch (error: any) {
       if (error instanceof AuthorizationError) {
          return NextResponse.json(

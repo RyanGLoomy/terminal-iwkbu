@@ -14,7 +14,7 @@ async function requireStaffActor() {
    const actor = await getAuthenticatedActor();
    if (!actor) return null;
 
-   ensureRoleOrThrow(actor.user, actor.profile, ["staf-iw", "admin-terminal"]);
+   ensureRoleOrThrow(actor.user, actor.profile, "staf-iw");
    return actor;
 }
 

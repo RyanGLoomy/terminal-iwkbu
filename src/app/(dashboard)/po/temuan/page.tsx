@@ -1,15 +1,14 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import { getAuthenticatedActor } from "@/lib/auth/server-actor";
 import { PoFindingsPanel } from "@/components/operasional/po-findings-panel";
 import { getPoFindings } from "@/lib/supabase/queries/findings.server";
 
 export default async function POTemuanPage() {
    const supabase = await createClient();
-   const {
-      data: { user },
-   } = await supabase.auth.getUser();
-
-   if (!user) redirect("/login");
+   const actor = await getAuthenticatedActor();
+   if (!actor) redirect("/login");
+   const user = actor.user;
 
    const { data: poData } = await supabase
       .from("po")

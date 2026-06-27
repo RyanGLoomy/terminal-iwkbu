@@ -8,52 +8,6 @@ import type {
    PetugasDashboardRPC,
 } from "@/lib/supabase/queries/operasional.types";
 
-function getTodayRange() {
-   const now = new Date();
-   const start = new Date(now);
-   start.setHours(0, 0, 0, 0);
-   const end = new Date(now);
-   end.setHours(23, 59, 59, 999);
-   return {
-      start: start.toISOString(),
-      end: end.toISOString(),
-   };
-}
-
-export async function getPetugasDashboardStats(petugasId: string) {
-   const supabase = await createClient();
-   const { start, end } = getTodayRange();
-
-   const { count: masukCount } = await supabase
-      .from("kendaraan_masuk")
-      .select("id", { count: "exact", head: true })
-      .eq("petugas_id", petugasId)
-      .gte("waktu_masuk", start)
-      .lte("waktu_masuk", end);
-
-   const { count: keluarCount } = await supabase
-      .from("kendaraan_keluar")
-      .select("id", { count: "exact", head: true })
-      .eq("petugas_id", petugasId)
-      .gte("waktu_keluar", start)
-      .lte("waktu_keluar", end);
-
-   const { data: sesiAktif } = await supabase
-      .from("sesi_petugas")
-      .select("id, waktu_mulai, status")
-      .eq("petugas_id", petugasId)
-      .eq("status", "aktif")
-      .order("waktu_mulai", { ascending: false })
-      .limit(1)
-      .maybeSingle();
-
-   return {
-      masukCount: masukCount ?? 0,
-      keluarCount: keluarCount ?? 0,
-      sesiAktif,
-   };
-}
-
 export async function getAdminTerminalStats(terminalId: string) {
    const supabase = await createClient();
    const today = new Date().toISOString().slice(0, 10);
@@ -172,7 +126,7 @@ export async function getActivityLogs(params: {
    limit: number;
    offset?: number;
 }) {
-   const supabase = await createClient();
+   const supabase = createAdminClient();
 
    const { data, error } = await supabase.rpc("get_activity_logs", {
       p_start_date: params.startDate,

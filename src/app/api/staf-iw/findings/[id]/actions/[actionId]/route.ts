@@ -6,6 +6,7 @@ import {
    AuthorizationError,
 } from "@/lib/auth/requireRole.server";
 import { logActivity } from "@/lib/supabase/queries/operasional.server";
+import { createNotification } from "@/lib/supabase/queries/notifications.server";
 
 export async function PATCH(
    request: NextRequest,
@@ -19,10 +20,7 @@ export async function PATCH(
          return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
       }
 
-      ensureRoleOrThrow(actor.user, actor.profile, [
-         "staf-iw",
-         "admin-terminal",
-      ]);
+      ensureRoleOrThrow(actor.user, actor.profile, "staf-iw");
 
       const { id, actionId } = await context.params;
       const body = await request.json();
@@ -85,6 +83,21 @@ export async function PATCH(
             },
             { actorUserId: actor.user.id },
          );
+
+         const { data: f } = await admin
+            .from("findings")
+            .select("po_id, nomor_polisi")
+            .eq("id", id)
+            .single();
+         if (f?.po_id) {
+            await createNotification({
+               userId: f.po_id,
+               title: "Tindakan Diselesaikan",
+               message: `Tindakan "${existing.action_text}" untuk temuan armada ${f.nomor_polisi} telah diselesaikan.`,
+               type: "success",
+               link: "/po/temuan",
+            });
+         }
       }
 
       return NextResponse.json({ data });

@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import {
@@ -77,9 +76,9 @@ export function LoginForm() {
 
          <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
-            <div className="relative">
-               <Mail className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-               <Input
+            <div className="input input-bordered flex items-center gap-2">
+               <Mail className="size-4 shrink-0 text-muted-foreground" />
+               <input
                   id="email"
                   type="email"
                   autoComplete="email"
@@ -90,16 +89,16 @@ export function LoginForm() {
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   disabled={loading}
-                  className="pl-10"
+                  className="min-w-0 grow bg-transparent outline-none placeholder:text-base-content/40"
                />
             </div>
          </div>
 
          <div className="space-y-2">
             <Label htmlFor="password">Password</Label>
-            <div className="relative">
-               <LockKeyhole className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-               <Input
+            <div className="input input-bordered flex items-center gap-2">
+               <LockKeyhole className="size-4 shrink-0 text-muted-foreground" />
+               <input
                   id="password"
                   type={showPassword ? "text" : "password"}
                   autoComplete="current-password"
@@ -108,12 +107,12 @@ export function LoginForm() {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   disabled={loading}
-                  className="px-10"
+                  className="min-w-0 grow bg-transparent outline-none placeholder:text-base-content/40"
                />
                <button
                   type="button"
                   onClick={() => setShowPassword((s) => !s)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
+                  className="text-muted-foreground transition-colors hover:text-foreground"
                   aria-label={showPassword ? "Sembunyikan password" : "Tampilkan password"}
                   tabIndex={0}
                >

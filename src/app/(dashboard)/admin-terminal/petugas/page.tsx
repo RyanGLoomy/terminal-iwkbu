@@ -1,22 +1,11 @@
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { getAuthenticatedActor } from "@/lib/auth/server-actor";
 import { ManagementAkunPanel } from "@/components/operasional/management-akun-panel";
 
 export default async function AdminTerminalPetugasPage() {
-   const supabase = await createClient();
-   const {
-      data: { user },
-   } = await supabase.auth.getUser();
-
-   if (!user) redirect("/login");
-
-   const { data: profile } = await supabase
-      .from("profiles")
-      .select("terminal_id")
-      .eq("id", user.id)
-      .single();
-
-   if (!profile?.terminal_id) {
+   const actor = await getAuthenticatedActor();
+   if (!actor) redirect("/login");
+   if (!actor.terminalId) {
       redirect("/error");
    }
 
@@ -30,7 +19,7 @@ export default async function AdminTerminalPetugasPage() {
                Kelola akun petugas dan PIN untuk terminal Anda.
             </p>
          </div>
-         <ManagementAkunPanel terminalId={profile.terminal_id} />
+         <ManagementAkunPanel terminalId={actor.terminalId} />
       </section>
    );
 }

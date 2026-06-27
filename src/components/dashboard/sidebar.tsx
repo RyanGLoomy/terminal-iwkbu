@@ -20,7 +20,7 @@ import {
    type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { ROLES, ROLE_DISPLAY_NAMES, type RoleType } from "@/config/roles";
+import { ROLES, type RoleType } from "@/config/roles";
 import {
    Tooltip,
    TooltipContent,
@@ -69,9 +69,10 @@ const menuItems: Record<
       { href: "/staf-iw/rekonsiliasi", label: "Rekonsiliasi", icon: "Activity" },
       { href: "/staf-iw/iwkbu-sync", label: "Sync IWKBU", icon: "RefreshCw" },
       { href: "/staf-iw/master-data", label: "Master Data", icon: "Settings" },
-      { href: "/staf-iw/temuan", label: "Temuan", icon: "Shield" },
-      { href: "/staf-iw/audit-trail", label: "Audit Trail", icon: "ClipboardList" },
-   ],
+       { href: "/staf-iw/temuan", label: "Temuan", icon: "Shield" },
+       { href: "/staf-iw/laporan", label: "Laporan", icon: "FileText" },
+       { href: "/staf-iw/audit-trail", label: "Audit Trail", icon: "ClipboardList" },
+    ],
 };
 
 export const bottomNavItems: Record<
@@ -121,45 +122,50 @@ export function Sidebar({ userRole, collapsed, onToggleCollapse }: SidebarProps)
    return (
       <TooltipProvider delayDuration={collapsed ? 200 : 9999}>
          <aside
-            className={cn(
-               "fixed inset-y-0 left-0 z-40 flex flex-col border-r border-sidebar-border bg-sidebar transition-[width] duration-200",
-               collapsed ? "w-[72px]" : "w-[264px]",
-            )}
+             className={cn(
+                "fixed inset-y-0 left-0 z-40 hidden lg:flex lg:flex-col border-r border-sidebar-border bg-sidebar transition-[width] duration-200",
+                collapsed ? "w-[72px]" : "w-[264px]",
+             )}
          >
-            {/* Logo */}
+            {/* Header: logo + toggle collapse (terintegrasi, bukan floating) */}
             <div className="flex h-16 items-center gap-3 border-b border-sidebar-border px-4">
-               <div className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/10">
-                  <Bus className="size-5 text-sidebar-primary" />
-               </div>
-               {!collapsed && (
-                  <div className="min-w-0">
-                     <span className="block truncate text-sm font-bold leading-tight text-sidebar-foreground">
-                        IWKBU Terminal
-                     </span>
-                     <span className="text-[11px] font-semibold uppercase tracking-wider text-sidebar-foreground/50">
-                        Jasa Raharja
-                     </span>
-                  </div>
+               {collapsed ? (
+                  <button
+                     type="button"
+                     onClick={onToggleCollapse}
+                     className="btn btn-ghost btn-square btn-sm mx-auto"
+                     aria-label="Lebarkan sidebar"
+                  >
+                     <PanelLeftOpen className="size-5" />
+                  </button>
+               ) : (
+                  <>
+                     <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                        <Bus className="size-5" />
+                     </div>
+                     <div className="min-w-0 flex-1">
+                        <span className="block truncate text-sm font-bold leading-tight text-sidebar-foreground">
+                           IWKBU Terminal
+                        </span>
+                        <span className="text-[11px] font-medium uppercase tracking-wider text-sidebar-foreground/50">
+                           Jasa Raharja
+                        </span>
+                     </div>
+                     <button
+                        type="button"
+                        onClick={onToggleCollapse}
+                        className="btn btn-ghost btn-square btn-sm text-sidebar-foreground/70 hover:text-sidebar-foreground"
+                        aria-label="Persempit sidebar"
+                     >
+                        <PanelLeftClose className="size-4" />
+                     </button>
+                  </>
                )}
             </div>
 
-            {/* Collapse toggle */}
-            <button
-               type="button"
-               onClick={onToggleCollapse}
-               className="absolute -right-3 top-20 z-50 flex size-6 items-center justify-center rounded-full border border-border bg-card text-muted-foreground shadow-sm transition-colors hover:text-foreground"
-               aria-label={collapsed ? "Lebarkan sidebar" : "Persempit sidebar"}
-            >
-               {collapsed ? (
-                  <PanelLeftOpen className="size-3.5" />
-               ) : (
-                  <PanelLeftClose className="size-3.5" />
-               )}
-            </button>
-
             {/* Nav */}
             <nav
-               className="flex-1 space-y-1 overflow-y-auto overflow-x-hidden px-3 py-4"
+               className="flex flex-col flex-1 gap-1 overflow-y-auto overflow-x-hidden px-3 py-4"
                aria-label="Menu utama"
             >
                {items.map((item) => {
@@ -172,7 +178,7 @@ export function Sidebar({ userRole, collapsed, onToggleCollapse }: SidebarProps)
                         aria-current={active ? "page" : undefined}
                         className={cn(
                            "sidebar-link group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors",
-                           collapsed && "justify-center px-0",
+                           collapsed && "justify-center w-12 px-0",
                            active
                               ? "is-active bg-sidebar-primary/15 text-sidebar-primary"
                               : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
@@ -196,26 +202,10 @@ export function Sidebar({ userRole, collapsed, onToggleCollapse }: SidebarProps)
                      );
                   }
 
-                  return linkContent;
-               })}
-            </nav>
-
-            {/* Role badge */}
-            <div className="border-t border-sidebar-border px-4 py-3">
-               {!collapsed ? (
-                  <div className="flex items-center gap-2 text-xs">
-                     <span className="size-2 rounded-full bg-sidebar-primary" />
-                     <span className="font-semibold text-sidebar-foreground/50">
-                        {ROLE_DISPLAY_NAMES[userRole]}
-                     </span>
-                  </div>
-               ) : (
-                  <div className="flex justify-center">
-                     <span className="size-2 rounded-full bg-sidebar-primary" />
-                  </div>
-               )}
-            </div>
-         </aside>
+                   return linkContent;
+                })}
+             </nav>
+          </aside>
       </TooltipProvider>
    );
 }

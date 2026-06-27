@@ -6,6 +6,7 @@ import {
    AuthorizationError,
 } from "@/lib/auth/requireRole.server";
 import { logActivity } from "@/lib/supabase/queries/operasional.server";
+import { createNotification } from "@/lib/supabase/queries/notifications.server";
 
 export async function POST(
    request: NextRequest,
@@ -17,10 +18,7 @@ export async function POST(
          return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
       }
 
-      ensureRoleOrThrow(actor.user, actor.profile, [
-         "staf-iw",
-         "admin-terminal",
-      ]);
+      ensureRoleOrThrow(actor.user, actor.profile, "staf-iw");
 
       const { id } = await context.params;
       const body = await request.json();
@@ -35,11 +33,11 @@ export async function POST(
 
       const admin = createAdminClient();
 
-      const { data: finding } = await admin
-         .from("findings")
-         .select("id, status")
-         .eq("id", id)
-         .single();
+       const { data: finding } = await admin
+          .from("findings")
+          .select("id, status, po_id, judul, nomor_polisi")
+          .eq("id", id)
+          .single();
 
       if (!finding) {
          return NextResponse.json(
@@ -73,8 +71,18 @@ export async function POST(
             action_id: data.id,
             action_text: data.action_text,
          },
-         { actorUserId: actor.user.id },
-      );
+          { actorUserId: actor.user.id },
+       );
+
+       if (finding?.po_id) {
+          await createNotification({
+             userId: finding.po_id,
+             title: "Tindak Lanjut Ditambahkan",
+             message: `Tindakan baru untuk temuan armada ${finding.nomor_polisi}: ${data.action_text}`,
+             type: "info",
+             link: "/po/temuan",
+          });
+       }
 
       return NextResponse.json({ data }, { status: 201 });
    } catch (error: any) {

@@ -38,6 +38,15 @@ export async function PATCH(
          );
       }
 
+      // Per spec (UC-13): Staf IW hanya mengelola akun admin-terminal & staf-iw.
+      const MANAGEABLE_ROLES = ["admin-terminal", "staf-iw"];
+      if (!MANAGEABLE_ROLES.includes(newRoleName)) {
+         return NextResponse.json(
+            { message: "Role tidak diizinkan untuk dikelola oleh Staf IW." },
+            { status: 400 },
+         );
+      }
+
       const admin = createAdminClient();
 
       const { data: roleRow } = await admin

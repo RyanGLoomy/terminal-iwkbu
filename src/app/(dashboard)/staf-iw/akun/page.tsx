@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { ManagementAkunPanel } from "@/components/operasional/management-akun-panel";
+import { AdminTerminalAccountsPanel } from "@/components/operasional/admin-terminal-accounts-panel";
 import { RoleManagementPanel } from "@/components/operasional/role-management-panel";
 import { getAuthenticatedActor } from "@/lib/auth/server-actor";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -24,11 +24,7 @@ export default async function StafIwAkunPage({
 
    const terminalOptions = terminals ?? [];
    const sp = await searchParams;
-   const requestedTerminal = typeof sp.terminalId === "string" ? sp.terminalId : null;
-   const initialTerminalId =
-      requestedTerminal && terminalOptions.some((t) => t.id === requestedTerminal)
-         ? requestedTerminal
-         : terminalOptions[0]?.id ?? "";
+   void sp;
 
    return (
       <section className="space-y-6">
@@ -37,8 +33,9 @@ export default async function StafIwAkunPage({
                 Manajemen Akun
              </h1>
              <p className="text-sm text-muted-foreground mt-1 max-w-2xl">
-                Kelola akun pengguna sistem, verifikasi PO, serta pengawasan
-                petugas loket untuk seluruh terminal.
+                Kelola akun <strong>Admin Terminal</strong> (buat, nonaktifkan,
+                reset password), verifikasi pendaftaran PO, serta atur peran
+                pengguna sistem (admin terminal &amp; staf IW).
              </p>
           </div>
 
@@ -47,10 +44,7 @@ export default async function StafIwAkunPage({
                 Belum ada data terminal untuk dikelola.
              </div>
           ) : (
-              <ManagementAkunPanel
-                 terminalId={initialTerminalId}
-                 terminalOptions={terminalOptions}
-              />
+              <AdminTerminalAccountsPanel terminalOptions={terminalOptions} />
           )}
 
           <RoleManagementPanel />
