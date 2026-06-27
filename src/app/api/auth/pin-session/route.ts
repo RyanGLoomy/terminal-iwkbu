@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { sanitizeDbError } from "@/lib/db-error";
 import { getAuthenticatedActor } from "@/lib/auth/server-actor";
 
 function isExpired(isoDate: string) {
@@ -26,7 +27,7 @@ export async function GET() {
          .maybeSingle();
 
       if (error) {
-         return NextResponse.json({ message: error.message }, { status: 500 });
+         return NextResponse.json({ message: sanitizeDbError(error) }, { status: 500 });
       }
 
       if (!data || isExpired(data.expires_at)) {
@@ -109,7 +110,7 @@ export async function DELETE() {
          .eq("user_id", actor.user.id);
 
       if (error) {
-         return NextResponse.json({ message: error.message }, { status: 500 });
+         return NextResponse.json({ message: sanitizeDbError(error) }, { status: 500 });
       }
 
       return NextResponse.json({ message: "Sesi PIN dihapus." });

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { sanitizeDbError } from "@/lib/db-error";
 import { createClient } from "@/lib/supabase/server";
 import { getAuthenticatedActor } from "@/lib/auth/server-actor";
 import { logActivity } from "@/lib/supabase/queries/operasional.server";
@@ -41,7 +42,7 @@ export async function PATCH(request: NextRequest) {
          .eq("id", actor.user.id);
 
       if (error) {
-         return NextResponse.json({ message: error.message }, { status: 500 });
+         return NextResponse.json({ message: sanitizeDbError(error) }, { status: 500 });
       }
 
       await logActivity(

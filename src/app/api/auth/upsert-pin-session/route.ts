@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { sanitizeDbError } from "@/lib/db-error";
 import { getAuthenticatedActor } from "@/lib/auth/server-actor";
 import { ensureRoleOrThrow } from "@/lib/auth/requireRole.server";
 
@@ -81,7 +82,7 @@ export async function POST(request: Request) {
          .single();
 
       if (error) {
-         return NextResponse.json({ message: error.message }, { status: 500 });
+         return NextResponse.json({ message: sanitizeDbError(error) }, { status: 500 });
       }
 
       return NextResponse.json({ session: data });

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { sanitizeDbError } from "@/lib/db-error";
 import { getAuthenticatedActor } from "@/lib/auth/server-actor";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { logActivity } from "@/lib/supabase/queries/operasional.server";
@@ -29,7 +30,7 @@ export async function GET() {
 
       if (error) {
          return NextResponse.json(
-            { message: error.message },
+            { message: sanitizeDbError(error) },
             { status: 500 },
          );
       }

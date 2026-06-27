@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { sanitizeDbError } from "@/lib/db-error";
 import { getAuthenticatedActor } from "@/lib/auth/server-actor";
 import {
    ensureRoleOrThrow,
@@ -30,7 +31,7 @@ export async function GET() {
    } catch (error: any) {
       if (error instanceof AuthorizationError) {
          return NextResponse.json(
-            { message: error.message },
+            { message: sanitizeDbError(error) },
             { status: 403 },
          );
       }
@@ -63,7 +64,7 @@ export async function POST() {
    } catch (error: any) {
       if (error instanceof AuthorizationError) {
          return NextResponse.json(
-            { message: error.message },
+            { message: sanitizeDbError(error) },
             { status: 403 },
          );
       }

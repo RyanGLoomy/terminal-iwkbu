@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { sanitizeDbError } from "@/lib/db-error";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getAuthenticatedActor } from "@/lib/auth/server-actor";
 import {
@@ -54,7 +55,7 @@ export async function GET(
 
       if (error) {
          return NextResponse.json(
-            { message: error.message },
+            { message: sanitizeDbError(error) },
             { status: 500 },
          );
       }
@@ -63,7 +64,7 @@ export async function GET(
    } catch (error: any) {
       if (error instanceof AuthorizationError) {
          return NextResponse.json(
-            { message: error.message },
+            { message: sanitizeDbError(error) },
             { status: 403 },
          );
       }

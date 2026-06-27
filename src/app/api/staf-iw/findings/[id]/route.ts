@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { sanitizeDbError } from "@/lib/db-error";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getAuthenticatedActor } from "@/lib/auth/server-actor";
 import {
@@ -118,7 +119,7 @@ export async function PATCH(
          .single();
 
       if (error) {
-         return NextResponse.json({ message: error.message }, { status: 500 });
+         return NextResponse.json({ message: sanitizeDbError(error) }, { status: 500 });
       }
 
       if (isReopening) {
@@ -171,7 +172,7 @@ export async function PATCH(
    } catch (error: any) {
       if (error instanceof AuthorizationError) {
          return NextResponse.json(
-            { message: error.message },
+            { message: sanitizeDbError(error) },
             { status: 403 },
          );
       }
