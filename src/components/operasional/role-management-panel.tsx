@@ -176,6 +176,13 @@ export function RoleManagementPanel() {
                                                  {ROLE_DISPLAY_NAMES[r as keyof typeof ROLE_DISPLAY_NAMES] ?? r}
                                               </SelectItem>
                                            ))}
+                                           {/* Role po & loket: read-only (ditetapkan sistem, bukan Staf IW) */}
+                                           <SelectItem value="po" disabled>
+                                              Perusahaan Otobus
+                                           </SelectItem>
+                                           <SelectItem value="loket" disabled>
+                                              Loket Terminal
+                                           </SelectItem>
                                         </SelectContent>
                                      </Select>
                                  </td>
