@@ -9,6 +9,10 @@ import {
    clearAttempts,
    formatRetryAfter,
 } from "@/lib/auth/rate-limiter";
+import {
+   validatePasswordStrength,
+   isPasswordLeaked,
+} from "@/lib/auth/password-policy";
 
 const PWD_LIMIT = { maxAttempts: 5, lockoutMs: 15 * 60 * 1000 };
 
@@ -55,9 +59,19 @@ export async function POST(request: Request) {
          );
       }
 
-      if (newPassword.length < 6) {
+      const strength = validatePasswordStrength(newPassword);
+      if (!strength.ok) {
+         return NextResponse.json({ message: strength.message }, { status: 400 });
+      }
+
+      // AUTH-02 mitigation: reject passwords known to be leaked (HIBP).
+      // Fail-open on HIBP outage; the strength check above still applies.
+      if (await isPasswordLeaked(newPassword)) {
          return NextResponse.json(
-            { message: "Password baru minimal 6 karakter." },
+            {
+               message:
+                  "Password baru ditemukan dalam data kebocoran publik (HaveIBeenPwned). Mohon gunakan password lain.",
+            },
             { status: 400 },
          );
       }

@@ -19,11 +19,16 @@ import {
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2, AlertCircle, CheckCircle, Building2, LockKeyhole } from "lucide-react";
 import { registerPO } from "@/lib/supabase/queries/verification.client";
+import {
+   passwordSchema,
+   PASSWORD_REQUIREMENTS,
+   isPasswordLeaked,
+} from "@/lib/auth/password-policy";
 
 const formSchema = z
    .object({
       email: z.string().email("Email tidak valid"),
-      password: z.string().min(6, "Password minimal 6 karakter"),
+      password: passwordSchema,
       confirmPassword: z.string(),
       kode_po: z.string().min(3, "Kode PO minimal 3 karakter"),
       nama_perusahaan: z.string().min(3, "Nama perusahaan wajib diisi"),
@@ -35,7 +40,7 @@ const formSchema = z
    .refine((data) => data.password === data.confirmPassword, {
       message: "Password tidak cocok",
       path: ["confirmPassword"],
-    });
+   });
 
 function FieldError({ message }: { message?: string }) {
    if (!message) return null;
@@ -64,11 +69,22 @@ export function RegistrasiPOForm() {
       },
    });
 
+   const passwordValue = form.watch("password");
+
    async function onSubmit(values: z.infer<typeof formSchema>) {
       setLoading(true);
       setError(null);
 
       try {
+         // AUTH-02 mitigation: reject passwords known to be leaked (HIBP).
+         // Fail-open on HIBP outage; the strong-policy check still applies.
+         if (await isPasswordLeaked(values.password)) {
+            setError(
+               "Password ini ditemukan dalam data kebocoran publik (HaveIBeenPwned). Mohon gunakan password lain.",
+            );
+            return;
+         }
+
          await registerPO({
             email: values.email,
             password: values.password,
@@ -203,19 +219,41 @@ export function RegistrasiPOForm() {
                      <Label htmlFor="confirmPassword">
                         Konfirmasi Password *
                      </Label>
-                      <Input
+                       <Input
                          id="confirmPassword"
                          type="password"
                          autoComplete="new-password"
                          aria-invalid={!!form.formState.errors.confirmPassword}
                          {...form.register("confirmPassword")}
                       />
-                       <FieldError message={form.formState.errors.confirmPassword?.message} />
-                    </div>
-                 </div>
+                        <FieldError message={form.formState.errors.confirmPassword?.message} />
+                     </div>
+                  </div>
 
-               <div className="space-y-2">
-                  <Label htmlFor="nama_pemilik">Nama Pemilik/Direktur</Label>
+                  <ul
+                     className="grid grid-cols-1 gap-1.5 rounded-2xl border border-border/70 bg-card/50 px-4 py-3 sm:grid-cols-2"
+                     aria-describedby="password"
+                  >
+                     {PASSWORD_REQUIREMENTS.map((req) => {
+                        const ok = req.test(passwordValue || "");
+                        return (
+                           <li
+                              key={req.label}
+                              className={`flex items-center gap-2 text-xs font700 ${
+                                 ok ? "text-brand-green dark:text-emerald-400" : "text-muted-foreground"
+                              }`}
+                           >
+                              <CheckCircle
+                                 className={`h-3.5 w-3.5 shrink-0 ${ok ? "opacity-100" : "opacity-30"}`}
+                              />
+                              {req.label}
+                           </li>
+                        );
+                     })}
+                  </ul>
+
+                  <div className="space-y-2">
+                     <Label htmlFor="nama_pemilik">Nama Pemilik/Direktur</Label>
                   <Input id="nama_pemilik" {...form.register("nama_pemilik")} />
                </div>
 
