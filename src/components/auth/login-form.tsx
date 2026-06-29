@@ -76,7 +76,7 @@ export function LoginForm() {
 
          <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
-            <div className="input input-bordered flex h-12 w-full items-center gap-2">
+            <div className="flex h-12 w-full items-center gap-2 rounded-lg border border-base-300 bg-base-100 px-3 transition-colors focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20">
                 <Mail className="size-4 shrink-0 text-base-content/70" aria-hidden="true" />
                 <input
                    id="email"
@@ -94,11 +94,11 @@ export function LoginForm() {
                    className="min-w-0 grow bg-transparent text-sm outline-none placeholder:text-base-content/40"
                 />
              </div>
-         </div>
+          </div>
 
-         <div className="space-y-2">
+          <div className="space-y-2">
             <Label htmlFor="password">Password</Label>
-            <div className="input input-bordered flex h-12 w-full items-center gap-2">
+            <div className="flex h-12 w-full items-center gap-2 rounded-lg border border-base-300 bg-base-100 px-3 transition-colors focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20">
                 <LockKeyhole className="size-4 shrink-0 text-base-content/70" aria-hidden="true" />
                 <input
                    id="password"
