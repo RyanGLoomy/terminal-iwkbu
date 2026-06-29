@@ -9,6 +9,7 @@ export interface Credential {
   role: string;
   fullName: string;
   pin?: string;
+  userId?: string;
 }
 
 export function loadCredentials(): Credential[] {

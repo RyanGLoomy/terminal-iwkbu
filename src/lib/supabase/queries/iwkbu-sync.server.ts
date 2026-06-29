@@ -107,6 +107,9 @@ export async function executeIwkbuSync(params: {
       const createdBy = params.initiatedBy ?? SYSTEM_USER_ID;
       let findingsCreated = 0;
       let findingsUpdated = 0;
+      // Agregasi error persist (lookup/update/insert) agar kegagalan parsial
+      // tidak lenyap — sebelumnya hanya console.error & sync tetap "success".
+      const persistErrors: string[] = [];
 
       // Batch lookup (1 query, bukan N): semua finding OPEN rekonsiliasi untuk armada terkait.
       const armadaIds = findings.map((f) => f.armada_id);
@@ -118,9 +121,10 @@ export async function executeIwkbuSync(params: {
             .in("armada_id", armadaIds)
             .eq("source_type", "rekonsiliasi")
             .eq("status", "open");
-         if (lookupError) {
-            console.error("[IWKBU Sync] finding batch lookup error:", lookupError.message);
-         } else {
+          if (lookupError) {
+             console.error("[IWKBU Sync] finding batch lookup error:", lookupError.message);
+             persistErrors.push(`lookup: ${lookupError.message}`);
+          } else {
             for (const row of existingRows as { id: string; armada_id: string }[]) {
                existingByArmada.set(row.armada_id, row.id);
             }
@@ -140,11 +144,12 @@ export async function executeIwkbuSync(params: {
                   updated_at: nowIso,
                })
                .eq("id", existingId);
-            if (updError) {
-               console.error("[IWKBU Sync] finding update error:", updError.message);
-            } else {
-               findingsUpdated++;
-            }
+             if (updError) {
+                console.error("[IWKBU Sync] finding update error:", updError.message);
+                persistErrors.push(`update ${pf.armada_id}: ${updError.message}`);
+             } else {
+                findingsUpdated++;
+             }
          } else {
             const { error: insError } = await admin.from("findings").insert({
                po_id: pf.po_id,
@@ -157,11 +162,12 @@ export async function executeIwkbuSync(params: {
                status: "open",
                created_by: createdBy,
             });
-            if (insError) {
-               console.error("[IWKBU Sync] finding insert error:", insError.message);
-            } else {
-               findingsCreated++;
-            }
+             if (insError) {
+                console.error("[IWKBU Sync] finding insert error:", insError.message);
+                persistErrors.push(`insert ${pf.armada_id}: ${insError.message}`);
+             } else {
+                findingsCreated++;
+             }
          }
       }
 
@@ -176,11 +182,13 @@ export async function executeIwkbuSync(params: {
          ).length,
          blocked: reconRows.filter((row) => row.reconciliation_status === "blocked")
             .length,
-         findings_created: findingsCreated,
-         findings_updated: findingsUpdated,
-         degraded: params.degraded === true,
-         finished_at: nowIso,
-      };
+          findings_created: findingsCreated,
+          findings_updated: findingsUpdated,
+          degraded: params.degraded === true,
+          partial_failure: persistErrors.length > 0,
+          persist_errors: persistErrors.slice(0, 20),
+          finished_at: nowIso,
+       };
 
       await admin
          .from("iwkbu_sync_runs")
