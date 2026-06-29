@@ -18,7 +18,7 @@ import {
    type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { ROLES, ROLE_DISPLAY_NAMES, type RoleType } from "@/config/roles";
+import { ROLES, DEFAULT_ROUTES, ROLE_DISPLAY_NAMES, type RoleType } from "@/config/roles";
 import {
    Sheet,
    SheetContent,
@@ -53,6 +53,11 @@ export function BottomNavigation({ userRole }: BottomNavigationProps) {
 
    const isActive = (href: string) => {
       const normalized = pathname?.replace(/\/+$/, "") || "";
+      // Dashboard route: exact match only (bukan startsWith) agar tak selalu
+      // menyala di child page (/po/temuan dll).
+      if (href === DEFAULT_ROLES[userRole]) {
+         return normalized === href;
+      }
       return normalized === href || normalized.startsWith(href + "/");
    };
 
