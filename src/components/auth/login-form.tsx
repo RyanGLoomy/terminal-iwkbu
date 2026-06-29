@@ -78,7 +78,7 @@ export function LoginForm() {
          <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <div className="relative">
-               <Mail className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-base-content/50" aria-hidden="true" />
+               <Mail className="pointer-events-none absolute left-3 top-1/2 z-10 size-4 -translate-y-1/2 text-base-content/50" aria-hidden="true" />
                <Input
                   id="email"
                   type="email"
@@ -100,7 +100,7 @@ export function LoginForm() {
          <div className="space-y-2">
             <Label htmlFor="password">Password</Label>
             <div className="relative">
-               <LockKeyhole className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-base-content/50" aria-hidden="true" />
+               <LockKeyhole className="pointer-events-none absolute left-3 top-1/2 z-10 size-4 -translate-y-1/2 text-base-content/50" aria-hidden="true" />
                <Input
                   id="password"
                   name="password"
@@ -116,7 +116,7 @@ export function LoginForm() {
                <button
                   type="button"
                   onClick={() => setShowPassword((s) => !s)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-base-content/50 transition-colors hover:text-base-content"
+                   className="absolute right-3 top-1/2 z-10 -translate-y-1/2 text-base-content/50 transition-colors hover:text-base-content"
                   aria-label={showPassword ? "Sembunyikan password" : "Tampilkan password"}
                   tabIndex={0}
                >
