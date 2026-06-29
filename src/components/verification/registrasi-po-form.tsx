@@ -132,7 +132,7 @@ export function RegistrasiPOForm() {
    return (
       <Card className="command-panel rounded-3xl">
          <CardHeader className="border-b border-base-300 pb-5">
-            <div className="mb-3 inline-flex w-fit rounded-full border border-brand-sky/20 bg-secondary px-3 py-1 text-xs font800 uppercase tracking-[0.12em] text-brand-navy dark:text-brand-sky">
+             <div className="mb-3 inline-flex w-fit rounded-full border border-secondary-content/20 bg-secondary px-3 py-1 text-xs font800 uppercase tracking-[0.12em] text-secondary-content">
                Data pengajuan
             </div>
             <CardTitle>Form Registrasi PO</CardTitle>
@@ -150,13 +150,13 @@ export function RegistrasiPOForm() {
                    </Alert>
                 )}
 
-                <div className="flex items-center gap-3 rounded-2xl border border-brand-sky/20 bg-secondary/70 px-4 py-3">
-                   <Building2 className="h-5 w-5 text-brand-sky" aria-hidden="true" />
-                   <div>
-                      <p className="text-sm font800 text-base-content">Identitas perusahaan</p>
-                      <p className="text-xs text-base-content/70">Data ini digunakan untuk proses verifikasi PO.</p>
-                   </div>
-                </div>
+                 <div className="flex items-center gap-3 rounded-2xl border border-secondary-content/20 bg-secondary px-4 py-3">
+                    <Building2 className="h-5 w-5 text-secondary-content/80" aria-hidden="true" />
+                    <div>
+                       <p className="text-sm font800 text-secondary-content">Identitas perusahaan</p>
+                       <p className="text-xs text-secondary-content/70">Data ini digunakan untuk proses verifikasi PO.</p>
+                    </div>
+                 </div>
 
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <div className="space-y-2">

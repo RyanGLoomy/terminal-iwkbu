@@ -380,7 +380,7 @@ export default function ProfilePage() {
                            Loket: {profile.full_name || profile.email}
                         </p>
                      )}
-                     <span className="inline-block mt-1.5 rounded-md bg-primary text-white dark:bg-primary dark:text-white text-xs font-medium px-3 py-1">
+                     <span className="inline-block mt-1.5 rounded-md bg-primary text-primary-content text-xs font-medium px-3 py-1">
                         {isPetugas && petugasIdentity
                            ? "Petugas Terminal"
                            : (profile.roleName ?? "Tidak diketahui")}

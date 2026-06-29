@@ -52,9 +52,9 @@ export default function RegistrasiPOPage() {
 
             <div className="hidden grid-cols-2 gap-3 pt-2 sm:grid">
               <div className="rounded-2xl border border-brand-sky/20 bg-secondary p-4">
-                <Building2 className="mb-4 h-5 w-5 text-brand-sky" aria-hidden="true" />
-                <p className="text-xs font800 uppercase tracking-[0.1em] text-base-content/70">Data</p>
-                <p className="mt-1 text-sm font800 text-base-content">Perusahaan</p>
+                <Building2 className="mb-4 h-5 w-5 text-secondary-content/80" aria-hidden="true" />
+                <p className="text-xs font800 uppercase tracking-[0.1em] text-secondary-content/70">Data</p>
+                <p className="mt-1 text-sm font800 text-secondary-content">Perusahaan</p>
               </div>
               <div className="rounded-2xl border border-brand-green/25 bg-brand-green/10 p-4">
                 <FileCheck2 className="mb-4 h-5 w-5 text-brand-green" aria-hidden="true" />
