@@ -137,7 +137,7 @@ async function ensurePinSession(supabase, userId, petugasTerminalId, petugasNama
 async function ensurePO(supabase, userId) {
   const { data: existing } = await supabase.from("po").select("id").eq("id", userId).maybeSingle();
   if (existing) return;
-  await supabase.from("po").insert({ id: userId, kode_po: "POTST", nama_perusahaan: "PT PO Demo Playwright", alamat: "Jl. Test No. 1", status_verifikasi: "aktif" });
+  await supabase.from("po").insert({ id: userId, kode_po: "E2EPO", nama_perusahaan: "PT PO Demo Playwright", alamat: "Jl. Test No. 1", status_verifikasi: "aktif" });
 }
 
 async function ensureArmada(supabase, poUserId) {

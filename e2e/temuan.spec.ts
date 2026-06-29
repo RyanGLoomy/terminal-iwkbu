@@ -23,21 +23,21 @@ test.beforeAll(() => {
 test("staf-iw membuat Temuan untuk PO tertentu", async ({ request }) => {
    await loginAs({ request, goto: async () => {} } as any, stafCred.email, stafCred.password);
 
-   // temukan PO test (kode POTST / nama mengandung "Playwright")
-   const poRes = await request.get("/api/staf-iw/po?status=aktif");
-   expect(poRes.ok()).toBeTruthy();
-   const poBody = await poRes.json();
-   const targetPo =
-      (poBody.data as any[]).find(
-         (p) => p.kode_po === "POTST" || (p.nama_perusahaan ?? "").includes("Playwright"),
-      ) ?? poBody.data[0];
-   expect(targetPo, "test PO harus ada").toBeTruthy();
-   targetPoId = targetPo.id;
+   // Dapatkan PO ID via profile PO user (endpoint /api/staf-iw/po tidak ada).
+   await loginAs({ request, goto: async () => {} } as any, poCred.email, poCred.password);
+   const profRes = await request.get("/api/profile");
+   expect(profRes.ok()).toBeTruthy();
+   const prof = await profRes.json();
+   targetPoId = prof.data?.id ?? prof.id;
+   expect(targetPoId, "PO id dari profile").toBeTruthy();
+
+   // Login kembali sebagai staf-iw.
+   await loginAs({ request, goto: async () => {} } as any, stafCred.email, stafCred.password);
 
    const mark = `E2E-${Date.now()}`;
    const createRes = await request.post("/api/staf-iw/findings", {
       data: {
-         po_id: targetPo.id,
+         po_id: targetPoId,
          nomor_polisi: "B 1234 CD",
          judul: mark,
          deskripsi: "uji interaksi role",

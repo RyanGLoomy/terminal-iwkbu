@@ -26,13 +26,13 @@ test("PO dashboard shows PO identity", async ({ page }) => {
   await loginAs(page, cred.email, cred.password);
   await navigateToDashboard(page, "/po", "po");
 
-  await expect(page.getByText(/POTST/)).toBeVisible();
+  await expect(page.getByText(/E2EPO/)).toBeVisible();
   await expect(page.getByText(/PT PO Demo Playwright/)).toBeVisible();
 });
 
 test("PO can access Temuan & Klarifikasi page", async ({ page }) => {
   await loginAs(page, cred.email, cred.password);
-  await page.goto("/po/temuan", { waitUntil: "networkidle" });
+  await page.goto("/po/temuan", { waitUntil: "domcontentloaded" });
 
   await expect(page.locator("h1")).toContainText("Temuan & Klarifikasi");
 });
@@ -80,7 +80,7 @@ test("PO armada contains expected fields", async ({ request }) => {
 
 test("PO can access rekonsiliasi page", async ({ page }) => {
   await loginAs(page, cred.email, cred.password);
-  await page.goto("/po/rekonsiliasi", { waitUntil: "networkidle" });
+  await page.goto("/po/rekonsiliasi", { waitUntil: "domcontentloaded" });
   expect(page.url()).toContain("/po/rekonsiliasi");
 });
 

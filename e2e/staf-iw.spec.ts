@@ -46,13 +46,13 @@ test("Staf IW sidebar shows all menu items", async ({ page }) => {
 
 test("Staf IW can access Rekonsiliasi page", async ({ page }) => {
   await loginAs(page, cred.email, cred.password);
-  await page.goto("/staf-iw/rekonsiliasi", { waitUntil: "networkidle" });
+  await page.goto("/staf-iw/rekonsiliasi", { waitUntil: "domcontentloaded" });
   expect(page.url()).toContain("/staf-iw/rekonsiliasi");
 });
 
 test("Staf IW can access Audit Trail page", async ({ page }) => {
   await loginAs(page, cred.email, cred.password);
-  await page.goto("/staf-iw/audit-trail", { waitUntil: "networkidle" });
+  await page.goto("/staf-iw/audit-trail", { waitUntil: "domcontentloaded" });
   expect(page.url()).toContain("/staf-iw/audit-trail");
 });
 
@@ -102,13 +102,13 @@ test("Staf IW can list periode rekonsiliasi via API", async ({ request }) => {
 
 test("Staf IW can access IWKBU sync page", async ({ page }) => {
   await loginAs(page, cred.email, cred.password);
-  await page.goto("/staf-iw/iwkbu-sync", { waitUntil: "networkidle" });
+  await page.goto("/staf-iw/iwkbu-sync", { waitUntil: "domcontentloaded" });
   expect(page.url()).toContain("/staf-iw/iwkbu-sync");
 });
 
 test("Staf IW can access Akun page", async ({ page }) => {
   await loginAs(page, cred.email, cred.password);
-  await page.goto("/staf-iw/akun", { waitUntil: "networkidle" });
+  await page.goto("/staf-iw/akun", { waitUntil: "domcontentloaded" });
   expect(page.url()).toContain("/staf-iw/akun");
 });
 

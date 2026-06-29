@@ -36,25 +36,25 @@ test("Admin Terminal sidebar shows all menu items", async ({ page }) => {
 
 test("Admin Terminal can access Manajemen Akun", async ({ page }) => {
   await loginAs(page, cred.email, cred.password);
-  await page.goto("/admin-terminal/petugas", { waitUntil: "networkidle" });
+  await page.goto("/admin-terminal/petugas", { waitUntil: "domcontentloaded" });
   expect(page.url()).toContain("/admin-terminal/petugas");
 });
 
 test("Admin Terminal can access Rekap Data", async ({ page }) => {
   await loginAs(page, cred.email, cred.password);
-  await page.goto("/admin-terminal/rekap", { waitUntil: "networkidle" });
+  await page.goto("/admin-terminal/rekap", { waitUntil: "domcontentloaded" });
   expect(page.url()).toContain("/admin-terminal/rekap");
 });
 
 test("Admin Terminal can access Rekap Sesi", async ({ page }) => {
   await loginAs(page, cred.email, cred.password);
-  await page.goto("/admin-terminal/sesi", { waitUntil: "networkidle" });
+  await page.goto("/admin-terminal/sesi", { waitUntil: "domcontentloaded" });
   expect(page.url()).toContain("/admin-terminal/sesi");
 });
 
 test("Admin Terminal can access Laporan", async ({ page }) => {
   await loginAs(page, cred.email, cred.password);
-  await page.goto("/admin-terminal/laporan", { waitUntil: "networkidle" });
+  await page.goto("/admin-terminal/laporan", { waitUntil: "domcontentloaded" });
   expect(page.url()).toContain("/admin-terminal/laporan");
 });
 
@@ -68,7 +68,7 @@ test("Admin Terminal dashboard has date range pickers", async ({ page }) => {
 
 test("Admin Terminal can access Master Data page", async ({ page }) => {
   await loginAs(page, cred.email, cred.password);
-  await page.goto("/admin-terminal/master-data", { waitUntil: "networkidle" });
+  await page.goto("/admin-terminal/master-data", { waitUntil: "domcontentloaded" });
   expect(page.url()).toContain("/admin-terminal/master-data");
 });
 

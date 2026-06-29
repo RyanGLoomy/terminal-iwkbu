@@ -37,7 +37,7 @@ export async function navigateToDashboard(
   route: string,
   expectedRole: string,
 ) {
-  await page.goto(route, { waitUntil: "networkidle" });
+  await page.goto(route, { waitUntil: "domcontentloaded" });
   await page.waitForLoadState("domcontentloaded");
   expect(page.url()).toContain(route);
 }

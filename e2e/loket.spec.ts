@@ -34,21 +34,21 @@ test("Loket sidebar shows menu items", async ({ page }) => {
 
 test("Loket can access PIN page", async ({ page }) => {
   await loginAs(page, cred.email, cred.password);
-  await page.goto("/loket/pin", { waitUntil: "networkidle" });
+  await page.goto("/loket/pin", { waitUntil: "domcontentloaded" });
 
   await expect(page.getByText(/Verifikasi PIN/)).toBeVisible();
 });
 
 test("Loket can access Pencatatan page", async ({ page }) => {
   await loginAs(page, cred.email, cred.password);
-  await page.goto("/loket/pencatatan", { waitUntil: "networkidle" });
+  await page.goto("/loket/pencatatan", { waitUntil: "domcontentloaded" });
 
   expect(page.url()).toContain("/loket/pencatatan");
 });
 
 test("Loket can access Riwayat page", async ({ page }) => {
   await loginAs(page, cred.email, cred.password);
-  await page.goto("/loket/riwayat", { waitUntil: "networkidle" });
+  await page.goto("/loket/riwayat", { waitUntil: "domcontentloaded" });
 
   expect(page.url()).toContain("/loket/riwayat");
 });
