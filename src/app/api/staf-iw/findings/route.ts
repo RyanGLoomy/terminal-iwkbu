@@ -44,8 +44,18 @@ export async function POST(request: Request) {
       const nomorPolisiInput =
          (body?.nomorPolisi as string | undefined)?.trim() ??
          (body?.nomor_polisi as string | undefined)?.trim();
-      const sourceType =
-         (body?.sourceType as string | undefined)?.trim() ?? "rekonsiliasi";
+       const sourceTypeRaw = (body?.source_type ?? body?.sourceType) as
+         | string
+         | undefined;
+       const sourceTypeCandidate = sourceTypeRaw?.trim() ?? "";
+       // Baca snake_case ATAU camelCase; validasi enum; default "manual" karena
+       // route ini adalah jalur pembuatan temuan manual oleh Staf IW. Sebelumnya
+       // hanya body.sourceType (camelCase) yang dibaca -> field source_type
+       // (snake_case) diabaikan & jatuh ke default "rekonsiliasi".
+       const ALLOWED_SOURCE_TYPES = ["manual", "rekonsiliasi"];
+       const sourceType = ALLOWED_SOURCE_TYPES.includes(sourceTypeCandidate)
+          ? sourceTypeCandidate
+          : "manual";
       const judul = (body?.judul as string | undefined)?.trim();
       const deskripsi = (body?.deskripsi as string | undefined)?.trim();
       const severity =
@@ -122,10 +132,10 @@ export async function POST(request: Request) {
          return NextResponse.json({ message: sanitizeDbError(error) }, { status: 500 });
       }
 
-       await logActivity(
-          "BUAT_TEMUAN",
-           "Membuat temuan rekonsiliasi",
-           {
+        await logActivity(
+           "BUAT_TEMUAN",
+            `Membuat temuan (${data.source_type})`,
+            {
               finding_id: data.id,
               po_id: data.po_id,
               armada_id: data.armada_id,
