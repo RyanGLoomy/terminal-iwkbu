@@ -40,7 +40,7 @@ test("Staf IW sidebar shows all menu items", async ({ page }) => {
   await expect(page.getByRole("link", { name: /Dashboard/i })).toBeVisible();
   await expect(page.getByRole("link", { name: /Temuan/i })).toBeVisible();
   await expect(page.getByRole("link", { name: /Rekonsiliasi/i }).first()).toBeVisible();
-  await expect(page.getByRole("link", { name: /Audit Trail/i })).toBeVisible();
+  await expect(page.getByRole("link", { name: /Audit Trail/i }).first()).toBeVisible();
   await expect(page.getByRole("link", { name: /Sinkronisasi IWKBU/i })).toBeVisible();
 });
 

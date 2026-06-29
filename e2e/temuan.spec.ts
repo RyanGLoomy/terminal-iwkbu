@@ -61,7 +61,7 @@ test("PO mengklarifikasi Temuan -> status berubah", async ({ request }) => {
    await loginAs({ request, goto: async () => {} } as any, poCred.email, poCred.password);
 
    const res = await request.post(`/api/po/findings/${createdFindingId}/clarifications`, {
-      data: { decision: "melengkapi", message: "klarifikasi uji e2e" },
+      multipart: { decision: "melengkapi", message: "klarifikasi uji e2e" },
    });
    expect([200, 201, 409]).toContain(res.status());
 });

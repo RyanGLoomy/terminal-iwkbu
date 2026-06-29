@@ -37,7 +37,7 @@ test.describe("Security: Cross-Role Access Control", () => {
     expect(res.status()).toBe(403);
   });
 
-  test("Staf-IW can access admin petugas with scoped terminal_id", async ({ request }) => {
+  test("Staf-IW cannot access admin petugas (admin-terminal only)", async ({ request }) => {
     await loginAs({ request, goto: async () => {} } as any, stafCred.email, stafCred.password);
     const terminalsRes = await request.get("/api/admin/terminals");
     expect(terminalsRes.ok()).toBeTruthy();
@@ -47,7 +47,7 @@ test.describe("Security: Cross-Role Access Control", () => {
     expect(terminalId).toBeTruthy();
 
     const res = await request.get(`/api/admin/petugas?terminal_id=${terminalId}`);
-    expect(res.ok()).toBeTruthy();
+    expect(res.status()).toBe(403);
   });
 
   test("Staf-IW cannot create transaksi masuk", async ({ request }) => {

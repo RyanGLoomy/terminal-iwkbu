@@ -147,7 +147,7 @@ async function ensureArmada(supabase, poUserId) {
   const { error } = await supabase.from("armada").insert([
     { po_id: poUserId, nomor_polisi: "B 1234 CD", nomor_uji: "1234/5678", status_operasional: "aktif", status_verifikasi: "terverifikasi" },
     { po_id: poUserId, nomor_polisi: "B 5678 EF", nomor_uji: "9012/3456", status_operasional: "aktif", status_verifikasi: "terverifikasi" },
-    { po_id: poUserId, nomor_polisi: "B 9012 GH", nomor_uji: "7890/1234", status_operasional: "nonaktif", status_verifikasi: "menunggu" },
+    { po_id: poUserId, nomor_polisi: "B 9012 GH", nomor_uji: "7890/1234", status_operasional: "tidak_aktif", status_verifikasi: "menunggu" },
   ]);
   return { error };
 }
@@ -180,9 +180,9 @@ async function main() {
 
     if (account.role === "po") {
       const { error: poError } = await ensurePO(supabase, userId);
-      if (poError) console.log(`  ⚠ ensurePO: ${poError}`);
+      if (poError) console.log(`  ⚠ ensurePO: ${JSON.stringify(poError)}`);
       const { error: armadaError } = await ensureArmada(supabase, userId);
-      if (armadaError) console.log(`  ⚠ ensureArmada: ${armadaError}`);
+      if (armadaError) console.log(`  ⚠ ensureArmada: ${JSON.stringify(armadaError)}`);
       console.log(`  ✓ PO + Armada data seeded`);
     }
 
