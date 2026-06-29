@@ -55,7 +55,7 @@ export function BottomNavigation({ userRole }: BottomNavigationProps) {
       const normalized = pathname?.replace(/\/+$/, "") || "";
       // Dashboard route: exact match only (bukan startsWith) agar tak selalu
       // menyala di child page (/po/temuan dll).
-      if (href === DEFAULT_ROLES[userRole]) {
+      if (href === DEFAULT_ROUTES[userRole]) {
          return normalized === href;
       }
       return normalized === href || normalized.startsWith(href + "/");
