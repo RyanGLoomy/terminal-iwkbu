@@ -1,6 +1,7 @@
 "use client";
 
 import { startTransition, useState, type FormEvent } from "react";
+import { formatDateTime } from "@/lib/utils/format-date";
 import { useRouter } from "next/navigation";
 import {
    AlertCircle,
@@ -297,7 +298,7 @@ export function IwkbuSyncPanel({
                {latestRun ? (
                   <div className="text-sm text-base-content/70">
                      Run terakhir:{" "}
-                     {new Date(latestRun.started_at).toLocaleString("id-ID")} (
+                     {formatDateTime(latestRun.started_at)} (
                      {latestRun.trigger_type})
                   </div>
                ) : (
@@ -340,9 +341,7 @@ export function IwkbuSyncPanel({
                         >
                            <div>
                               <p className="text-sm font-medium">
-                                 {new Date(run.started_at).toLocaleString(
-                                    "id-ID",
-                                 )}
+                                 {formatDateTime(run.started_at)}
                               </p>
                               <p className="text-xs text-base-content/70">
                                  Trigger: {run.trigger_type}
@@ -423,9 +422,7 @@ export function IwkbuSyncPanel({
                                      {row.discrepancy_note ?? "-"}
                                   </td>
                                   <td className="py-2 pr-4 text-base-content/70">
-                                     {new Date(
-                                        row.last_synced_at,
-                                     ).toLocaleString("id-ID")}
+                                      {formatDateTime(row.last_synced_at)}
                                   </td>
                                   <td className="py-2 pr-4">
                                      {row.reconciliation_status !== "ready" && (

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { formatDate } from "@/lib/utils/format-date";
 import {
    Dialog,
    DialogContent,
@@ -196,13 +197,9 @@ export function PeriodeRekonsiliasiPanel() {
                                  </Badge>
                               </div>
                               <p className="text-xs text-base-content/70 mt-0.5">
-                                 {new Date(p.tanggal_mulai).toLocaleDateString(
-                                    "id-ID",
-                                 )}{" "}
+                                 {formatDate(p.tanggal_mulai)}{" "}
                                  &mdash;{" "}
-                                 {new Date(
-                                    p.tanggal_selesai,
-                                 ).toLocaleDateString("id-ID")}
+                                 {formatDate(p.tanggal_selesai)}
                                  {p.catatan ? ` · ${p.catatan}` : ""}
                               </p>
                            </div>

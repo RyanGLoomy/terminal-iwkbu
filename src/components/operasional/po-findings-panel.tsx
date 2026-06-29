@@ -1,6 +1,7 @@
 "use client";
 
 import { useDeferredValue, useState } from "react";
+import { formatDate } from "@/lib/utils/format-date";
 import { useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -246,7 +247,7 @@ export function PoFindingsPanel({ findings }: { findings: FindingRecord[] }) {
                                   {finding.due_date && (
                                      <span className="ml-2">
                                         · Tenggat:{" "}
-                                        {new Date(finding.due_date).toLocaleDateString("id-ID", { dateStyle: "medium" })}
+                                        {formatDate(finding.due_date)}
                                      </span>
                                   )}
                                </p>

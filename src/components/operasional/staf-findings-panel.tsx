@@ -1,6 +1,7 @@
 "use client";
 
 import { useDeferredValue, useEffect, useState } from "react";
+import { formatDateTime, formatDate } from "@/lib/utils/format-date";
 import { useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -27,7 +28,6 @@ import { AlertCircle, MessageSquare, Pencil } from "lucide-react";
 import { getErrorMessage } from "@/lib/db-error";
 import {
    FINDINGS_PAGE_SIZE,
-   formatDateTime,
    isOverdue,
 } from "./findings-shared";
 import { StafFindingsStatusDialog } from "./staf-findings-status-dialog";
@@ -448,10 +448,7 @@ export function StafFindingsPanel({
 
                               const body = filteredFindings.map((f) => [
                                  f.created_at
-                                    ? new Date(f.created_at).toLocaleString("id-ID", {
-                                         dateStyle: "medium",
-                                         timeStyle: "short",
-                                      })
+                                    ? formatDateTime(f.created_at)
                                     : "-",
                                  f.po?.kode_po ?? f.po_id,
                                  f.nomor_polisi,
@@ -546,9 +543,7 @@ export function StafFindingsPanel({
                                     {finding.due_date && (
                                        <div className="mt-1 text-xs text-base-content/70">
                                           Tenggat:{" "}
-                                          {new Date(finding.due_date).toLocaleDateString("id-ID", {
-                                             dateStyle: "medium",
-                                          })}
+                                          {formatDate(finding.due_date)}
                                        </div>
                                     )}
                                  </TableCell>

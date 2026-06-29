@@ -12,10 +12,4 @@ export function isOverdue(dueDate: string | null, status: string) {
    return new Date(dueDate) < new Date(new Date().toDateString());
 }
 
-export function formatDateTime(value: string | null) {
-   if (!value) return "-";
-   return new Date(value).toLocaleString("id-ID", {
-      dateStyle: "medium",
-      timeStyle: "short",
-   });
-}
+export { formatDateTime } from "@/lib/utils/format-date";

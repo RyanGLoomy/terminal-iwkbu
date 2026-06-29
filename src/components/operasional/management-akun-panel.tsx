@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { formatDateTime } from "@/lib/utils/format-date";
 import {
    createPetugas,
    listPetugas,
@@ -46,13 +47,6 @@ type DeviceRow = {
    terminal_id: string | null;
    created_at: string;
 };
-
-function formatDate(value: string) {
-   return new Date(value).toLocaleString("id-ID", {
-      dateStyle: "medium",
-      timeStyle: "short",
-   });
-}
 
 interface ManagementAkunPanelProps {
    terminalId: string;
@@ -503,7 +497,7 @@ export function ManagementAkunPanel({
                                        </span>
                                     </TableCell>
                                     <TableCell className="text-[13px] text-base-content/70">
-                                       {formatDate(row.created_at)}
+                                       {formatDateTime(row.created_at)}
                                     </TableCell>
                                     <TableCell className="text-right">
                                        <div className="flex items-center justify-end gap-1">
@@ -694,7 +688,7 @@ export function ManagementAkunPanel({
                                        </span>
                                     </TableCell>
                                      <TableCell className="text-[13px] text-base-content/70">
-                                        {formatDate(row.created_at)}
+                                        {formatDateTime(row.created_at)}
                                      </TableCell>
                                      <TableCell className="text-right">
                                         <div className="flex items-center justify-end gap-1">

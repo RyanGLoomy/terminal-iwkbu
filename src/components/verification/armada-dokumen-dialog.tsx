@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { formatDate } from "@/lib/utils/format-date";
 import {
    Dialog,
    DialogContent,
@@ -179,9 +180,7 @@ export function ArmadaDokumenDialog({
                                                 ? `${(dok.file_size / 1024).toFixed(0)} KB`
                                                 : ""}
                                              {" · "}
-                                             {new Date(
-                                                dok.created_at,
-                                             ).toLocaleDateString("id-ID")}
+                                             {formatDate(dok.created_at)}
                                           </p>
                                        </div>
                                     </div>

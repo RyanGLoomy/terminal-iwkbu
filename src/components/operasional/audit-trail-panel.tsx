@@ -1,6 +1,7 @@
 "use client";
 
 import { useDeferredValue, useEffect, useState } from "react";
+import { formatDateTime } from "@/lib/utils/format-date";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -65,13 +66,6 @@ function getDateOffset(daysAgo: number) {
    const date = new Date();
    date.setDate(date.getDate() - daysAgo);
    return date.toISOString().slice(0, 10);
-}
-
-function formatDateTime(value: string) {
-   return new Date(value).toLocaleString("id-ID", {
-      dateStyle: "medium",
-      timeStyle: "short",
-   });
 }
 
 function formatActionLabel(aksi: AksiLog) {

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { formatDateTime, formatDateTimeCustom } from "@/lib/utils/format-date";
 import { getTerminalReport } from "@/lib/supabase/queries/operasional.client";
 import { exportXlsx } from "@/lib/export/xlsx.client";
 import type {
@@ -27,16 +28,8 @@ import { Bus, Download, Loader2, LogIn, LogOut, TrendingUp } from "lucide-react"
 
 type ExportCell = string | number | null | undefined;
 
-function formatDateTime(value: string | null) {
-   if (!value) return "-";
-   return new Date(value).toLocaleString("id-ID", {
-      dateStyle: "medium",
-      timeStyle: "short",
-   });
-}
-
 function formatDate(value: string) {
-   return new Date(`${value}T00:00:00`).toLocaleDateString("id-ID", {
+   return formatDateTimeCustom(`${value}T00:00:00`, {
       weekday: "long",
       day: "numeric",
       month: "long",

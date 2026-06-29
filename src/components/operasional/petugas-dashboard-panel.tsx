@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { formatDateTime } from "@/lib/utils/format-date";
 import dynamic from "next/dynamic";
 import { createClient } from "@/lib/supabase/client";
 import {
@@ -31,13 +32,6 @@ const WeeklyTrendChart = dynamic(
       loading: () => <div className="h-[300px] rounded-xl bg-base-200/30 animate-pulse" />,
    },
 );
-
-function formatDateTime(value: string) {
-   return new Date(value).toLocaleString("id-ID", {
-      dateStyle: "medium",
-      timeStyle: "short",
-   });
-}
 
 export function PetugasDashboardPanel() {
    const [stats, setStats] = useState<PetugasDashboardRPC | null>(null);

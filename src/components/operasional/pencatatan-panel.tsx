@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, type FormEvent } from "react";
+import { formatDateTime } from "@/lib/utils/format-date";
 import {
    catatKendaraanKeluar,
    catatKendaraanMasuk,
@@ -31,13 +32,6 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2, LogIn, LogOut, Bus } from "lucide-react";
 import { getErrorMessage } from "@/lib/db-error";
-
-function formatDateTime(value: string) {
-   return new Date(value).toLocaleString("id-ID", {
-      dateStyle: "medium",
-      timeStyle: "short",
-   });
-}
 
 export function PencatatanPanel() {
    const [session, setSession] = useState<ShiftSession | null>(null);

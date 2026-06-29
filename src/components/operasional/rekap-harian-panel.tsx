@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { formatDateTime } from "@/lib/utils/format-date";
 import { getRekapHarian } from "@/lib/supabase/queries/operasional.client";
 import type { RekapHarianRow } from "@/lib/supabase/queries/operasional.types";
 import { exportXlsx } from "@/lib/export/xlsx.client";
@@ -22,14 +23,6 @@ const statusBadge: Record<string, string> = {
    masuk: "bg-amber-50 text-accent border border-amber-200/60 dark:bg-amber-950/50 dark:text-amber-300 dark:border-amber-800",
    keluar: "bg-emerald-50 text-brand-green dark:bg-green-950/50 dark:text-green-300 dark:border-green-800",
 };
-
-function formatDateTime(value: string | null) {
-   if (!value) return "-";
-   return new Date(value).toLocaleString("id-ID", {
-      dateStyle: "medium",
-      timeStyle: "short",
-   });
-}
 
 export function RekapHarianPanel() {
     const [tanggal, setTanggal] = useState("");

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { formatDateTime } from "@/lib/utils/format-date";
 import {
    getRekapSesi,
    getDetailSesi,
@@ -29,19 +30,6 @@ import {
 } from "@/components/ui/dialog";
 import { DatePicker } from "@/components/ui/date-picker";
 import { Activity, ChevronLeft, Eye, Loader2 } from "lucide-react";
-
-function formatDateTime(value: string) {
-   return new Date(value).toLocaleString("id-ID", {
-      dateStyle: "medium",
-      timeStyle: "short",
-   });
-}
-
-function formatDate(value: string) {
-   return new Date(value).toLocaleDateString("id-ID", {
-      dateStyle: "medium",
-   });
-}
 
 function toDateString(date: Date) {
    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;

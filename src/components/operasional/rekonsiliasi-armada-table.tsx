@@ -1,6 +1,7 @@
 "use client";
 
 import { Fragment, useState } from "react";
+import { formatDateTimeCustom } from "@/lib/utils/format-date";
 import {
    Table,
    TableBody,
@@ -61,7 +62,7 @@ interface RekonsiliasiArmadaTableProps {
 function formatDate(dateStr: string | null): string {
    if (!dateStr) return "-";
    try {
-      return new Date(dateStr).toLocaleString("id-ID", {
+      return formatDateTimeCustom(dateStr, {
          day: "2-digit",
          month: "short",
          year: "numeric",

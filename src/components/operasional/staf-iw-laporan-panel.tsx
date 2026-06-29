@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { formatDateShort } from "@/lib/utils/format-date";
 import {
    Card,
    CardContent,
@@ -43,15 +44,6 @@ const STATUS_BADGE: Record<FindingStatus, string> = {
    closed: "badge-success",
 };
 
-function formatDate(value: string | null) {
-   if (!value) return "-";
-   return new Date(value).toLocaleDateString("id-ID", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-   });
-}
-
 export function StafIwLaporanPanel({
    findings,
    stats,
@@ -92,8 +84,8 @@ export function StafIwLaporanPanel({
             f.severity,
             STATUS_LABEL[f.status],
             f.source_type,
-            formatDate(f.created_at),
-            formatDate(f.resolved_at),
+            formatDateShort(f.created_at),
+            formatDateShort(f.resolved_at),
          ]);
          await exportXlsx(`laporan-temuan-staf-iw-${new Date().toISOString().slice(0, 10)}.xlsx`, [
             { name: "Temuan", rows: [header, ...rows] },
@@ -208,7 +200,7 @@ export function StafIwLaporanPanel({
                                  </Badge>
                               </TableCell>
                               <TableCell className="text-base-content/60">
-                                 {formatDate(f.created_at)}
+                                 {formatDateShort(f.created_at)}
                               </TableCell>
                            </TableRow>
                         ))}

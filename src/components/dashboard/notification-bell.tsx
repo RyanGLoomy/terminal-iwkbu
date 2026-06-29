@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { formatDateTimeCustom } from "@/lib/utils/format-date";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Bell, CheckCheck } from "lucide-react";
@@ -215,15 +216,12 @@ export function NotificationBell() {
                                      {n.message}
                                   </p>
                                   <p className="text-[10px] text-base-content/50 mt-1 tabular-nums">
-                                     {new Date(n.created_at).toLocaleString(
-                                        "id-ID",
-                                        {
-                                           day: "numeric",
-                                           month: "short",
-                                           hour: "2-digit",
-                                           minute: "2-digit",
-                                        },
-                                     )}
+                                      {formatDateTimeCustom(n.created_at, {
+                                         day: "numeric",
+                                         month: "short",
+                                         hour: "2-digit",
+                                         minute: "2-digit",
+                                      })}
                                   </p>
                                </div>
                             </div>
