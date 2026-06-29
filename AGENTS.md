@@ -38,7 +38,7 @@ pnpm test:e2e:dev           # Same but skip build (use running dev server)
 - Roles (`src/config/roles.ts`): `po`, `loket`, `admin-terminal`, `staf-iw`. App names use hyphens; DB/RPC may use underscores. Normalize via `resolveRoleFromUserAndProfile()` (`src/lib/auth/role.ts`) and `normalizeRoleName()` (`src/lib/supabase/role-utils.ts`) — two different files.
 - Supabase clients: `server.ts` (Server Components/handlers), `client.ts` (browser singleton), `admin.ts` (service-role). Query modules in `src/lib/supabase/queries/` split by `.server.ts` vs `.client.ts` — keep that boundary.
 - IWKBU sync: `src/lib/iwkbu/adaptor.ts` switches between mock and real API via `IWKBU_API_URL` + `IWKBU_API_KEY`. Cron endpoints at `src/app/api/cron/iwkbu-fetch/route.ts` (fetch + sync) and `iwkbu-sync/route.ts` (sync only). Both use timing-safe Bearer comparison (`src/lib/auth/safe-compare.ts`).
-- Migrations: `supabase/migrations/` (28 files). `0000_01`–`0000_06` are captured from live DB to reconcile drift; `0001`–`0022` are canonical local migrations. Plus `supabase/seed.sql`.
+- Migrations: `supabase/migrations/` (29 files). `0000_01`–`0000_06` are captured from live DB to reconcile drift; `0001`–`0023` are canonical local migrations. Plus `supabase/seed.sql`.
 
 ## PostgREST Relationship Quirk
 
