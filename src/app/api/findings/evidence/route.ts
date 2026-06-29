@@ -1,10 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getAuthenticatedActor } from "@/lib/auth/server-actor";
-import {
-   ensureRoleOrThrow,
-   AuthorizationError,
-} from "@/lib/auth/requireRole.server";
+import { hasRole, actorErrorHandler } from "@/lib/auth/actor";
+import { ROLES } from "@/config/roles";
 
 export async function GET(request: NextRequest) {
    try {
@@ -56,15 +54,11 @@ export async function GET(request: NextRequest) {
          );
       }
 
-      try {
-         ensureRoleOrThrow(actor.user, actor.profile, "staf-iw");
-      } catch {
-         if (finding.po_id !== actor.user.id) {
-            return NextResponse.json(
-               { message: "File tidak ditemukan" },
-               { status: 404 },
-            );
-         }
+      if (!hasRole(actor, ROLES.STAF_IW) && finding.po_id !== actor.user.id) {
+         return NextResponse.json(
+            { message: "File tidak ditemukan" },
+            { status: 404 },
+         );
       }
 
       const { data, error } = await admin.storage
@@ -80,15 +74,6 @@ export async function GET(request: NextRequest) {
 
       return NextResponse.json({ url: data.signedUrl });
    } catch (error) {
-      if (error instanceof AuthorizationError) {
-         return NextResponse.json(
-            { message: "Akses ditolak" },
-            { status: 403 },
-         );
-      }
-      return NextResponse.json(
-         { message: "Terjadi kesalahan internal" },
-         { status: 500 },
-      );
+      return actorErrorHandler(error);
    }
 }

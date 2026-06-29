@@ -37,10 +37,10 @@ export default async function StafIwLaporanPage() {
    return (
       <section className="space-y-6">
          <div>
-            <h1 className="text-xl font-bold tracking-tight text-foreground">
+            <h1 className="text-xl font-bold tracking-tight text-base-content">
                Laporan &amp; Ekspor
             </h1>
-            <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
+            <p className="mt-1 max-w-2xl text-sm text-base-content/70">
                Ringkasan rekonsiliasi kepatuhan IWKBU lintas terminal dan PO,
                daftar temuan, serta ekspor laporan.
             </p>

@@ -68,7 +68,20 @@ export async function getArmadaByPO(poId: string) {
 // ============================================================
 
 export async function createArmada(
-   data: Omit<Armada, "id" | "created_at" | "updated_at" | "po_id">,
+   data: Partial<
+      Pick<
+         Armada,
+         | "nomor_polisi"
+         | "nomor_lambung"
+         | "merk"
+         | "tipe"
+         | "tahun_pembuatan"
+         | "nomor_chassis"
+         | "nomor_mesin"
+         | "kapasitas_penumpang"
+         | "status_operasional"
+      >
+   >,
 ) {
    const res = await fetch("/api/po/armada", {
       method: "POST",

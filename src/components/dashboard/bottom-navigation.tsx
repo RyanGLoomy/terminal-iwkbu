@@ -63,83 +63,93 @@ export function BottomNavigation({ userRole }: BottomNavigationProps) {
 
    return (
       <>
-         <nav className="fixed inset-x-0 bottom-0 z-40 flex h-16 items-stretch border-t border-border bg-card/95 backdrop-blur lg:hidden">
+         <nav
+            className="fixed inset-x-0 bottom-0 z-40 flex h-16 items-stretch border-t border-base-300 bg-base-100/95 lg:hidden"
+            style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+            aria-label="Navigasi utama"
+         >
             {primaryItems.map((item) => {
-               const Icon = iconMap[item.icon] || LayoutDashboard;
-               const active = isActive(item.href);
-               return (
-                  <Link
-                     key={item.href}
-                     href={item.href}
-                     className={cn(
-                        "flex flex-1 flex-col items-center justify-center gap-1 py-2 transition-colors",
-                        active
-                           ? "text-brand-sky"
-                           : "text-muted-foreground hover:text-foreground",
-                     )}
-                  >
-                     <div className="relative">
-                        <Icon className="size-5" />
-                        {active && (
-                           <span className="absolute -bottom-1.5 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-brand-gold" />
-                        )}
-                     </div>
-                     <span className="text-[10px] font-medium leading-none">
-                        {item.label}
-                     </span>
-                  </Link>
-               );
-            })}
+                const Icon = iconMap[item.icon] || LayoutDashboard;
+                const active = isActive(item.href);
+                return (
+                   <Link
+                      key={item.href}
+                      href={item.href}
+                      aria-current={active ? "page" : undefined}
+                      aria-label={item.label}
+                      className={cn(
+                         "flex flex-1 flex-col items-center justify-center gap-1 py-2 transition-colors touch-manipulation",
+                         active
+                            ? "text-primary"
+                            : "text-base-content/70 hover:text-base-content",
+                      )}
+                   >
+                      <div className="relative">
+                         <Icon className="size-5" aria-hidden="true" />
+                         {active && (
+                            <span className="absolute -bottom-1.5 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-accent" aria-hidden="true" />
+                         )}
+                      </div>
+                      <span className="text-[10px] font-medium leading-none">
+                         {item.label}
+                      </span>
+                   </Link>
+                );
+             })}
 
-            {moreItems.length > 0 && (
-               <Sheet open={moreOpen} onOpenChange={setMoreOpen}>
-                  <SheetTrigger asChild>
-                     <button
-                        type="button"
-                        className={cn(
-                           "flex flex-1 flex-col items-center justify-center gap-1 py-2 transition-colors",
-                           moreOpen
-                              ? "text-brand-sky"
-                              : "text-muted-foreground hover:text-foreground",
-                        )}
-                     >
-                        <MoreHorizontal className="size-5" />
-                        <span className="text-[10px] font-medium leading-none">
-                           Lainnya
-                        </span>
-                     </button>
-                  </SheetTrigger>
-                  <SheetContent side="bottom" className="rounded-t-2xl">
-                     <SheetHeader>
-                        <SheetTitle>Menu Lainnya</SheetTitle>
-                     </SheetHeader>
-                     <div className="grid grid-cols-3 gap-3 px-4 pb-8 pt-4">
-                        {moreItems.map((item) => {
-                           const Icon = iconMap[item.icon] || LayoutDashboard;
-                           const active = isActive(item.href);
-                           return (
-                              <Link
-                                 key={item.href}
-                                 href={item.href}
-                                 onClick={() => setMoreOpen(false)}
-                                 className={cn(
-                                    "flex flex-col items-center gap-2 rounded-xl border p-4 transition-colors",
-                                    active
-                                       ? "border-brand-sky/30 bg-brand-sky/5 text-brand-sky"
-                                       : "border-border text-muted-foreground hover:bg-muted",
-                                 )}
-                              >
-                                 <Icon className="size-6" />
-                                 <span className="text-xs font-medium text-center leading-tight">
-                                    {item.label}
-                                 </span>
-                              </Link>
-                           );
-                        })}
-                     </div>
-                  </SheetContent>
-               </Sheet>
-            )}
+             {moreItems.length > 0 && (
+                <Sheet open={moreOpen} onOpenChange={setMoreOpen}>
+                   <SheetTrigger asChild>
+                      <button
+                         type="button"
+                         aria-label="Menu lainnya"
+                         aria-expanded={moreOpen}
+                         aria-haspopup="dialog"
+                         className={cn(
+                            "flex flex-1 flex-col items-center justify-center gap-1 py-2 transition-colors touch-manipulation",
+                            moreOpen
+                               ? "text-primary"
+                               : "text-base-content/70 hover:text-base-content",
+                         )}
+                      >
+                         <MoreHorizontal className="size-5" aria-hidden="true" />
+                         <span className="text-[10px] font-medium leading-none">
+                            Lainnya
+                         </span>
+                      </button>
+                   </SheetTrigger>
+                   <SheetContent side="bottom" className="rounded-t-2xl">
+                      <SheetHeader>
+                         <SheetTitle>Menu Lainnya</SheetTitle>
+                      </SheetHeader>
+                      <div className="grid grid-cols-3 gap-3 px-4 pb-8 pt-4">
+                         {moreItems.map((item) => {
+                            const Icon = iconMap[item.icon] || LayoutDashboard;
+                            const active = isActive(item.href);
+                            return (
+                               <Link
+                                  key={item.href}
+                                  href={item.href}
+                                  aria-current={active ? "page" : undefined}
+                                  onClick={() => setMoreOpen(false)}
+                                  className={cn(
+                                     "flex flex-col items-center gap-2 rounded-xl border p-4 transition-colors touch-manipulation",
+                                     active
+                                        ? "border-primary/30 bg-primary/5 text-primary"
+                                        : "border-base-300 text-base-content/70 hover:bg-base-200",
+                                  )}
+                               >
+                                  <Icon className="size-6" aria-hidden="true" />
+                                  <span className="text-xs font-medium text-center leading-tight">
+                                     {item.label}
+                                  </span>
+                               </Link>
+                            );
+                         })}
+                      </div>
+                   </SheetContent>
+                </Sheet>
+             )}
          </nav>
       </>
    );

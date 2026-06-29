@@ -22,7 +22,7 @@ const statusOptions: Array<{
    {
       value: "tidak_aktif",
       label: "Tidak Aktif",
-      color: "bg-muted text-muted-foreground",
+      color: "bg-base-200 text-base-content/70",
    },
    { value: "rusak", label: "Rusak", color: "bg-red-100 text-red-800 dark:bg-red-950/50 dark:text-red-300" },
    {
@@ -75,7 +75,7 @@ export function StatusArmadaDialog({
                      <Badge className={`mr-3 ${status.color}`}>
                         {status.label}
                      </Badge>
-                     <span className="text-sm text-muted-foreground">
+                     <span className="text-sm text-base-content/70">
                         {status.value === "aktif" && "Armada siap beroperasi"}
                         {status.value === "tidak_aktif" &&
                            "Armada tidak beroperasi sementara"}

@@ -24,10 +24,10 @@ export default async function StafIWDashboard() {
       <section className="space-y-6">
          <div className="space-y-5">
             <div>
-                <h1 className="text-xl font-bold tracking-tight text-foreground">
+                <h1 className="text-xl font-bold tracking-tight text-base-content">
                   Pengawasan Integrasi Data
                </h1>
-               <p className="text-sm text-muted-foreground mt-1 max-w-2xl">
+               <p className="text-sm text-base-content/70 mt-1 max-w-2xl">
                   Pusat pengelolaan data sumber PO dan armada sebelum dipakai
                   untuk rekonsiliasi, audit trail, dan tindak lanjut.
                </p>
@@ -76,13 +76,13 @@ export default async function StafIWDashboard() {
                 armadaDitolak={armadaDitolak.length}
              />
 
-             <Card className="border-border">
+             <Card className="border-base-300">
                <CardContent className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between pt-5">
                   <div>
-                     <p className="text-sm font-medium text-foreground">
+                     <p className="text-sm font-medium text-base-content">
                         Alur kerja staf IW
                      </p>
-                     <p className="text-sm text-muted-foreground">
+                     <p className="text-sm text-base-content/70">
                         Verifikasi data sumber, lanjutkan ke rekonsiliasi, lalu
                         pantau audit trail untuk tindak lanjut.
                      </p>
@@ -96,7 +96,7 @@ export default async function StafIWDashboard() {
                      </Link>
                      <Link
                         href="/staf-iw/audit-trail"
-                        className="inline-flex h-9 items-center justify-center rounded-md border border-border bg-background px-4 text-sm font-medium text-foreground transition-colors hover:bg-muted/50"
+                        className="inline-flex h-9 items-center justify-center rounded-md border border-base-300 bg-base-100 px-4 text-sm font-medium text-base-content transition-colors hover:bg-base-200/50"
                      >
                         Lihat Audit Trail
                      </Link>

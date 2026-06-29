@@ -21,7 +21,10 @@ if (existsSync(envPath)) {
       if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
         value = value.slice(1, -1);
       }
-      if (!process.env[key]) process.env[key] = value;
+      // OVERRIDE dari .env.local (jangan andalkan process.env shell yang mungkin
+      // berisi key stale — penyebab crash ensureRole "id of null" + kegagalan
+      // admin API di shell tertentu).
+      process.env[key] = value;
     }
   }
 }
@@ -37,10 +40,10 @@ if (!SUPABASE_URL || !SERVICE_KEY) {
 const CREDENTIALS_PATH = "/tmp/opencode/iwkbu-test-credentials.json";
 
 const TEST_ACCOUNTS = [
-  { email: "test.po.iwkbu@example.com", password: "Tmp-IWKBU-PO-2026", role: "po", fullName: "PO Demo Playwright" },
-  { email: "test.loket.iwkbu@example.com", password: "Tmp-IWKBU-Loket-2026", role: "loket", fullName: "Loket Demo Playwright", terminalKode: "TST01", pin: "123456" },
-  { email: "test.admin-terminal.iwkbu@example.com", password: "Tmp-IWKBU-Admin-2026", role: "admin-terminal", fullName: "Admin Terminal Demo Playwright", terminalKode: "TST01" },
-  { email: "test.staf-iw.iwkbu@example.com", password: "Tmp-IWKBU-Staf-2026", role: "staf-iw", fullName: "Staf IW Demo Playwright" },
+  { email: "e2e.po.iwkbu@example.com", password: "Tmp-IWKBU-PO-2026", role: "po", fullName: "PO Demo Playwright" },
+  { email: "e2e.loket.iwkbu@example.com", password: "Tmp-IWKBU-Loket-2026", role: "loket", fullName: "Loket Demo Playwright", terminalKode: "TST01", pin: "123456" },
+  { email: "e2e.admin-terminal.iwkbu@example.com", password: "Tmp-IWKBU-Admin-2026", role: "admin-terminal", fullName: "Admin Terminal Demo Playwright", terminalKode: "TST01" },
+  { email: "e2e.staf-iw.iwkbu@example.com", password: "Tmp-IWKBU-Staf-2026", role: "staf-iw", fullName: "Staf IW Demo Playwright" },
 ];
 
 async function ensureRole(supabase, name) {
@@ -58,40 +61,57 @@ async function ensureTerminal(supabase, kode) {
 }
 
 async function ensureUser(supabase, account, roleId, terminalId) {
-  let userId;
+   let userId;
 
-  const { data: { users } } = await supabase.auth.admin.listUsers();
-  const existing = users?.find((u) => u.email === account.email);
-  if (existing) {
-    userId = existing.id;
-    await supabase.auth.admin.updateUserById(userId, {
-      password: account.password,
-      user_metadata: { full_name: account.fullName, role: account.role },
-      email_confirm: true,
-    });
-  } else {
-    const { data: created } = await supabase.auth.admin.createUser({
-      email: account.email,
-      password: account.password,
-      email_confirm: true,
-      user_metadata: { full_name: account.fullName, role: account.role },
-    });
-    userId = created?.user?.id;
-  }
+   // Cari id via tabel profiles (PostgREST) — andal, tak bergantung pada
+   // auth.admin.listUsers() yang di beberapa project mengembalikan daftar kosong
+   // meski user ada (kontradiksi dengan getUserById yang bekerja).
+   const { data: prof } = await supabase
+      .from("profiles")
+      .select("id")
+      .eq("email", account.email)
+      .maybeSingle();
 
-  if (!userId) throw new Error(`Failed: ${account.email}`);
+   if (prof?.id) {
+      userId = prof.id;
+      const { error: updError } = await supabase.auth.admin.updateUserById(userId, {
+         password: account.password,
+         user_metadata: { full_name: account.fullName, role: account.role },
+         email_confirm: true,
+      });
+      if (updError) {
+         // User ada di profiles/auth.users tapi GoTrue tak bisa manage (kemungkinan
+         // dibuat via raw SQL INSERT, bukan createUser) -> mustahil reset password.
+         // Hapus via Dashboard lalu re-run agar createUser membuatnya fresh.
+         throw new Error(
+            `Tidak dapat reset password ${account.email}: GoTrue tidak mengenali user ini (${updError.message}). ` +
+               `Hapus user ini via Supabase Dashboard (Authentication → Users) lalu jalankan ulang setup.`,
+         );
+      }
+   } else {
+      const { data: created, error: createError } = await supabase.auth.admin.createUser({
+         email: account.email,
+         password: account.password,
+         email_confirm: true,
+         user_metadata: { full_name: account.fullName, role: account.role },
+      });
+      if (createError) throw new Error(`createUser ${account.email}: ${createError.message}`);
+      userId = created?.user?.id;
+   }
 
-  await supabase.from("profiles").upsert(
-    { id: userId, email: account.email, full_name: account.fullName, terminal_id: terminalId ?? null, is_active: true },
-    { onConflict: "id" },
-  );
+   if (!userId) throw new Error(`Failed: ${account.email}`);
 
-  await supabase.from("user_roles").upsert(
-    { user_id: userId, role_id: roleId },
-    { onConflict: "user_id,role_id" },
-  );
+   await supabase.from("profiles").upsert(
+      { id: userId, email: account.email, full_name: account.fullName, terminal_id: terminalId ?? null, is_active: true },
+      { onConflict: "id" },
+   );
 
-  return userId;
+   await supabase.from("user_roles").upsert(
+      { user_id: userId, role_id: roleId },
+      { onConflict: "user_id,role_id" },
+   );
+
+   return userId;
 }
 
 async function ensurePetugasTerminal(supabase, terminalId, nama, pin) {

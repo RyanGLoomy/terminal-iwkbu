@@ -3,8 +3,10 @@
 ## Sources Of Truth
 
 - `README.md` is custom-written but may lag; trust `package.json`, CI config, and `src/` over prose.
+- `CONTEXT.md` is the domain glossary (actors, concepts, vocabulary for seams). `docs/adr/` holds Architecture Decision Records — load-bearing decisions; don't re-suggest alternatives an ADR already rejected.
 - Single Next.js app, not a monorepo (`pnpm-workspace.yaml` only sets build settings).
 - Use `pnpm` only. CI uses Node 20 and pnpm 10.29.1.
+- Unit tests: `pnpm test:unit` (engine + actor + lifecycle pure modules via `node:test` + `tsx`).
 
 ## Commands
 
@@ -24,7 +26,8 @@ pnpm test:e2e:dev           # Same but skip build (use running dev server)
 - `pnpm audit` **hard-fails** CI (`continue-on-error: false`); `pnpm lint` is `continue-on-error: true` — still fix lint locally.
 - **E2E (`test:e2e*`) is NOT run in CI** — CI runs integration smoke only. E2E is local/manual. CI pins Node 20 + pnpm 10.29.1; local versions may differ, so trust the lockfile.
 - Integration smoke needs a prod server: `pnpm build && pnpm start`, then `BASE_URL=http://127.0.0.1:3000 pnpm test:integration`.
-- E2E tests use `request.fetch()` (API-level), not browser navigation (~84 cases across 6 spec files). Setup script (`scripts/setup-e2e.mjs`) creates test users in Supabase and writes credentials to `/tmp/opencode/iwkbu-test-credentials.json`. It reads `.env.local` automatically.
+- E2E tests use `request.fetch()` (API-level), not browser navigation (~80 cases across 6 spec files). Setup script (`scripts/setup-e2e.mjs`) creates test users in Supabase and writes credentials to `/tmp/opencode/iwkbu-test-credentials.json`. It reads `.env.local` automatically.
+- Run a single E2E spec/test against a running server: `npx playwright test e2e/loket.spec.ts` or `npx playwright test -g "pattern"` (config: `playwright.config.ts`). The full `test:e2e*` scripts re-run setup first.
 - No unit test runner — only integration smoke + Playwright E2E.
 - Scheduled workflows: `nightly-backup.yml` (02:00 UTC, `pg_dump` via `SUPABASE_DB_URL` → 7-day artifact), `scheduled-audit.yml` (03:00 UTC, opens a GitHub issue on vulns). Dependabot PRs **auto squash-merge when green** — don't merge them manually.
 
@@ -47,7 +50,8 @@ pnpm test:e2e:dev           # Same but skip build (use running dev server)
 - IWKBU sync: `IWKBU_API_URL`, `IWKBU_API_KEY`, `IWKBU_SYNC_CRON_SECRET` (or `CRON_SECRET`).
 - Sentry optional (no-ops without DSN): `SENTRY_DSN`, `NEXT_PUBLIC_SENTRY_DSN`.
 - `SUPABASE_DB_URL` used only by GitHub backup workflow, not app runtime.
-- `.env.local` is gitignored. `.env.example` is committed as reference. `opencode.json` contains MCP tokens — treat as sensitive.
+- `.env.local` is gitignored. `.env.example` is committed as reference. `opencode.json` wires remote/local MCP servers (Supabase project ref is embedded in the MCP URL; Supabase MCP uses OAuth) — treat as sensitive since it points at the live project.
+- **Known Supabase-side anomaly (NOT a code defect):** the `.env.local` service-role key is valid for PostgREST (bypasses RLS, returns data) but the GoTrue admin API (`/auth/v1/admin/users`) returns 0 users / `user_not_found` for users that exist in `auth.users` — confirmed with multiple header combinations, against the correct project ref, non-expired key. Root cause undetermined (likely an auth-admin config on this project). Implication: `scripts/setup-e2e.mjs` can't reset test-user passwords via the admin API, so E2E may 401 on login. **Workaround:** reset test-user passwords via the Supabase Dashboard (Authentication → Users) — that path is independent of the admin API — then run `pnpm test:e2e:dev`. The app's own login (anon key) and all data paths work normally; only admin-API user management is affected.
 
 ## Conventions
 

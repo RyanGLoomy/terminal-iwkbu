@@ -1,86 +1,21 @@
 import { createAdminClient } from "@/lib/supabase/admin";
+import {
+   reconcile,
+   normalizePlate,
+   type ArmadaRecord,
+   type SourceRecord,
+} from "@/lib/rekonsiliasi/engine";
 
 type SyncTrigger = "manual" | "scheduled" | "api";
 
-type SourceRecord = {
-   nomor_polisi: string;
-   compliance_status: "compliant" | "non_compliant" | "pending" | "unknown";
-   issue_count: number;
-   source_updated_at: string | null;
-   payload: Record<string, unknown> | null;
-};
-
-type ArmadaRecord = {
-   id: string;
-   po_id: string;
-   nomor_polisi: string;
-   status_verifikasi: string;
-   status_operasional: string;
-   po:
-      | {
-           status_verifikasi: string;
-           kode_po: string;
-           nama_perusahaan: string;
-        }
-      | null;
-};
-
-function normalizePlate(value: string | null | undefined) {
-   return (value ?? "").toUpperCase().replace(/\s+/g, "").trim();
-}
-
-function buildReconciliation(
-   armada: ArmadaRecord,
-   source: SourceRecord | undefined,
-): {
-   iwkbuComplianceStatus: "compliant" | "non_compliant" | "pending" | "unknown";
-   reconciliationStatus: "ready" | "needs_review" | "blocked";
-   discrepancyNote: string | null;
-   issueCount: number;
-   sourceUpdatedAt: string | null;
-   sourcePayload: Record<string, unknown>;
-} {
-   const iwkbuStatus = source?.compliance_status ?? "unknown";
-   const issueCount = source?.issue_count ?? 0;
-
-   const reasons: string[] = [];
-   if (!source) reasons.push("data IWKBU belum tersedia");
-    if (armada.po?.status_verifikasi !== "aktif")
-       reasons.push("PO belum aktif");
-   if (armada.status_verifikasi !== "terverifikasi")
-      reasons.push("armada belum terverifikasi");
-   if (armada.status_operasional !== "aktif")
-      reasons.push("armada tidak aktif");
-   if (iwkbuStatus === "non_compliant")
-      reasons.push("status IWKBU non-compliant");
-   if (iwkbuStatus === "pending") reasons.push("status IWKBU pending");
-
-   let reconciliationStatus: "ready" | "needs_review" | "blocked" =
-      "needs_review";
-
-   if (iwkbuStatus === "compliant" && reasons.length === 0) {
-      reconciliationStatus = "ready";
-   } else if (
-      iwkbuStatus === "non_compliant" ||
-      reasons.includes("PO belum aktif") ||
-      reasons.includes("armada belum terverifikasi")
-   ) {
-      reconciliationStatus = "blocked";
-   }
-
-   return {
-      iwkbuComplianceStatus: iwkbuStatus,
-      reconciliationStatus,
-      discrepancyNote: reasons.length > 0 ? reasons.join("; ") : null,
-      issueCount,
-      sourceUpdatedAt: source?.source_updated_at ?? null,
-      sourcePayload: source?.payload ?? {},
-   };
-}
+/** Actor untuk Temuan otomatis saat cron terjadwal (initiated_by NULL). */
+const SYSTEM_USER_ID = "00000000-0000-0000-0000-000000000001";
 
 export async function executeIwkbuSync(params: {
    triggerType: SyncTrigger;
    initiatedBy?: string | null;
+   /** true bila fetch API IWKBU gagal/env kosong -> rekonsiliasi vs cache, run degraded. */
+   degraded?: boolean;
 }) {
    const admin = createAdminClient();
 
@@ -128,42 +63,37 @@ export async function executeIwkbuSync(params: {
       if (armadaError) throw new Error(armadaError.message);
       if (terminalError) throw new Error(terminalError.message);
 
-      const sourceMap = new Map<string, SourceRecord>();
-      (sourceData ?? []).forEach((item: any) => {
-         sourceMap.set(normalizePlate(item.nomor_polisi), item as SourceRecord);
+      // Bangun map source & last-seen. normalizePlate adalah milik engine (join key tunggal).
+      const sourceByPlate = new Map<string, SourceRecord>();
+      (sourceData ?? []).forEach((item: SourceRecord) => {
+         sourceByPlate.set(normalizePlate(item.nomor_polisi), item);
       });
 
       const terminalLastSeen = new Map<string, string>();
-      (terminalData ?? []).forEach((item: any) => {
-         if (!item.armada_id) return;
-         if (!terminalLastSeen.has(item.armada_id)) {
-            terminalLastSeen.set(item.armada_id, item.waktu_masuk);
-         }
+      (terminalData ?? []).forEach(
+         (item: { armada_id: string | null; waktu_masuk: string }) => {
+            if (!item.armada_id) return;
+            if (!terminalLastSeen.has(item.armada_id)) {
+               terminalLastSeen.set(item.armada_id, item.waktu_masuk);
+            }
+         },
+      );
+
+      const armadaRows = (armadaData ?? []) as unknown as ArmadaRecord[];
+
+      // Inti mesin: pure reconcile -> {rows, findings}. Edge reconcile->findings hidup di sini.
+      const { rows: reconRows, findings } = reconcile({
+         armada: armadaRows,
+         sourceByPlate,
+         terminalLastSeen,
       });
 
-      const rows = (armadaData ?? []) as unknown as ArmadaRecord[];
+      const nowIso = new Date().toISOString();
 
-      const upserts = rows.map((armada) => {
-         const source = sourceMap.get(normalizePlate(armada.nomor_polisi));
-         const result = buildReconciliation(armada, source);
-
-         return {
-            armada_id: armada.id,
-            po_id: armada.po_id,
-            nomor_polisi: armada.nomor_polisi,
-            iwkbu_compliance_status: result.iwkbuComplianceStatus,
-            issue_count: result.issueCount,
-            source_updated_at: result.sourceUpdatedAt,
-            terminal_last_seen: terminalLastSeen.get(armada.id) ?? null,
-             po_status_verifikasi: armada.po?.status_verifikasi ?? null,
-            armada_status_verifikasi: armada.status_verifikasi,
-            armada_status_operasional: armada.status_operasional,
-            reconciliation_status: result.reconciliationStatus,
-            discrepancy_note: result.discrepancyNote,
-            source_payload: result.sourcePayload,
-            last_synced_at: new Date().toISOString(),
-         };
-      });
+      const upserts = reconRows.map((row) => ({
+         ...row,
+         last_synced_at: nowIso,
+      }));
 
       if (upserts.length > 0) {
          const { error: upsertError } = await admin
@@ -173,20 +103,83 @@ export async function executeIwkbuSync(params: {
          if (upsertError) throw new Error(upsertError.message);
       }
 
+      // Persist ProposedFinding dengan dedup: satu finding OPEN per armada (source_type rekonsiliasi).
+      const createdBy = params.initiatedBy ?? SYSTEM_USER_ID;
+      let findingsCreated = 0;
+      let findingsUpdated = 0;
+
+      // Batch lookup (1 query, bukan N): semua finding OPEN rekonsiliasi untuk armada terkait.
+      const armadaIds = findings.map((f) => f.armada_id);
+      const existingByArmada = new Map<string, string>();
+      if (armadaIds.length > 0) {
+         const { data: existingRows, error: lookupError } = await admin
+            .from("findings")
+            .select("id, armada_id")
+            .in("armada_id", armadaIds)
+            .eq("source_type", "rekonsiliasi")
+            .eq("status", "open");
+         if (lookupError) {
+            console.error("[IWKBU Sync] finding batch lookup error:", lookupError.message);
+         } else {
+            for (const row of existingRows as { id: string; armada_id: string }[]) {
+               existingByArmada.set(row.armada_id, row.id);
+            }
+         }
+      }
+
+      for (const pf of findings) {
+         const existingId = existingByArmada.get(pf.armada_id);
+
+         if (existingId) {
+            const { error: updError } = await admin
+               .from("findings")
+               .update({
+                  judul: pf.judul,
+                  deskripsi: pf.deskripsi,
+                  severity: pf.severity,
+                  updated_at: nowIso,
+               })
+               .eq("id", existingId);
+            if (updError) {
+               console.error("[IWKBU Sync] finding update error:", updError.message);
+            } else {
+               findingsUpdated++;
+            }
+         } else {
+            const { error: insError } = await admin.from("findings").insert({
+               po_id: pf.po_id,
+               armada_id: pf.armada_id,
+               nomor_polisi: pf.nomor_polisi,
+               source_type: "rekonsiliasi",
+               judul: pf.judul,
+               deskripsi: pf.deskripsi,
+               severity: pf.severity,
+               status: "open",
+               created_by: createdBy,
+            });
+            if (insError) {
+               console.error("[IWKBU Sync] finding insert error:", insError.message);
+            } else {
+               findingsCreated++;
+            }
+         }
+      }
+
       const summary = {
-         total_armada: upserts.length,
-         with_iwkbu_data: upserts.filter(
+         total_armada: reconRows.length,
+         with_iwkbu_data: reconRows.filter(
             (row) => row.iwkbu_compliance_status !== "unknown",
          ).length,
-         ready: upserts.filter((row) => row.reconciliation_status === "ready")
-            .length,
-         needs_review: upserts.filter(
+         ready: reconRows.filter((row) => row.reconciliation_status === "ready").length,
+         needs_review: reconRows.filter(
             (row) => row.reconciliation_status === "needs_review",
          ).length,
-         blocked: upserts.filter(
-            (row) => row.reconciliation_status === "blocked",
-         ).length,
-         finished_at: new Date().toISOString(),
+         blocked: reconRows.filter((row) => row.reconciliation_status === "blocked")
+            .length,
+         findings_created: findingsCreated,
+         findings_updated: findingsUpdated,
+         degraded: params.degraded === true,
+         finished_at: nowIso,
       };
 
       await admin
@@ -202,13 +195,14 @@ export async function executeIwkbuSync(params: {
          runId: runRow.id,
          summary,
       };
-   } catch (error: any) {
+   } catch (error: unknown) {
       await admin
          .from("iwkbu_sync_runs")
          .update({
             status: "failed",
             finished_at: new Date().toISOString(),
-            error_message: error?.message ?? "Unknown error",
+            error_message:
+               error instanceof Error ? error.message : "Unknown error",
          })
          .eq("id", runRow.id);
 
@@ -250,13 +244,16 @@ export async function getIwkbuSyncDashboard(limit = 100) {
    const summary = {
       total_rows: statuses?.length ?? 0,
       ready: (statuses ?? []).filter(
-         (row: any) => row.reconciliation_status === "ready",
+         (row: { reconciliation_status: string }) =>
+            row.reconciliation_status === "ready",
       ).length,
       needs_review: (statuses ?? []).filter(
-         (row: any) => row.reconciliation_status === "needs_review",
+         (row: { reconciliation_status: string }) =>
+            row.reconciliation_status === "needs_review",
       ).length,
       blocked: (statuses ?? []).filter(
-         (row: any) => row.reconciliation_status === "blocked",
+         (row: { reconciliation_status: string }) =>
+            row.reconciliation_status === "blocked",
       ).length,
       source_records: sourceRecordsCount ?? 0,
    };
@@ -287,13 +284,18 @@ export async function getPoIwkbuStatus(poId: string) {
       statuses: rows,
       summary: {
          total: rows.length,
-         ready: rows.filter((r: any) => r.reconciliation_status === "ready")
-            .length,
-         needs_review: rows.filter(
-            (r: any) => r.reconciliation_status === "needs_review",
+         ready: rows.filter(
+            (r: { reconciliation_status: string }) =>
+               r.reconciliation_status === "ready",
          ).length,
-         blocked: rows.filter((r: any) => r.reconciliation_status === "blocked")
-            .length,
+         needs_review: rows.filter(
+            (r: { reconciliation_status: string }) =>
+               r.reconciliation_status === "needs_review",
+         ).length,
+         blocked: rows.filter(
+            (r: { reconciliation_status: string }) =>
+               r.reconciliation_status === "blocked",
+         ).length,
       },
    };
 }

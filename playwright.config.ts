@@ -22,7 +22,10 @@ export default defineConfig({
   },
   webServer: shouldStartWebServer
     ? {
-        command: `pnpm exec next start -p ${BASE.port || "3000"} -H ${BASE.hostname}`,
+        // Source .env.local agar men-override stale shell env (mis. SUPABASE_URL
+        // / SUPABASE_SERVICE_ROLE_KEY dari project lain) — Next.js tidak override
+        // process.env yang sudah ada, jadi harus dispesifikkan eksplisit.
+        command: `bash -c "set -a; . ./.env.local 2>/dev/null; set +a; exec pnpm exec next start -p ${BASE.port || "3000"} -H ${BASE.hostname}"`,
         url: BASE_URL,
         reuseExistingServer: !process.env.CI,
         timeout: 120_000,
@@ -35,5 +38,9 @@ export default defineConfig({
     { name: "loket", testMatch: "loket.spec.ts", dependencies: ["auth"] },
     { name: "admin-terminal", testMatch: "admin-terminal.spec.ts", dependencies: ["auth"] },
     { name: "staf-iw", testMatch: "staf-iw.spec.ts", dependencies: ["auth"] },
+    // Sebelumnya orphaned (tak masuk projects) -> tak pernah dijalankan `npx playwright test`.
+    { name: "temuan", testMatch: "temuan.spec.ts", dependencies: ["auth"] },
+    { name: "audit-laporan", testMatch: "audit-laporan.spec.ts", dependencies: ["auth"] },
+    { name: "storage", testMatch: "storage.spec.ts", dependencies: ["auth"] },
   ],
 });

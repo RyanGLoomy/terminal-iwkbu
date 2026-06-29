@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, memo } from "react";
+import { memo } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -108,7 +108,7 @@ export const RekonsiliasiPanel = memo(function RekonsiliasiPanelContent({
    armada: Armada[];
 }) {
    // Memoize heavy computations
-   const rows = useMemo(() => {
+   const rows = (() => {
       const builtRows = buildRows(poAktif, armada).sort((a, b) => {
          const priority = {
             "perlu perhatian": 0,
@@ -118,28 +118,21 @@ export const RekonsiliasiPanel = memo(function RekonsiliasiPanelContent({
          return priority[a.status] - priority[b.status];
       });
       return builtRows;
-   }, [poAktif, armada]);
+   })();
 
    // Memoize stats calculations
-   const stats = useMemo(() => {
-      const totalArmada = armada.length;
-      const armadaTerverifikasi = armada.filter(
+   const stats = {
+      totalArmada: armada.length,
+      armadaTerverifikasi: armada.filter(
          (item) => item.status_verifikasi === "terverifikasi",
-      ).length;
-      const armadaMenunggu = armada.filter(
+      ).length,
+      armadaMenunggu: armada.filter(
          (item) => item.status_verifikasi === "menunggu",
-      ).length;
-      const poTanpaArmada = rows.filter(
+      ).length,
+      poTanpaArmada: rows.filter(
          (row) => row.status === "belum ada armada",
-      ).length;
-
-      return {
-         totalArmada,
-         armadaTerverifikasi,
-         armadaMenunggu,
-         poTanpaArmada,
-      };
-   }, [armada, rows]);
+      ).length,
+   };
 
    const handleExportCSV = () => {
       downloadCsv(
@@ -200,13 +193,13 @@ export const RekonsiliasiPanel = memo(function RekonsiliasiPanelContent({
             />
          </div>
 
-          <Card className="border-border">
+          <Card className="border-base-300">
              <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                    <CardTitle className="text-base">
                       Status Rekonsiliasi Data PO
                    </CardTitle>
-                   <p className="text-sm text-muted-foreground mt-1">
+                   <p className="text-sm text-base-content/70 mt-1">
                       Pemadanan data armada terhadap status verifikasi PO untuk
                       memastikan data pembanding siap digunakan.
                    </p>
@@ -218,12 +211,12 @@ export const RekonsiliasiPanel = memo(function RekonsiliasiPanelContent({
                    disabled={rows.length === 0}
                    className="shrink-0"
                 >
-                   <Download className="h-4 w-4 mr-1.5" />
+                   <Download className="h-4 w-4 mr-1.5" aria-hidden="true" />
                    CSV
                 </Button>
              </CardHeader>
             <CardContent>
-               <div className="overflow-hidden rounded-lg border border-border bg-card">
+               <div className="overflow-hidden rounded-lg border border-base-300 bg-base-100">
                   <Table caption="Daftar status rekonsiliasi armada">
                      <TableHeader>
                         <TableRow>
@@ -244,7 +237,7 @@ export const RekonsiliasiPanel = memo(function RekonsiliasiPanelContent({
                            <TableRow>
                               <TableCell
                                  colSpan={6}
-                                 className="py-8 text-center text-sm text-muted-foreground"
+                                 className="py-8 text-center text-sm text-base-content/70"
                               >
                                  Belum ada PO aktif untuk direkonsiliasi.
                               </TableCell>
@@ -252,7 +245,7 @@ export const RekonsiliasiPanel = memo(function RekonsiliasiPanelContent({
                         ) : (
                            rows.map((row) => (
                               <TableRow key={row.po.id}>
-                                  <TableCell className="font-medium text-foreground">
+                                  <TableCell className="font-medium text-base-content">
                                     {row.po.kode_po}
                                  </TableCell>
                                  <TableCell>{row.po.nama_perusahaan}</TableCell>
@@ -277,7 +270,7 @@ export const RekonsiliasiPanel = memo(function RekonsiliasiPanelContent({
                                        </Badge>
                                     )}
                                     {row.status === "belum ada armada" && (
-                                       <Badge className="bg-muted text-foreground border-border hover:bg-muted">
+                                       <Badge className="bg-base-200 text-base-content border-base-300 hover:bg-base-200">
                                           Belum Ada Armada
                                        </Badge>
                                     )}
@@ -291,8 +284,8 @@ export const RekonsiliasiPanel = memo(function RekonsiliasiPanelContent({
             </CardContent>
          </Card>
 
-         <Card className="border-border bg-muted/50">
-            <CardContent className="pt-5 text-sm text-muted-foreground">
+         <Card className="border-base-300 bg-base-200/50">
+            <CardContent className="pt-5 text-sm text-base-content/70">
                {poMenunggu.length} PO masih menunggu verifikasi awal sebelum
                masuk ke proses rekonsiliasi penuh.
             </CardContent>

@@ -1,17 +1,15 @@
 import { randomInt } from "crypto";
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { getAuthenticatedActor } from "@/lib/auth/server-actor";
-import {
-   ensureRoleOrThrow,
-   AuthorizationError,
-} from "@/lib/auth/requireRole.server";
+import { requireActor, actorErrorHandler } from "@/lib/auth/actor";
+import { ROLES } from "@/config/roles";
+import { sanitizeDbError, getErrorMessage } from "@/lib/db-error";
 import { logActivity } from "@/lib/supabase/queries/operasional.server";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PASSWORD_MIN_LENGTH = 8;
 // Per spec (UC-13): Staf IW mengelola akun admin-terminal & staf-iw.
-const MANAGED_ROLES = ["admin-terminal", "staf-iw"] as const;
+const MANAGED_ROLES = [ROLES.ADMIN_TERMINAL, ROLES.STAF_IW] as const;
 type ManagedRole = (typeof MANAGED_ROLES)[number];
 
 function randomSuffix(length: number) {
@@ -41,24 +39,6 @@ function validatePassword(password: string) {
 
 function isManagedRole(value: string): value is ManagedRole {
    return (MANAGED_ROLES as readonly string[]).includes(value);
-}
-
-async function requireStafIwActor() {
-   const actor = await getAuthenticatedActor();
-   if (!actor) {
-      return {
-         error: NextResponse.json({ message: "Unauthorized" }, { status: 401 }),
-      };
-   }
-   try {
-      ensureRoleOrThrow(actor.user, actor.profile, "staf-iw");
-   } catch (error) {
-      const status = error instanceof AuthorizationError ? 403 : 500;
-      return {
-         error: NextResponse.json({ message: "Akses ditolak" }, { status }),
-      };
-   }
-   return { actor };
 }
 
 async function getRoleId(
@@ -98,8 +78,7 @@ async function cleanupCreatedUser(
 // GET: daftar akun admin-terminal & staf-iw
 export async function GET() {
    try {
-      const { error } = await requireStafIwActor();
-      if (error) return error;
+      await requireActor(ROLES.STAF_IW);
 
       const admin = createAdminClient();
       const { adminTerminalRoleId, stafIwRoleId } = await getManagedRoleIds(admin);
@@ -114,25 +93,21 @@ export async function GET() {
 
       if (queryError) {
          return NextResponse.json(
-            { message: queryError.message },
+            { message: sanitizeDbError(queryError, "admin-terminal list") },
             { status: 500 },
          );
       }
 
       return NextResponse.json({ data: data ?? [] });
-   } catch (err) {
-      return NextResponse.json(
-         { message: err instanceof Error ? err.message : "Internal error" },
-         { status: 500 },
-      );
+   } catch (error) {
+      return actorErrorHandler(error);
    }
 }
 
 // POST: buat akun admin-terminal atau staf-iw baru
 export async function POST(request: Request) {
    try {
-      const { actor, error } = await requireStafIwActor();
-      if (error) return error;
+      const actor = await requireActor(ROLES.STAF_IW);
 
       const body = await request.json().catch(() => null);
       const roleRaw = normalizeText(body?.role) || "admin-terminal";
@@ -207,12 +182,12 @@ export async function POST(request: Request) {
          });
 
       if (authError || !authData?.user?.id) {
-         const msg = authError?.message ?? "Gagal membuat akun";
+         const authMsg = getErrorMessage(authError);
          return NextResponse.json(
             {
-               message: msg.toLowerCase().includes("already")
+               message: authMsg.toLowerCase().includes("already")
                   ? "Email sudah terdaftar"
-                  : msg,
+                  : "Gagal membuat akun",
             },
             { status: 400 },
          );
@@ -232,7 +207,7 @@ export async function POST(request: Request) {
       if (profileError) {
          await cleanupCreatedUser(admin, userId).catch(() => undefined);
          return NextResponse.json(
-            { message: profileError.message },
+            { message: sanitizeDbError(profileError, "admin-terminal create profile") },
             { status: 400 },
          );
       }
@@ -243,7 +218,7 @@ export async function POST(request: Request) {
       if (userRolesError) {
          await cleanupCreatedUser(admin, userId).catch(() => undefined);
          return NextResponse.json(
-            { message: userRolesError.message },
+            { message: sanitizeDbError(userRolesError, "admin-terminal create role") },
             { status: 400 },
          );
       }
@@ -260,19 +235,15 @@ export async function POST(request: Request) {
          user_id: userId,
          role,
       });
-   } catch (err) {
-      return NextResponse.json(
-         { message: err instanceof Error ? err.message : "Internal error" },
-         { status: 500 },
-      );
+   } catch (error) {
+      return actorErrorHandler(error);
    }
 }
 
 // PATCH: ubah nama / aktif-nonaktif / reset password akun admin-terminal|staf-iw
 export async function PATCH(request: Request) {
    try {
-      const { actor, error } = await requireStafIwActor();
-      if (error) return error;
+      const actor = await requireActor(ROLES.STAF_IW);
 
       const body = await request.json().catch(() => null);
       const id = normalizeText(body?.id);
@@ -328,7 +299,7 @@ export async function PATCH(request: Request) {
             .eq("id", id);
          if (updateError) {
             return NextResponse.json(
-               { message: updateError.message },
+               { message: sanitizeDbError(updateError, "admin-terminal update profile") },
                { status: 400 },
             );
          }
@@ -342,7 +313,7 @@ export async function PATCH(request: Request) {
          });
          if (authError) {
             return NextResponse.json(
-               { message: authError.message },
+               { message: sanitizeDbError(authError, "admin-terminal update password") },
                { status: 400 },
             );
          }
@@ -364,10 +335,7 @@ export async function PATCH(request: Request) {
       );
 
       return NextResponse.json({ password: generatedPassword });
-   } catch (err) {
-      return NextResponse.json(
-         { message: err instanceof Error ? err.message : "Internal error" },
-         { status: 500 },
-      );
+   } catch (error) {
+      return actorErrorHandler(error);
    }
 }

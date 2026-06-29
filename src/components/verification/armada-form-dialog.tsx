@@ -30,6 +30,8 @@ const formSchema = z.object({
    kapasitas_penumpang: z.coerce.number().min(1).optional(),
 });
 
+export type ArmadaFormValues = z.infer<typeof formSchema>;
+
 interface ArmadaFormDialogProps {
    open: boolean;
    onOpenChange: (open: boolean) => void;
@@ -97,7 +99,7 @@ export function ArmadaFormDialog({
                          {...form.register("nomor_polisi")}
                       />
                       {form.formState.errors.nomor_polisi && (
-                         <p className="text-sm text-destructive">
+                         <p className="text-sm text-error">
                             {form.formState.errors.nomor_polisi.message}
                          </p>
                       )}
@@ -122,7 +124,7 @@ export function ArmadaFormDialog({
                          {...form.register("merk")}
                       />
                       {form.formState.errors.merk && (
-                         <p className="text-sm text-destructive">
+                         <p className="text-sm text-error">
                             {form.formState.errors.merk.message}
                          </p>
                       )}
@@ -136,7 +138,7 @@ export function ArmadaFormDialog({
                          {...form.register("tipe")}
                       />
                       {form.formState.errors.tipe && (
-                         <p className="text-sm text-destructive">
+                         <p className="text-sm text-error">
                             {form.formState.errors.tipe.message}
                          </p>
                       )}
@@ -153,7 +155,7 @@ export function ArmadaFormDialog({
                          {...form.register("tahun_pembuatan")}
                       />
                       {form.formState.errors.tahun_pembuatan && (
-                         <p className="text-sm text-destructive">
+                         <p className="text-sm text-error">
                             {form.formState.errors.tahun_pembuatan.message}
                          </p>
                       )}
@@ -168,7 +170,7 @@ export function ArmadaFormDialog({
                          {...form.register("kapasitas_penumpang")}
                       />
                       {form.formState.errors.kapasitas_penumpang && (
-                         <p className="text-sm text-destructive">
+                         <p className="text-sm text-error">
                             {form.formState.errors.kapasitas_penumpang.message}
                          </p>
                       )}

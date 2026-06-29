@@ -8,7 +8,7 @@ export default function LoginPage() {
             {/* Logo + judul */}
             <div className="mb-8 flex flex-col items-center gap-3 text-center">
                <div className="flex size-14 items-center justify-center rounded-2xl bg-primary text-primary-content">
-                  <Bus className="size-7" />
+                  <Bus className="size-7" aria-hidden="true" />
                </div>
                <div>
                   <h1 className="text-xl font-bold tracking-tight text-base-content">

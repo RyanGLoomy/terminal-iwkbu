@@ -28,7 +28,7 @@ const WeeklyTrendChart = dynamic(
       ),
    {
       ssr: false,
-      loading: () => <div className="h-[300px] rounded-xl bg-muted/30 animate-pulse" />,
+      loading: () => <div className="h-[300px] rounded-xl bg-base-200/30 animate-pulse" />,
    },
 );
 
@@ -121,7 +121,7 @@ export function PetugasDashboardPanel() {
        return (
           <LoadingState
              variant="spinner"
-             text="Memuat dashboard..."
+             text="Memuat dashboard…"
              className="animate-fade-in p-8"
           />
        );
@@ -130,14 +130,14 @@ export function PetugasDashboardPanel() {
    return (
       <div className="space-y-5">
          {/* Session Control Card */}
-         <Card className="card-interactive border-border">
+         <Card className="card-interactive border-base-300">
             <CardHeader className="flex flex-row items-center justify-between pb-4">
                <div>
                   <CardTitle className="text-base flex items-center gap-2">
-                     <Activity className="h-4 w-4" />
+                     <Activity className="h-4 w-4" aria-hidden="true" />
                      Sesi Kerja Hari Ini
                   </CardTitle>
-                  <p className="text-sm text-muted-foreground mt-1">
+                  <p className="text-sm text-base-content/70 mt-1">
                      {session
                         ? `Aktif sejak ${formatDateTime(session.waktu_mulai)}`
                         : "Belum ada sesi aktif. Buka sesi untuk mulai mencatat."}
@@ -147,7 +147,7 @@ export function PetugasDashboardPanel() {
                   className={`text-xs font-medium gap-1.5 ${
                      session
                         ? "bg-green-50 text-brand-green border border-green-200/60 dark:bg-green-950/50 dark:text-green-300 dark:border-green-800"
-                        : "bg-muted text-muted-foreground border border-border"
+                        : "bg-base-200 text-base-content/70 border border-base-300"
                   }`}
                >
                   <div
@@ -166,9 +166,9 @@ export function PetugasDashboardPanel() {
                      size="sm"
                   >
                      {actionLoading && !session ? (
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
                      ) : (
-                        <LogIn className="mr-2 h-4 w-4" />
+                        <LogIn className="mr-2 h-4 w-4" aria-hidden="true" />
                      )}
                      Buka Sesi
                   </Button>
@@ -179,9 +179,9 @@ export function PetugasDashboardPanel() {
                      size="sm"
                   >
                      {actionLoading && !!session ? (
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
                      ) : (
-                        <LogOut className="mr-2 h-4 w-4" />
+                        <LogOut className="mr-2 h-4 w-4" aria-hidden="true" />
                      )}
                      Tutup Sesi
                   </Button>

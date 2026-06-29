@@ -1,26 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sanitizeDbError } from "@/lib/db-error";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { getAuthenticatedActor } from "@/lib/auth/server-actor";
-import {
-   ensureRoleOrThrow,
-   AuthorizationError,
-} from "@/lib/auth/requireRole.server";
+import { requireActor, actorErrorHandler } from "@/lib/auth/actor";
+import { ROLES } from "@/config/roles";
 
 export async function GET(
    _request: NextRequest,
    context: { params: Promise<{ id: string }> },
 ) {
    try {
-      const actor = await getAuthenticatedActor();
-      if (!actor) {
-         return NextResponse.json(
-            { message: "Unauthorized" },
-            { status: 401 },
-         );
-      }
-
-      ensureRoleOrThrow(actor.user, actor.profile, "po");
+      const actor = await requireActor(ROLES.PO);
 
       const { id } = await context.params;
       const admin = createAdminClient();
@@ -61,16 +50,7 @@ export async function GET(
       }
 
       return NextResponse.json({ data: actions ?? [] });
-   } catch (error: any) {
-      if (error instanceof AuthorizationError) {
-         return NextResponse.json(
-            { message: sanitizeDbError(error) },
-            { status: 403 },
-         );
-      }
-      return NextResponse.json(
-         { message: error?.message ?? "Internal error" },
-         { status: 500 },
-      );
+   } catch (error) {
+      return actorErrorHandler(error);
    }
 }

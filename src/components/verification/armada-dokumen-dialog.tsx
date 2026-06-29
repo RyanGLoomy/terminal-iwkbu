@@ -18,6 +18,7 @@ import {
    deleteArmadaDokumen,
    getArmadaDokumenUrl,
 } from "@/lib/supabase/queries/verification.client";
+import { getErrorMessage } from "@/lib/db-error";
 
 const JENIS_DOKUMEN = [
    { value: "stck" as const, label: "STCK" },
@@ -80,8 +81,8 @@ export function ArmadaDokumenDialog({
          );
          toast.success("Dokumen berhasil diunggah");
          await loadDokumen(armada.id);
-      } catch (error: any) {
-         toast.error(error?.message ?? "Gagal mengunggah dokumen");
+      } catch (error: unknown) {
+         toast.error(getErrorMessage(error));
       } finally {
          setUploading(null);
          input.value = "";
@@ -93,8 +94,8 @@ export function ArmadaDokumenDialog({
          await deleteArmadaDokumen(dok.id, dok.file_path);
          toast.success("Dokumen dihapus");
          if (armada) await loadDokumen(armada.id);
-      } catch (error: any) {
-         toast.error(error?.message ?? "Gagal menghapus dokumen");
+      } catch (error: unknown) {
+         toast.error(getErrorMessage(error));
       }
    }
 
@@ -102,8 +103,8 @@ export function ArmadaDokumenDialog({
       try {
          const url = await getArmadaDokumenUrl(dok.file_path);
          window.open(url, "_blank");
-      } catch (error: any) {
-         toast.error(error?.message ?? "Gagal membuka dokumen");
+      } catch (error: unknown) {
+         toast.error(getErrorMessage(error));
       }
    }
 
@@ -114,7 +115,7 @@ export function ArmadaDokumenDialog({
          <DialogContent className="max-w-lg">
             <DialogHeader>
                <DialogTitle className="flex items-center gap-2">
-                  <Paperclip className="h-4 w-4" />
+                  <Paperclip className="h-4 w-4" aria-hidden="true" />
                   Dokumen Armada
                </DialogTitle>
                <DialogDescription>
@@ -151,10 +152,10 @@ export function ArmadaDokumenDialog({
                               }
                            >
                               {uploading === jenis.value ? (
-                                 "Mengunggah..."
+                                 "Mengunggah…"
                               ) : (
                                  <>
-                                    <Upload className="h-3.5 w-3.5 mr-1" />
+                                    <Upload className="h-3.5 w-3.5 mr-1" aria-hidden="true" />
                                     Upload
                                  </>
                               )}
@@ -165,15 +166,15 @@ export function ArmadaDokumenDialog({
                               {docs.map((dok) => (
                                  <div
                                     key={dok.id}
-                                    className="flex items-center justify-between gap-2 rounded-lg border border-border px-3 py-2"
+                                    className="flex items-center justify-between gap-2 rounded-lg border border-base-300 px-3 py-2"
                                  >
                                     <div className="flex items-center gap-2 min-w-0">
-                                       <FileText className="h-4 w-4 text-muted-foreground shrink-0" />
+                                       <FileText className="h-4 w-4 text-base-content/70 shrink-0" aria-hidden="true" />
                                        <div className="min-w-0">
                                           <p className="text-sm truncate">
                                              {dok.file_name}
                                           </p>
-                                          <p className="text-xs text-muted-foreground">
+                                          <p className="text-xs text-base-content/70">
                                              {dok.file_size
                                                 ? `${(dok.file_size / 1024).toFixed(0)} KB`
                                                 : ""}
@@ -209,13 +210,13 @@ export function ArmadaDokumenDialog({
                })}
 
                {loading && (
-                  <p className="text-sm text-muted-foreground text-center py-4">
-                     Memuat dokumen...
+                  <p className="text-sm text-base-content/70 text-center py-4">
+                     Memuat dokumen…
                   </p>
                )}
 
                {!loading && dokumen.length === 0 && (
-                  <p className="text-sm text-muted-foreground text-center py-4">
+                  <p className="text-sm text-base-content/70 text-center py-4">
                      Belum ada dokumen diunggah
                   </p>
                )}

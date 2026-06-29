@@ -23,10 +23,10 @@ export default async function AdminTerminalPage() {
    return (
       <section className="space-y-6">
          <div>
-            <h1 className="text-xl font-bold tracking-tight text-foreground">
+            <h1 className="text-xl font-bold tracking-tight text-base-content">
                Dashboard Admin Terminal
             </h1>
-            <p className="text-sm text-muted-foreground mt-1">
+            <p className="text-sm text-base-content/70 mt-1">
                Status operasional terminal hari ini.
             </p>
          </div>

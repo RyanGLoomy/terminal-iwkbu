@@ -167,6 +167,10 @@ export type AksiLog =
    | "VERIFIKASI_PO"
    | "PERIODE_REKONSILIASI"
    | "VERIFIKASI_PIN"
+   | "LOGOUT_SESI_PIN"
+   | "BUAT_PETUGAS_TERMINAL"
+   | "UPDATE_PETUGAS_TERMINAL"
+   | "HAPUS_PETUGAS_TERMINAL"
    | "UPLOAD_DOKUMEN_ARMADA";
 
 export interface ActivityLog {

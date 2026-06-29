@@ -117,11 +117,11 @@ export default function ResetPasswordPage() {
       <div className="command-panel w-full max-w-[420px] rounded-3xl p-5 sm:p-7">
         {sessionError ? (
           <div className="space-y-5">
-            <div className="flex flex-col items-center gap-3 rounded-2xl border border-destructive/30 bg-destructive/5 px-5 py-8 text-center">
-              <AlertCircle className="h-10 w-10 text-destructive" />
+            <div className="flex flex-col items-center gap-3 rounded-2xl border border-destructive/30 bg-error/5 px-5 py-8 text-center">
+              <AlertCircle className="h-10 w-10 text-error" aria-hidden="true" />
               <div className="space-y-1">
-                <p className="font800 text-foreground">Tautan tidak valid</p>
-                <p className="text-sm text-muted-foreground">
+                <p className="font800 text-base-content">Tautan tidak valid</p>
+                <p className="text-sm text-base-content/70">
                   Tautan reset password tidak valid atau sudah kedaluwarsa.
                   Silakan ajukan reset password ulang.
                 </p>
@@ -138,26 +138,26 @@ export default function ResetPasswordPage() {
         ) : success ? (
           <div className="space-y-5">
             <div className="flex flex-col items-center gap-3 rounded-2xl border border-brand-green/30 bg-brand-green/5 px-5 py-8 text-center">
-              <CheckCircle2 className="h-10 w-10 text-brand-green" />
+              <CheckCircle2 className="h-10 w-10 text-brand-green" aria-hidden="true" />
               <div className="space-y-1">
-                <p className="font800 text-foreground">
+                <p className="font800 text-base-content">
                   Password berhasil diubah
                 </p>
-                <p className="text-sm text-muted-foreground">
-                  Mengarahkan ke halaman masuk...
+                <p className="text-sm text-base-content/70">
+                  Mengarahkan ke halaman masuk…
                 </p>
               </div>
             </div>
           </div>
         ) : !sessionReady ? (
           <div className="flex items-center justify-center py-12">
-            <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+            <Loader2 className="h-6 w-6 animate-spin text-base-content/70" />
           </div>
         ) : (
           <>
-            <div className="mb-7 border-b border-border pb-6">
-              <h2 className="text-heading text-foreground">Reset password</h2>
-              <p className="mt-3 text-sm leading-6 text-muted-foreground">
+            <div className="mb-7 border-b border-base-300 pb-6">
+              <h2 className="text-heading text-base-content">Reset password</h2>
+              <p className="mt-3 text-sm leading-6 text-base-content/70">
                 Masukkan password baru untuk akun Anda.
               </p>
             </div>
@@ -165,7 +165,7 @@ export default function ResetPasswordPage() {
             <form onSubmit={handleSubmit} className="space-y-5">
               {error && (
                 <Alert variant="destructive">
-                  <AlertCircle className="h-4 w-4" />
+                  <AlertCircle className="h-4 w-4" aria-hidden="true" />
                   <AlertDescription>{error}</AlertDescription>
                 </Alert>
               )}
@@ -173,7 +173,7 @@ export default function ResetPasswordPage() {
               <div className="space-y-2.5">
                 <Label htmlFor="password">Password baru</Label>
                 <div className="relative">
-                  <KeyRound className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                  <KeyRound className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-base-content/70" aria-hidden="true" />
                   <Input
                     id="password"
                     type={showPassword ? "text" : "password"}
@@ -189,7 +189,7 @@ export default function ResetPasswordPage() {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-base-content/70 hover:text-base-content"
                     tabIndex={-1}
                   >
                     {showPassword ? (
@@ -204,7 +204,7 @@ export default function ResetPasswordPage() {
               <div className="space-y-2.5">
                 <Label htmlFor="confirm-password">Konfirmasi password baru</Label>
                 <div className="relative">
-                  <KeyRound className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                  <KeyRound className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-base-content/70" aria-hidden="true" />
                   <Input
                     id="confirm-password"
                     type={showPassword ? "text" : "password"}
@@ -226,8 +226,8 @@ export default function ResetPasswordPage() {
               >
                 {loading ? (
                   <>
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    Mengubah password...
+                    <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+                    Mengubah password…
                   </>
                 ) : (
                   "Ubah password"

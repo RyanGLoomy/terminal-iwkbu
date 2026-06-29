@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import { getAuthenticatedActor } from "@/lib/auth/server-actor";
-import { ensureRoleOrThrow } from "@/lib/auth/requireRole.server";
+import { requireActor, actorErrorHandler } from "@/lib/auth/actor";
+import { ROLES } from "@/config/roles";
 import { logActivity } from "@/lib/supabase/queries/operasional.server";
 
 /**
@@ -15,10 +15,7 @@ import { logActivity } from "@/lib/supabase/queries/operasional.server";
  */
 export async function POST(request: NextRequest) {
    try {
-      const actor = await getAuthenticatedActor();
-      if (!actor) {
-         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-      }
+      const actor = await requireActor(ROLES.PETUGAS_LOKET);
 
       const supabase = await createClient();
 
@@ -53,16 +50,7 @@ export async function POST(request: NextRequest) {
          );
       }
 
-      try {
-         ensureRoleOrThrow(actor.user, actor.profile, "loket");
-      } catch (err: unknown) {
-         return NextResponse.json(
-            { message: err instanceof Error ? err.message : "Forbidden" },
-            { status: (err as any)?.status ?? 403 },
-         );
-      }
-
-      if (sesi.status !== "aktif") {
+       if (sesi.status !== "aktif") {
          return NextResponse.json(
             { message: "Sesi sudah ditutup sebelumnya" },
             { status: 409 },
@@ -109,9 +97,7 @@ export async function POST(request: NextRequest) {
          success: true,
          data: updatedSesi,
       });
-   } catch (error: unknown) {
-      const message =
-         error instanceof Error ? error.message : "Internal server error";
-       return NextResponse.json({ message }, { status: 500 });
+   } catch (error) {
+      return actorErrorHandler(error);
    }
 }

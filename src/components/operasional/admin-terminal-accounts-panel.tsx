@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
    Card,
@@ -62,7 +62,7 @@ export function AdminTerminalAccountsPanel({
    } | null>(null);
    const [copied, setCopied] = useState(false);
 
-   const load = useCallback(async () => {
+   const load = async () => {
       try {
          const data = await listAdminTerminalAccounts();
          setAccounts(data);
@@ -73,7 +73,7 @@ export function AdminTerminalAccountsPanel({
       } finally {
          setLoading(false);
       }
-   }, []);
+   };
 
    useEffect(() => {
       load();
@@ -166,7 +166,7 @@ export function AdminTerminalAccountsPanel({
          <Card>
              <CardHeader className="pb-4">
                 <CardTitle className="flex items-center gap-2 text-base">
-                   <UserPlus className="size-4 text-primary" />
+                   <UserPlus className="size-4 text-primary" aria-hidden="true" />
                    Tambah Akun Admin Terminal / Staf IW
                 </CardTitle>
             </CardHeader>
@@ -246,7 +246,7 @@ export function AdminTerminalAccountsPanel({
                   </div>
                   <div className="sm:col-span-2">
                      <Button type="submit" disabled={creating}>
-                        {creating ? "Memproses..." : "Buat Akun"}
+                        {creating ? "Memproses…" : "Buat Akun"}
                      </Button>
                   </div>
                </form>
@@ -275,9 +275,9 @@ export function AdminTerminalAccountsPanel({
                               onClick={copyCreds}
                            >
                               {copied ? (
-                                 <Check className="size-4" />
+                                 <Check className="size-4" aria-hidden="true" />
                               ) : (
-                                 <Copy className="size-4" />
+                                 <Copy className="size-4" aria-hidden="true" />
                               )}
                               Salin
                            </Button>
@@ -300,14 +300,14 @@ export function AdminTerminalAccountsPanel({
          <Card>
             <CardHeader className="pb-4">
                <CardTitle className="flex items-center gap-2 text-base">
-                  <ShieldCheck className="size-4 text-primary" />
+                  <ShieldCheck className="size-4 text-primary" aria-hidden="true" />
                   Daftar Akun Admin Terminal &amp; Staf IW
                </CardTitle>
             </CardHeader>
             <CardContent>
                {loading ? (
                   <p className="py-6 text-center text-sm text-base-content/60">
-                     Memuat data...
+                     Memuat data…
                   </p>
                ) : accounts.length === 0 ? (
                   <EmptyState

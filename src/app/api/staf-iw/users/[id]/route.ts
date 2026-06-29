@@ -1,10 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { getAuthenticatedActor } from "@/lib/auth/server-actor";
-import {
-   ensureRoleOrThrow,
-   AuthorizationError,
-} from "@/lib/auth/requireRole.server";
+import { requireActor, actorErrorHandler } from "@/lib/auth/actor";
+import { ROLES } from "@/config/roles";
 import { logActivity } from "@/lib/supabase/queries/operasional.server";
 
 export async function PATCH(
@@ -12,12 +9,7 @@ export async function PATCH(
    context: { params: Promise<{ id: string }> },
 ) {
    try {
-      const actor = await getAuthenticatedActor();
-      if (!actor) {
-         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-      }
-
-      ensureRoleOrThrow(actor.user, actor.profile, "staf-iw");
+      const actor = await requireActor(ROLES.STAF_IW);
 
       const { id } = await context.params;
 
@@ -39,7 +31,7 @@ export async function PATCH(
       }
 
       // Per spec (UC-13): Staf IW hanya mengelola akun admin-terminal & staf-iw.
-      const MANAGEABLE_ROLES = ["admin-terminal", "staf-iw"];
+      const MANAGEABLE_ROLES: string[] = [ROLES.ADMIN_TERMINAL, ROLES.STAF_IW];
       if (!MANAGEABLE_ROLES.includes(newRoleName)) {
          return NextResponse.json(
             { message: "Role tidak diizinkan untuk dikelola oleh Staf IW." },
@@ -111,15 +103,6 @@ export async function PATCH(
 
       return NextResponse.json({ success: true });
    } catch (error) {
-      if (error instanceof AuthorizationError) {
-         return NextResponse.json(
-            { message: "Akses ditolak" },
-            { status: 403 },
-         );
-      }
-      return NextResponse.json(
-         { message: "Terjadi kesalahan internal" },
-         { status: 500 },
-      );
+      return actorErrorHandler(error);
    }
 }

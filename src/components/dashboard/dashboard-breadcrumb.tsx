@@ -1,5 +1,6 @@
 "use client";
 
+import { Fragment } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -66,22 +67,22 @@ export function DashboardBreadcrumb() {
    return (
       <Breadcrumb>
          <BreadcrumbList>
-            {crumbs.map((crumb, idx) => (
-               <div key={crumb.href} className="flex items-center gap-1.5">
-                  <BreadcrumbItem>
-                     {crumb.isLast ? (
-                        <BreadcrumbPage>{crumb.label}</BreadcrumbPage>
-                     ) : (
-                        <>
-                           <BreadcrumbLink asChild>
-                              <Link href={crumb.href}>{crumb.label}</Link>
-                           </BreadcrumbLink>
-                        </>
-                     )}
-                  </BreadcrumbItem>
-                  {!crumb.isLast && <BreadcrumbSeparator />}
-               </div>
-            ))}
+             {crumbs.map((crumb) => (
+                <Fragment key={crumb.href}>
+                   <BreadcrumbItem>
+                      {crumb.isLast ? (
+                         <BreadcrumbPage>{crumb.label}</BreadcrumbPage>
+                      ) : (
+                         <>
+                            <BreadcrumbLink asChild>
+                               <Link href={crumb.href}>{crumb.label}</Link>
+                            </BreadcrumbLink>
+                         </>
+                      )}
+                   </BreadcrumbItem>
+                   {!crumb.isLast && <BreadcrumbSeparator />}
+                </Fragment>
+             ))}
          </BreadcrumbList>
       </Breadcrumb>
    );

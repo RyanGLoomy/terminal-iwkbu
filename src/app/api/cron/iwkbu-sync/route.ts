@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { executeIwkbuSync } from "@/lib/supabase/queries/iwkbu-sync.server";
 import { safeCompare } from "@/lib/auth/safe-compare";
+import { sanitizeDbError } from "@/lib/db-error";
 
 function isAuthorized(request: NextRequest) {
    const secret =
@@ -25,10 +26,10 @@ export async function POST(request: NextRequest) {
       });
 
       return NextResponse.json({ data: result });
-   } catch (error: any) {
-      return NextResponse.json(
-         { message: error?.message ?? "Internal error" },
-         { status: 500 },
-      );
-   }
+    } catch (error: unknown) {
+       return NextResponse.json(
+          { message: sanitizeDbError(error, "iwkbu-sync") },
+          { status: 500 },
+       );
+    }
 }

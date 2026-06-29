@@ -19,7 +19,7 @@ export default async function POTemuanPage() {
    if (!poData) {
       return (
          <section className="space-y-6">
-            <div className="text-center py-14 text-muted-foreground bg-muted/50 rounded-xl border border-dashed border-border">
+            <div className="text-center py-14 text-base-content/70 bg-base-200/50 rounded-xl border border-dashed border-base-300">
                <p className="text-sm">Profil PO tidak ditemukan.</p>
             </div>
          </section>
@@ -31,10 +31,10 @@ export default async function POTemuanPage() {
    return (
       <section className="space-y-6">
          <div>
-            <h1 className="text-xl font-bold tracking-tight text-foreground">
+            <h1 className="text-xl font-bold tracking-tight text-base-content">
                Temuan & Klarifikasi
             </h1>
-            <p className="text-sm text-muted-foreground mt-1 max-w-2xl">
+            <p className="text-sm text-base-content/70 mt-1 max-w-2xl">
                Lihat temuan yang berkaitan dengan armada Anda dan berikan
                klarifikasi jika diperlukan.
             </p>

@@ -16,6 +16,7 @@ import {
    TableRow,
 } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { getErrorMessage } from "@/lib/db-error";
 
 const statusBadge: Record<string, string> = {
    masuk: "bg-amber-50 text-accent border border-amber-200/60 dark:bg-amber-950/50 dark:text-amber-300 dark:border-amber-800",
@@ -31,9 +32,11 @@ function formatDateTime(value: string | null) {
 }
 
 export function RekapHarianPanel() {
-   const [tanggal, setTanggal] = useState(
-      new Date().toISOString().slice(0, 10),
-   );
+    const [tanggal, setTanggal] = useState("");
+
+    useEffect(() => {
+       setTanggal(new Date().toISOString().slice(0, 10));
+    }, []);
    const [rows, setRows] = useState<RekapHarianRow[]>([]);
    const [loading, setLoading] = useState(true);
    const [error, setError] = useState<string | null>(null);
@@ -41,17 +44,18 @@ export function RekapHarianPanel() {
    useEffect(() => {
       let mounted = true;
 
-      const load = async () => {
-         setLoading(true);
-         setError(null);
+       const load = async () => {
+          if (!tanggal) return;
+          setLoading(true);
+          setError(null);
 
-         try {
-            const data = await getRekapHarian(tanggal);
+          try {
+             const data = await getRekapHarian(tanggal);
             if (!mounted) return;
             setRows(data);
-         } catch (err: any) {
+         } catch (err: unknown) {
             if (!mounted) return;
-            setError(err.message ?? "Gagal memuat rekap harian");
+            setError(getErrorMessage(err));
          } finally {
             if (mounted) setLoading(false);
          }
@@ -65,13 +69,13 @@ export function RekapHarianPanel() {
    }, [tanggal]);
 
    return (
-      <Card className="border-border">
+      <Card className="border-base-300">
          <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between pb-4">
             <div>
                <CardTitle className="text-base">
                   Rekap Operasional Harian
                </CardTitle>
-               <p className="text-sm text-muted-foreground mt-1">
+               <p className="text-sm text-base-content/70 mt-1">
                   Daftar kendaraan masuk dan keluar per tanggal.
                </p>
             </div>
@@ -168,11 +172,11 @@ export function RekapHarianPanel() {
           </CardHeader>
          <CardContent>
             {error && (
-               <div className="text-sm text-destructive mb-4 animate-fade-in">
+               <div className="text-sm text-error mb-4 animate-fade-in">
                   {error}
                </div>
             )}
-            <div className="border border-border rounded-lg bg-card overflow-hidden">
+            <div className="border border-base-300 rounded-lg bg-base-100 overflow-hidden">
                <Table caption="Rekap harian kendaraan">
                   <TableHeader>
                      <TableRow>
@@ -187,7 +191,7 @@ export function RekapHarianPanel() {
                   <TableBody>
                      {loading ? (
                         <TableRow>
-                           <TableCell colSpan={6}>Memuat data...</TableCell>
+                           <TableCell colSpan={6}>Memuat data…</TableCell>
                         </TableRow>
                      ) : rows.length === 0 ? (
                         <TableRow>

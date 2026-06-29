@@ -2,6 +2,7 @@ import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
 import { resolveRoleFromUserAndProfile } from "./role";
 import { normalizeRoleName } from "@/lib/supabase/role-utils";
+import type { UserRoleRelation } from "@/lib/supabase/role-utils";
 
 export type AuthenticatedActor = {
    user: {
@@ -15,6 +16,11 @@ export type AuthenticatedActor = {
         full_name?: string | null;
        is_active?: boolean | null;
         role?: string | null;
+       user_roles?: UserRoleRelation | UserRoleRelation[];
+       roles?:
+          | { name?: string | null }
+          | Array<{ name?: string | null }>
+          | null;
        [key: string]: unknown;
     } | null;
     role: string;

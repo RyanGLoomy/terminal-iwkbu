@@ -33,6 +33,7 @@ import {
    getRoleNameFromProfile,
    normalizeRoleName,
 } from "@/lib/supabase/role-utils";
+import { getErrorMessage } from "@/lib/db-error";
 
 /* ────────────────────── types ────────────────────── */
 
@@ -74,14 +75,14 @@ function MsgAlert({ msg }: { msg: Msg }) {
          className={cn(
             "flex items-start gap-2.5 rounded-lg border px-4 py-3 text-sm animate-fade-in",
             isError
-               ? "border-red-200/60 bg-red-50/80 text-destructive dark:border-red-800/40 dark:bg-red-950/40 dark:text-red-400"
+               ? "border-red-200/60 bg-red-50/80 text-error dark:border-red-800/40 dark:bg-red-950/40 dark:text-red-400"
                : "border-emerald-200/60 bg-emerald-50/80 text-brand-green dark:border-emerald-800/40 dark:bg-emerald-950/40 dark:text-emerald-400",
          )}
       >
          {isError ? (
-            <AlertCircle className="h-4 w-4 mt-0.5 shrink-0" />
+            <AlertCircle className="h-4 w-4 mt-0.5 shrink-0" aria-hidden="true" />
          ) : (
-            <Check className="h-4 w-4 mt-0.5 shrink-0" />
+            <Check className="h-4 w-4 mt-0.5 shrink-0" aria-hidden="true" />
          )}
          <span>{msg.text}</span>
       </div>
@@ -229,10 +230,10 @@ export default function ProfilePage() {
             type: "success",
             text: "Profil berhasil diperbarui.",
          });
-      } catch (err: any) {
+      } catch (err: unknown) {
          setProfileMsg({
             type: "error",
-            text: err.message ?? "Gagal menyimpan profil.",
+            text: getErrorMessage(err),
          });
       } finally {
          setSavingProfile(false);
@@ -274,10 +275,10 @@ export default function ProfilePage() {
             type: "success",
             text: "Password berhasil diperbarui.",
          });
-      } catch (err: any) {
+      } catch (err: unknown) {
          setPasswordMsg({
             type: "error",
-            text: err.message ?? "Gagal mengubah password.",
+            text: getErrorMessage(err),
          });
       } finally {
          setSavingPassword(false);
@@ -313,10 +314,10 @@ export default function ProfilePage() {
          setNewPin("");
          setConfirmPin("");
          setPinMsg({ type: "success", text: "PIN berhasil diperbarui." });
-      } catch (err: any) {
+      } catch (err: unknown) {
          setPinMsg({
             type: "error",
-            text: err.message ?? "Gagal mengubah PIN.",
+            text: getErrorMessage(err),
          });
       } finally {
          setSavingPin(false);
@@ -326,8 +327,8 @@ export default function ProfilePage() {
    /* ── loading / error states ── */
    if (loading) {
       return (
-         <div className="flex items-center gap-2 text-sm text-muted-foreground p-8 animate-fade-in">
-            <Loader2 className="h-4 w-4 animate-spin" />
+         <div className="flex items-center gap-2 text-sm text-base-content/70 p-8 animate-fade-in">
+            <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
             Memuat profil…
          </div>
       );
@@ -351,31 +352,31 @@ export default function ProfilePage() {
          <div className="space-y-6 max-w-2xl">
             {/* ── Page Header ── */}
             <div>
-                <h1 className="text-xl font-bold tracking-tight text-foreground">
+                <h1 className="text-xl font-bold tracking-tight text-base-content">
                   Kelola Profil
                </h1>
-               <p className="text-sm text-muted-foreground mt-1">
+               <p className="text-sm text-base-content/70 mt-1">
                   Kelola informasi akun dan keamanan Anda.
                </p>
             </div>
 
             {/* ── Profile Card ── */}
-            <Card className="border-border overflow-hidden">
+            <Card className="border-base-300 overflow-hidden">
                {/* profile header with accent */}
                <div className="h-24 bg-gradient-to-r from-primary/80 to-primary/50" />
                <div className="px-6 -mt-8">
                   <div className="flex items-end gap-4">
                      {/* avatar */}
-                     <div className="h-16 w-16 rounded-2xl bg-card shadow-md border border-border/80 dark:border-border flex items-center justify-center text-lg font-bold text-primary select-none shrink-0">
+                     <div className="h-16 w-16 rounded-2xl bg-base-100 shadow-md border border-base-300/80 dark:border-base-300 flex items-center justify-center text-lg font-bold text-primary select-none shrink-0">
                         {displayInitials}
                      </div>
                   </div>
                   <div className="mt-3 mb-5">
-                      <h2 className="text-lg font-semibold text-foreground">
+                      <h2 className="text-lg font-semibold text-base-content">
                         {displayName}
                      </h2>
                      {isPetugas && petugasIdentity && (
-                        <p className="text-xs text-muted-foreground mt-0.5">
+                        <p className="text-xs text-base-content/70 mt-0.5">
                            Loket: {profile.full_name || profile.email}
                         </p>
                      )}
@@ -392,25 +393,25 @@ export default function ProfilePage() {
 
                   {/* email */}
                   <div className="space-y-1.5">
-                     <Label className="text-[13px] flex items-center gap-1.5 text-muted-foreground">
-                        <Mail className="h-3.5 w-3.5" />
+                     <Label className="text-[13px] flex items-center gap-1.5 text-base-content/70">
+                        <Mail className="h-3.5 w-3.5" aria-hidden="true" />
                         Email
                      </Label>
-                     <p className="text-sm text-foreground dark:text-muted-foreground/50 pl-5">
+                     <p className="text-sm text-base-content dark:text-base-content/70/50 pl-5">
                         {profile.email}
                      </p>
                   </div>
 
                   {/* divider */}
-                  <div className="border-t border-border dark:border-border" />
+                  <div className="border-t border-base-300 dark:border-base-300" />
 
                   {/* full name */}
                   <div className="space-y-1.5">
                      <Label
                         htmlFor="fullName"
-                        className="text-[13px] flex items-center gap-1.5 text-muted-foreground"
+                        className="text-[13px] flex items-center gap-1.5 text-base-content/70"
                      >
-                        <User className="h-3.5 w-3.5" />
+                        <User className="h-3.5 w-3.5" aria-hidden="true" />
                         {isPetugas ? "Nama Petugas" : "Nama Lengkap"}
                      </Label>
                      {canEditName ? (
@@ -423,7 +424,7 @@ export default function ProfilePage() {
                             placeholder="Masukkan nama lengkap"
                          />
                      ) : (
-                        <p className="text-sm text-foreground dark:text-muted-foreground/50 pl-5">
+                        <p className="text-sm text-base-content dark:text-base-content/70/50 pl-5">
                            {isPetugas && petugasIdentity
                               ? petugasIdentity.nama
                               : profile.full_name || "—"}
@@ -439,7 +440,7 @@ export default function ProfilePage() {
                            size="sm"
                         >
                            {savingProfile && (
-                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                              <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
                            )}
                            Simpan Perubahan
                         </Button>
@@ -449,10 +450,10 @@ export default function ProfilePage() {
             </Card>
 
             {/* ── Change Password Card ── */}
-            <Card className="border-border">
+            <Card className="border-base-300">
                <CardHeader className="pb-3">
                   <CardTitle className="text-base flex items-center gap-2">
-                     <Lock className="h-4 w-4 text-muted-foreground" />
+                     <Lock className="h-4 w-4 text-base-content/70" />
                      Ganti Password
                   </CardTitle>
                   <CardDescription>
@@ -468,7 +469,7 @@ export default function ProfilePage() {
                   <div className="space-y-1.5">
                      <Label
                         htmlFor="currentPassword"
-                        className="text-[13px] text-muted-foreground"
+                        className="text-[13px] text-base-content/70"
                      >
                         Password Saat Ini
                      </Label>
@@ -485,7 +486,7 @@ export default function ProfilePage() {
                            type="button"
                            tabIndex={-1}
                            onClick={() => setShowCurrentPw((v) => !v)}
-                           className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                           className="absolute right-3 top-1/2 -translate-y-1/2 text-base-content/70 hover:text-base-content transition-colors"
                         >
                            {showCurrentPw ? (
                               <EyeOff className="h-4 w-4" />
@@ -500,7 +501,7 @@ export default function ProfilePage() {
                   <div className="space-y-1.5">
                      <Label
                         htmlFor="newPassword"
-                        className="text-[13px] text-muted-foreground"
+                        className="text-[13px] text-base-content/70"
                      >
                         Password Baru
                      </Label>
@@ -517,7 +518,7 @@ export default function ProfilePage() {
                            type="button"
                            tabIndex={-1}
                            onClick={() => setShowNewPw((v) => !v)}
-                           className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                           className="absolute right-3 top-1/2 -translate-y-1/2 text-base-content/70 hover:text-base-content transition-colors"
                         >
                            {showNewPw ? (
                               <EyeOff className="h-4 w-4" />
@@ -532,7 +533,7 @@ export default function ProfilePage() {
                   <div className="space-y-1.5">
                      <Label
                         htmlFor="confirmPassword"
-                        className="text-[13px] text-muted-foreground"
+                        className="text-[13px] text-base-content/70"
                      >
                         Konfirmasi Password Baru
                      </Label>
@@ -552,10 +553,10 @@ export default function ProfilePage() {
                         disabled={savingPassword}
                         variant="outline"
                         size="sm"
-                        className="border-input"
+                        className="border-base-300"
                      >
                         {savingPassword && (
-                           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                           <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
                         )}
                         Perbarui Password
                      </Button>
@@ -565,10 +566,10 @@ export default function ProfilePage() {
 
             {/* ── Change PIN Card (Petugas Loket only) ── */}
             {isPetugas && (
-               <Card className="border-border">
+               <Card className="border-base-300">
                   <CardHeader className="pb-3">
                      <CardTitle className="text-base flex items-center gap-2">
-                        <KeyRound className="h-4 w-4 text-muted-foreground" />
+                        <KeyRound className="h-4 w-4 text-base-content/70" aria-hidden="true" />
                         Ganti PIN
                      </CardTitle>
                      <CardDescription>
@@ -582,7 +583,7 @@ export default function ProfilePage() {
                      <div className="space-y-1.5">
                         <Label
                            htmlFor="currentPin"
-                           className="text-[13px] text-muted-foreground"
+                           className="text-[13px] text-base-content/70"
                         >
                            PIN Saat Ini
                         </Label>
@@ -604,7 +605,7 @@ export default function ProfilePage() {
                      <div className="space-y-1.5">
                         <Label
                            htmlFor="newPin"
-                           className="text-[13px] text-muted-foreground"
+                           className="text-[13px] text-base-content/70"
                         >
                            PIN Baru
                         </Label>
@@ -626,7 +627,7 @@ export default function ProfilePage() {
                      <div className="space-y-1.5">
                         <Label
                            htmlFor="confirmPin"
-                           className="text-[13px] text-muted-foreground"
+                           className="text-[13px] text-base-content/70"
                         >
                            Konfirmasi PIN Baru
                         </Label>
@@ -650,10 +651,10 @@ export default function ProfilePage() {
                            disabled={savingPin}
                            variant="outline"
                            size="sm"
-                           className="border-input"
+                           className="border-base-300"
                         >
                            {savingPin && (
-                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                              <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
                            )}
                            Perbarui PIN
                         </Button>

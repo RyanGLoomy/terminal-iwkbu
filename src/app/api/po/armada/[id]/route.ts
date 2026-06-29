@@ -1,11 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sanitizeDbError } from "@/lib/db-error";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { getAuthenticatedActor } from "@/lib/auth/server-actor";
-import {
-   ensureRoleOrThrow,
-   AuthorizationError,
-} from "@/lib/auth/requireRole.server";
+import { requireActor, hasRole, actorErrorHandler } from "@/lib/auth/actor";
+import { ROLES } from "@/config/roles";
 import { logActivity } from "@/lib/supabase/queries/operasional.server";
 
 export async function PATCH(
@@ -13,12 +10,7 @@ export async function PATCH(
    context: { params: Promise<{ id: string }> },
 ) {
    try {
-      const actor = await getAuthenticatedActor();
-      if (!actor) {
-         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-      }
-
-      ensureRoleOrThrow(actor.user, actor.profile, "po");
+      const actor = await requireActor(ROLES.PO);
 
       const { id } = await context.params;
       const admin = createAdminClient();
@@ -114,17 +106,8 @@ export async function PATCH(
       );
 
       return NextResponse.json({ data: armada });
-    } catch (error: any) {
-      if (error instanceof AuthorizationError) {
-         return NextResponse.json(
-            { message: sanitizeDbError(error) },
-            { status: 403 },
-         );
-      }
-      return NextResponse.json(
-         { message: error?.message ?? "Internal error" },
-         { status: 500 },
-      );
+   } catch (error) {
+      return actorErrorHandler(error);
    }
 }
 
@@ -133,10 +116,7 @@ export async function DELETE(
    context: { params: Promise<{ id: string }> },
 ) {
    try {
-      const actor = await getAuthenticatedActor();
-      if (!actor) {
-         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-      }
+      const actor = await requireActor([ROLES.PO, ROLES.STAF_IW]);
 
       const { id } = await context.params;
       const admin = createAdminClient();
@@ -156,11 +136,9 @@ export async function DELETE(
 
       // Hanya Staf IW yang boleh menghapus armada milik PO lain secara administratif.
       // Admin Terminal tidak memiliki use case penghapusan armada (spec).
-      const isStaf = actor.role === "staf-iw";
+      const isStaf = hasRole(actor, ROLES.STAF_IW);
 
       if (!isStaf) {
-         ensureRoleOrThrow(actor.user, actor.profile, "po");
-
          if (existing.po_id !== actor.user.id) {
             return NextResponse.json(
                { message: "Armada bukan milik PO ini" },
@@ -193,16 +171,7 @@ export async function DELETE(
       );
 
       return NextResponse.json({ success: true });
-   } catch (error: any) {
-      if (error instanceof AuthorizationError) {
-         return NextResponse.json(
-            { message: sanitizeDbError(error) },
-            { status: 403 },
-         );
-      }
-      return NextResponse.json(
-         { message: error?.message ?? "Internal error" },
-         { status: 500 },
-      );
+   } catch (error) {
+      return actorErrorHandler(error);
    }
 }

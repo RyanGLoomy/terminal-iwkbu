@@ -57,10 +57,10 @@ export async function PATCH(request: NextRequest) {
       );
 
       return NextResponse.json({ success: true });
-   } catch (error: any) {
-      return NextResponse.json(
-         { message: error?.message ?? "Internal error" },
-         { status: 500 },
-      );
-   }
+    } catch (error: unknown) {
+       return NextResponse.json(
+          { message: sanitizeDbError(error, "profile") },
+          { status: 500 },
+       );
+    }
 }

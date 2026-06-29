@@ -61,16 +61,16 @@ export function StafIWStatsChart({
 
    return (
       <div className="grid gap-5 lg:grid-cols-2">
-         <Card className="border-border">
+         <Card className="border-base-300">
             <CardHeader className="pb-2">
-               <CardTitle className="text-sm font-medium flex items-center gap-2 text-foreground">
-                  <PieChartIcon className="h-4 w-4 text-brand-sky" />
+               <CardTitle className="text-sm font-medium flex items-center gap-2 text-base-content">
+                  <PieChartIcon className="h-4 w-4 text-brand-sky" aria-hidden="true" />
                   Distribusi Status PO
                </CardTitle>
             </CardHeader>
             <CardContent>
                {totalPO === 0 ? (
-                  <div className="flex items-center justify-center py-12 text-sm text-muted-foreground">
+                  <div className="flex items-center justify-center py-12 text-sm text-base-content/70">
                      Belum ada data PO.
                   </div>
                ) : (
@@ -107,10 +107,10 @@ export function StafIWStatsChart({
             </CardContent>
          </Card>
 
-         <Card className="border-border">
+         <Card className="border-base-300">
             <CardHeader className="pb-2">
-               <CardTitle className="text-sm font-medium flex items-center gap-2 text-foreground">
-                  <CheckCircle2 className="h-4 w-4 text-brand-green" />
+               <CardTitle className="text-sm font-medium flex items-center gap-2 text-base-content">
+                  <CheckCircle2 className="h-4 w-4 text-brand-green" aria-hidden="true" />
                   Status Verifikasi Armada
                   {totalArmada > 0 && (
                      <span className="ml-auto text-xs font-semibold text-brand-green">
@@ -121,7 +121,7 @@ export function StafIWStatsChart({
             </CardHeader>
             <CardContent>
                {totalArmada === 0 ? (
-                  <div className="flex items-center justify-center py-12 text-sm text-muted-foreground">
+                  <div className="flex items-center justify-center py-12 text-sm text-base-content/70">
                      Belum ada data armada.
                   </div>
                ) : (

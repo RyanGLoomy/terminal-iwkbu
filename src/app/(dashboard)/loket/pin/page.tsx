@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Loader2, ShieldCheck } from "lucide-react";
+import { getErrorMessage } from "@/lib/db-error";
 
 export default function LoketPinPage() {
    const [pin, setPin] = useState("");
@@ -71,8 +72,8 @@ export default function LoketPinPage() {
 
          // Langsung ke dashboard setelah PIN terverifikasi
          window.location.href = "/loket";
-      } catch (err: any) {
-         setError(err.message ?? "Gagal memverifikasi PIN");
+      } catch (err: unknown) {
+         setError(getErrorMessage(err));
       } finally {
          setLoading(false);
       }
@@ -81,9 +82,9 @@ export default function LoketPinPage() {
    if (checking) {
       return (
          <div className="min-h-[calc(100vh-6rem)] flex items-center justify-center animate-fade-in">
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-               <Loader2 className="h-4 w-4 animate-spin" />
-               Memeriksa sesi...
+            <div className="flex items-center gap-2 text-sm text-base-content/70">
+               <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+               Memeriksa sesi…
             </div>
          </div>
       );
@@ -91,10 +92,10 @@ export default function LoketPinPage() {
 
    return (
       <div className="min-h-[calc(100vh-6rem)] flex items-center justify-center animate-fade-in">
-         <Card className="w-full max-w-md border-border shadow-lg ">
+         <Card className="w-full max-w-md border-base-300 shadow-lg ">
             <CardHeader className="pb-4 text-center">
                <div className="mx-auto w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center mb-3">
-                  <ShieldCheck className="h-6 w-6 text-primary" />
+                  <ShieldCheck className="h-6 w-6 text-primary" aria-hidden="true" />
                </div>
                <CardTitle className="text-lg">Quick Login PIN</CardTitle>
             </CardHeader>
@@ -138,8 +139,8 @@ export default function LoketPinPage() {
                    >
                       {loading ? (
                          <>
-                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            Memverifikasi...
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
+                            Memverifikasi…
                          </>
                       ) : (
                          "Verifikasi PIN"

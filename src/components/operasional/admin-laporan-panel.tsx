@@ -113,15 +113,15 @@ const summaryHeaders = ["Kategori", "Masuk", "Keluar", "Di Terminal"];
 
 function PeriodeTable({ rows }: { rows: TerminalReportPeriodRow[] }) {
    return (
-      <Card className="border-border">
+      <Card className="border-base-300">
          <CardHeader>
             <CardTitle className="text-base">Ringkasan Periode</CardTitle>
-            <p className="text-sm text-muted-foreground mt-1">
+            <p className="text-sm text-base-content/70 mt-1">
                Agregasi harian, mingguan, atau bulanan sesuai rentang laporan.
             </p>
          </CardHeader>
          <CardContent>
-            <div className="overflow-hidden rounded-lg border border-border bg-card">
+            <div className="overflow-hidden rounded-lg border border-base-300 bg-base-100">
                <Table caption="Laporan ringkasan harian">
                   <TableHeader>
                      <TableRow>
@@ -136,7 +136,7 @@ function PeriodeTable({ rows }: { rows: TerminalReportPeriodRow[] }) {
                         <TableRow>
                            <TableCell
                               colSpan={4}
-                              className="py-6 text-center text-sm text-muted-foreground"
+                              className="py-6 text-center text-sm text-base-content/70"
                            >
                               Belum ada data periode.
                            </TableCell>
@@ -169,15 +169,15 @@ function PeriodeTable({ rows }: { rows: TerminalReportPeriodRow[] }) {
 
 function PetugasTable({ rows }: { rows: TerminalReportPetugasRow[] }) {
    return (
-      <Card className="border-border">
+      <Card className="border-base-300">
          <CardHeader>
             <CardTitle className="text-base">Rekap Per Petugas</CardTitle>
-            <p className="text-sm text-muted-foreground mt-1">
+            <p className="text-sm text-base-content/70 mt-1">
                Produktivitas transaksi masuk dan keluar per petugas.
             </p>
          </CardHeader>
          <CardContent>
-            <div className="max-h-[360px] overflow-auto rounded-lg border border-border bg-card">
+            <div className="max-h-[360px] overflow-auto rounded-lg border border-base-300 bg-base-100">
                <Table caption="Laporan per PO">
                   <TableHeader>
                      <TableRow>
@@ -192,7 +192,7 @@ function PetugasTable({ rows }: { rows: TerminalReportPetugasRow[] }) {
                         <TableRow>
                            <TableCell
                               colSpan={4}
-                              className="py-6 text-center text-sm text-muted-foreground"
+                              className="py-6 text-center text-sm text-base-content/70"
                            >
                               Belum ada data petugas.
                            </TableCell>
@@ -225,15 +225,15 @@ function PetugasTable({ rows }: { rows: TerminalReportPetugasRow[] }) {
 
 function ArmadaTable({ rows }: { rows: TerminalReportArmadaRow[] }) {
    return (
-      <Card className="border-border">
+      <Card className="border-base-300">
          <CardHeader>
             <CardTitle className="text-base">Rekap Per Armada</CardTitle>
-            <p className="text-sm text-muted-foreground mt-1">
+            <p className="text-sm text-base-content/70 mt-1">
                Kendaraan paling aktif pada rentang laporan terpilih.
             </p>
          </CardHeader>
          <CardContent>
-            <div className="max-h-[420px] overflow-auto rounded-lg border border-border bg-card">
+            <div className="max-h-[420px] overflow-auto rounded-lg border border-base-300 bg-base-100">
                <Table caption="Laporan per armada">
                   <TableHeader>
                      <TableRow>
@@ -249,7 +249,7 @@ function ArmadaTable({ rows }: { rows: TerminalReportArmadaRow[] }) {
                         <TableRow>
                            <TableCell
                               colSpan={5}
-                              className="py-6 text-center text-sm text-muted-foreground"
+                              className="py-6 text-center text-sm text-base-content/70"
                            >
                               Belum ada data armada.
                            </TableCell>
@@ -282,12 +282,14 @@ function ArmadaTable({ rows }: { rows: TerminalReportArmadaRow[] }) {
 }
 
 export function AdminLaporanPanel({ terminalId }: { terminalId: string }) {
-   const [startDate, setStartDate] = useState(
-      new Date().toISOString().slice(0, 10),
-   );
-   const [endDate, setEndDate] = useState(
-      new Date().toISOString().slice(0, 10),
-   );
+    const [startDate, setStartDate] = useState("");
+    const [endDate, setEndDate] = useState("");
+
+    useEffect(() => {
+       const today = new Date().toISOString().slice(0, 10);
+       setStartDate(today);
+       setEndDate(today);
+    }, []);
    const [report, setReport] = useState<TerminalReport | null>(null);
    const [loading, setLoading] = useState(true);
    const [error, setError] = useState<string | null>(null);
@@ -295,18 +297,19 @@ export function AdminLaporanPanel({ terminalId }: { terminalId: string }) {
    useEffect(() => {
       let mounted = true;
 
-      const load = async () => {
-         setLoading(true);
-         setError(null);
+       const load = async () => {
+          if (!startDate || !endDate) return;
+          setLoading(true);
+          setError(null);
 
-         try {
-            const data = await getTerminalReport({
-               terminalId,
-               startDate,
-               endDate,
-            });
-            if (!mounted) return;
-            setReport(data);
+          try {
+             const data = await getTerminalReport({
+                terminalId,
+                startDate,
+                endDate,
+             });
+             if (!mounted) return;
+             setReport(data);
          } catch (err: unknown) {
             if (!mounted) return;
             setError(
@@ -471,13 +474,13 @@ export function AdminLaporanPanel({ terminalId }: { terminalId: string }) {
             />
          </div>
 
-         <Card className="card-interactive border-border">
+         <Card className="card-interactive border-base-300">
             <CardHeader className="flex flex-col gap-3 pb-4 xl:flex-row xl:items-center xl:justify-between">
                <div>
                   <CardTitle className="text-base">
                      Laporan Per Perusahaan Otobus
                   </CardTitle>
-                  <p className="text-sm text-muted-foreground mt-1">
+                  <p className="text-sm text-base-content/70 mt-1">
                      {startDate === endDate
                         ? formatDate(startDate)
                         : `${formatDate(startDate)} - ${formatDate(endDate)}`}
@@ -497,7 +500,7 @@ export function AdminLaporanPanel({ terminalId }: { terminalId: string }) {
                      disabled={rows.length === 0 || loading}
                      className="shrink-0"
                   >
-                     <Download className="h-4 w-4 mr-1.5" />
+                     <Download className="h-4 w-4 mr-1.5" aria-hidden="true" />
                      CSV Detail
                   </Button>
                   <Button
@@ -522,11 +525,11 @@ export function AdminLaporanPanel({ terminalId }: { terminalId: string }) {
             </CardHeader>
             <CardContent>
                {error && (
-                  <div className="text-sm text-destructive mb-4 animate-fade-in">
+                  <div className="text-sm text-error mb-4 animate-fade-in">
                      {error}
                   </div>
                )}
-               <div className="border border-border rounded-lg bg-card overflow-hidden">
+               <div className="border border-base-300 rounded-lg bg-base-100 overflow-hidden">
                   <Table caption="Riwayat transaksi laporan">
                      <TableHeader>
                         <TableRow>
@@ -543,9 +546,9 @@ export function AdminLaporanPanel({ terminalId }: { terminalId: string }) {
                         {loading ? (
                            <TableRow>
                               <TableCell colSpan={5}>
-                                 <div className="flex items-center gap-2 text-muted-foreground">
-                                    <Loader2 className="h-4 w-4 animate-spin" />
-                                    Memuat laporan...
+                                 <div className="flex items-center gap-2 text-base-content/70">
+                                    <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+                                    Memuat laporan…
                                  </div>
                               </TableCell>
                            </TableRow>
@@ -553,7 +556,7 @@ export function AdminLaporanPanel({ terminalId }: { terminalId: string }) {
                            <TableRow>
                               <TableCell
                                  colSpan={5}
-                                 className="text-muted-foreground"
+                                 className="text-base-content/70"
                               >
                                  Tidak ada data pada rentang tanggal ini.
                               </TableCell>
@@ -577,7 +580,7 @@ export function AdminLaporanPanel({ terminalId }: { terminalId: string }) {
                                     </TableCell>
                                  </TableRow>
                               ))}
-                              <TableRow className="bg-muted/50 font-semibold">
+                              <TableRow className="bg-base-200/50 font-semibold">
                                  <TableCell colSpan={2}>Total</TableCell>
                                  <TableCell className="text-center text-primary">
                                     {totalMasuk}

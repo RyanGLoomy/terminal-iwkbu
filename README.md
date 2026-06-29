@@ -17,17 +17,17 @@ Sistem pengawasan dan rekonsiliasi Integrasi Wilayah Kota Bulan (IWKBU) untuk te
 
 ## Tech Stack
 
-| Layer | Teknologi |
-|-------|-----------|
-| Frontend | Next.js 16 (App Router), React 19, TypeScript (strict) |
-| Styling | Tailwind CSS v4, DaisyUI v5 (tema jr/jr-dark) |
-| Backend | Next.js Route Handlers (65 API routes) |
-| Database | Supabase Postgres 17 (21 tabel, RLS, CHECK constraints) |
-| Auth | Supabase Auth (GoTrue) + role-based access control |
-| Storage | Supabase Storage (armada-dokumen, finding-evidence) |
-| Realtime | Supabase Realtime (notifications) |
-| Charts | Recharts |
-| Monitoring | Sentry (opsional, no-op tanpa DSN) |
+| Layer      | Teknologi                                               |
+| ---------- | ------------------------------------------------------- |
+| Frontend   | Next.js 16 (App Router), React 19, TypeScript (strict)  |
+| Styling    | Tailwind CSS v4, DaisyUI v5 (tema jr/jr-dark)           |
+| Backend    | Next.js Route Handlers (65 API routes)                  |
+| Database   | Supabase Postgres 17 (21 tabel, RLS, CHECK constraints) |
+| Auth       | Supabase Auth (GoTrue) + role-based access control      |
+| Storage    | Supabase Storage (armada-dokumen, finding-evidence)     |
+| Realtime   | Supabase Realtime (notifications)                       |
+| Charts     | Recharts                                                |
+| Monitoring | Sentry (opsional, no-op tanpa DSN)                      |
 
 ## Persyaratan
 
@@ -61,19 +61,19 @@ Buka [http://localhost:3000](http://localhost:3000).
 
 ## Environment Variables
 
-| Variable | Wajib | Deskripsi |
-|----------|-------|-----------|
-| `NEXT_PUBLIC_SUPABASE_URL` | Ya | URL project Supabase |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Ya* | Anon key (legacy) |
-| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Ya* | Publishable key (modern) |
-| `SUPABASE_SERVICE_ROLE_KEY` | Ya | Service role key (server-only, jangan prefix NEXT_PUBLIC_) |
-| `SUPABASE_URL` | Tidak | Backup URL untuk admin client |
-| `IWKBU_SYNC_CRON_SECRET` | Tidak | Bearer token untuk cron endpoints |
-| `CRON_SECRET` | Tidak | Fallback cron secret |
-| `IWKBU_API_URL` | Tidak | URL API IWKBU real (kosong = mock mode) |
-| `IWKBU_API_KEY` | Tidak | API key IWKBU real |
-| `SENTRY_DSN` | Tidak | DSN Sentry server-side |
-| `NEXT_PUBLIC_SENTRY_DSN` | Tidak | DSN Sentry client-side |
+| Variable                               | Wajib | Deskripsi                                                  |
+| -------------------------------------- | ----- | ---------------------------------------------------------- |
+| `NEXT_PUBLIC_SUPABASE_URL`             | Ya    | URL project Supabase                                       |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY`        | Ya\*  | Anon key (legacy)                                          |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Ya\*  | Publishable key (modern)                                   |
+| `SUPABASE_SERVICE_ROLE_KEY`            | Ya    | Service role key (server-only, jangan prefix NEXT*PUBLIC*) |
+| `SUPABASE_URL`                         | Tidak | Backup URL untuk admin client                              |
+| `IWKBU_SYNC_CRON_SECRET`               | Tidak | Bearer token untuk cron endpoints                          |
+| `CRON_SECRET`                          | Tidak | Fallback cron secret                                       |
+| `IWKBU_API_URL`                        | Tidak | URL API IWKBU real (kosong = mock mode)                    |
+| `IWKBU_API_KEY`                        | Tidak | API key IWKBU real                                         |
+| `SENTRY_DSN`                           | Tidak | DSN Sentry server-side                                     |
+| `NEXT_PUBLIC_SENTRY_DSN`               | Tidak | DSN Sentry client-side                                     |
 
 \* Salah satu dari anon/publishable key cukup, tetapi sebaiknya set keduanya.
 
@@ -119,12 +119,12 @@ docs/                         # Dokumentasi teknis
 
 ## Roles & Access Control
 
-| Role | Akses | Route Prefix |
-|------|-------|--------------|
-| PO | Dashboard armada, rekonsiliasi, temuan & klarifikasi | `/po` |
-| Loket | Dashboard, pencatatan, riwayat (butuh PIN session) | `/loket` |
-| Admin Terminal | Dashboard, petugas/loket, rekap, sesi, laporan, master-data (read-only) | `/admin-terminal` |
-| Staf IW | Dashboard, akun (admin-terminal/staf-iw), verifikasi PO, master data, rekonsiliasi, findings, IWKBU sync, laporan, audit trail | `/staf-iw` |
+| Role           | Akses                                                                                                                          | Route Prefix      |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------ | ----------------- |
+| PO             | Dashboard armada, rekonsiliasi, temuan & klarifikasi                                                                           | `/po`             |
+| Loket          | Dashboard, pencatatan, riwayat (butuh PIN session)                                                                             | `/loket`          |
+| Admin Terminal | Dashboard, petugas/loket, rekap, sesi, laporan, master-data (read-only)                                                        | `/admin-terminal` |
+| Staf IW        | Dashboard, akun (admin-terminal/staf-iw), verifikasi PO, master data, rekonsiliasi, findings, IWKBU sync, laporan, audit trail | `/staf-iw`        |
 
 Role didefinisikan di `src/config/roles.ts`. Middleware `src/proxy.ts` menangani auth dan role-based routing untuk pages. Setiap API route melakukan auth + role check sendiri via `getAuthenticatedActor()` + `ensureRoleOrThrow()`.
 

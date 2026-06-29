@@ -4,7 +4,7 @@ import { getAllArmada } from "@/lib/supabase/queries/verification.server";
 import type { Armada } from "@/lib/supabase/queries/verification.types";
 import { getPoIwkbuStatus } from "@/lib/supabase/queries/iwkbu-sync.server";
 import { DashboardCard } from "@/components/dashboard/dashboard-card";
-import { RekonsiliasiArmadaTable } from "@/components/operasional/rekonsiliasi-armada-table";
+import { RekonsiliasiArmadaTable, type IwkbuSyncData } from "@/components/operasional/rekonsiliasi-armada-table";
 
 export default async function PoRekonsiliasiPage() {
   const actor = await getAuthenticatedActor();
@@ -18,7 +18,7 @@ export default async function PoRekonsiliasiPage() {
   const armada = armadaRaw as Armada[];
   const { statuses: iwkbuStatuses, summary: iwkbuSummary } = iwkbu;
 
-  const iwkbuMap: Record<string, any> = {};
+  const iwkbuMap: Record<string, IwkbuSyncData> = {};
   for (const s of iwkbuStatuses) {
      iwkbuMap[s.armada_id] = s;
   }
@@ -31,10 +31,10 @@ export default async function PoRekonsiliasiPage() {
     <section className="space-y-6">
       <div className="space-y-5">
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-foreground">
+          <h1 className="text-xl font-bold tracking-tight text-base-content">
             Rekonsiliasi Armada
           </h1>
-          <p className="text-sm text-muted-foreground mt-1 max-w-2xl">
+          <p className="text-sm text-base-content/70 mt-1 max-w-2xl">
             Status armada, kesiapan operasional, dan kepatuhan IWKBU.
           </p>
         </div>

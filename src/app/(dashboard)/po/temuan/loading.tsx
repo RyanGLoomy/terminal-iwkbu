@@ -6,17 +6,17 @@ export default function PoTemuanLoading() {
     <section className="space-y-6">
       <div className="space-y-5">
         <div>
-          <div className="h-7 w-56 bg-muted rounded animate-pulse mb-2" />
-          <div className="h-4 w-80 bg-muted rounded animate-pulse" />
+          <div className="h-7 w-56 bg-base-200 rounded animate-pulse mb-2" />
+          <div className="h-4 w-80 bg-base-200 rounded animate-pulse" />
         </div>
         <DashboardCardsSkeletonGrid />
         <div className="space-y-3">
           {[1, 2, 3].map((i) => (
             <Card key={i} className="animate-pulse">
               <CardContent className="pt-5">
-                <div className="h-5 w-48 bg-muted rounded mb-3" />
-                <div className="h-4 w-full bg-muted rounded mb-2" />
-                <div className="h-4 w-3/4 bg-muted rounded" />
+                <div className="h-5 w-48 bg-base-200 rounded mb-3" />
+                <div className="h-4 w-full bg-base-200 rounded mb-2" />
+                <div className="h-4 w-3/4 bg-base-200 rounded" />
               </CardContent>
             </Card>
           ))}

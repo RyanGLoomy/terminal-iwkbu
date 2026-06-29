@@ -1,8 +1,8 @@
 import { randomInt } from "crypto";
 import { sanitizeDbError } from "@/lib/db-error";
 import { NextResponse } from "next/server";
-import { getAuthenticatedActor } from "@/lib/auth/server-actor";
-import { ensureRoleOrThrow } from "@/lib/auth/requireRole.server";
+import { requireActor, actorErrorHandler } from "@/lib/auth/actor";
+import { ROLES } from "@/config/roles";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { logActivity } from "@/lib/supabase/queries/operasional.server";
 import bcrypt from "bcryptjs";
@@ -48,26 +48,7 @@ async function pinExists(params: {
 
 export async function POST(request: Request) {
    try {
-      const actor = await getAuthenticatedActor();
-      if (!actor) {
-         return NextResponse.json(
-            { message: "Sesi habis. Silakan login ulang." },
-            { status: 401 },
-         );
-      }
-
-      let role: string;
-      try {
-         role = ensureRoleOrThrow(actor.user, actor.profile, [
-            "admin-terminal",
-            "staf-iw",
-         ]).role;
-      } catch (err: unknown) {
-         return NextResponse.json(
-            { message: err instanceof Error ? err.message : "Forbidden" },
-            { status: (err as { status?: number })?.status ?? 403 },
-         );
-      }
+      const actor = await requireActor([ROLES.ADMIN_TERMINAL, ROLES.STAF_IW]);
 
       const body = await request.json().catch(() => null);
       const requestedTerminalId = normalizeText(body?.terminal_id);
@@ -90,7 +71,7 @@ export async function POST(request: Request) {
       }
 
       const terminalResult = resolveTerminalId({
-         actorRole: role,
+         actorRole: actor.role,
          actorTerminalId: actor.terminalId,
          requestedTerminalId,
       });
@@ -114,7 +95,7 @@ export async function POST(request: Request) {
 
          if (existingPetugasError) {
             return NextResponse.json(
-               { message: existingPetugasError.message },
+               { message: sanitizeDbError(existingPetugasError, "upsert-petugas existing") },
                { status: 500 },
             );
          }
@@ -138,7 +119,7 @@ export async function POST(request: Request) {
 
       if (existingPinsError) {
          return NextResponse.json(
-            { message: existingPinsError.message },
+            { message: sanitizeDbError(existingPinsError, "upsert-petugas pins") },
             { status: 500 },
          );
       }
@@ -220,10 +201,7 @@ export async function POST(request: Request) {
       }
 
       return NextResponse.json({ id: data.id, pin: finalPin || undefined });
-   } catch (error: unknown) {
-      return NextResponse.json(
-         { message: error instanceof Error ? error.message : "Terjadi kesalahan." },
-         { status: 500 },
-      );
+   } catch (error) {
+      return actorErrorHandler(error);
    }
 }

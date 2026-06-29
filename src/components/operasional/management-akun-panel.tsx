@@ -301,7 +301,7 @@ export function ManagementAkunPanel({
    return (
       <div className="space-y-5">
          {terminalOptions.length > 0 && (
-            <Card className="border-border">
+            <Card className="border-base-300">
                <CardContent className="pt-5">
                   <div className="max-w-md space-y-2">
                      <Label htmlFor="terminal-akun" className="text-[13px]">
@@ -341,21 +341,21 @@ export function ManagementAkunPanel({
       <Tabs defaultValue="petugas" className="space-y-4">
          <TabsList>
             <TabsTrigger value="petugas" className="gap-1.5">
-               <UserPlus className="h-3.5 w-3.5" />
+               <UserPlus className="h-3.5 w-3.5" aria-hidden="true" />
                Data Petugas
             </TabsTrigger>
             <TabsTrigger value="loket" className="gap-1.5">
-               <Monitor className="h-3.5 w-3.5" />
+               <Monitor className="h-3.5 w-3.5" aria-hidden="true" />
                Akun Loket
             </TabsTrigger>
          </TabsList>
 
          {/* ─── TAB: Data Petugas ─── */}
          <TabsContent value="petugas" className="space-y-6">
-            <Card className="max-w-2xl border-border">
+            <Card className="max-w-2xl border-base-300">
                <CardHeader className="pb-4">
                   <CardTitle className="text-base flex items-center gap-2">
-                     <UserPlus className="h-4 w-4 text-primary" />
+                     <UserPlus className="h-4 w-4 text-primary" aria-hidden="true" />
                      {ptEditId ? "Edit Petugas" : "Tambah Petugas Baru"}
                   </CardTitle>
                </CardHeader>
@@ -384,7 +384,7 @@ export function ManagementAkunPanel({
                      </Alert>
                   )}
 
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-base-content/70">
                      Setiap petugas memiliki PIN unik untuk identifikasi saat
                      login di loket. Biarkan PIN kosong untuk menghasilkan PIN
                      otomatis.
@@ -425,8 +425,8 @@ export function ManagementAkunPanel({
                      <Button onClick={handleSavePetugas} disabled={ptSaving}>
                         {ptSaving ? (
                            <>
-                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                              Menyimpan...
+                              <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
+                              Menyimpan…
                            </>
                         ) : ptEditId ? (
                            "Simpan Perubahan"
@@ -443,7 +443,7 @@ export function ManagementAkunPanel({
                </CardContent>
             </Card>
 
-            <Card className="border-border">
+            <Card className="border-base-300">
                <CardHeader className="pb-4">
                   <div className="flex items-center justify-between">
                      <CardTitle className="text-base">Daftar Petugas</CardTitle>
@@ -456,25 +456,25 @@ export function ManagementAkunPanel({
                      >
                         <RefreshCw
                            className={`h-3.5 w-3.5 ${ptLoading ? "animate-spin" : ""}`}
-                        />
+                         aria-hidden="true" />
                         Refresh
                      </Button>
                   </div>
                </CardHeader>
                <CardContent>
                    {ptLoading ? (
-                      <LoadingState variant="inline" text="Memuat data..." />
+                      <LoadingState variant="inline" text="Memuat data…" />
                    ) : petugasList.length === 0 ? (
                      <div className="text-center py-8">
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-sm text-base-content/70">
                            Belum ada petugas. Tambahkan petugas baru di atas.
                         </p>
                      </div>
                   ) : (
-                     <div className="border border-border rounded-lg bg-card overflow-hidden">
+                     <div className="border border-base-300 rounded-lg bg-base-100 overflow-hidden">
                         <Table caption="Daftar petugas terminal">
                            <TableHeader>
-                              <TableRow className="bg-muted/50">
+                              <TableRow className="bg-base-200/50">
                                  <TableHead className="text-[13px]">
                                     Nama
                                  </TableHead>
@@ -497,12 +497,12 @@ export function ManagementAkunPanel({
                                     </TableCell>
                                     <TableCell>
                                        <span
-                                          className={`inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium ${row.is_active ? "bg-emerald-50 text-brand-green dark:bg-green-950/50 dark:text-green-300" : "bg-muted text-muted-foreground"}`}
+                                          className={`inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium ${row.is_active ? "bg-emerald-50 text-brand-green dark:bg-green-950/50 dark:text-green-300" : "bg-base-200 text-base-content/70"}`}
                                        >
                                           {row.is_active ? "Aktif" : "Nonaktif"}
                                        </span>
                                     </TableCell>
-                                    <TableCell className="text-[13px] text-muted-foreground">
+                                    <TableCell className="text-[13px] text-base-content/70">
                                        {formatDate(row.created_at)}
                                     </TableCell>
                                     <TableCell className="text-right">
@@ -548,10 +548,10 @@ export function ManagementAkunPanel({
 
          {/* ─── TAB: Akun Loket ─── */}
          <TabsContent value="loket" className="space-y-6">
-            <Card className="max-w-2xl border-border">
+            <Card className="max-w-2xl border-base-300">
                <CardHeader className="pb-4">
                   <CardTitle className="text-base flex items-center gap-2">
-                     <Monitor className="h-4 w-4 text-primary" />
+                     <Monitor className="h-4 w-4 text-primary" aria-hidden="true" />
                      Buat Akun Loket
                   </CardTitle>
                </CardHeader>
@@ -580,7 +580,7 @@ export function ManagementAkunPanel({
                      </Alert>
                   )}
 
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-base-content/70">
                      Akun loket digunakan untuk login di perangkat/device loket.
                      Setelah login, petugas memasukkan PIN pribadi untuk
                      identifikasi.
@@ -629,8 +629,8 @@ export function ManagementAkunPanel({
                   <Button onClick={handleCreateDevice} disabled={devSaving}>
                      {devSaving ? (
                         <>
-                           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                           Membuat...
+                           <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
+                           Membuat…
                         </>
                      ) : (
                         "Buat Akun Loket"
@@ -639,27 +639,27 @@ export function ManagementAkunPanel({
                </CardContent>
             </Card>
 
-            <Card className="border-border">
+            <Card className="border-base-300">
                <CardHeader className="pb-4">
                   <CardTitle className="text-base">Daftar Akun Loket</CardTitle>
                </CardHeader>
                <CardContent>
                   {devLoading ? (
-                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                        Memuat data...
+                     <div className="flex items-center gap-2 text-sm text-base-content/70">
+                        <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+                        Memuat data…
                      </div>
                   ) : devices.length === 0 ? (
                      <div className="text-center py-8">
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-sm text-base-content/70">
                            Belum ada akun loket.
                         </p>
                      </div>
                   ) : (
-                     <div className="border border-border rounded-lg bg-card overflow-hidden">
+                     <div className="border border-base-300 rounded-lg bg-base-100 overflow-hidden">
                         <Table caption="Daftar akun operator terminal">
                            <TableHeader>
-                              <TableRow className="bg-muted/50">
+                              <TableRow className="bg-base-200/50">
                                  <TableHead className="text-[13px]">
                                     Nama Loket
                                  </TableHead>
@@ -688,12 +688,12 @@ export function ManagementAkunPanel({
                                     </TableCell>
                                     <TableCell>
                                        <span
-                                          className={`inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium ${row.is_active ? "bg-emerald-50 text-brand-green dark:bg-green-950/50 dark:text-green-300" : "bg-muted text-muted-foreground"}`}
+                                          className={`inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium ${row.is_active ? "bg-emerald-50 text-brand-green dark:bg-green-950/50 dark:text-green-300" : "bg-base-200 text-base-content/70"}`}
                                        >
                                           {row.is_active ? "Aktif" : "Nonaktif"}
                                        </span>
                                     </TableCell>
-                                     <TableCell className="text-[13px] text-muted-foreground">
+                                     <TableCell className="text-[13px] text-base-content/70">
                                         {formatDate(row.created_at)}
                                      </TableCell>
                                      <TableCell className="text-right">

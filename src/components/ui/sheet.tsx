@@ -90,14 +90,48 @@ function SheetContent({
   side?: "top" | "bottom" | "left" | "right";
 }) {
   const ctx = useSheet("SheetContent");
+  const dialogRef = React.useRef<HTMLDivElement | null>(null);
+  const previousFocus = React.useRef<HTMLElement | null>(null);
 
   React.useEffect(() => {
     if (!ctx.open) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") ctx.onOpenChange(false);
-    };
+
+    // Record & move focus into the sheet; restore on close.
+    previousFocus.current = (document.activeElement as HTMLElement) ?? null;
+    const dialog = dialogRef.current;
+    const focusables = dialog
+      ? (Array.from(
+          dialog.querySelectorAll<HTMLElement>(
+            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+          ),
+        ).filter((el) => !el.hasAttribute("disabled")) )
+      : [];
+    (focusables[0] ?? dialog)?.focus();
+
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        ctx.onOpenChange(false);
+        return;
+      }
+      if (e.key === "Tab" && dialog && focusables.length > 0) {
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+        const active = document.activeElement as HTMLElement | null;
+        if (e.shiftKey && active === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && active === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    }
     document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      previousFocus.current?.focus?.();
+    };
   }, [ctx]);
 
   if (!ctx.open) return null;
@@ -105,15 +139,17 @@ function SheetContent({
   return (
     <div className="fixed inset-0 z-50">
       <div
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+        className="absolute inset-0 bg-base-content/50"
         onClick={() => ctx.onOpenChange(false)}
         aria-hidden="true"
       />
       <div
+        ref={dialogRef}
         role="dialog"
         aria-modal="true"
+        tabIndex={-1}
         className={cn(
-          "absolute bg-base-100 p-6 text-base-content shadow-2xl transition-transform duration-300",
+          "absolute bg-base-100 p-6 text-base-content shadow-sm outline-none transition-transform duration-300 overscroll-contain",
           SIDE_CLASS[side],
           className,
         )}
@@ -125,7 +161,7 @@ function SheetContent({
           className="btn btn-circle btn-ghost btn-sm absolute right-3 top-3"
           aria-label="Tutup"
         >
-          <X className="size-4" />
+          <X className="size-4" aria-hidden="true" />
         </button>
       </div>
     </div>

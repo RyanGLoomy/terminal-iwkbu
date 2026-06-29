@@ -22,11 +22,11 @@ export default async function PODashboard() {
    if (!poData) {
       return (
          <section className="space-y-6">
-            <h1 className="text-xl font-bold tracking-tight text-foreground">
+            <h1 className="text-xl font-bold tracking-tight text-base-content">
                Dashboard PO
             </h1>
             <Alert variant="destructive">
-               <AlertCircle className="h-4 w-4" />
+               <AlertCircle className="h-4 w-4" aria-hidden="true" />
                <AlertDescription>
                   <strong>Data PO tidak ditemukan</strong>
                   <br />
@@ -40,11 +40,11 @@ export default async function PODashboard() {
    if (poData.status_verifikasi === "menunggu") {
       return (
          <section className="space-y-6">
-            <h1 className="text-xl font-bold tracking-tight text-foreground">
+            <h1 className="text-xl font-bold tracking-tight text-base-content">
                Dashboard PO
             </h1>
             <Alert className="bg-accent/10 border-accent/30">
-               <AlertCircle className="h-4 w-4 text-accent" />
+               <AlertCircle className="h-4 w-4 text-accent" aria-hidden="true" />
                <AlertDescription className="text-accent-foreground">
                   <strong>Menunggu Verifikasi</strong>
                   <br />
@@ -60,11 +60,11 @@ export default async function PODashboard() {
    if (poData.status_verifikasi === "ditolak") {
       return (
          <section className="space-y-6">
-            <h1 className="text-xl font-bold tracking-tight text-foreground">
+            <h1 className="text-xl font-bold tracking-tight text-base-content">
                Dashboard PO
             </h1>
             <Alert variant="destructive">
-               <AlertCircle className="h-4 w-4" />
+               <AlertCircle className="h-4 w-4" aria-hidden="true" />
             <AlertDescription>
                    <strong>Registrasi Ditolak</strong>
                    <br />
@@ -98,12 +98,14 @@ export default async function PODashboard() {
 
    const armadaList = armadaRes.data ?? [];
    const totalArmada = armadaList.length;
-   const armadaTerverifikasi = armadaList.filter(
-      (a: any) => a.status_verifikasi === "terverifikasi",
-   ).length;
-   const armadaMenunggu = armadaList.filter(
-      (a: any) => a.status_verifikasi === "menunggu",
-   ).length;
+    const armadaTerverifikasi = armadaList.filter(
+       (a: { status_verifikasi: string }) =>
+          a.status_verifikasi === "terverifikasi",
+    ).length;
+    const armadaMenunggu = armadaList.filter(
+       (a: { status_verifikasi: string }) =>
+          a.status_verifikasi === "menunggu",
+    ).length;
    const temuanAktif = (findingsRes.data ?? []).length;
    const iwkbuSummary = iwkbuData.summary;
 
@@ -111,10 +113,10 @@ export default async function PODashboard() {
       <section className="space-y-6">
          <div className="flex justify-between items-center">
             <div>
-               <h1 className="text-xl font-bold tracking-tight text-foreground">
+               <h1 className="text-xl font-bold tracking-tight text-base-content">
                   Dashboard PO
                </h1>
-               <p className="text-sm text-muted-foreground mt-1">
+               <p className="text-sm text-base-content/70 mt-1">
                   {poData.kode_po} - {poData.nama_perusahaan}
                </p>
             </div>

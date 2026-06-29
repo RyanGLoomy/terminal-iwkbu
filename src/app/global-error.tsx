@@ -10,15 +10,15 @@ export default function GlobalError({
   return (
     <html>
       <body>
-        <div className="flex min-h-screen flex-col items-center justify-center bg-background px-4">
+        <div className="flex min-h-screen flex-col items-center justify-center bg-base-100 px-4">
           <div className="text-center max-w-md">
-            <h1 className="text-7xl font-bold tracking-tight text-foreground">
+            <h1 className="text-7xl font-bold tracking-tight text-base-content">
               Error
             </h1>
-            <p className="mt-4 text-lg text-muted-foreground">
+            <p className="mt-4 text-lg text-base-content/70">
               Terjadi kesalahan yang tidak terduga.
             </p>
-            <p className="mt-2 text-sm text-muted-foreground">
+            <p className="mt-2 text-sm text-base-content/70">
               Silakan coba lagi atau hubungi administrator.
             </p>
             <button

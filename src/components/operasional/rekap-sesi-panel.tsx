@@ -117,24 +117,24 @@ export function RekapSesiPanel({ terminalId }: RekapSesiPanelProps) {
    return (
       <div className="space-y-5">
          {/* Filter */}
-         <Card className="border-border">
+         <Card className="border-base-300">
             <CardContent className="pt-6">
                <div className="flex flex-col gap-4 sm:flex-row sm:items-end">
                   <div className="space-y-1.5">
-                     <label className="text-sm font-medium text-foreground">
+                     <label className="text-sm font-medium text-base-content">
                         Tanggal Mulai
                      </label>
                      <DatePicker value={startDate} onChange={setStartDate} />
                   </div>
                   <div className="space-y-1.5">
-                     <label className="text-sm font-medium text-foreground">
+                     <label className="text-sm font-medium text-base-content">
                         Tanggal Akhir
                      </label>
                      <DatePicker value={endDate} onChange={setEndDate} />
                   </div>
                   <Button onClick={handleFilter} disabled={loading} size="sm">
                      {loading ? (
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
                      ) : null}
                      Filter
                   </Button>
@@ -152,17 +152,17 @@ export function RekapSesiPanel({ terminalId }: RekapSesiPanelProps) {
 
          {/* Summary Cards */}
          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <Card className="border-border">
+            <Card className="border-base-300">
                <CardContent className="pt-6">
-                  <div className="text-sm text-muted-foreground">
+                  <div className="text-sm text-base-content/70">
                      Total Sesi
                   </div>
                   <div className="text-2xl font-bold">{totalSesi}</div>
                </CardContent>
             </Card>
-            <Card className="border-border">
+            <Card className="border-base-300">
                <CardContent className="pt-6">
-                  <div className="text-sm text-muted-foreground">
+                  <div className="text-sm text-base-content/70">
                      Sesi Aktif
                   </div>
                   <div className="text-2xl font-bold text-brand-green">
@@ -170,9 +170,9 @@ export function RekapSesiPanel({ terminalId }: RekapSesiPanelProps) {
                   </div>
                </CardContent>
             </Card>
-            <Card className="border-border">
+            <Card className="border-base-300">
                <CardContent className="pt-6">
-                  <div className="text-sm text-muted-foreground">
+                  <div className="text-sm text-base-content/70">
                      Total Masuk
                   </div>
                   <div className="text-2xl font-bold text-primary">
@@ -180,9 +180,9 @@ export function RekapSesiPanel({ terminalId }: RekapSesiPanelProps) {
                   </div>
                </CardContent>
             </Card>
-            <Card className="border-border">
+            <Card className="border-base-300">
                <CardContent className="pt-6">
-                  <div className="text-sm text-muted-foreground">
+                  <div className="text-sm text-base-content/70">
                      Total Keluar
                   </div>
                   <div className="text-2xl font-bold text-violet-600">
@@ -193,21 +193,21 @@ export function RekapSesiPanel({ terminalId }: RekapSesiPanelProps) {
          </div>
 
          {/* Session List Table */}
-         <Card className="border-border">
+         <Card className="border-base-300">
             <CardHeader className="pb-4">
                <CardTitle className="text-base flex items-center gap-2">
-                  <Activity className="h-4 w-4" />
+                  <Activity className="h-4 w-4" aria-hidden="true" />
                   Daftar Sesi Kerja
                </CardTitle>
             </CardHeader>
             <CardContent>
                {loading ? (
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground py-8 justify-center">
-                     <Loader2 className="h-4 w-4 animate-spin" />
-                     Memuat data...
+                  <div className="flex items-center gap-2 text-sm text-base-content/70 py-8 justify-center">
+                     <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+                     Memuat data…
                   </div>
                ) : sesiList.length === 0 ? (
-                  <div className="text-sm text-muted-foreground text-center py-8">
+                  <div className="text-sm text-base-content/70 text-center py-8">
                      Tidak ada data sesi pada rentang tanggal ini.
                   </div>
                ) : (
@@ -248,7 +248,7 @@ export function RekapSesiPanel({ terminalId }: RekapSesiPanelProps) {
                                        className={`text-xs ${
                                           sesi.status === "aktif"
                                              ? "bg-emerald-50 text-brand-green dark:bg-green-950/50 dark:text-green-300 border-emerald-200 dark:bg-green-950/50 dark:text-green-300 dark:border-green-800"
-                                             : "bg-muted text-muted-foreground border-border"
+                                             : "bg-base-200 text-base-content/70 border-base-300"
                                        }`}
                                     >
                                        {sesi.status === "aktif"
@@ -284,7 +284,7 @@ export function RekapSesiPanel({ terminalId }: RekapSesiPanelProps) {
             <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
                <DialogHeader>
                   <DialogTitle className="flex items-center gap-2">
-                     <Activity className="h-5 w-5" />
+                     <Activity className="h-5 w-5" aria-hidden="true" />
                      Detail Sesi Kerja
                   </DialogTitle>
                </DialogHeader>
@@ -293,7 +293,7 @@ export function RekapSesiPanel({ terminalId }: RekapSesiPanelProps) {
                   <div className="space-y-4">
                      <div className="grid gap-3 sm:grid-cols-2">
                         <div>
-                           <div className="text-sm text-muted-foreground">
+                           <div className="text-sm text-base-content/70">
                               Petugas
                            </div>
                            <div className="font-medium">
@@ -301,14 +301,14 @@ export function RekapSesiPanel({ terminalId }: RekapSesiPanelProps) {
                            </div>
                         </div>
                         <div>
-                           <div className="text-sm text-muted-foreground">
+                           <div className="text-sm text-base-content/70">
                               Status
                            </div>
                            <Badge
                               className={`text-xs ${
                                  selectedSesi.status === "aktif"
                                     ? "bg-emerald-50 text-brand-green dark:bg-green-950/50 dark:text-green-300 border-emerald-200 dark:bg-green-950/50 dark:text-green-300 dark:border-green-800"
-                                    : "bg-muted text-muted-foreground border-border"
+                                    : "bg-base-200 text-base-content/70 border-base-300"
                               }`}
                            >
                               {selectedSesi.status === "aktif"
@@ -317,7 +317,7 @@ export function RekapSesiPanel({ terminalId }: RekapSesiPanelProps) {
                            </Badge>
                         </div>
                         <div>
-                           <div className="text-sm text-muted-foreground">
+                           <div className="text-sm text-base-content/70">
                               Waktu Mulai
                            </div>
                            <div className="font-medium">
@@ -325,7 +325,7 @@ export function RekapSesiPanel({ terminalId }: RekapSesiPanelProps) {
                            </div>
                         </div>
                         <div>
-                           <div className="text-sm text-muted-foreground">
+                           <div className="text-sm text-base-content/70">
                               Waktu Selesai
                            </div>
                            <div className="font-medium">
@@ -335,7 +335,7 @@ export function RekapSesiPanel({ terminalId }: RekapSesiPanelProps) {
                            </div>
                         </div>
                         <div>
-                           <div className="text-sm text-muted-foreground">
+                           <div className="text-sm text-base-content/70">
                               Total Masuk
                            </div>
                            <div className="font-bold text-primary">
@@ -343,7 +343,7 @@ export function RekapSesiPanel({ terminalId }: RekapSesiPanelProps) {
                            </div>
                         </div>
                         <div>
-                           <div className="text-sm text-muted-foreground">
+                           <div className="text-sm text-base-content/70">
                               Total Keluar
                            </div>
                            <div className="font-bold text-violet-600">
@@ -357,12 +357,12 @@ export function RekapSesiPanel({ terminalId }: RekapSesiPanelProps) {
                            Daftar Transaksi
                         </h4>
                         {detailLoading ? (
-                           <div className="flex items-center gap-2 text-sm text-muted-foreground py-4 justify-center">
-                              <Loader2 className="h-4 w-4 animate-spin" />
-                              Memuat transaksi...
+                           <div className="flex items-center gap-2 text-sm text-base-content/70 py-4 justify-center">
+                              <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+                              Memuat transaksi…
                            </div>
                         ) : detailRows.length === 0 ? (
-                           <div className="text-sm text-muted-foreground text-center py-4">
+                           <div className="text-sm text-base-content/70 text-center py-4">
                               Belum ada transaksi dalam sesi ini.
                            </div>
                         ) : (

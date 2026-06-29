@@ -1,6 +1,6 @@
 "use client";
 
-import { useDeferredValue, useEffect, useState, useCallback } from "react";
+import { useDeferredValue, useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -27,6 +27,7 @@ import type {
    AksiLog,
 } from "@/lib/supabase/queries/operasional.types";
 import { Download, Loader2, Search } from "lucide-react";
+import { getErrorMessage } from "@/lib/db-error";
 
 const ACTION_OPTIONS: Array<{ value: AksiLog | "SEMUA"; label: string }> = [
    { value: "SEMUA", label: "Semua Aksi" },
@@ -141,7 +142,7 @@ function badgeClassForAction(aksi: AksiLog) {
       case "BUKA_SESI":
          return "bg-emerald-100 text-brand-green border-emerald-200 dark:bg-green-950/50 dark:text-green-300 dark:border-green-800";
       case "TUTUP_SESI":
-         return "bg-muted text-foreground border-border";
+         return "bg-base-200 text-base-content border-base-300";
       case "INPUT_TRANSAKSI":
          return "bg-sky-100 text-sky-700 border-sky-200 dark:bg-sky-950/50 dark:text-sky-300 dark:border-sky-800";
       case "SET_PIN":
@@ -155,7 +156,7 @@ function badgeClassForAction(aksi: AksiLog) {
       case "LOGIN":
          return "bg-emerald-100 text-brand-green border-emerald-200 dark:bg-green-950/50 dark:text-green-300 dark:border-green-800";
       case "LOGOUT":
-         return "bg-muted text-foreground border-border";
+         return "bg-base-200 text-base-content border-base-300";
       case "UBAH_PASSWORD":
          return "bg-violet-100 text-violet-700 border-violet-200 dark:bg-violet-950/50 dark:text-violet-300 dark:border-violet-800";
       case "BUAT_USER":
@@ -167,13 +168,13 @@ function badgeClassForAction(aksi: AksiLog) {
       case "UPDATE_TERMINAL":
          return "bg-sky-100 text-sky-700 border-sky-200 dark:bg-sky-950/50 dark:text-sky-300 dark:border-sky-800";
        case "HAPUS_TERMINAL":
-          return "bg-red-100 text-destructive border-red-200 dark:bg-red-950/50 dark:text-red-300 dark:border-red-800";
+          return "bg-red-100 text-error border-red-200 dark:bg-red-950/50 dark:text-red-300 dark:border-red-800";
        case "BUAT_JENIS_KENDARAAN":
           return "bg-emerald-100 text-brand-green border-emerald-200 dark:bg-green-950/50 dark:text-green-300 dark:border-green-800";
        case "UPDATE_JENIS_KENDARAAN":
           return "bg-sky-100 text-sky-700 border-sky-200 dark:bg-sky-950/50 dark:text-sky-300 dark:border-sky-800";
        case "HAPUS_JENIS_KENDARAAN":
-          return "bg-red-100 text-destructive border-red-200 dark:bg-red-950/50 dark:text-red-300 dark:border-red-800";
+          return "bg-red-100 text-error border-red-200 dark:bg-red-950/50 dark:text-red-300 dark:border-red-800";
        case "UPDATE_SETTINGS":
           return "bg-sky-100 text-sky-700 border-sky-200 dark:bg-sky-950/50 dark:text-sky-300 dark:border-sky-800";
        case "IMPORT_IWKBU":
@@ -313,9 +314,9 @@ export function AuditTrailPanel() {
             if (!mounted) return;
             setRows(result.data);
             setHasMore(result.hasMore);
-         } catch (err: any) {
+         } catch (err: unknown) {
             if (!mounted) return;
-            setError(err?.message ?? "Gagal memuat audit trail");
+            setError(getErrorMessage(err));
          } finally {
             if (mounted) setLoading(false);
          }
@@ -327,7 +328,7 @@ export function AuditTrailPanel() {
       };
    }, [startDate, endDate, aksi, deferredSearch]);
 
-   const loadMore = useCallback(async () => {
+   const loadMore = async () => {
       setLoadingMore(true);
       try {
          const result = await fetchActivityLogs({
@@ -345,7 +346,7 @@ export function AuditTrailPanel() {
       } finally {
          setLoadingMore(false);
       }
-   }, [startDate, endDate, aksi, deferredSearch, rows.length]);
+   };
 
    const uniqueUsers = new Set(rows.map((row) => row.user_id)).size;
    const todayKey = new Date().toISOString().slice(0, 10);
@@ -393,27 +394,27 @@ export function AuditTrailPanel() {
             />
          </div>
 
-         <Card className="border-border">
+         <Card className="border-base-300">
             <CardHeader className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
                <div>
                   <CardTitle className="text-base">
                      Audit Trail Aktivitas Sistem
                   </CardTitle>
-                  <p className="text-sm text-muted-foreground mt-1">
+                  <p className="text-sm text-base-content/70 mt-1">
                      Pantau jejak aktivitas penting untuk monitoring dan tindak
                      lanjut.
                   </p>
                </div>
                 <div className="flex flex-wrap items-center gap-2">
                    <div className="relative w-full sm:w-[220px]">
-                      <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                      <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-base-content/70" aria-hidden="true" />
                       <input
                          type="search"
                          aria-label="Cari audit trail"
                          value={search}
                          onChange={(event) => setSearch(event.target.value)}
                          placeholder="Cari pengguna/detail"
-                         className="h-10 w-full rounded-md border border-input bg-background pl-9 pr-3 text-sm shadow-sm outline-none"
+                         className="h-10 w-full rounded-md border border-base-300 bg-base-100 pl-9 pr-3 text-sm shadow-sm outline-none"
                       />
                   </div>
                   <div className="w-[150px]">
@@ -446,19 +447,19 @@ export function AuditTrailPanel() {
                      onClick={() => exportCsv(rows)}
                      disabled={rows.length === 0}
                   >
-                     <Download className="mr-2 h-4 w-4" />
+                     <Download className="mr-2 h-4 w-4" aria-hidden="true" />
                      CSV
                   </Button>
                </div>
             </CardHeader>
             <CardContent>
                {error && (
-                  <div className="mb-4 rounded-md border border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950/50 px-3 py-2 text-sm text-destructive">
+                  <div className="mb-4 rounded-md border border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950/50 px-3 py-2 text-sm text-error">
                      {error}
                   </div>
                )}
 
-               <div className="overflow-hidden rounded-lg border border-border bg-card">
+               <div className="overflow-hidden rounded-lg border border-base-300 bg-base-100">
                   <Table caption="Riwayat audit aktivitas sistem">
                      <TableHeader>
                         <TableRow>
@@ -474,7 +475,7 @@ export function AuditTrailPanel() {
                                <TableCell colSpan={4}>
                                   <LoadingState
                                      variant="inline"
-                                     text="Memuat audit trail..."
+                                     text="Memuat audit trail…"
                                   />
                                </TableCell>
                             </TableRow>
@@ -482,18 +483,21 @@ export function AuditTrailPanel() {
                            <TableRow>
                               <TableCell
                                  colSpan={4}
-                                 className="py-8 text-center text-sm text-muted-foreground"
+                                 className="py-8 text-center text-sm text-base-content/70"
                               >
                                  Tidak ada aktivitas pada filter ini.
                               </TableCell>
                            </TableRow>
                         ) : (
-                           rows.map((row) => (
-                              <TableRow key={row.id}>
-                                 <TableCell className="whitespace-nowrap text-sm text-muted-foreground">
+                            rows.map((row) => (
+                               <TableRow
+                                  key={row.id}
+                                  className="[content-visibility:auto] [contain-intrinsic-block-size:64px]"
+                               >
+                                 <TableCell className="whitespace-nowrap text-sm text-base-content/70">
                                     {formatDateTime(row.created_at)}
                                  </TableCell>
-                                  <TableCell className="font-medium text-foreground">
+                                  <TableCell className="font-medium text-base-content">
                                     {row.user_name}
                                  </TableCell>
                                  <TableCell>
@@ -504,10 +508,10 @@ export function AuditTrailPanel() {
                                        {formatActionLabel(row.aksi)}
                                     </Badge>
                                  </TableCell>
-                                 <TableCell className="text-sm text-muted-foreground">
+                                 <TableCell className="text-sm text-base-content/70">
                                     <div className="space-y-1">
                                        <p>{row.deskripsi ?? "-"}</p>
-                                       <p className="text-[12px] text-muted-foreground">
+                                       <p className="text-[12px] text-base-content/70">
                                           {summarizeMetadata(row.metadata)}
                                        </p>
                                     </div>
@@ -529,8 +533,8 @@ export function AuditTrailPanel() {
                      >
                         {loadingMore ? (
                            <>
-                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                              Memuat...
+                              <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
+                              Memuat…
                            </>
                         ) : (
                            "Muat lebih banyak"
@@ -540,13 +544,13 @@ export function AuditTrailPanel() {
                )}
 
                {rows.length > 0 && !hasMore && (
-                  <p className="mt-2 text-center text-xs text-muted-foreground">
+                  <p className="mt-2 text-center text-xs text-base-content/70">
                      Menampilkan {rows.length} log
                   </p>
                )}
 
                {hasMore && !loading && (
-                  <p className="mt-1 text-center text-xs text-muted-foreground">
+                  <p className="mt-1 text-center text-xs text-base-content/70">
                      Menampilkan {rows.length} log terbaru
                   </p>
                )}

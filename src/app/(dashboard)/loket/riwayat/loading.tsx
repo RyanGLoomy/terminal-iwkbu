@@ -5,10 +5,10 @@ export default function RiwayatLoading() {
     <section className="space-y-6">
       <div className="space-y-5">
         <div>
-          <div className="h-7 w-56 bg-muted rounded animate-pulse mb-2" />
-          <div className="h-4 w-80 bg-muted rounded animate-pulse" />
+          <div className="h-7 w-56 bg-base-200 rounded animate-pulse mb-2" />
+          <div className="h-4 w-80 bg-base-200 rounded animate-pulse" />
         </div>
-        <div className="h-10 w-56 bg-muted rounded animate-pulse" />
+        <div className="h-10 w-56 bg-base-200 rounded animate-pulse" />
         <TableSkeleton rows={8} />
       </div>
     </section>

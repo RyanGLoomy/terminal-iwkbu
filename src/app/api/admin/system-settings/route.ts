@@ -1,25 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sanitizeDbError } from "@/lib/db-error";
-import { getAuthenticatedActor } from "@/lib/auth/server-actor";
+import { requireActor, actorErrorHandler } from "@/lib/auth/actor";
+import { ROLES } from "@/config/roles";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { logActivity } from "@/lib/supabase/queries/operasional.server";
 
 export async function GET() {
    try {
-      const actor = await getAuthenticatedActor();
-      if (!actor) {
-         return NextResponse.json(
-            { message: "Unauthorized" },
-            { status: 401 },
-         );
-      }
-
-      if (actor.role !== "staf-iw") {
-         return NextResponse.json(
-            { message: "Forbidden" },
-            { status: 403 },
-         );
-      }
+      await requireActor(ROLES.STAF_IW);
 
       const admin = createAdminClient();
       const { data, error } = await admin
@@ -36,30 +24,14 @@ export async function GET() {
       }
 
       return NextResponse.json({ data: data ?? [] });
-   } catch (error: any) {
-      return NextResponse.json(
-         { message: error?.message ?? "Internal error" },
-         { status: 500 },
-      );
+   } catch (error) {
+      return actorErrorHandler(error);
    }
 }
 
 export async function PUT(request: NextRequest) {
    try {
-      const actor = await getAuthenticatedActor();
-      if (!actor) {
-         return NextResponse.json(
-            { message: "Unauthorized" },
-            { status: 401 },
-         );
-      }
-
-      if (actor.role !== "staf-iw") {
-         return NextResponse.json(
-            { message: "Forbidden" },
-            { status: 403 },
-         );
-      }
+      const actor = await requireActor(ROLES.STAF_IW);
 
       const body = await request.json();
       const items: Array<{ key: string; value: string }> = Array.isArray(body)
@@ -90,12 +62,12 @@ export async function PUT(request: NextRequest) {
             })
             .eq("key", item.key);
 
-         if (error) {
-            return NextResponse.json(
-               { message: `Gagal memperbarui ${item.key}: ${error.message}` },
+          if (error) {
+             return NextResponse.json(
+               { message: `Gagal memperbarui ${item.key}: ${sanitizeDbError(error, "system-settings update")}` },
                { status: 500 },
             );
-         }
+          }
          updates.push({ key: item.key, value: item.value });
       }
 
@@ -109,10 +81,7 @@ export async function PUT(request: NextRequest) {
       }
 
       return NextResponse.json({ success: true, updated: updates.length });
-   } catch (error: any) {
-      return NextResponse.json(
-         { message: error?.message ?? "Internal error" },
-         { status: 500 },
-      );
+   } catch (error) {
+      return actorErrorHandler(error);
    }
 }

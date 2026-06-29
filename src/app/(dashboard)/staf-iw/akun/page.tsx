@@ -29,10 +29,10 @@ export default async function StafIwAkunPage({
    return (
       <section className="space-y-6">
           <div>
-             <h1 className="text-xl font-bold tracking-tight text-foreground">
+             <h1 className="text-xl font-bold tracking-tight text-base-content">
                 Manajemen Akun
              </h1>
-             <p className="text-sm text-muted-foreground mt-1 max-w-2xl">
+             <p className="text-sm text-base-content/70 mt-1 max-w-2xl">
                 Kelola akun <strong>Admin Terminal</strong> (buat, nonaktifkan,
                 reset password), verifikasi pendaftaran PO, serta atur peran
                 pengguna sistem (admin terminal &amp; staf IW).
@@ -40,7 +40,7 @@ export default async function StafIwAkunPage({
           </div>
 
           {terminalOptions.length === 0 ? (
-             <div className="rounded-lg border border-border bg-card p-6 text-sm text-muted-foreground">
+             <div className="rounded-lg border border-base-300 bg-base-100 p-6 text-sm text-base-content/70">
                 Belum ada data terminal untuk dikelola.
              </div>
           ) : (

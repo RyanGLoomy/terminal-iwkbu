@@ -1,16 +1,16 @@
 import { randomInt } from "crypto";
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { getAuthenticatedActor } from "@/lib/auth/server-actor";
+import { requireActor, actorErrorHandler } from "@/lib/auth/actor";
+import { ROLES } from "@/config/roles";
+import { sanitizeDbError, getErrorMessage } from "@/lib/db-error";
 import { logActivity } from "@/lib/supabase/queries/operasional.server";
+import { resolveTerminalId } from "@/lib/auth/petugas-context.server";
 
 // Per spec (UC-12): manajemen akun petugas/loket adalah peran Admin Terminal.
 // Staf IW tidak boleh membuat/mengelola akun petugas/loket.
-const ALLOWED_ROLES = ["admin-terminal"] as const;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PASSWORD_MIN_LENGTH = 8;
-
-type AllowedRole = (typeof ALLOWED_ROLES)[number];
 
 function randomSuffix(length: number) {
    const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
@@ -25,10 +25,6 @@ function generatePassword() {
    return `Iw-${randomSuffix(6)}-${randomSuffix(4)}`;
 }
 
-function isAllowedRole(roleName: string | null | undefined): roleName is AllowedRole {
-   return ALLOWED_ROLES.includes(roleName as AllowedRole);
-}
-
 function normalizeEmail(value: unknown) {
    return typeof value === "string" ? value.trim().toLowerCase() : "";
 }
@@ -39,47 +35,6 @@ function normalizeText(value: unknown) {
 
 function validatePassword(password: string) {
    return password.length >= PASSWORD_MIN_LENGTH;
-}
-
-async function requireAccountActor() {
-   const actor = await getAuthenticatedActor();
-
-   if (!actor) {
-      return { error: NextResponse.json({ message: "Unauthorized" }, { status: 401 }) };
-   }
-
-   if (!isAllowedRole(actor.role)) {
-      return { error: NextResponse.json({ message: "Forbidden" }, { status: 403 }) };
-   }
-
-   return { actor };
-}
-
-function resolveTerminalId(params: {
-   role: string;
-   actorTerminalId?: string | null;
-   requestedTerminalId?: string | null;
-}) {
-   if (params.role === "admin-terminal") {
-      if (!params.actorTerminalId) {
-         return { message: "Terminal tidak ditemukan", status: 400 } as const;
-      }
-
-      if (
-         params.requestedTerminalId &&
-         params.requestedTerminalId !== params.actorTerminalId
-      ) {
-         return { message: "Forbidden", status: 403 } as const;
-      }
-
-      return { terminalId: params.actorTerminalId } as const;
-   }
-
-   if (!params.requestedTerminalId) {
-      return { message: "Terminal tidak ditemukan", status: 400 } as const;
-   }
-
-   return { terminalId: params.requestedTerminalId } as const;
 }
 
 async function getLoketRoleId(adminClient: ReturnType<typeof createAdminClient>) {
@@ -131,8 +86,7 @@ function stripRoleRelation(row: Record<string, unknown>) {
 
 export async function GET(request: Request) {
    try {
-      const { actor, error } = await requireAccountActor();
-      if (error) return error;
+      const actor = await requireActor(ROLES.ADMIN_TERMINAL);
 
       const url = new URL(request.url);
       const terminalResult = resolveTerminalId({
@@ -161,24 +115,20 @@ export async function GET(request: Request) {
          .order("created_at", { ascending: false });
 
       if (queryError) {
-         return NextResponse.json({ message: queryError.message }, { status: 500 });
+         return NextResponse.json({ message: sanitizeDbError(queryError, "petugas list") }, { status: 500 });
       }
 
       return NextResponse.json({
          data: (data ?? []).map((row) => stripRoleRelation(row)),
       });
-   } catch (error: unknown) {
-      return NextResponse.json(
-         { message: error instanceof Error ? error.message : "Internal error" },
-         { status: 500 },
-      );
+   } catch (error) {
+      return actorErrorHandler(error);
    }
 }
 
 export async function POST(request: Request) {
    try {
-      const { actor, error } = await requireAccountActor();
-      if (error) return error;
+      const actor = await requireActor(ROLES.ADMIN_TERMINAL);
 
       const body = await request.json().catch(() => null);
       const label = normalizeText(body?.label);
@@ -249,11 +199,12 @@ export async function POST(request: Request) {
          });
 
       if (authError || !authData?.user?.id) {
+         const authMsg = getErrorMessage(authError);
          return NextResponse.json(
             {
-               message: authError?.message?.toLowerCase().includes("already")
+               message: authMsg.toLowerCase().includes("already")
                   ? "Email sudah terdaftar"
-                  : authError?.message ?? "Gagal membuat akun",
+                  : "Gagal membuat akun",
             },
             { status: 400 },
          );
@@ -274,7 +225,7 @@ export async function POST(request: Request) {
       if (profileError) {
          await cleanupCreatedLoketUser(adminClient, userId).catch(() => undefined);
          return NextResponse.json(
-            { message: profileError.message },
+            { message: sanitizeDbError(profileError, "petugas create profile") },
             { status: 400 },
          );
       }
@@ -289,7 +240,7 @@ export async function POST(request: Request) {
       if (userRolesError) {
          await cleanupCreatedLoketUser(adminClient, userId).catch(() => undefined);
          return NextResponse.json(
-            { message: userRolesError.message },
+            { message: sanitizeDbError(userRolesError, "petugas create role") },
             { status: 400 },
          );
        }
@@ -304,18 +255,14 @@ export async function POST(request: Request) {
          password: inputPassword ? null : password,
          user_id: userId,
       });
-   } catch (error: unknown) {
-      return NextResponse.json(
-         { message: error instanceof Error ? error.message : "Internal error" },
-         { status: 500 },
-      );
+   } catch (error) {
+      return actorErrorHandler(error);
    }
 }
 
 export async function PATCH(request: Request) {
    try {
-      const { actor, error } = await requireAccountActor();
-      if (error) return error;
+      const actor = await requireActor(ROLES.ADMIN_TERMINAL);
 
       const body = await request.json().catch(() => null);
       const id = normalizeText(body?.id);
@@ -382,7 +329,7 @@ export async function PATCH(request: Request) {
 
          if (updateError) {
             return NextResponse.json(
-               { message: updateError.message },
+               { message: sanitizeDbError(updateError, "petugas update profile") },
                { status: 400 },
             );
          }
@@ -405,7 +352,7 @@ export async function PATCH(request: Request) {
 
          if (authError) {
             return NextResponse.json(
-               { message: authError.message },
+               { message: sanitizeDbError(authError, "petugas update password") },
                { status: 400 },
             );
          }
@@ -432,10 +379,7 @@ export async function PATCH(request: Request) {
          data: updated ? stripRoleRelation(updated) : null,
          password: generatedPassword,
       });
-   } catch (error: unknown) {
-      return NextResponse.json(
-         { message: error instanceof Error ? error.message : "Internal error" },
-         { status: 500 },
-      );
+   } catch (error) {
+      return actorErrorHandler(error);
    }
 }

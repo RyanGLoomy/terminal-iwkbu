@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans, Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "sonner";
@@ -21,6 +21,14 @@ export const metadata: Metadata = {
    title: "Sistem Integrasi Terminal | IWKBU Jasa Raharja",
    description:
       "Sistem pencatatan dan pengelolaan operasional terminal IWKBU Jasa Raharja",
+};
+
+export const viewport: Viewport = {
+   viewportFit: "cover",
+   themeColor: [
+      { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+      { media: "(prefers-color-scheme: dark)", color: "#0f172a" },
+   ],
 };
 
 export default function RootLayout({

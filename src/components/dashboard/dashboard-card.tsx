@@ -72,9 +72,9 @@ export function DashboardCard({
                   <p className="text-[11px] font-semibold uppercase tracking-[0.10em] text-base-content/55">
                      {title}
                   </p>
-                  <p className="text-3xl font-extrabold tracking-tight text-base-content">
-                     {value}
-                  </p>
+                  <p className="text-3xl font-extrabold tracking-tight text-base-content tabular-nums">
+                      {value}
+                   </p>
                   {description && (
                      <p className="pt-1 text-xs leading-5 text-base-content/55">
                         {description}
@@ -88,7 +88,7 @@ export function DashboardCard({
                         accentConfig[accent],
                      )}
                   >
-                     <Icon className="h-6 w-6" />
+                     <Icon className="h-6 w-6" aria-hidden="true" />
                   </div>
                )}
             </div>

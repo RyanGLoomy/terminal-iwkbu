@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import {
    Table,
    TableBody,
@@ -85,17 +85,15 @@ export function ArmadaTable({
       }
    };
 
-   const sortedData = useMemo(() => {
-      return [...data].sort((a, b) => {
-         const va = getSortValue(a, sortKey);
-         const vb = getSortValue(b, sortKey);
-         const cmp =
-            typeof va === "number" && typeof vb === "number"
-               ? va - vb
-               : String(va).localeCompare(String(vb));
-         return sortDir === "asc" ? cmp : -cmp;
-      });
-   }, [data, sortKey, sortDir]);
+    const sortedData = [...data].sort((a, b) => {
+       const va = getSortValue(a, sortKey);
+       const vb = getSortValue(b, sortKey);
+       const cmp =
+          typeof va === "number" && typeof vb === "number"
+             ? va - vb
+             : String(va).localeCompare(String(vb));
+       return sortDir === "asc" ? cmp : -cmp;
+    });
 
    const SortIcon = ({ col }: { col: SortKey }) => {
       if (sortKey !== col)
@@ -113,7 +111,7 @@ export function ArmadaTable({
       extraClassName = "",
    ) => (
       <TableHead
-         className={`text-[13px] cursor-pointer select-none hover:text-foreground transition-colors ${extraClassName}`}
+         className={`text-[13px] cursor-pointer select-none hover:text-base-content transition-colors ${extraClassName}`}
          onClick={() => toggleSort(col)}
       >
          <span className="inline-flex items-center gap-1.5">
@@ -125,9 +123,9 @@ export function ArmadaTable({
 
    if (loading) {
       return (
-         <div className="text-center py-10 text-muted-foreground">
+         <div className="text-center py-10 text-base-content/70">
             <div className="animate-spin h-5 w-5 border-2 border-primary/30 border-t-primary rounded-full mx-auto mb-3" />
-            <p className="text-sm">Memuat data...</p>
+            <p className="text-sm">Memuat data…</p>
          </div>
       );
    }
@@ -142,10 +140,10 @@ export function ArmadaTable({
      }
 
    return (
-      <div className="border border-border rounded-lg overflow-hidden">
+      <div className="border border-base-300 rounded-lg overflow-hidden">
           <Table caption="Daftar armada PO">
             <TableHeader>
-               <TableRow className="bg-muted/50">
+               <TableRow className="bg-base-200/50">
                   {sortableTh("No. Polisi", "nomor_polisi")}
                   {sortableTh("No. Lambung", "nomor_lambung")}
                   {sortableTh("Merk/Tipe", "merk")}

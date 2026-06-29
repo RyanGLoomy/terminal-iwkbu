@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import {
    catatKendaraanKeluar,
    catatKendaraanMasuk,
@@ -30,6 +30,7 @@ import {
 } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2, LogIn, LogOut, Bus } from "lucide-react";
+import { getErrorMessage } from "@/lib/db-error";
 
 function formatDateTime(value: string) {
    return new Date(value).toLocaleString("id-ID", {
@@ -53,14 +54,8 @@ export function PencatatanPanel() {
    const [detectedInfo, setDetectedInfo] = useState<{ po_nama: string; merk: string | null; tipe: string | null } | null>(null);
    const [detecting, setDetecting] = useState(false);
 
-   const canSubmitMasuk = useMemo(
-      () => session && nomorMasuk.trim() && selectedPo,
-      [session, nomorMasuk, selectedPo],
-   );
-   const canSubmitKeluar = useMemo(
-      () => session && selectedMasukId,
-      [session, selectedMasukId],
-   );
+   const canSubmitMasuk = session && nomorMasuk.trim() && selectedPo;
+   const canSubmitKeluar = session && selectedMasukId;
 
    useEffect(() => {
       let mounted = true;
@@ -82,9 +77,9 @@ export function PencatatanPanel() {
             if (activePOs.length > 0) {
                setSelectedPo((current) => current || activePOs[0].id);
             }
-         } catch (err: any) {
+         } catch (err: unknown) {
             if (!mounted) return;
-            setError(err.message ?? "Gagal memuat data awal");
+            setError(getErrorMessage(err));
          } finally {
             if (mounted) setLoading(false);
          }
@@ -130,8 +125,8 @@ export function PencatatanPanel() {
          setActiveMasuk(masukAktif);
          setSelectedMasukId(masukAktif[0]?.id || "");
          setSuccess("Sesi kerja berhasil dibuka.");
-      } catch (err: any) {
-         setError(err.message ?? "Gagal membuka sesi kerja");
+      } catch (err: unknown) {
+         setError(getErrorMessage(err));
       } finally {
          setActionLoading(false);
       }
@@ -152,8 +147,8 @@ export function PencatatanPanel() {
          setSuccess(
             `Sesi kerja berhasil ditutup. Total masuk: ${result.total_transaksi_masuk}, keluar: ${result.total_transaksi_keluar}.`,
          );
-      } catch (err: any) {
-         setError(err.message ?? "Gagal menutup sesi kerja");
+      } catch (err: unknown) {
+         setError(getErrorMessage(err));
       } finally {
          setActionLoading(false);
       }
@@ -181,8 +176,8 @@ export function PencatatanPanel() {
          setActiveMasuk(masukAktif);
          setSelectedMasukId((current) => current || masukAktif[0]?.id || "");
          setSuccess("Kendaraan masuk berhasil dicatat.");
-      } catch (err: any) {
-         setError(err.message ?? "Gagal mencatat kendaraan masuk");
+      } catch (err: unknown) {
+         setError(getErrorMessage(err));
       } finally {
          setActionLoading(false);
       }
@@ -208,8 +203,8 @@ export function PencatatanPanel() {
          setActiveMasuk(masukAktif);
          setSelectedMasukId(masukAktif[0]?.id || "");
          setSuccess("Kendaraan keluar berhasil dicatat.");
-      } catch (err: any) {
-         setError(err.message ?? "Gagal mencatat kendaraan keluar");
+      } catch (err: unknown) {
+         setError(getErrorMessage(err));
       } finally {
          setActionLoading(false);
       }
@@ -217,18 +212,18 @@ export function PencatatanPanel() {
 
    return (
       <div className="space-y-5">
-         <Card className="card-interactive border-border">
+         <Card className="card-interactive border-base-300">
             <CardHeader className="flex flex-row items-center justify-between pb-4">
                <div>
                   <CardTitle className="text-base">
                      Sesi Kerja Petugas
                   </CardTitle>
-                  <p className="text-sm text-muted-foreground mt-1">
+                  <p className="text-sm text-base-content/70 mt-1">
                      Kelola sesi kerja sebelum melakukan pencatatan.
                   </p>
                </div>
                <Badge
-                  className={`text-xs font-medium gap-1.5 ${session ? "bg-emerald-50 text-brand-green dark:bg-green-950/50 dark:text-green-300 dark:border-green-800" : "bg-muted text-muted-foreground border border-border"}`}
+                  className={`text-xs font-medium gap-1.5 ${session ? "bg-emerald-50 text-brand-green dark:bg-green-950/50 dark:text-green-300 dark:border-green-800" : "bg-base-200 text-base-content/70 border border-base-300"}`}
                >
                   <div
                      className={`status-dot ${session ? "bg-brand-green" : "bg-muted-foreground"}`}
@@ -237,7 +232,7 @@ export function PencatatanPanel() {
                </Badge>
             </CardHeader>
             <CardContent className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-               <div className="text-sm text-muted-foreground">
+               <div className="text-sm text-base-content/70">
                   {session
                      ? `Mulai: ${formatDateTime(session.waktu_mulai)}`
                      : "Tidak ada sesi yang berjalan."}
@@ -248,9 +243,9 @@ export function PencatatanPanel() {
                      disabled={!!session || actionLoading}
                   >
                      {actionLoading && !session ? (
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
                      ) : (
-                        <LogIn className="mr-2 h-4 w-4" />
+                        <LogIn className="mr-2 h-4 w-4" aria-hidden="true" />
                      )}
                      Buka Sesi
                   </Button>
@@ -286,7 +281,7 @@ export function PencatatanPanel() {
             <Card className="card-interactive border-base-300">
                <CardHeader className="pb-4">
                   <CardTitle className="text-base flex items-center gap-2">
-                     <LogIn className="h-4 w-4 text-primary" />
+                     <LogIn className="h-4 w-4 text-primary" aria-hidden="true" />
                      Pencatatan Kendaraan Masuk
                   </CardTitle>
                </CardHeader>
@@ -311,7 +306,7 @@ export function PencatatanPanel() {
                         />
                         {detectedInfo && (
                            <div className="flex items-center gap-2 rounded-md border border-emerald-200 bg-emerald-50 dark:border-green-800 dark:bg-green-950/50 px-3 py-1.5 text-xs text-brand-green">
-                              <Bus className="h-3.5 w-3.5 shrink-0" />
+                              <Bus className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                               <span>
                                  {detectedInfo.merk} {detectedInfo.tipe} —{" "}
                                  <strong>{detectedInfo.po_nama}</strong>
@@ -319,9 +314,9 @@ export function PencatatanPanel() {
                            </div>
                         )}
                         {detecting && (
-                           <p className="text-xs text-muted-foreground flex items-center gap-1">
-                              <Loader2 className="h-3 w-3 animate-spin" />
-                              Mencari kendaraan...
+                           <p className="text-xs text-base-content/70 flex items-center gap-1">
+                              <Loader2 className="h-3 w-3 animate-spin" aria-hidden="true" />
+                              Mencari kendaraan…
                            </p>
                         )}
                      </div>
@@ -354,7 +349,7 @@ export function PencatatanPanel() {
                         className="w-full sm:w-auto"
                      >
                         {actionLoading && (
-                           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                           <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
                         )}
                         Simpan Kendaraan Masuk
                      </Button>
@@ -365,7 +360,7 @@ export function PencatatanPanel() {
             <Card className="card-interactive border-base-300">
                <CardHeader className="pb-4">
                   <CardTitle className="text-base flex items-center gap-2">
-                     <LogOut className="h-4 w-4 text-violet-500" />
+                     <LogOut className="h-4 w-4 text-violet-500" aria-hidden="true" />
                      Pencatatan Kendaraan Keluar
                   </CardTitle>
                </CardHeader>
@@ -409,7 +404,7 @@ export function PencatatanPanel() {
                         className="w-full sm:w-auto"
                      >
                         {actionLoading && (
-                           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                           <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
                         )}
                         Simpan Kendaraan Keluar
                      </Button>
@@ -419,9 +414,9 @@ export function PencatatanPanel() {
          </div>
 
          {loading && (
-            <div className="flex items-center gap-2 text-sm text-muted-foreground animate-fade-in">
-               <Loader2 className="h-4 w-4 animate-spin" />
-               Memuat data...
+            <div className="flex items-center gap-2 text-sm text-base-content/70 animate-fade-in">
+               <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+               Memuat data…
             </div>
          )}
       </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -60,7 +60,7 @@ export function RoleManagementPanel() {
    const [loading, setLoading] = useState(true);
    const [saving, setSaving] = useState<string | null>(null);
 
-   const loadUsers = useCallback(async () => {
+   const loadUsers = async () => {
       try {
          const res = await fetch("/api/staf-iw/users");
          const payload = await res.json();
@@ -72,7 +72,7 @@ export function RoleManagementPanel() {
       } finally {
          setLoading(false);
       }
-   }, []);
+   };
 
    useEffect(() => {
       loadUsers();
@@ -107,27 +107,27 @@ export function RoleManagementPanel() {
    }
 
    return (
-      <Card className="border-border">
+      <Card className="border-base-300">
          <CardHeader className="pb-4">
             <CardTitle className="text-base flex items-center gap-2">
-               <Users className="h-4 w-4 text-primary" />
+               <Users className="h-4 w-4 text-primary" aria-hidden="true" />
                Manajemen Role User
             </CardTitle>
          </CardHeader>
          <CardContent>
             {loading ? (
-               <p className="text-sm text-muted-foreground text-center py-6">
-                  Memuat data...
+               <p className="text-sm text-base-content/70 text-center py-6">
+                  Memuat data…
                </p>
             ) : users.length === 0 ? (
-               <p className="text-sm text-muted-foreground text-center py-6">
+               <p className="text-sm text-base-content/70 text-center py-6">
                   Belum ada user terdaftar
                </p>
             ) : (
                <div className="overflow-x-auto">
                   <table className="w-full text-sm">
                      <thead>
-                        <tr className="border-b border-border text-left text-xs text-muted-foreground">
+                        <tr className="border-b border-base-300 text-left text-xs text-base-content/70">
                            <th className="pb-2 pr-4 font-medium">Email</th>
                            <th className="pb-2 pr-4 font-medium">Nama</th>
                            <th className="pb-2 pr-4 font-medium">Role</th>
@@ -141,14 +141,14 @@ export function RoleManagementPanel() {
                            return (
                               <tr
                                  key={user.id}
-                                 className="border-b border-border last:border-0"
+                                 className="border-b border-base-300 last:border-0"
                               >
                                  <td className="py-2.5 pr-4">
                                     <span className="font-medium">
                                        {user.email}
                                     </span>
                                  </td>
-                                 <td className="py-2.5 pr-4 text-muted-foreground">
+                                 <td className="py-2.5 pr-4 text-base-content/70">
                                     {user.full_name || "-"}
                                  </td>
                                  <td className="py-2.5 pr-4">
@@ -191,7 +191,7 @@ export function RoleManagementPanel() {
                                        className={`text-[11px] ${
                                           user.is_active
                                              ? "bg-emerald-50 text-brand-green dark:bg-green-950/50 dark:text-green-300 dark:border-green-800"
-                                             : "bg-red-50 text-destructive border border-red-200/60 dark:bg-red-950/50 dark:text-red-300 dark:border-red-800"
+                                             : "bg-red-50 text-error border border-red-200/60 dark:bg-red-950/50 dark:text-red-300 dark:border-red-800"
                                        }`}
                                     >
                                        {user.is_active ? "Aktif" : "Nonaktif"}

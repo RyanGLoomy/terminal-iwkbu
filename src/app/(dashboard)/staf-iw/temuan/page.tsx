@@ -35,10 +35,10 @@ export default async function StafIwTemuanPage({
    return (
       <section className="space-y-6">
          <div>
-            <h1 className="text-xl font-bold tracking-tight text-foreground">
+            <h1 className="text-xl font-bold tracking-tight text-base-content">
                Temuan & Klarifikasi
             </h1>
-            <p className="text-sm text-muted-foreground mt-1 max-w-2xl">
+            <p className="text-sm text-base-content/70 mt-1 max-w-2xl">
                Catat temuan dari hasil rekonsiliasi, lalu pantau klarifikasi PO
                sampai status dapat ditutup.
             </p>

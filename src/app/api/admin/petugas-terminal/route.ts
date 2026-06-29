@@ -1,64 +1,18 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { getAuthenticatedActor } from "@/lib/auth/server-actor";
-
-const ALLOWED_ROLES = ["admin-terminal", "staf-iw"] as const;
-
-type AllowedRole = (typeof ALLOWED_ROLES)[number];
-
-function isAllowedRole(role: string | null | undefined): role is AllowedRole {
-   return ALLOWED_ROLES.includes(role as AllowedRole);
-}
+import { sanitizeDbError } from "@/lib/db-error";
+import { requireActor, actorErrorHandler } from "@/lib/auth/actor";
+import { ROLES } from "@/config/roles";
+import { logActivity } from "@/lib/supabase/queries/operasional.server";
+import { resolveTerminalId } from "@/lib/auth/petugas-context.server";
 
 function normalizeText(value: unknown) {
    return typeof value === "string" ? value.trim() : "";
 }
 
-async function requirePetugasActor() {
-   const actor = await getAuthenticatedActor();
-
-   if (!actor) {
-      return { error: NextResponse.json({ message: "Unauthorized" }, { status: 401 }) };
-   }
-
-   if (!isAllowedRole(actor.role)) {
-      return { error: NextResponse.json({ message: "Forbidden" }, { status: 403 }) };
-   }
-
-   return { actor };
-}
-
-function resolveTerminalId(params: {
-   role: string;
-   actorTerminalId?: string | null;
-   requestedTerminalId?: string | null;
-}) {
-   if (params.role === "admin-terminal") {
-      if (!params.actorTerminalId) {
-         return { message: "Terminal tidak ditemukan", status: 400 } as const;
-      }
-
-      if (
-         params.requestedTerminalId &&
-         params.requestedTerminalId !== params.actorTerminalId
-      ) {
-         return { message: "Forbidden", status: 403 } as const;
-      }
-
-      return { terminalId: params.actorTerminalId } as const;
-   }
-
-   if (!params.requestedTerminalId) {
-      return { message: "Terminal tidak ditemukan", status: 400 } as const;
-   }
-
-   return { terminalId: params.requestedTerminalId } as const;
-}
-
 export async function GET(request: Request) {
    try {
-      const { actor, error } = await requirePetugasActor();
-      if (error) return error;
+      const actor = await requireActor([ROLES.ADMIN_TERMINAL, ROLES.STAF_IW]);
 
       const url = new URL(request.url);
       const terminalResult = resolveTerminalId({
@@ -82,22 +36,18 @@ export async function GET(request: Request) {
          .order("created_at", { ascending: false });
 
       if (queryError) {
-         return NextResponse.json({ message: queryError.message }, { status: 500 });
+         return NextResponse.json({ message: sanitizeDbError(queryError, "petugas-terminal list") }, { status: 500 });
       }
 
       return NextResponse.json({ data: data ?? [] });
-   } catch (error: unknown) {
-      return NextResponse.json(
-         { message: error instanceof Error ? error.message : "Internal error" },
-         { status: 500 },
-      );
+   } catch (error) {
+      return actorErrorHandler(error);
    }
 }
 
 export async function PATCH(request: Request) {
    try {
-      const { actor, error } = await requirePetugasActor();
-      if (error) return error;
+      const actor = await requireActor([ROLES.ADMIN_TERMINAL, ROLES.STAF_IW]);
 
       const body = await request.json().catch(() => null);
       const id = normalizeText(body?.id);
@@ -119,7 +69,7 @@ export async function PATCH(request: Request) {
 
       if (existingError) {
          return NextResponse.json(
-            { message: existingError.message },
+            { message: sanitizeDbError(existingError, "petugas-terminal update") },
             { status: 500 },
          );
       }
@@ -153,7 +103,7 @@ export async function PATCH(request: Request) {
 
       if (updateError) {
          return NextResponse.json(
-            { message: updateError.message },
+            { message: sanitizeDbError(updateError, "petugas-terminal update") },
             { status: 400 },
          );
       }
@@ -165,19 +115,22 @@ export async function PATCH(request: Request) {
             .eq("petugas_terminal_id", id);
       }
 
-      return NextResponse.json({ data });
-    } catch (error: unknown) {
-      return NextResponse.json(
-         { message: error instanceof Error ? error.message : "Internal error" },
-         { status: 500 },
+      await logActivity(
+         "UPDATE_PETUGAS_TERMINAL",
+         `${isActive ? "Aktifkan" : "Nonaktifkan"} petugas terminal: ${data.nama ?? id}`,
+         { petugas_terminal_id: id, is_active: isActive },
+         { actorUserId: actor.user.id },
       );
+
+      return NextResponse.json({ data });
+   } catch (error) {
+      return actorErrorHandler(error);
    }
 }
 
 export async function DELETE(request: Request) {
    try {
-      const { actor, error } = await requirePetugasActor();
-      if (error) return error;
+      const actor = await requireActor([ROLES.ADMIN_TERMINAL, ROLES.STAF_IW]);
 
       const url = new URL(request.url);
       const id = url.searchParams.get("id")?.trim();
@@ -198,7 +151,7 @@ export async function DELETE(request: Request) {
 
       if (existingError) {
          return NextResponse.json(
-            { message: existingError.message },
+            { message: sanitizeDbError(existingError, "petugas-terminal delete") },
             { status: 500 },
          );
       }
@@ -230,16 +183,20 @@ export async function DELETE(request: Request) {
 
       if (deleteError) {
          return NextResponse.json(
-            { message: deleteError.message },
+            { message: sanitizeDbError(deleteError, "petugas-terminal delete") },
             { status: 500 },
          );
       }
 
-      return NextResponse.json({ success: true });
-   } catch (error: unknown) {
-      return NextResponse.json(
-         { message: error instanceof Error ? error.message : "Internal error" },
-         { status: 500 },
+      await logActivity(
+         "HAPUS_PETUGAS_TERMINAL",
+         `Hapus petugas terminal: ${existing.nama ?? id}`,
+         { petugas_terminal_id: id },
+         { actorUserId: actor.user.id },
       );
+
+      return NextResponse.json({ success: true });
+   } catch (error) {
+      return actorErrorHandler(error);
    }
 }

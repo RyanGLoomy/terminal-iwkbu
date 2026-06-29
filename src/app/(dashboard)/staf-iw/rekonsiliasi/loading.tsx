@@ -7,8 +7,8 @@ export default function RekonsiliasiLoading() {
          <div className="space-y-5">
             {/* Heading */}
             <div>
-               <div className="h-7 w-72 bg-muted rounded animate-pulse mb-2" />
-               <div className="h-4 w-full max-w-2xl bg-muted rounded animate-pulse" />
+               <div className="h-7 w-72 bg-base-200 rounded animate-pulse mb-2" />
+               <div className="h-4 w-full max-w-2xl bg-base-200 rounded animate-pulse" />
             </div>
 
             {/* Summary Cards */}

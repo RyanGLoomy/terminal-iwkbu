@@ -1,16 +1,19 @@
 /**
  * IWKBU API Adaptor
  *
- * Mendukung dua mode:
- * 1. Mode fallback — estimasi berbasis algoritma deterministik (default).
- * 2. Mode API — memanggil API IWKBU ketika env vars tersedia.
+ * Seam nyata antara mesin rekonsiliasi dan sumber data IWKBU eksternal.
  *
- * Env vars untuk mode API:
+ * Mode:
+ * 1. Mode API — memanggil API IWKBU bila IWKBU_API_URL + IWKBU_API_KEY diset.
+ * 2. Mode degraded — bila env tak diset ATAU fetch gagal, TIDAK memfabrikasi data;
+ *    mengembalikan source="degraded" dengan records kosong. Pemanggil (cron) lalu
+ *    melewati upsert source dan merekonsiliasi vs cache (iwkbu_source_records)
+ *    yang sudah ada, serta menandai run degraded. Ini sesuai skripsi (fault-tolerance
+ *    membaca cache, bukan mengarang data).
+ *
+ * Env vars mode API:
  *   IWKBU_API_URL  — base URL API IWKBU
  *   IWKBU_API_KEY  — Bearer token / API key
- *
- * Struktur adaptor dirancang agar fallback dapat diganti dengan
- * implementasi API tanpa mengubah kode pemanggil.
  */
 
 export interface IwkbuComplianceRecord {
@@ -23,48 +26,10 @@ export interface IwkbuComplianceRecord {
 
 export interface IwkbuFetchResult {
    records: IwkbuComplianceRecord[];
-   source: "fallback" | "api";
+   /** "api" = sukses dari API; "degraded" = gagal/env kosong -> pakai cache. */
+   source: "api" | "degraded";
    fetched_at: string;
    count: number;
-}
-
-const FALLBACK_SEED_ISSUES: Record<string, { status: string; issues: number }> = {};
-
-function fallbackStatusForPlate(plate: string): {
-   status: IwkbuComplianceRecord["compliance_status"];
-   issues: number;
-} {
-   if (FALLBACK_SEED_ISSUES[plate]) {
-      return {
-         status: FALLBACK_SEED_ISSUES[plate].status as IwkbuComplianceRecord["compliance_status"],
-         issues: FALLBACK_SEED_ISSUES[plate].issues,
-      };
-   }
-
-   const hash = plate
-      .toUpperCase()
-      .replace(/\s/g, "")
-      .split("")
-      .reduce((acc, ch) => acc + ch.charCodeAt(0), 0);
-
-   const bucket = hash % 10;
-   let status: IwkbuComplianceRecord["compliance_status"];
-   let issues = 0;
-
-   if (bucket < 6) {
-      status = "compliant";
-   } else if (bucket < 8) {
-      status = "pending";
-      issues = 1;
-   } else if (bucket === 8) {
-      status = "non_compliant";
-      issues = 2 + (hash % 3);
-   } else {
-      status = "unknown";
-   }
-
-   FALLBACK_SEED_ISSUES[plate] = { status, issues };
-   return { status, issues };
 }
 
 async function fetchFromApi(
@@ -103,25 +68,6 @@ async function fetchFromApi(
    return records;
 }
 
-function fallbackFetch(
-   plates: string[],
-): IwkbuComplianceRecord[] {
-   const now = new Date().toISOString();
-   return plates.map((plate) => {
-      const { status, issues } = fallbackStatusForPlate(plate);
-      return {
-         nomor_polisi: plate,
-         compliance_status: status,
-         issue_count: issues,
-         source_updated_at: now,
-         payload: {
-            estimated: true,
-            source: "iwkbu-adaptor-fallback",
-         },
-      };
-   });
-}
-
 export async function fetchIwkbuCompliance(
    plates: string[],
 ): Promise<IwkbuFetchResult> {
@@ -139,15 +85,12 @@ export async function fetchIwkbuCompliance(
             count: records.length,
          };
       } catch (error) {
-         console.error("[IWKBU Adaptor] API fetch failed, using fallback:", error);
+         // Fault-tolerance: jangan fabrikasi. Sinyalkan degraded; pemanggil pakai cache.
+         console.error("[IWKBU Adaptor] API fetch gagal -> degraded (pakai cache):", error);
       }
+   } else {
+      console.warn("[IWKBU Adaptor] Env IWKBU_API_URL/KEY tak diset -> degraded (pakai cache).");
    }
 
-   const records = fallbackFetch(plates);
-   return {
-      records,
-      source: "fallback",
-      fetched_at: now,
-      count: records.length,
-   };
+   return { records: [], source: "degraded", fetched_at: now, count: 0 };
 }

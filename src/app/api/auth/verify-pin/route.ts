@@ -1,9 +1,7 @@
 import { NextResponse } from "next/server";
-import { getAuthenticatedActor } from "@/lib/auth/server-actor";
-import {
-   ensureRoleOrThrow,
-   AuthorizationError,
-} from "@/lib/auth/requireRole.server";
+import { requireActor, actorErrorHandler } from "@/lib/auth/actor";
+import { ROLES } from "@/config/roles";
+import { logActivity } from "@/lib/supabase/queries/operasional.server";
 import {
    checkRateLimit,
    recordFailedAttempt,
@@ -14,15 +12,7 @@ import bcrypt from "bcryptjs";
 
 export async function POST(request: Request) {
    try {
-      const actor = await getAuthenticatedActor();
-      if (!actor) {
-         return NextResponse.json(
-            { message: "Sesi habis. Silakan login ulang." },
-            { status: 401 },
-         );
-      }
-
-      ensureRoleOrThrow(actor.user, actor.profile, "loket");
+      const actor = await requireActor(ROLES.PETUGAS_LOKET);
 
       const terminalId = actor.profile?.terminal_id ?? actor.terminalId;
       if (!terminalId) {
@@ -96,21 +86,19 @@ export async function POST(request: Request) {
 
       await clearAttempts(rateLimitKey);
 
+      await logActivity(
+         "VERIFIKASI_PIN",
+         `Verifikasi PIN petugas: ${matched.nama}`,
+         { petugas_terminal_id: matched.id },
+         { actorUserId: actor.user.id },
+      );
+
       return NextResponse.json({
-         verified: true,
-         petugas_id: matched.id,
-         petugas_nama: matched.nama,
+          verified: true,
+          petugas_id: matched.id,
+          petugas_nama: matched.nama,
       });
    } catch (error) {
-      if (error instanceof AuthorizationError) {
-         return NextResponse.json(
-            { message: "Akses ditolak" },
-            { status: 403 },
-         );
-      }
-      return NextResponse.json(
-         { message: "Terjadi kesalahan internal" },
-         { status: 500 },
-      );
+      return actorErrorHandler(error);
    }
 }

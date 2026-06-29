@@ -6,6 +6,11 @@ import { Check, ChevronDown, ChevronUp } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
+interface ItemEntry {
+  value: string;
+  element: HTMLDivElement;
+}
+
 interface SelectContextValue {
   value: string | undefined;
   onItemSelect: (value: string) => void;
@@ -15,6 +20,12 @@ interface SelectContextValue {
   rootId: string;
   registerLabel: (value: string, label: string) => void;
   getLabel: (value: string) => string | undefined;
+  // keyboard a11y
+  activeIndex: number;
+  setActiveIndex: (n: number) => void;
+  registerItem: (entry: ItemEntry) => () => void;
+  focusActive: () => void;
+  focusTrigger: () => void;
 }
 
 const SelectContext = React.createContext<SelectContextValue | null>(null);
@@ -45,6 +56,8 @@ function Select({
   const current = isControlled ? value : internal;
   const [open, setOpen] = React.useState(false);
   const labelsRef = React.useRef<Record<string, string>>({});
+  const itemsRef = React.useRef<ItemEntry[]>([]);
+  const [activeIndex, setActiveIndexState] = React.useState(0);
   const [, forceRender] = React.useReducer((n) => n + 1, 0);
   const rootId = React.useId();
 
@@ -55,19 +68,60 @@ function Select({
     }
   }, []);
 
+  const focusTrigger = React.useCallback(() => {
+    const el = document
+      .getElementById(rootId)
+      ?.querySelector<HTMLElement>("[data-slot='select-trigger']");
+    el?.focus();
+  }, [rootId]);
+
   const onItemSelect = React.useCallback(
     (val: string) => {
       if (!isControlled) setInternal(val);
       onValueChange?.(val);
       setOpen(false);
+      // Return focus to the trigger after selection.
+      window.requestAnimationFrame(focusTrigger);
     },
-    [isControlled, onValueChange],
+    [isControlled, onValueChange, focusTrigger],
   );
 
-  const getLabel = React.useCallback(
-    (val: string) => labelsRef.current[val],
-    [],
-  );
+  const getLabel = React.useCallback((val: string) => labelsRef.current[val], []);
+
+  const registerItem = React.useCallback((entry: ItemEntry) => {
+    itemsRef.current = [...itemsRef.current, entry];
+    return () => {
+      itemsRef.current = itemsRef.current.filter((i) => i.element !== entry.element);
+    };
+  }, []);
+
+  const setActiveIndex = React.useCallback((n: number) => {
+    setActiveIndexState(n);
+  }, []);
+
+  const focusActive = React.useCallback(() => {
+    const items = itemsRef.current;
+    if (items[activeIndex]) {
+      items[activeIndex].element.focus();
+    } else if (items[0]) {
+      items[0].element.focus();
+    }
+  }, [activeIndex]);
+
+  // When opening, jump to the currently-selected option (or first).
+  React.useEffect(() => {
+    if (!open) return;
+    const items = itemsRef.current;
+    const idx = Math.max(
+      0,
+      items.findIndex((i) => i.value === current),
+    );
+    setActiveIndexState(idx);
+    const id = window.requestAnimationFrame(() => {
+      items[idx]?.element.focus();
+    });
+    return () => window.cancelAnimationFrame(id);
+  }, [open, current]);
 
   return (
     <SelectContext.Provider
@@ -80,6 +134,11 @@ function Select({
         rootId,
         registerLabel,
         getLabel,
+        activeIndex,
+        setActiveIndex,
+        registerItem,
+        focusActive,
+        focusTrigger,
       }}
     >
       <div id={rootId} data-select-root className="relative inline-block w-full" {...props}>
@@ -116,6 +175,34 @@ function SelectTrigger({
   ...props
 }: React.ComponentProps<"button">) {
   const ctx = useSelectContext("SelectTrigger");
+
+  function handleKeyDown(e: React.KeyboardEvent<HTMLButtonElement>) {
+    if (ctx.disabled) return;
+    switch (e.key) {
+      case "ArrowDown":
+      case "Enter":
+      case " ":
+      case "Spacebar":
+        e.preventDefault();
+        if (!ctx.open) ctx.setOpen(true);
+        else ctx.focusActive();
+        break;
+      case "ArrowUp":
+        e.preventDefault();
+        if (!ctx.open) {
+          ctx.setOpen(true);
+          // will land on selected in the open effect
+        }
+        break;
+      case "Escape":
+        if (ctx.open) {
+          e.preventDefault();
+          ctx.setOpen(false);
+        }
+        break;
+    }
+  }
+
   return (
     <button
       type="button"
@@ -124,6 +211,7 @@ function SelectTrigger({
       aria-expanded={ctx.open}
       disabled={ctx.disabled}
       onClick={() => ctx.setOpen(!ctx.open)}
+      onKeyDown={handleKeyDown}
       className={cn(
         "input input-bordered flex h-11 w-full items-center justify-between gap-2 bg-base-100 pr-3 text-left text-base-content",
         ctx.disabled && "cursor-not-allowed opacity-50",
@@ -132,7 +220,7 @@ function SelectTrigger({
       {...props}
     >
       {children}
-      <ChevronDown className="size-4 shrink-0 opacity-50" />
+      <ChevronDown className="size-4 shrink-0 opacity-50" aria-hidden="true" />
     </button>
   );
 }
@@ -202,14 +290,66 @@ function SelectContent({
 
   if (!mounted || typeof document === "undefined") return null;
 
+  function handleListKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
+    const count = menuRef.current
+      ? menuRef.current.querySelectorAll('[role="option"]:not([data-disabled])').length
+      : 0;
+    if (count === 0) return;
+    let idx = ctx.activeIndex;
+    switch (e.key) {
+      case "ArrowDown":
+        e.preventDefault();
+        idx = (idx + 1) % count;
+        ctx.setActiveIndex(idx);
+        ctx.focusActive();
+        break;
+      case "ArrowUp":
+        e.preventDefault();
+        idx = (idx - 1 + count) % count;
+        ctx.setActiveIndex(idx);
+        ctx.focusActive();
+        break;
+      case "Home":
+        e.preventDefault();
+        ctx.setActiveIndex(0);
+        ctx.focusActive();
+        break;
+      case "End":
+        e.preventDefault();
+        ctx.setActiveIndex(count - 1);
+        ctx.focusActive();
+        break;
+      case "Enter":
+      case " ":
+      case "Spacebar": {
+        e.preventDefault();
+        const items = menuRef.current?.querySelectorAll<HTMLDivElement>('[role="option"]');
+        const el = items?.[ctx.activeIndex];
+        const value = el?.getAttribute("data-value");
+        if (value) ctx.onItemSelect(value);
+        break;
+      }
+      case "Escape":
+        e.preventDefault();
+        ctx.setOpen(false);
+        ctx.focusTrigger();
+        break;
+      case "Tab":
+        ctx.setOpen(false);
+        break;
+    }
+  }
+
   return createPortal(
     <div
       ref={menuRef}
       role="listbox"
+      tabIndex={-1}
       data-slot="select-content"
       hidden={!ctx.open}
+      onKeyDown={handleListKeyDown}
       className={cn(
-        "max-h-72 overflow-auto rounded-box border border-base-300 bg-base-100 p-1 text-base-content shadow-lg",
+        "max-h-72 overflow-auto rounded-box border border-base-300 bg-base-100 p-1 text-base-content shadow-sm outline-none",
         ctx.open ? "block animate-[fadeIn_0.12s_ease]" : "hidden",
         className,
       )}
@@ -252,6 +392,36 @@ function SelectItem({
     }
   }, [value, ctx]);
 
+  React.useEffect(() => {
+    if (!ref.current) return;
+    const el = ref.current;
+    const unregister = ctx.registerItem({ value, element: el });
+    return unregister;
+  }, [value, ctx]);
+
+  // Keep this option scrolled into view when it becomes the active one.
+  React.useEffect(() => {
+    if (ref.current && ctx.activeIndex >= 0) {
+      const items = Array.from(
+        ref.current.parentElement?.parentElement?.querySelectorAll<HTMLDivElement>(
+          '[role="option"]',
+        ) ?? [],
+      );
+      if (items[ctx.activeIndex] === ref.current) {
+        ref.current.scrollIntoView({ block: "nearest" });
+      }
+    }
+  }, [ctx.activeIndex]);
+
+  function handleItemKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
+    // Delegate to the listbox by bubbling; but also allow Enter here for safety.
+    if (e.key === "Enter" || e.key === " " || e.key === "Spacebar") {
+      e.preventDefault();
+      e.stopPropagation();
+      if (!disabled) ctx.onItemSelect(value);
+    }
+  }
+
   return (
     <div
       ref={ref}
@@ -259,16 +429,19 @@ function SelectItem({
       aria-selected={selected}
       aria-disabled={disabled}
       data-disabled={disabled ? "" : undefined}
+      data-value={value}
       data-slot="select-item"
+      tabIndex={-1}
       onClick={() => !disabled && ctx.onItemSelect(value)}
+      onKeyDown={handleItemKeyDown}
       className={cn(
-        "relative flex w-full cursor-pointer select-none items-center rounded-lg py-1.5 pl-8 pr-2 text-sm outline-none hover:bg-base-200 data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+        "relative flex w-full cursor-pointer select-none items-center rounded-lg py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-base-200 hover:bg-base-200 data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
         selected && "bg-base-200 font-medium",
         className,
       )}
       {...props}
     >
-      <span className="absolute left-2 flex size-3.5 items-center justify-center">
+      <span className="absolute left-2 flex size-3.5 items-center justify-center" aria-hidden="true">
         {selected && <Check className="size-4 text-primary" />}
       </span>
       {children}
@@ -287,14 +460,14 @@ function SelectSeparator({
 
 function SelectScrollUpButton() {
   return (
-    <div className="flex cursor-default items-center justify-center py-0.5 text-base-content/40">
+    <div className="flex cursor-default items-center justify-center py-0.5 text-base-content/40" aria-hidden="true">
       <ChevronUp className="size-3.5" />
     </div>
   );
 }
 function SelectScrollDownButton() {
   return (
-    <div className="flex cursor-default items-center justify-center py-0.5 text-base-content/40">
+    <div className="flex cursor-default items-center justify-center py-0.5 text-base-content/40" aria-hidden="true">
       <ChevronDown className="size-3.5" />
     </div>
   );

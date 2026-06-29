@@ -52,9 +52,9 @@ export function WeeklyTrendChart({
 
     if (loading) {
        return (
-          <Card className="border-border">
+          <Card className="border-base-300">
              <CardContent>
-                <LoadingState variant="spinner" text="Memuat grafik..." />
+                <LoadingState variant="spinner" text="Memuat grafik…" />
              </CardContent>
           </Card>
        );
@@ -65,16 +65,16 @@ export function WeeklyTrendChart({
    return (
       <div className="grid gap-5 lg:grid-cols-2">
          {/* Area Chart — Tren Masuk/Keluar */}
-         <Card className="border-border">
+         <Card className="border-base-300">
             <CardHeader className="pb-2">
-               <CardTitle className="text-sm font-medium flex items-center gap-2 text-foreground">
-                  <TrendingUp className="h-4 w-4 text-brand-sky" />
+               <CardTitle className="text-sm font-medium flex items-center gap-2 text-base-content">
+                  <TrendingUp className="h-4 w-4 text-brand-sky" aria-hidden="true" />
                   Tren Kendaraan (7 Hari)
                </CardTitle>
             </CardHeader>
             <CardContent>
                {!hasData ? (
-                  <div className="flex items-center justify-center py-12 text-sm text-muted-foreground">
+                  <div className="flex items-center justify-center py-12 text-sm text-base-content/70">
                      Belum ada data transaksi minggu ini.
                   </div>
                ) : (
@@ -180,16 +180,16 @@ export function WeeklyTrendChart({
          </Card>
 
          {/* Bar Chart — Total per Hari */}
-         <Card className="border-border">
+         <Card className="border-base-300">
             <CardHeader className="pb-2">
-               <CardTitle className="text-sm font-medium flex items-center gap-2 text-foreground">
-                  <BarChart3 className="h-4 w-4 text-brand-green" />
+               <CardTitle className="text-sm font-medium flex items-center gap-2 text-base-content">
+                  <BarChart3 className="h-4 w-4 text-brand-green" aria-hidden="true" />
                   Total Transaksi Harian
                </CardTitle>
             </CardHeader>
             <CardContent>
                {!hasData ? (
-                  <div className="flex items-center justify-center py-12 text-sm text-muted-foreground">
+                  <div className="flex items-center justify-center py-12 text-sm text-base-content/70">
                      Belum ada data transaksi minggu ini.
                   </div>
                ) : (

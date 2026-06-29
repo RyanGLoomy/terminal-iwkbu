@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Bell, CheckCheck } from "lucide-react";
@@ -23,9 +23,10 @@ export function NotificationBell() {
    const [unreadCount, setUnreadCount] = useState(0);
    const [open, setOpen] = useState(false);
    const dropdownRef = useRef<HTMLDivElement>(null);
+   const bellWrapRef = useRef<HTMLSpanElement>(null);
    const router = useRouter();
 
-   const loadNotifications = useCallback(async () => {
+   const loadNotifications = async () => {
       try {
          const supabase = createClient();
          const {
@@ -48,7 +49,7 @@ export function NotificationBell() {
       } catch {
          return;
       }
-   }, []);
+   };
 
    useEffect(() => {
       const supabase = createClient();
@@ -103,9 +104,20 @@ export function NotificationBell() {
             setOpen(false);
          }
       }
+      function handleKeydown(e: KeyboardEvent) {
+         if (e.key === "Escape" && open) {
+            setOpen(false);
+            const btn = bellWrapRef.current?.querySelector("button");
+            btn?.focus();
+         }
+      }
       document.addEventListener("mousedown", handleClickOutside);
-      return () => document.removeEventListener("mousedown", handleClickOutside);
-   }, []);
+      document.addEventListener("keydown", handleKeydown);
+      return () => {
+         document.removeEventListener("mousedown", handleClickOutside);
+         document.removeEventListener("keydown", handleKeydown);
+      };
+   }, [open]);
 
    async function markAllRead() {
       const supabase = createClient();
@@ -136,76 +148,89 @@ export function NotificationBell() {
 
    return (
       <div className="relative" ref={dropdownRef}>
-         <Button
-            variant="ghost"
-            size="sm"
-            className="relative h-9 w-9 p-0"
-            onClick={() => setOpen((v) => !v)}
-         >
-            <Bell className="h-4 w-4" />
-            {unreadCount > 0 && (
-               <span className="absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-destructive px-1 text-[10px] font-bold text-destructive-foreground">
-                  {unreadCount > 9 ? "9+" : unreadCount}
-               </span>
-            )}
-         </Button>
+         <span ref={bellWrapRef} className="contents">
+            <Button
+               variant="ghost"
+               size="sm"
+               className="relative h-9 w-9 p-0"
+               aria-label="Notifikasi"
+               aria-haspopup="dialog"
+               aria-expanded={open}
+               onClick={() => setOpen((v) => !v)}
+            >
+               <Bell className="h-4 w-4" aria-hidden="true" />
+               {unreadCount > 0 && (
+                  <span
+                     className="absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-error px-1 text-[10px] font-bold text-error-content"
+                     aria-hidden="true"
+                  >
+                     {unreadCount > 9 ? "9+" : unreadCount}
+                  </span>
+               )}
+            </Button>
+         </span>
+         <span className="sr-only" aria-live="polite">
+            {unreadCount > 0 ? `${unreadCount} notifikasi belum dibaca` : "Tidak ada notifikasi belum dibaca"}
+         </span>
 
          {open && (
-            <div className="absolute right-0 top-full mt-2 w-80 max-h-96 overflow-y-auto rounded-xl border border-border bg-card shadow-lg z-50">
-               <div className="flex items-center justify-between px-4 py-3 border-b border-border">
-                  <span className="text-sm font-semibold">Notifikasi</span>
-                  {unreadCount > 0 && (
-                     <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-7 text-xs"
-                        onClick={markAllRead}
-                     >
-                        <CheckCheck className="h-3.5 w-3.5 mr-1" />
-                        Tandai dibaca
-                     </Button>
-                  )}
-               </div>
-                {notifications.length === 0 ? (
-                   <EmptyState title="Tidak ada notifikasi" icon={Bell} className="border-0 py-6" />
-                ) : (
-                  <div className="divide-y divide-border">
-                     {notifications.map((n) => (
-                        <button
-                           key={n.id}
-                           className={`w-full text-left px-4 py-3 hover:bg-muted/50 transition-colors ${
-                              !n.is_read ? "bg-primary/10" : ""
-                           }`}
-                           onClick={() => handleClickLink(n.link)}
-                        >
-                           <div className="flex items-start gap-2">
-                              {!n.is_read && (
-                                 <span className="mt-1.5 h-2 w-2 rounded-full bg-primary shrink-0" />
-                              )}
-                              <div className="min-w-0 flex-1">
-                                 <p className="text-sm font-medium truncate">
-                                    {n.title}
-                                 </p>
-                                 <p className="text-xs text-muted-foreground line-clamp-2 mt-0.5">
-                                    {n.message}
-                                 </p>
-                                 <p className="text-[10px] text-muted-foreground/70 mt-1">
-                                    {new Date(n.created_at).toLocaleString(
-                                       "id-ID",
-                                       {
-                                          day: "numeric",
-                                          month: "short",
-                                          hour: "2-digit",
-                                          minute: "2-digit",
-                                       },
-                                    )}
-                                 </p>
-                              </div>
-                           </div>
-                        </button>
-                     ))}
-                  </div>
-               )}
+            <div className="absolute right-0 top-full mt-2 w-80 max-h-96 overflow-y-auto rounded-xl border border-base-300 bg-base-100 shadow-sm z-50">
+                <div className="flex items-center justify-between px-4 py-3 border-b border-base-300">
+                   <span className="text-sm font-semibold">Notifikasi</span>
+                   {unreadCount > 0 && (
+                      <Button
+                         variant="ghost"
+                         size="sm"
+                         className="h-7 text-xs"
+                         onClick={markAllRead}
+                      >
+                         <CheckCheck className="h-3.5 w-3.5 mr-1" aria-hidden="true" />
+                         Tandai dibaca
+                      </Button>
+                   )}
+                </div>
+                 {notifications.length === 0 ? (
+                    <EmptyState title="Tidak ada notifikasi" icon={Bell} className="border-0 py-6" />
+                 ) : (
+                   <div className="divide-y divide-base-300" role="list">
+                      {notifications.map((n) => (
+                         <button
+                            key={n.id}
+                            type="button"
+                            role="listitem"
+                            className={`w-full text-left px-4 py-3 hover:bg-base-200/60 transition-colors ${
+                               !n.is_read ? "bg-primary/10" : ""
+                            }`}
+                            onClick={() => handleClickLink(n.link)}
+                         >
+                            <div className="flex items-start gap-2">
+                               {!n.is_read && (
+                                  <span className="mt-1.5 h-2 w-2 rounded-full bg-primary shrink-0" aria-hidden="true" />
+                               )}
+                               <div className="min-w-0 flex-1">
+                                  <p className="text-sm font-medium truncate">
+                                     {n.title}
+                                  </p>
+                                  <p className="text-xs text-base-content/70 line-clamp-2 mt-0.5">
+                                     {n.message}
+                                  </p>
+                                  <p className="text-[10px] text-base-content/50 mt-1 tabular-nums">
+                                     {new Date(n.created_at).toLocaleString(
+                                        "id-ID",
+                                        {
+                                           day: "numeric",
+                                           month: "short",
+                                           hour: "2-digit",
+                                           minute: "2-digit",
+                                        },
+                                     )}
+                                  </p>
+                               </div>
+                            </div>
+                         </button>
+                      ))}
+                   </div>
+                )}
             </div>
          )}
       </div>

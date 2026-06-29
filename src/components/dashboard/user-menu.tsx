@@ -79,7 +79,7 @@ export function UserMenu({ userName, userRole }: UserMenuProps) {
                   <p className="truncate text-sm font-medium leading-none">
                      {userName}
                   </p>
-                  <p className="text-xs leading-none text-muted-foreground">
+                  <p className="text-xs leading-none text-base-content/70">
                      {userRole === ROLES.PO ? "Perusahaan Otobus" :
                       userRole === ROLES.PETUGAS_LOKET ? "Loket Terminal" :
                       userRole === ROLES.ADMIN_TERMINAL ? "Admin Terminal" :
@@ -90,7 +90,7 @@ export function UserMenu({ userName, userRole }: UserMenuProps) {
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
                <Link href="/profile" className="cursor-pointer">
-                  <User className="mr-2 size-4" />
+                  <User className="mr-2 size-4" aria-hidden="true" />
                   Profil
                </Link>
             </DropdownMenuItem>
@@ -101,9 +101,9 @@ export function UserMenu({ userName, userRole }: UserMenuProps) {
                   className="cursor-pointer"
                >
                   {exitingPetugas ? (
-                     <Loader2 className="mr-2 size-4 animate-spin" />
+                     <Loader2 className="mr-2 size-4 animate-spin" aria-hidden="true" />
                   ) : (
-                     <KeyRound className="mr-2 size-4" />
+                     <KeyRound className="mr-2 size-4" aria-hidden="true" />
                   )}
                   Keluar Sesi Petugas
                </DropdownMenuItem>
@@ -112,12 +112,12 @@ export function UserMenu({ userName, userRole }: UserMenuProps) {
             <DropdownMenuItem
                onClick={handleLogout}
                disabled={loggingOut}
-               className="cursor-pointer text-destructive focus:text-destructive"
+               className="cursor-pointer text-error focus:text-error"
             >
                {loggingOut ? (
-                  <Loader2 className="mr-2 size-4 animate-spin" />
+                  <Loader2 className="mr-2 size-4 animate-spin" aria-hidden="true" />
                ) : (
-                  <LogOut className="mr-2 size-4" />
+                  <LogOut className="mr-2 size-4" aria-hidden="true" />
                )}
                Keluar
             </DropdownMenuItem>

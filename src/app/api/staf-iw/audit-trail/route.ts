@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getAuthenticatedActor } from "@/lib/auth/server-actor";
-import { ensureRoleOrThrow } from "@/lib/auth/requireRole.server";
+import { requireActor, actorErrorHandler } from "@/lib/auth/actor";
+import { ROLES } from "@/config/roles";
 import { getActivityLogs } from "@/lib/supabase/queries/operasional.server";
 import type {
    ActivityLog,
@@ -126,19 +126,7 @@ function filterBySearch(rows: ActivityLog[], search: string) {
 
 export async function GET(request: NextRequest) {
    try {
-      const actor = await getAuthenticatedActor();
-      if (!actor) {
-         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-      }
-
-      try {
-         ensureRoleOrThrow(actor.user, actor.profile, "staf-iw");
-      } catch (error: unknown) {
-         return NextResponse.json(
-            { message: error instanceof Error ? error.message : "Forbidden" },
-            { status: (error as { status?: number })?.status ?? 403 },
-         );
-      }
+      await requireActor(ROLES.STAF_IW);
 
       const params = request.nextUrl.searchParams;
       const startDate = parseDateParam(
@@ -182,11 +170,13 @@ export async function GET(request: NextRequest) {
       }
 
       return NextResponse.json({ data: resultRows, hasMore });
-   } catch (error: unknown) {
-      const status = error instanceof QueryValidationError ? error.status : 500;
-      return NextResponse.json(
-         { message: error instanceof Error ? error.message : "Internal error" },
-         { status },
-      );
+   } catch (error) {
+      if (error instanceof QueryValidationError) {
+         return NextResponse.json(
+            { message: error.message },
+            { status: 400 },
+         );
+      }
+      return actorErrorHandler(error);
    }
 }

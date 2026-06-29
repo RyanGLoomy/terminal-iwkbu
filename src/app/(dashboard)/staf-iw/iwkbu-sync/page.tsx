@@ -7,10 +7,10 @@ export default async function IwkbuSyncPage() {
    return (
       <section className="space-y-6">
          <div>
-            <h1 className="text-xl font-bold tracking-tight text-foreground">
+            <h1 className="text-xl font-bold tracking-tight text-base-content">
                Sinkronisasi IWKBU
             </h1>
-            <p className="text-sm text-muted-foreground mt-1 max-w-2xl">
+            <p className="text-sm text-base-content/70 mt-1 max-w-2xl">
                Pantau status sinkronisasi data kepatuhan IWKBU, jalankan
                sinkronisasi manual, dan lihat hasil rekonsiliasi per armada.
             </p>

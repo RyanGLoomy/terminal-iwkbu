@@ -3,6 +3,8 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { fetchIwkbuCompliance } from "@/lib/iwkbu/adaptor";
 import { executeIwkbuSync } from "@/lib/supabase/queries/iwkbu-sync.server";
 import { safeCompare } from "@/lib/auth/safe-compare";
+import { sanitizeDbError } from "@/lib/db-error";
+import { normalizePlate } from "@/lib/rekonsiliasi/engine";
 
 export async function POST(request: Request) {
    const authHeader = request.headers.get("authorization");
@@ -25,7 +27,7 @@ export async function POST(request: Request) {
 
       if (armadaError) {
          return NextResponse.json(
-            { message: armadaError.message },
+            { message: sanitizeDbError(armadaError, "iwkbu-fetch armada") },
             { status: 500 },
          );
       }
@@ -43,41 +45,51 @@ export async function POST(request: Request) {
 
       const result = await fetchIwkbuCompliance(plates);
 
-      const rows = result.records.map((r) => ({
-         external_ref: `IWKBU-API-${r.nomor_polisi}`,
-         nomor_polisi: r.nomor_polisi,
-         compliance_status: r.compliance_status,
-         issue_count: r.issue_count,
-         source_updated_at: r.source_updated_at,
-         payload: r.payload ?? {},
-         imported_at: new Date().toISOString(),
-      }));
+      let upserted = 0;
+      // Hanya upsert source bila fetch API berhasil. Bila degraded, pakai cache
+      // existing (iwkbu_source_records) -> jangan ditimpa.
+      if (result.source === "api" && result.records.length > 0) {
+         const rows = result.records.map((r) => ({
+            external_ref: `IWKBU-API-${normalizePlate(r.nomor_polisi)}`,
+            nomor_polisi: r.nomor_polisi,
+            compliance_status: r.compliance_status,
+            issue_count: r.issue_count,
+            source_updated_at: r.source_updated_at,
+            payload: r.payload ?? {},
+            imported_at: new Date().toISOString(),
+         }));
 
-      const { error: upsertError } = await admin
-         .from("iwkbu_source_records")
-         .upsert(rows, { onConflict: "external_ref" });
+         const { error: upsertError } = await admin
+            .from("iwkbu_source_records")
+            .upsert(rows, { onConflict: "external_ref" });
 
-      if (upsertError) {
-         return NextResponse.json(
-            { message: upsertError.message },
-            { status: 500 },
-         );
+         if (upsertError) {
+            return NextResponse.json(
+               { message: sanitizeDbError(upsertError, "iwkbu-fetch upsert") },
+               { status: 500 },
+            );
+         }
+         upserted = rows.length;
       }
 
-      await executeIwkbuSync({
+      const syncSummary = await executeIwkbuSync({
          triggerType: "scheduled",
          initiatedBy: null,
+         degraded: result.source !== "api",
       });
 
       return NextResponse.json({
          success: true,
          source: result.source,
-         fetched: result.count,
+         fetched: result.source === "api" ? result.count : 0,
+         source_upserted: upserted,
+         degraded: result.source !== "api",
          synced_at: result.fetched_at,
+         sync: syncSummary.summary,
       });
-   } catch (error: any) {
+   } catch (error: unknown) {
       return NextResponse.json(
-         { message: error?.message ?? "Internal error" },
+         { message: sanitizeDbError(error, "iwkbu-fetch") },
          { status: 500 },
       );
    }

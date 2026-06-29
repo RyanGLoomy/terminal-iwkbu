@@ -1,11 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sanitizeDbError } from "@/lib/db-error";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { getAuthenticatedActor } from "@/lib/auth/server-actor";
-import {
-   ensureRoleOrThrow,
-   AuthorizationError,
-} from "@/lib/auth/requireRole.server";
+import { requireActor, actorErrorHandler } from "@/lib/auth/actor";
+import { ROLES } from "@/config/roles";
 import { logActivity } from "@/lib/supabase/queries/operasional.server";
 import { createNotification } from "@/lib/supabase/queries/notifications.server";
 
@@ -14,12 +11,7 @@ export async function POST(
    context: { params: Promise<{ id: string }> },
 ) {
    try {
-      const actor = await getAuthenticatedActor();
-      if (!actor) {
-         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-      }
-
-      ensureRoleOrThrow(actor.user, actor.profile, "staf-iw");
+      const actor = await requireActor(ROLES.STAF_IW);
 
       const { id } = await context.params;
       const body = await request.json();
@@ -86,16 +78,7 @@ export async function POST(
        }
 
       return NextResponse.json({ data }, { status: 201 });
-   } catch (error: any) {
-      if (error instanceof AuthorizationError) {
-         return NextResponse.json(
-            { message: sanitizeDbError(error) },
-            { status: 403 },
-         );
-      }
-      return NextResponse.json(
-         { message: error?.message ?? "Internal error" },
-         { status: 500 },
-      );
+   } catch (error) {
+      return actorErrorHandler(error);
    }
 }

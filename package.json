@@ -12,6 +12,9 @@
         "test:e2e": "pnpm build && node scripts/setup-e2e.mjs && npx playwright test",
         "test:e2e:dev": "node scripts/setup-e2e.mjs && npx playwright test",
         "test:e2e:setup": "node scripts/setup-e2e.mjs",
+        "test:engine": "tsx --test src/lib/rekonsiliasi/engine.test.ts",
+        "test:auth": "tsx --test src/lib/auth/actor.test.ts",
+        "test:unit": "tsx --test src/lib/**/*.test.ts",
         "deps:check": "pnpm outdated",
         "audit": "pnpm audit --audit-level=moderate",
         "size": "pnpm build && size-limit"
@@ -58,6 +61,7 @@
         "postcss": "8.5.14",
         "size-limit": "^12.1.0",
         "tailwindcss": "^4",
+        "tsx": "^4.22.4",
         "typescript": "^5"
     },
     "size-limit": [

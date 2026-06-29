@@ -17,31 +17,31 @@ import type { Armada } from "@/lib/supabase/queries/verification.types";
 const verifikasiColor: Record<string, string> = {
    menunggu: "bg-amber-50 text-accent border border-amber-200/60 dark:bg-amber-950/50 dark:text-amber-300 dark:border-amber-800",
    terverifikasi: "bg-emerald-50 text-brand-green dark:bg-green-950/50 dark:text-green-300 dark:border-green-800",
-   ditolak: "bg-red-50 text-destructive border border-red-200/60 dark:bg-red-950/50 dark:text-red-300 dark:border-red-800",
+   ditolak: "bg-red-50 text-error border border-red-200/60 dark:bg-red-950/50 dark:text-red-300 dark:border-red-800",
 };
 
 const operasionalColor: Record<string, string> = {
    aktif: "bg-emerald-50 text-brand-green dark:bg-green-950/50 dark:text-green-300 dark:border-green-800",
-   tidak_aktif: "bg-muted text-muted-foreground border border-border",
-   rusak: "bg-red-50 text-destructive border border-red-200/60 dark:bg-red-950/50 dark:text-red-300 dark:border-red-800",
+   tidak_aktif: "bg-base-200 text-base-content/70 border border-base-300",
+   rusak: "bg-red-50 text-error border border-red-200/60 dark:bg-red-950/50 dark:text-red-300 dark:border-red-800",
    cadangan: "bg-amber-50 text-accent border border-amber-200/60 dark:bg-amber-950/50 dark:text-amber-300 dark:border-amber-800",
    dijual: "bg-primary/10 text-primary bg-primary/10 border border-primary/25 dark:bg-blue-950/50 dark:border-blue-800",
 };
 
 const complianceColor: Record<string, string> = {
    compliant: "bg-emerald-50 text-brand-green dark:bg-green-950/50 dark:text-green-300 dark:border-green-800",
-   non_compliant: "bg-red-50 text-destructive border border-red-200/60 dark:bg-red-950/50 dark:text-red-300 dark:border-red-800",
+   non_compliant: "bg-red-50 text-error border border-red-200/60 dark:bg-red-950/50 dark:text-red-300 dark:border-red-800",
    pending: "bg-amber-50 text-accent border border-amber-200/60 dark:bg-amber-950/50 dark:text-amber-300 dark:border-amber-800",
-   unknown: "bg-muted text-muted-foreground border border-border",
+   unknown: "bg-base-200 text-base-content/70 border border-base-300",
 };
 
 const reconColor: Record<string, string> = {
    ready: "bg-emerald-50 text-brand-green dark:bg-green-950/50 dark:text-green-300 dark:border-green-800",
    needs_review: "bg-amber-50 text-accent border border-amber-200/60 dark:bg-amber-950/50 dark:text-amber-300 dark:border-amber-800",
-   blocked: "bg-red-50 text-destructive border border-red-200/60 dark:bg-red-950/50 dark:text-red-300 dark:border-red-800",
+   blocked: "bg-red-50 text-error border border-red-200/60 dark:bg-red-950/50 dark:text-red-300 dark:border-red-800",
 };
 
-interface IwkbuSyncData {
+export interface IwkbuSyncData {
    armada_id: string;
    iwkbu_compliance_status: string;
    issue_count: number;
@@ -50,7 +50,7 @@ interface IwkbuSyncData {
    reconciliation_status: string;
    discrepancy_note: string | null;
    last_synced_at: string | null;
-   source_payload: Record<string, unknown>;
+   source_payload?: Record<string, unknown>;
 }
 
 interface RekonsiliasiArmadaTableProps {
@@ -85,11 +85,11 @@ export function RekonsiliasiArmadaTable({
 
    if (armada.length === 0) {
       return (
-         <div className="rounded-lg border border-border bg-card overflow-hidden">
+         <div className="rounded-lg border border-base-300 bg-base-100 overflow-hidden">
             <Table>
                <TableBody>
                   <TableRow>
-                     <TableCell className="py-8 text-center text-sm text-muted-foreground">
+                     <TableCell className="py-8 text-center text-sm text-base-content/70">
                         Belum ada armada terdaftar.
                      </TableCell>
                   </TableRow>
@@ -100,10 +100,10 @@ export function RekonsiliasiArmadaTable({
    }
 
    return (
-      <div className="rounded-lg border border-border bg-card overflow-hidden">
+      <div className="rounded-lg border border-base-300 bg-base-100 overflow-hidden">
          <Table caption="Daftar rekonsiliasi armada PO">
             <TableHeader>
-               <TableRow className="bg-muted/50">
+               <TableRow className="bg-base-200/50">
                   <TableHead className="w-8" />
                   <TableHead className="text-[13px]">No. Polisi</TableHead>
                   <TableHead className="text-[13px]">Merk/Tipe</TableHead>
@@ -176,7 +176,7 @@ export function RekonsiliasiArmadaTable({
                                     )}
                                  </Badge>
                               ) : (
-                                 <span className="text-xs text-muted-foreground">
+                                 <span className="text-xs text-base-content/70">
                                     Belum tersinkron
                                  </span>
                               )}
@@ -195,12 +195,12 @@ export function RekonsiliasiArmadaTable({
                                     )}
                                  </Badge>
                               ) : (
-                                 <span className="text-xs text-muted-foreground">
+                                 <span className="text-xs text-base-content/70">
                                     -
                                  </span>
                               )}
                            </TableCell>
-                           <TableCell className="max-w-[200px] text-xs text-muted-foreground">
+                           <TableCell className="max-w-[200px] text-xs text-base-content/70">
                               {a.status_verifikasi === "ditolak" &&
                               a.keterangan_verifikasi
                                  ? `Ditolak: ${a.keterangan_verifikasi}`
@@ -210,12 +210,12 @@ export function RekonsiliasiArmadaTable({
                         {isExpanded && (
                            <TableRow
                               key={`${a.id}-detail`}
-                              className="bg-muted/40"
+                              className="bg-base-200/40"
                            >
                               <TableCell colSpan={8} className="p-4">
                                  <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                                     <div>
-                                       <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wide">
+                                       <p className="text-[11px] font-medium text-base-content/70 uppercase tracking-wide">
                                           Jumlah Issue IWKBU
                                        </p>
                                        <p className="text-sm font-semibold mt-0.5">
@@ -223,7 +223,7 @@ export function RekonsiliasiArmadaTable({
                                        </p>
                                     </div>
                                     <div>
-                                       <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wide">
+                                       <p className="text-[11px] font-medium text-base-content/70 uppercase tracking-wide">
                                           Sumber Diperbarui
                                        </p>
                                        <p className="text-sm mt-0.5">
@@ -233,7 +233,7 @@ export function RekonsiliasiArmadaTable({
                                        </p>
                                     </div>
                                     <div>
-                                       <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wide">
+                                       <p className="text-[11px] font-medium text-base-content/70 uppercase tracking-wide">
                                           Terakhir Terlihat di Terminal
                                        </p>
                                        <p className="text-sm mt-0.5">
@@ -243,7 +243,7 @@ export function RekonsiliasiArmadaTable({
                                        </p>
                                     </div>
                                     <div>
-                                       <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wide">
+                                       <p className="text-[11px] font-medium text-base-content/70 uppercase tracking-wide">
                                           Sinkronisasi Terakhir
                                        </p>
                                        <p className="text-sm mt-0.5">
@@ -265,7 +265,7 @@ export function RekonsiliasiArmadaTable({
                                  )}
                                  {a.keterangan_verifikasi && (
                                     <div className="mt-2">
-                                       <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wide">
+                                       <p className="text-[11px] font-medium text-base-content/70 uppercase tracking-wide">
                                           Keterangan Verifikasi
                                        </p>
                                        <p className="text-sm mt-0.5">

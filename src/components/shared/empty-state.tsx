@@ -24,21 +24,21 @@ function EmptyState({
    return (
       <div
          className={cn(
-            "flex flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-border px-6 py-12 text-center",
+            "flex flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-base-300 px-6 py-12 text-center",
             className,
          )}
       >
-         <div className="flex size-12 items-center justify-center rounded-full bg-muted">
+         <div className="flex size-12 items-center justify-center rounded-full bg-base-200">
             {Icon ? (
-               <Icon className="size-6 text-muted-foreground" />
+               <Icon className="size-6 text-base-content/70" aria-hidden="true" />
             ) : (
-               <DefaultIcon className="size-6 text-muted-foreground" />
+               <DefaultIcon className="size-6 text-base-content/70" aria-hidden="true" />
             )}
          </div>
          <div className="space-y-1">
-            <p className="font-semibold text-sm text-foreground">{title}</p>
+            <p className="font-semibold text-sm text-base-content">{title}</p>
             {description && (
-               <p className="text-sm text-muted-foreground max-w-sm">
+               <p className="text-sm text-base-content/70 max-w-sm">
                   {description}
                </p>
             )}

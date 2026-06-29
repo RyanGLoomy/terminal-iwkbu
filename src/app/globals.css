@@ -281,7 +281,21 @@
   .font700 { font-weight: 700; }
   .font800 { font-weight: 800; }
   .transition-smooth {
-    transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+    transition-property: color, background-color, border-color, box-shadow, transform, opacity, fill, stroke;
+    transition-duration: 0.18s;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+/* Hormati prefers-reduced-motion: matikan animasi/transisi non-esensial. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
 
@@ -323,10 +337,16 @@ select:focus-visible,
   outline: none;
 }
 
-/* Indikator focus field form: border -> primary + ring halus, serasi dgn outer line. */
+/* Indikator focus field form: border -> primary + ring halus, serasi dgn outer line.
+   Berlaku juga untuk <input>/<textarea>/<select> telanjang (tidak dibungkus .input)
+   agar tak ada field yang kehilangan indikator focus. */
 .input:focus,
 .input:focus-within,
-.textarea:focus {
+.textarea:focus,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
   border-color: var(--color-primary);
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 18%, transparent);
+  outline: none;
 }

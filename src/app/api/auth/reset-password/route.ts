@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient as createServerClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { sanitizeDbError } from "@/lib/db-error";
 import { logActivity } from "@/lib/supabase/queries/operasional.server";
 import {
    checkRateLimit,
@@ -62,7 +63,7 @@ export async function POST(request: Request) {
       if (updateError) {
          await recordFailedAttempt(rateKey, RESET_LIMIT);
          return NextResponse.json(
-            { message: updateError.message },
+            { message: sanitizeDbError(updateError, "reset-password update") },
             { status: 500 },
          );
       }
@@ -77,10 +78,10 @@ export async function POST(request: Request) {
       );
 
       return NextResponse.json({ message: "Password berhasil diubah." });
-   } catch (error: any) {
-      return NextResponse.json(
-         { message: error?.message ?? "Terjadi kesalahan." },
-         { status: 500 },
-      );
-   }
+    } catch (error: unknown) {
+       return NextResponse.json(
+          { message: sanitizeDbError(error, "reset-password") },
+          { status: 500 },
+       );
+    }
 }

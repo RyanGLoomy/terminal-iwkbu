@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import type { JenisKendaraan, SystemSetting } from "@/lib/supabase/queries/operasional.types";
 
 export type TerminalMasterRow = {
@@ -42,6 +43,12 @@ export function MasterDataPanel({ initialTerminals, initialJenisKendaraan, initi
    const [jenisForm, setJenisForm] = useState({ id: "", nama: "", kode: "", urutan: "0" });
    const [jenisSaving, setJenisSaving] = useState(false);
    const isJenisEditing = Boolean(jenisForm.id);
+
+   type ConfirmDelete =
+      | { kind: "terminal"; id: string; label: string }
+      | { kind: "jenis"; id: string; label: string }
+      | null;
+   const [confirmDelete, setConfirmDelete] = useState<ConfirmDelete>(null);
 
    const [settings, setSettings] = useState<SystemSetting[]>(initialSettings ?? []);
    const [settingsDraft, setSettingsDraft] = useState<Record<string, string>>({});
@@ -114,30 +121,11 @@ export function MasterDataPanel({ initialTerminals, initialJenisKendaraan, initi
 
    const deleteTerminal = async (terminal: TerminalMasterRow) => {
       if (!canCreateDelete) return;
-      if (!window.confirm(`Hapus terminal ${terminal.kode} - ${terminal.nama}?`)) return;
-
-      setLoading(true);
-      setError(null);
-
-      try {
-         const response = await fetch(
-            `/api/admin/terminals?id=${encodeURIComponent(terminal.id)}`,
-            { method: "DELETE" },
-         );
-         const payload = await response.json();
-
-         if (!response.ok) {
-            throw new Error(payload.message ?? "Gagal menghapus terminal");
-         }
-
-         toast.success("Terminal berhasil dihapus");
-         resetForm();
-         await reloadTerminals();
-      } catch (err) {
-         setError(getErrorMessage(err));
-      } finally {
-         setLoading(false);
-      }
+      setConfirmDelete({
+         kind: "terminal",
+         id: terminal.id,
+         label: `${terminal.kode} - ${terminal.nama}`,
+      });
    };
 
     const editTerminal = (terminal: TerminalMasterRow) => {
@@ -212,22 +200,42 @@ export function MasterDataPanel({ initialTerminals, initialJenisKendaraan, initi
        }
     };
 
-    const deleteJenis = async (item: JenisKendaraan) => {
-       if (!window.confirm(`Hapus jenis kendaraan ${item.nama}?`)) return;
-       try {
-          const res = await fetch(`/api/admin/jenis-kendaraan/${item.id}`, {
-             method: "DELETE",
-          });
-          if (!res.ok) {
-             const p = await res.json();
-             throw new Error(p.message ?? "Gagal menghapus");
-          }
-          toast.success("Jenis kendaraan dihapus");
-          await reloadJenis();
-       } catch (err) {
-          toast.error(getErrorMessage(err));
-       }
-    };
+     const deleteJenis = async (item: JenisKendaraan) => {
+        setConfirmDelete({ kind: "jenis", id: item.id, label: item.nama });
+     };
+
+     const executeConfirmDelete = async () => {
+        if (!confirmDelete) return;
+        try {
+           if (confirmDelete.kind === "terminal") {
+              const response = await fetch(
+                 `/api/admin/terminals?id=${encodeURIComponent(confirmDelete.id)}`,
+                 { method: "DELETE" },
+              );
+              const payload = await response.json();
+              if (!response.ok) {
+                 throw new Error(payload.message ?? "Gagal menghapus terminal");
+              }
+              toast.success("Terminal berhasil dihapus");
+              resetForm();
+              await reloadTerminals();
+           } else {
+              const res = await fetch(`/api/admin/jenis-kendaraan/${confirmDelete.id}`, {
+                 method: "DELETE",
+              });
+              if (!res.ok) {
+                 const p = await res.json();
+                 throw new Error(p.message ?? "Gagal menghapus");
+              }
+              toast.success("Jenis kendaraan dihapus");
+              await reloadJenis();
+           }
+        } catch (err) {
+           toast.error(getErrorMessage(err));
+        } finally {
+           setConfirmDelete(null);
+        }
+     };
 
     const editJenis = (item: JenisKendaraan) => {
        setJenisForm({
@@ -275,7 +283,7 @@ export function MasterDataPanel({ initialTerminals, initialJenisKendaraan, initi
 
    return (
       <div className="space-y-5">
-         <Card className="border-border">
+         <Card className="border-base-300">
             <CardHeader>
                <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                   <div>
@@ -287,23 +295,23 @@ export function MasterDataPanel({ initialTerminals, initialJenisKendaraan, initi
                       </CardDescription>
                   </div>
                   <Button variant="outline" size="sm" onClick={reloadTerminals} disabled={loading}>
-                     <RefreshCw className="h-4 w-4" />
+                     <RefreshCw className="h-4 w-4" aria-hidden="true" />
                      Refresh
                   </Button>
                </div>
             </CardHeader>
             <CardContent className="space-y-4">
                {error && (
-                  <div className="flex items-start gap-2 rounded-xl border border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950/50 px-3 py-2 text-sm text-destructive">
-                     <AlertCircle className="mt-0.5 h-4 w-4" />
+                  <div className="flex items-start gap-2 rounded-xl border border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950/50 px-3 py-2 text-sm text-error">
+                     <AlertCircle className="mt-0.5 h-4 w-4" aria-hidden="true" />
                      <span>{error}</span>
                   </div>
                )}
 
                 {canCreateDelete && (
-                <div className="grid gap-3 rounded-2xl border border-border bg-muted/50 p-4 md:grid-cols-[160px_1fr_auto]">
+                <div className="grid gap-3 rounded-2xl border border-base-300 bg-base-200/50 p-4 md:grid-cols-[160px_1fr_auto]">
                    <label className="space-y-1.5 text-sm">
-                      <span className="font-semibold text-foreground">Kode</span>
+                      <span className="font-semibold text-base-content">Kode</span>
                       <Input
                          value={form.kode}
                          onChange={(event) =>
@@ -314,7 +322,7 @@ export function MasterDataPanel({ initialTerminals, initialJenisKendaraan, initi
                       />
                    </label>
                    <label className="space-y-1.5 text-sm">
-                      <span className="font-semibold text-foreground">Nama Terminal</span>
+                      <span className="font-semibold text-base-content">Nama Terminal</span>
                       <Input
                          value={form.nama}
                          onChange={(event) =>
@@ -325,8 +333,8 @@ export function MasterDataPanel({ initialTerminals, initialJenisKendaraan, initi
                    </label>
                    <div className="flex items-end gap-2">
                       <Button onClick={saveTerminal} disabled={saving}>
-                         {isEditing ? <Pencil className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
-                         {saving ? "Menyimpan..." : isEditing ? "Simpan" : "Tambah"}
+                         {isEditing ? <Pencil className="h-4 w-4" aria-hidden="true" /> : <Plus className="h-4 w-4" aria-hidden="true" />}
+                         {saving ? "Menyimpan…" : isEditing ? "Simpan" : "Tambah"}
                       </Button>
                       {isEditing && (
                          <Button variant="outline" onClick={resetForm} disabled={saving}>
@@ -348,7 +356,7 @@ export function MasterDataPanel({ initialTerminals, initialJenisKendaraan, initi
                   <TableBody>
                      {terminals.length === 0 ? (
                         <TableRow>
-                           <TableCell colSpan={3} className="py-8 text-center text-sm text-muted-foreground">
+                           <TableCell colSpan={3} className="py-8 text-center text-sm text-base-content/70">
                               Belum ada terminal yang dapat ditampilkan.
                            </TableCell>
                         </TableRow>
@@ -361,7 +369,7 @@ export function MasterDataPanel({ initialTerminals, initialJenisKendaraan, initi
                                   <div className="flex flex-wrap gap-2">
                                      {canCreateDelete && (
                                         <Button variant="outline" size="sm" onClick={() => editTerminal(terminal)}>
-                                           <Pencil className="h-4 w-4" />
+                                           <Pencil className="h-4 w-4" aria-hidden="true" />
                                            Edit
                                         </Button>
                                      )}
@@ -372,12 +380,12 @@ export function MasterDataPanel({ initialTerminals, initialJenisKendaraan, initi
                                            onClick={() => deleteTerminal(terminal)}
                                            disabled={loading}
                                         >
-                                           <Trash2 className="h-4 w-4" />
+                                           <Trash2 className="h-4 w-4" aria-hidden="true" />
                                            Hapus
                                         </Button>
                                      )}
                                      {!canCreateDelete && (
-                                        <span className="text-xs text-muted-foreground">Read-only</span>
+                                        <span className="text-xs text-base-content/70">Read-only</span>
                                      )}
                                   </div>
                                </TableCell>
@@ -390,7 +398,7 @@ export function MasterDataPanel({ initialTerminals, initialJenisKendaraan, initi
          </Card>
 
          {/* Jenis Kendaraan */}
-         <Card className="border-border">
+         <Card className="border-base-300">
             <CardHeader>
                <CardTitle className="text-base">Jenis Kendaraan</CardTitle>
                <CardDescription>
@@ -401,9 +409,9 @@ export function MasterDataPanel({ initialTerminals, initialJenisKendaraan, initi
             </CardHeader>
             <CardContent className="space-y-4">
                {canCreateDelete && (
-                  <div className="grid gap-3 rounded-2xl border border-border bg-muted/50 p-4 md:grid-cols-[1fr_140px_100px_auto]">
+                  <div className="grid gap-3 rounded-2xl border border-base-300 bg-base-200/50 p-4 md:grid-cols-[1fr_140px_100px_auto]">
                      <label className="space-y-1.5 text-sm">
-                        <span className="font-semibold text-foreground">Nama</span>
+                        <span className="font-semibold text-base-content">Nama</span>
                         <Input
                            value={jenisForm.nama}
                            onChange={(e) =>
@@ -413,7 +421,7 @@ export function MasterDataPanel({ initialTerminals, initialJenisKendaraan, initi
                         />
                      </label>
                      <label className="space-y-1.5 text-sm">
-                        <span className="font-semibold text-foreground">Kode</span>
+                        <span className="font-semibold text-base-content">Kode</span>
                         <Input
                            value={jenisForm.kode}
                            onChange={(e) =>
@@ -426,7 +434,7 @@ export function MasterDataPanel({ initialTerminals, initialJenisKendaraan, initi
                         />
                      </label>
                      <label className="space-y-1.5 text-sm">
-                        <span className="font-semibold text-foreground">Urutan</span>
+                        <span className="font-semibold text-base-content">Urutan</span>
                         <Input
                            type="number"
                            value={jenisForm.urutan}
@@ -441,9 +449,9 @@ export function MasterDataPanel({ initialTerminals, initialJenisKendaraan, initi
                            disabled={jenisSaving}
                         >
                            {isJenisEditing ? (
-                              <Pencil className="h-4 w-4" />
+                              <Pencil className="h-4 w-4" aria-hidden="true" />
                            ) : (
-                              <Plus className="h-4 w-4" />
+                              <Plus className="h-4 w-4" aria-hidden="true" />
                            )}
                            {jenisSaving ? "..." : isJenisEditing ? "Simpan" : "Tambah"}
                         </Button>
@@ -476,7 +484,7 @@ export function MasterDataPanel({ initialTerminals, initialJenisKendaraan, initi
                         <TableRow>
                            <TableCell
                               colSpan={canCreateDelete ? 4 : 3}
-                              className="py-8 text-center text-sm text-muted-foreground"
+                              className="py-8 text-center text-sm text-base-content/70"
                            >
                               Belum ada jenis kendaraan.
                            </TableCell>
@@ -519,7 +527,7 @@ export function MasterDataPanel({ initialTerminals, initialJenisKendaraan, initi
 
          {/* System Settings */}
          {showSettings && (
-            <Card className="border-border">
+            <Card className="border-base-300">
                <CardHeader>
                   <div className="flex items-center justify-between">
                      <div>
@@ -533,14 +541,14 @@ export function MasterDataPanel({ initialTerminals, initialJenisKendaraan, initi
                         onClick={saveSettings}
                         disabled={settingsSaving || Object.keys(settingsDraft).length === 0}
                      >
-                        <Save className="h-4 w-4" />
-                        {settingsSaving ? "Menyimpan..." : "Simpan"}
+                        <Save className="h-4 w-4" aria-hidden="true" />
+                        {settingsSaving ? "Menyimpan…" : "Simpan"}
                      </Button>
                   </div>
                </CardHeader>
                <CardContent>
                   {settings.length === 0 ? (
-                     <p className="py-4 text-center text-sm text-muted-foreground">
+                     <p className="py-4 text-center text-sm text-base-content/70">
                         Belum ada pengaturan.
                      </p>
                   ) : (
@@ -555,7 +563,7 @@ export function MasterDataPanel({ initialTerminals, initialJenisKendaraan, initi
                            ),
                         ).map(([cat, items]) => (
                            <div key={cat}>
-                              <h4 className="mb-2 text-xs font-bold uppercase tracking-wide text-muted-foreground">
+                              <h4 className="mb-2 text-xs font-bold uppercase tracking-wide text-base-content/70">
                                  {cat}
                               </h4>
                               <div className="grid gap-3 sm:grid-cols-2">
@@ -564,7 +572,7 @@ export function MasterDataPanel({ initialTerminals, initialJenisKendaraan, initi
                                        key={s.key}
                                        className="space-y-1 text-sm"
                                     >
-                                       <span className="flex items-center justify-between font-semibold text-foreground">
+                                       <span className="flex items-center justify-between font-semibold text-base-content">
                                           {s.key.replace(/_/g, " ")}
                                           {settingsDraft[s.key] !== undefined &&
                                              settingsDraft[s.key] !== s.value && (
@@ -587,7 +595,7 @@ export function MasterDataPanel({ initialTerminals, initialJenisKendaraan, initi
                                           }
                                        />
                                        {s.description && (
-                                          <span className="text-xs text-muted-foreground">
+                                          <span className="text-xs text-base-content/70">
                                              {s.description}
                                           </span>
                                        )}
@@ -598,9 +606,23 @@ export function MasterDataPanel({ initialTerminals, initialJenisKendaraan, initi
                         ))}
                      </div>
                   )}
-               </CardContent>
-            </Card>
-         )}
+                </CardContent>
+             </Card>
+          )}
+
+         <ConfirmDialog
+            open={confirmDelete !== null}
+            onOpenChange={(o) => !o && setConfirmDelete(null)}
+            title="Konfirmasi Hapus"
+            description={
+               confirmDelete
+                  ? `Hapus ${confirmDelete.kind === "terminal" ? "terminal" : "jenis kendaraan"} ${confirmDelete.label}? Aksi ini tidak dapat dibatalkan.`
+                  : ""
+            }
+            confirmLabel="Hapus"
+            destructive
+            onConfirm={executeConfirmDelete}
+         />
       </div>
-   );
+    );
 }

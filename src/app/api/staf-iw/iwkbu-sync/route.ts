@@ -1,53 +1,26 @@
 import { NextResponse } from "next/server";
-import { sanitizeDbError } from "@/lib/db-error";
-import { getAuthenticatedActor } from "@/lib/auth/server-actor";
-import {
-   ensureRoleOrThrow,
-   AuthorizationError,
-} from "@/lib/auth/requireRole.server";
+import { requireActor, actorErrorHandler } from "@/lib/auth/actor";
+import { ROLES } from "@/config/roles";
 import {
    executeIwkbuSync,
    getIwkbuSyncDashboard,
 } from "@/lib/supabase/queries/iwkbu-sync.server";
 import { logActivity } from "@/lib/supabase/queries/operasional.server";
 
-async function requireStaffActor() {
-   const actor = await getAuthenticatedActor();
-   if (!actor) return null;
-
-   ensureRoleOrThrow(actor.user, actor.profile, "staf-iw");
-   return actor;
-}
-
 export async function GET() {
    try {
-      const actor = await requireStaffActor();
-      if (!actor) {
-         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-      }
+      await requireActor(ROLES.STAF_IW);
 
       const data = await getIwkbuSyncDashboard(200);
       return NextResponse.json({ data });
-   } catch (error: any) {
-      if (error instanceof AuthorizationError) {
-         return NextResponse.json(
-            { message: sanitizeDbError(error) },
-            { status: 403 },
-         );
-      }
-      return NextResponse.json(
-         { message: error?.message ?? "Internal error" },
-         { status: 500 },
-      );
+   } catch (error) {
+      return actorErrorHandler(error);
    }
 }
 
 export async function POST() {
    try {
-      const actor = await requireStaffActor();
-      if (!actor) {
-         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-      }
+      const actor = await requireActor(ROLES.STAF_IW);
 
       const result = await executeIwkbuSync({
          triggerType: "manual",
@@ -61,16 +34,7 @@ export async function POST() {
       );
 
       return NextResponse.json({ data: result }, { status: 201 });
-   } catch (error: any) {
-      if (error instanceof AuthorizationError) {
-         return NextResponse.json(
-            { message: sanitizeDbError(error) },
-            { status: 403 },
-         );
-      }
-      return NextResponse.json(
-         { message: error?.message ?? "Internal error" },
-         { status: 500 },
-      );
+   } catch (error) {
+      return actorErrorHandler(error);
    }
 }

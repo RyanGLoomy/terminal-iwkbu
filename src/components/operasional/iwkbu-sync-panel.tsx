@@ -159,7 +159,7 @@ export function IwkbuSyncPanel({
          <div className="grid gap-4 md:grid-cols-5">
             <Card>
                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm text-muted-foreground">
+                  <CardTitle className="text-sm text-base-content/70">
                      Total Armada Tersinkron
                   </CardTitle>
                </CardHeader>
@@ -169,7 +169,7 @@ export function IwkbuSyncPanel({
             </Card>
             <Card>
                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm text-muted-foreground">
+                  <CardTitle className="text-sm text-base-content/70">
                      Ready
                   </CardTitle>
                </CardHeader>
@@ -179,7 +179,7 @@ export function IwkbuSyncPanel({
             </Card>
             <Card>
                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm text-muted-foreground">
+                  <CardTitle className="text-sm text-base-content/70">
                      Needs Review
                   </CardTitle>
                </CardHeader>
@@ -189,17 +189,17 @@ export function IwkbuSyncPanel({
             </Card>
             <Card>
                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm text-muted-foreground">
+                  <CardTitle className="text-sm text-base-content/70">
                      Blocked
                   </CardTitle>
                </CardHeader>
-               <CardContent className="text-2xl font-semibold text-destructive">
+               <CardContent className="text-2xl font-semibold text-error">
                   {initialData.summary.blocked}
                </CardContent>
             </Card>
             <Card>
                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm text-muted-foreground">
+                  <CardTitle className="text-sm text-base-content/70">
                      Record Source IWKBU
                   </CardTitle>
                </CardHeader>
@@ -213,17 +213,17 @@ export function IwkbuSyncPanel({
              <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                 <div>
                    <CardTitle className="flex items-center gap-2">
-                      <FileSpreadsheet className="h-5 w-5" />
+                      <FileSpreadsheet className="h-5 w-5" aria-hidden="true" />
                       Upload Source IWKBU
                    </CardTitle>
-                   <p className="mt-1 text-sm text-muted-foreground">
+                   <p className="mt-1 text-sm text-base-content/70">
                       Terima CSV atau JSON. Kolom minimal: nomor_polisi. Kolom
                       opsional: compliance_status, issue_count,
                       source_updated_at, external_ref.
                    </p>
                 </div>
                 <Button type="button" variant="outline" onClick={downloadTemplate}>
-                   <Download className="mr-2 h-4 w-4" />
+                   <Download className="mr-2 h-4 w-4" aria-hidden="true" />
                    Template CSV
                 </Button>
              </CardHeader>
@@ -236,44 +236,45 @@ export function IwkbuSyncPanel({
                       key={fileInputKey}
                       type="file"
                       accept=".csv,.json,text/csv,application/json"
+                      aria-label="Unggah file source IWKBU (CSV/JSON)"
                       onChange={(event) => {
                          setUploadFile(event.target.files?.[0] ?? null);
                          setUploadMessage(null);
                          setUploadError(null);
                       }}
-                      className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-xs file:mr-3 file:rounded-md file:border-0 file:bg-muted file:px-3 file:py-1.5 file:text-sm file:font-medium hover:file:bg-muted lg:max-w-xl"
+                      className="w-full rounded-md border border-base-300 bg-base-100 px-3 py-2 text-sm shadow-sm file:mr-3 file:rounded-md file:border-0 file:bg-base-200 file:px-3 file:py-1.5 file:text-sm file:font-medium hover:file:bg-base-300 lg:max-w-xl"
                    />
                    <Button type="submit" disabled={uploading || !uploadFile}>
                       {uploading ? (
-                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                         <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
                       ) : (
-                         <Upload className="mr-2 h-4 w-4" />
+                         <Upload className="mr-2 h-4 w-4" aria-hidden="true" />
                       )}
                       Upload Source
                    </Button>
                 </form>
 
-                <div className="text-xs text-muted-foreground">
-                   Batas upload: 2 MB atau maksimal 5.000 baris per file. Status
+                <div className="text-xs text-base-content/70">
+                   Batas upload: 2&nbsp;MB atau maksimal 5.000&nbsp;baris per file. Status
                    valid: compliant, non_compliant, pending, unknown.
                    {uploadFile ? (
-                      <span className="ml-1 font-medium text-foreground">
+                      <span className="ml-1 font-medium text-base-content tabular-nums">
                          Dipilih: {uploadFile.name} (
-                         {(uploadFile.size / 1024).toFixed(1)} KB)
+                         {(uploadFile.size / 1024).toFixed(1)}&nbsp;KB)
                       </span>
                    ) : null}
                 </div>
 
                 {uploadMessage && (
                    <Alert className="border-emerald-300 bg-emerald-50 text-emerald-800 dark:border-green-800 dark:bg-green-950/50 dark:text-green-300">
-                      <CheckCircle2 className="h-4 w-4" />
+                      <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
                       <AlertDescription>{uploadMessage}</AlertDescription>
                    </Alert>
                 )}
 
                 {uploadError && (
                    <Alert variant="destructive">
-                      <AlertCircle className="h-4 w-4" />
+                      <AlertCircle className="h-4 w-4" aria-hidden="true" />
                       <AlertDescription>{uploadError}</AlertDescription>
                    </Alert>
                 )}
@@ -285,36 +286,36 @@ export function IwkbuSyncPanel({
                <CardTitle>Status Sinkronisasi</CardTitle>
                <Button onClick={runSync} disabled={syncing}>
                   {syncing ? (
-                     <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                     <Loader2 className="h-4 w-4 animate-spin mr-2" aria-hidden="true" />
                   ) : (
-                     <RefreshCw className="h-4 w-4 mr-2" />
+                     <RefreshCw className="h-4 w-4 mr-2" aria-hidden="true" />
                   )}
                   Jalankan Sinkronisasi
                </Button>
             </CardHeader>
             <CardContent className="space-y-3">
                {latestRun ? (
-                  <div className="text-sm text-muted-foreground">
+                  <div className="text-sm text-base-content/70">
                      Run terakhir:{" "}
                      {new Date(latestRun.started_at).toLocaleString("id-ID")} (
                      {latestRun.trigger_type})
                   </div>
                ) : (
-                  <div className="text-sm text-muted-foreground">
+                  <div className="text-sm text-base-content/70">
                      Belum ada run sinkronisasi.
                   </div>
                )}
 
                {message && (
                   <Alert className="border-emerald-300 bg-emerald-50 text-emerald-800 dark:border-green-800 dark:bg-green-950/50 dark:text-green-300">
-                     <CheckCircle2 className="h-4 w-4" />
+                     <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
                      <AlertDescription>{message}</AlertDescription>
                   </Alert>
                )}
 
                {error && (
                   <Alert variant="destructive">
-                     <AlertCircle className="h-4 w-4" />
+                     <AlertCircle className="h-4 w-4" aria-hidden="true" />
                      <AlertDescription>{error}</AlertDescription>
                   </Alert>
                )}
@@ -328,7 +329,7 @@ export function IwkbuSyncPanel({
             <CardContent>
                <div className="space-y-2">
                   {initialData.runs.length === 0 ? (
-                     <p className="text-sm text-muted-foreground">
+                     <p className="text-sm text-base-content/70">
                         Belum ada riwayat sinkronisasi.
                      </p>
                   ) : (
@@ -343,7 +344,7 @@ export function IwkbuSyncPanel({
                                     "id-ID",
                                  )}
                               </p>
-                              <p className="text-xs text-muted-foreground">
+                              <p className="text-xs text-base-content/70">
                                  Trigger: {run.trigger_type}
                               </p>
                            </div>
@@ -387,17 +388,17 @@ export function IwkbuSyncPanel({
                             <tr>
                                <td
                                   colSpan={6}
-                                  className="py-4 text-muted-foreground"
+                                  className="py-4 text-base-content/70"
                                >
                                   Belum ada data sinkronisasi.
                                </td>
                             </tr>
                          ) : (
                             initialData.statuses.slice(0, 100).map((row) => (
-                               <tr
-                                  key={row.armada_id}
-                                  className="border-b align-top"
-                               >
+                                <tr
+                                   key={row.armada_id}
+                                   className="border-b align-top [content-visibility:auto] [contain-intrinsic-block-size:48px]"
+                                >
                                   <td className="py-2 pr-4 font-medium">
                                      {row.nomor_polisi}
                                   </td>
@@ -418,10 +419,10 @@ export function IwkbuSyncPanel({
                                         {row.reconciliation_status}
                                      </Badge>
                                   </td>
-                                  <td className="py-2 pr-4 text-muted-foreground">
+                                  <td className="py-2 pr-4 text-base-content/70">
                                      {row.discrepancy_note ?? "-"}
                                   </td>
-                                  <td className="py-2 pr-4 text-muted-foreground">
+                                  <td className="py-2 pr-4 text-base-content/70">
                                      {new Date(
                                         row.last_synced_at,
                                      ).toLocaleString("id-ID")}
@@ -429,7 +430,7 @@ export function IwkbuSyncPanel({
                                   <td className="py-2 pr-4">
                                      {row.reconciliation_status !== "ready" && (
                                         <button
-                                           className="inline-flex items-center gap-1 rounded-md border border-border bg-card px-2 py-1 text-xs font-medium text-foreground hover:bg-muted/50"
+                                           className="inline-flex items-center gap-1 rounded-md border border-base-300 bg-base-100 px-2 py-1 text-xs font-medium text-base-content hover:bg-base-200/50"
                                            onClick={() =>
                                               router.push(
                                                  `/staf-iw/temuan?poId=${encodeURIComponent(row.po_id)}&armadaId=${encodeURIComponent(row.armada_id)}&nomorPolisi=${encodeURIComponent(row.nomor_polisi)}&judul=${encodeURIComponent(`Diskrepansi IWKBU: ${row.nomor_polisi}`)}&deskripsi=${encodeURIComponent(row.discrepancy_note ?? `Status: ${row.reconciliation_status}, IWKBU: ${row.iwkbu_compliance_status}`)}`,

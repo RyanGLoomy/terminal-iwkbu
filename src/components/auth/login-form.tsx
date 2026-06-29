@@ -69,60 +69,63 @@ export function LoginForm() {
       <form onSubmit={handleLogin} className="space-y-5">
          {error && (
             <Alert variant="destructive">
-               <AlertCircle className="h-4 w-4" />
+               <AlertCircle className="h-4 w-4" aria-hidden="true" />
                <AlertDescription>{error}</AlertDescription>
             </Alert>
          )}
 
          <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
-            <div className="input input-bordered flex items-center gap-2">
-               <Mail className="size-4 shrink-0 text-muted-foreground" />
-               <input
-                  id="email"
-                  type="email"
-                  autoComplete="email"
-                  autoCapitalize="none"
-                  autoFocus
-                  placeholder="nama@perusahaan.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  disabled={loading}
-                  className="min-w-0 grow bg-transparent outline-none placeholder:text-base-content/40"
-               />
-            </div>
+            <div className="input input-bordered flex h-12 w-full items-center gap-2">
+                <Mail className="size-4 shrink-0 text-base-content/70" aria-hidden="true" />
+                <input
+                   id="email"
+                   type="email"
+                   name="email"
+                   autoComplete="email"
+                   autoCapitalize="none"
+                   spellCheck={false}
+                   autoFocus
+                   placeholder="nama@perusahaan.com"
+                   value={email}
+                   onChange={(e) => setEmail(e.target.value)}
+                   required
+                   disabled={loading}
+                   className="min-w-0 grow bg-transparent text-sm outline-none placeholder:text-base-content/40"
+                />
+             </div>
          </div>
 
          <div className="space-y-2">
             <Label htmlFor="password">Password</Label>
-            <div className="input input-bordered flex items-center gap-2">
-               <LockKeyhole className="size-4 shrink-0 text-muted-foreground" />
-               <input
-                  id="password"
-                  type={showPassword ? "text" : "password"}
-                  autoComplete="current-password"
-                  placeholder="Masukkan password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  disabled={loading}
-                  className="min-w-0 grow bg-transparent outline-none placeholder:text-base-content/40"
-               />
-               <button
-                  type="button"
-                  onClick={() => setShowPassword((s) => !s)}
-                  className="text-muted-foreground transition-colors hover:text-foreground"
-                  aria-label={showPassword ? "Sembunyikan password" : "Tampilkan password"}
-                  tabIndex={0}
-               >
-                  {showPassword ? (
-                     <EyeOff className="size-4" />
-                  ) : (
-                     <Eye className="size-4" />
-                  )}
-               </button>
-            </div>
+            <div className="input input-bordered flex h-12 w-full items-center gap-2">
+                <LockKeyhole className="size-4 shrink-0 text-base-content/70" aria-hidden="true" />
+                <input
+                   id="password"
+                   name="password"
+                   type={showPassword ? "text" : "password"}
+                   autoComplete="current-password"
+                   placeholder="Masukkan password"
+                   value={password}
+                   onChange={(e) => setPassword(e.target.value)}
+                   required
+                   disabled={loading}
+                   className="min-w-0 grow bg-transparent text-sm outline-none placeholder:text-base-content/40"
+                />
+                <button
+                   type="button"
+                   onClick={() => setShowPassword((s) => !s)}
+                   className="text-base-content/70 transition-colors hover:text-base-content"
+                   aria-label={showPassword ? "Sembunyikan password" : "Tampilkan password"}
+                   tabIndex={0}
+                >
+                   {showPassword ? (
+                      <EyeOff className="size-4" aria-hidden="true" />
+                   ) : (
+                      <Eye className="size-4" aria-hidden="true" />
+                   )}
+                </button>
+             </div>
             <div className="flex justify-end">
                <Link
                   href="/lupa-password"
@@ -140,18 +143,18 @@ export function LoginForm() {
          >
             {loading ? (
                <>
-                  <Loader2 className="size-4 animate-spin" />
-                  Memproses...
+                  <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+                  Memproses…
                </>
             ) : (
                <>
-                  <LogIn className="size-4" />
+                  <LogIn className="size-4" aria-hidden="true" />
                   Masuk
                </>
             )}
          </Button>
 
-         <p className="text-center text-sm text-muted-foreground">
+         <p className="text-center text-sm text-base-content/70">
             Belum punya akun PO?{" "}
             <Link
                href="/registrasi-po"

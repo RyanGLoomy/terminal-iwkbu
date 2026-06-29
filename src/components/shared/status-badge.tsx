@@ -26,12 +26,12 @@ const STATUS_MAP: Record<
        tidak_aktif: {
           label: "Tidak Aktif",
           className:
-             "bg-muted text-muted-foreground border-border",
+             "bg-base-200 text-base-content/70 border-base-300",
        },
        nonaktif: {
           label: "Nonaktif",
           className:
-             "bg-muted text-muted-foreground border-border",
+             "bg-base-200 text-base-content/70 border-base-300",
        },
        cadangan: {
           label: "Cadangan",
@@ -41,7 +41,7 @@ const STATUS_MAP: Record<
        rusak: {
           label: "Rusak",
           className:
-             "bg-red-50 text-destructive border-red-200 dark:bg-red-950/50 dark:text-red-300 dark:border-red-800",
+             "bg-red-50 text-error border-red-200 dark:bg-red-950/50 dark:text-red-300 dark:border-red-800",
        },
        perawatan: {
           label: "Perawatan",
@@ -51,7 +51,7 @@ const STATUS_MAP: Record<
        dijual: {
           label: "Dijual",
           className:
-             "bg-muted text-muted-foreground border-border",
+             "bg-base-200 text-base-content/70 border-base-300",
        },
     },
    verifikasi: {
@@ -68,7 +68,7 @@ const STATUS_MAP: Record<
       ditolak: {
          label: "Ditolak",
          className:
-            "bg-red-50 text-destructive border-red-200 dark:bg-red-950/50 dark:text-red-300 dark:border-red-800",
+            "bg-red-50 text-error border-red-200 dark:bg-red-950/50 dark:text-red-300 dark:border-red-800",
       },
    },
     severity: {
@@ -105,7 +105,7 @@ const STATUS_MAP: Record<
        kritis: {
           label: "Kritis",
           className:
-             "bg-red-50 text-destructive border-red-200 dark:bg-red-950/50 dark:text-red-300 dark:border-red-800",
+             "bg-red-50 text-error border-red-200 dark:bg-red-950/50 dark:text-red-300 dark:border-red-800",
        },
     },
     finding: {
@@ -142,14 +142,14 @@ const STATUS_MAP: Record<
        ditolak: {
           label: "Ditolak",
           className:
-             "bg-red-50 text-destructive border-red-200 dark:bg-red-950/50 dark:text-red-300 dark:border-red-800",
+             "bg-red-50 text-error border-red-200 dark:bg-red-950/50 dark:text-red-300 dark:border-red-800",
        },
     },
    recon: {
       draft: {
          label: "Draft",
          className:
-            "bg-muted text-muted-foreground border-border",
+            "bg-base-200 text-base-content/70 border-base-300",
       },
       aktif: {
          label: "Aktif",
@@ -176,7 +176,7 @@ const STATUS_MAP: Record<
       ditolak: {
          label: "Ditolak",
          className:
-            "bg-red-50 text-destructive border-red-200 dark:bg-red-950/50 dark:text-red-300 dark:border-red-800",
+            "bg-red-50 text-error border-red-200 dark:bg-red-950/50 dark:text-red-300 dark:border-red-800",
       },
    },
     sync: {
@@ -198,7 +198,7 @@ const STATUS_MAP: Record<
        failed: {
           label: "Failed",
           className:
-             "bg-red-50 text-destructive border-red-200 dark:bg-red-950/50 dark:text-red-300 dark:border-red-800",
+             "bg-red-50 text-error border-red-200 dark:bg-red-950/50 dark:text-red-300 dark:border-red-800",
        },
     },
     transaksi: {
@@ -222,7 +222,7 @@ const STATUS_MAP: Record<
        nonaktif: {
           label: "Nonaktif",
           className:
-             "bg-red-50 text-destructive border-red-200 dark:bg-red-950/50 dark:text-red-300 dark:border-red-800",
+             "bg-red-50 text-error border-red-200 dark:bg-red-950/50 dark:text-red-300 dark:border-red-800",
        },
     },
 };

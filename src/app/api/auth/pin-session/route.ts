@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { sanitizeDbError } from "@/lib/db-error";
 import { getAuthenticatedActor } from "@/lib/auth/server-actor";
+import { logActivity } from "@/lib/supabase/queries/operasional.server";
 
 function isExpired(isoDate: string) {
    return new Date(isoDate).getTime() <= Date.now();
@@ -61,7 +62,7 @@ export async function GET() {
          .maybeSingle();
 
       if (petugasError) {
-         return NextResponse.json({ message: petugasError.message }, { status: 500 });
+         return NextResponse.json({ message: sanitizeDbError(petugasError, "pin-session petugas") }, { status: 500 });
       }
 
       if (!petugas || petugas.terminal_id !== actor.terminalId || !petugas.is_active) {
@@ -85,10 +86,10 @@ export async function GET() {
          petugas_nama: data.petugas_nama,
       });
    } catch (error: unknown) {
-      return NextResponse.json(
-         { message: error instanceof Error ? error.message : "Terjadi kesalahan." },
-         { status: 500 },
-      );
+       return NextResponse.json(
+          { message: sanitizeDbError(error, "pin-session get") },
+          { status: 500 },
+       );
    }
 }
 
@@ -113,11 +114,18 @@ export async function DELETE() {
          return NextResponse.json({ message: sanitizeDbError(error) }, { status: 500 });
       }
 
+      await logActivity(
+         "LOGOUT_SESI_PIN",
+         "Sesi PIN petugas ditutup",
+         {},
+         { actorUserId: actor.user.id },
+      );
+
       return NextResponse.json({ message: "Sesi PIN dihapus." });
    } catch (error: unknown) {
-      return NextResponse.json(
-         { message: error instanceof Error ? error.message : "Terjadi kesalahan." },
-         { status: 500 },
-      );
+       return NextResponse.json(
+          { message: sanitizeDbError(error, "pin-session delete") },
+          { status: 500 },
+       );
    }
 }

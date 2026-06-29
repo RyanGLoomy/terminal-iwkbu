@@ -143,7 +143,7 @@ export function StafIwLaporanPanel({
             <CardHeader className="pb-4">
                <CardTitle className="flex flex-wrap items-center justify-between gap-3 text-base">
                   <span className="flex items-center gap-2">
-                     <FileSpreadsheet className="size-4 text-primary" />
+                     <FileSpreadsheet className="size-4 text-primary" aria-hidden="true" />
                      Laporan Temuan & Ekspor
                   </span>
                   <Button
@@ -152,7 +152,7 @@ export function StafIwLaporanPanel({
                      onClick={handleExportFindings}
                      disabled={exporting || findings.length === 0}
                   >
-                     <Download className="size-4" />
+                     <Download className="size-4" aria-hidden="true" />
                      Ekspor XLSX
                   </Button>
                </CardTitle>

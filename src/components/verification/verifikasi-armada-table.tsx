@@ -77,8 +77,8 @@ export const VerifikasiArmadaTable = memo(
          return (
             <div className="space-y-3">
                {error && (
-                  <div className="flex items-start gap-2 rounded-md border border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950/50 px-3 py-2 text-sm text-destructive">
-                     <AlertCircle className="mt-0.5 h-4 w-4" />
+                  <div className="flex items-start gap-2 rounded-md border border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950/50 px-3 py-2 text-sm text-error">
+                     <AlertCircle className="mt-0.5 h-4 w-4" aria-hidden="true" />
                      <span>{error}</span>
                   </div>
                )}
@@ -90,15 +90,15 @@ export const VerifikasiArmadaTable = memo(
       return (
          <>
             {error && (
-               <div className="mb-3 flex items-start gap-2 rounded-md border border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950/50 px-3 py-2 text-sm text-destructive">
-                  <AlertCircle className="mt-0.5 h-4 w-4" />
+               <div className="mb-3 flex items-start gap-2 rounded-md border border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950/50 px-3 py-2 text-sm text-error">
+                  <AlertCircle className="mt-0.5 h-4 w-4" aria-hidden="true" />
                   <span>{error}</span>
                </div>
             )}
-            <div className="border border-border rounded-lg bg-card overflow-hidden">
+            <div className="border border-base-300 rounded-lg bg-base-100 overflow-hidden">
                 <Table caption="Daftar armada menunggu verifikasi">
                   <TableHeader>
-                     <TableRow className="bg-muted/50">
+                     <TableRow className="bg-base-200/50">
                         <TableHead className="text-[13px]">
                            No. Polisi
                         </TableHead>
@@ -129,7 +129,7 @@ export const VerifikasiArmadaTable = memo(
                            <TableCell>
                               <div className="text-sm">
                                  <div>{armada.po?.nama_perusahaan || "-"}</div>
-                                 <div className="text-muted-foreground">
+                                 <div className="text-base-content/70">
                                     {armada.po?.kode_po || "-"}
                                  </div>
                               </div>
@@ -158,20 +158,20 @@ export const VerifikasiArmadaTable = memo(
                                        setAction("terverifikasi");
                                     }}
                                  >
-                                    <CheckCircle className="h-4 w-4 mr-1" />
+                                    <CheckCircle className="h-4 w-4 mr-1" aria-hidden="true" />
                                     Terima
                                  </Button>
                                  <Button
                                     size="sm"
                                     variant="outline"
-                                    className="text-destructive border-red-200 hover:bg-red-50 dark:text-red-300 dark:border-red-800 dark:hover:bg-red-950/50"
+                                    className="text-error border-red-200 hover:bg-red-50 dark:text-red-300 dark:border-red-800 dark:hover:bg-red-950/50"
                                     onClick={() => {
                                        setError(null);
                                        setSelectedArmada(armada);
                                        setAction("ditolak");
                                     }}
                                  >
-                                    <XCircle className="h-4 w-4 mr-1" />
+                                    <XCircle className="h-4 w-4 mr-1" aria-hidden="true" />
                                     Tolak
                                  </Button>
                               </TableCell>
@@ -236,7 +236,7 @@ export const VerifikasiArmadaTable = memo(
                         }
                      >
                         {loading
-                           ? "Memproses..."
+                           ? "Memproses…"
                            : action === "terverifikasi"
                              ? "Verifikasi"
                              : "Tolak"}

@@ -12,10 +12,10 @@ export default async function AdminTerminalRekapPage() {
    return (
       <section className="space-y-6">
          <div>
-            <h1 className="text-xl font-bold tracking-tight text-foreground">
+            <h1 className="text-xl font-bold tracking-tight text-base-content">
                Rekap Data Operasional
             </h1>
-            <p className="text-sm text-muted-foreground mt-1">
+            <p className="text-sm text-base-content/70 mt-1">
                Detail kendaraan masuk dan keluar seluruh petugas di terminal
                ini.
             </p>

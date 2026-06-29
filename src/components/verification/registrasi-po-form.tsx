@@ -45,7 +45,7 @@ const formSchema = z
 function FieldError({ message }: { message?: string }) {
    if (!message) return null;
 
-   return <p className="text-xs font700 text-destructive">{message}</p>;
+   return <p className="text-xs font700 text-error">{message}</p>;
 }
 
 export function RegistrasiPOForm() {
@@ -108,12 +108,12 @@ export function RegistrasiPOForm() {
          <Card className="command-panel rounded-3xl">
             <CardContent className="pb-8 pt-8 text-center">
                <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-3xl bg-brand-green/15 ring-1 ring-brand-green/30">
-                   <CheckCircle className="h-7 w-7 text-brand-green dark:text-emerald-400" />
+                   <CheckCircle className="h-7 w-7 text-brand-green dark:text-emerald-400" aria-hidden="true" />
                 </div>
-                <h3 className="mb-2 text-xl font800 tracking-tight text-foreground">
+                <h3 className="mb-2 text-xl font800 tracking-tight text-base-content">
                    Registrasi Berhasil!
                 </h3>
-                <p className="mx-auto mb-6 max-w-sm text-sm leading-6 text-muted-foreground">
+                <p className="mx-auto mb-6 max-w-sm text-sm leading-6 text-base-content/70">
                    Akun Anda telah terdaftar dan sedang menunggu verifikasi dari
                    Staf IW Jasa Raharja. Anda akan menerima email notifikasi
                    setelah akun diverifikasi.
@@ -131,7 +131,7 @@ export function RegistrasiPOForm() {
 
    return (
       <Card className="command-panel rounded-3xl">
-         <CardHeader className="border-b border-border pb-5">
+         <CardHeader className="border-b border-base-300 pb-5">
             <div className="mb-3 inline-flex w-fit rounded-full border border-brand-sky/20 bg-secondary px-3 py-1 text-xs font800 uppercase tracking-[0.12em] text-brand-navy dark:text-brand-sky">
                Data pengajuan
             </div>
@@ -145,16 +145,16 @@ export function RegistrasiPOForm() {
              <CardContent className="space-y-5 pt-6">
                 {error && (
                    <Alert variant="destructive">
-                      <AlertCircle className="h-4 w-4" />
+                      <AlertCircle className="h-4 w-4" aria-hidden="true" />
                       <AlertDescription>{error}</AlertDescription>
                    </Alert>
                 )}
 
                 <div className="flex items-center gap-3 rounded-2xl border border-brand-sky/20 bg-secondary/70 px-4 py-3">
-                   <Building2 className="h-5 w-5 text-brand-sky" />
+                   <Building2 className="h-5 w-5 text-brand-sky" aria-hidden="true" />
                    <div>
-                      <p className="text-sm font800 text-foreground">Identitas perusahaan</p>
-                      <p className="text-xs text-muted-foreground">Data ini digunakan untuk proses verifikasi PO.</p>
+                      <p className="text-sm font800 text-base-content">Identitas perusahaan</p>
+                      <p className="text-xs text-base-content/70">Data ini digunakan untuk proses verifikasi PO.</p>
                    </div>
                 </div>
 
@@ -196,10 +196,10 @@ export function RegistrasiPOForm() {
                  </div>
 
                  <div className="flex items-center gap-3 rounded-2xl border border-brand-green/25 bg-brand-green/10 px-4 py-3">
-                    <LockKeyhole className="h-5 w-5 text-brand-green" />
+                    <LockKeyhole className="h-5 w-5 text-brand-green" aria-hidden="true" />
                     <div>
-                       <p className="text-sm font800 text-foreground">Akses akun</p>
-                       <p className="text-xs text-muted-foreground">Password akan dipakai setelah akun diverifikasi.</p>
+                       <p className="text-sm font800 text-base-content">Akses akun</p>
+                       <p className="text-xs text-base-content/70">Password akan dipakai setelah akun diverifikasi.</p>
                     </div>
                  </div>
 
@@ -231,7 +231,7 @@ export function RegistrasiPOForm() {
                   </div>
 
                   <ul
-                     className="grid grid-cols-1 gap-1.5 rounded-2xl border border-border/70 bg-card/50 px-4 py-3 sm:grid-cols-2"
+                     className="grid grid-cols-1 gap-1.5 rounded-2xl border border-base-300/70 bg-base-100/50 px-4 py-3 sm:grid-cols-2"
                      aria-describedby="password"
                   >
                      {PASSWORD_REQUIREMENTS.map((req) => {
@@ -240,7 +240,7 @@ export function RegistrasiPOForm() {
                            <li
                               key={req.label}
                               className={`flex items-center gap-2 text-xs font700 ${
-                                 ok ? "text-brand-green dark:text-emerald-400" : "text-muted-foreground"
+                                 ok ? "text-brand-green dark:text-emerald-400" : "text-base-content/70"
                               }`}
                            >
                               <CheckCircle
@@ -283,7 +283,7 @@ export function RegistrasiPOForm() {
                    />
                 </div>
              </CardContent>
-             <CardFooter className="flex-col gap-3 border-t border-border pt-5">
+             <CardFooter className="flex-col gap-3 border-t border-base-300 pt-5">
                 <Button
                    type="submit"
                    className="h-11 w-full text-[15px]"
@@ -291,12 +291,12 @@ export function RegistrasiPOForm() {
                 >
                   {loading ? (
                      <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Mengirim registrasi...
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
+                        Mengirim registrasi…
                      </>
                   ) : (
                      <>
-                        <CheckCircle className="mr-2 h-4 w-4" />
+                        <CheckCircle className="mr-2 h-4 w-4" aria-hidden="true" />
                         Kirim registrasi
                      </>
                   )}

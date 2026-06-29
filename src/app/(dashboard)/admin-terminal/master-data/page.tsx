@@ -27,8 +27,8 @@ export default async function AdminTerminalMasterDataPage() {
    return (
       <section className="space-y-6">
          <div className="space-y-1">
-            <h1 className="text-xl font-bold tracking-tight text-foreground">Master Data</h1>
-            <p className="text-sm text-muted-foreground">
+            <h1 className="text-xl font-bold tracking-tight text-base-content">Master Data</h1>
+            <p className="text-sm text-base-content/70">
                Kelola data dasar terminal untuk operasional IWKBU.
             </p>
          </div>

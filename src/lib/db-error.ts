@@ -13,12 +13,18 @@
  *   );
  */
 export function sanitizeDbError(error: unknown, context?: string): string {
-  const raw =
-    error instanceof Error
-      ? error.message
-      : typeof error === "string"
-        ? error
-        : "Unknown error";
+  let raw: string;
+  if (error instanceof Error) {
+    raw = error.message;
+  } else if (typeof error === "string") {
+    raw = error;
+  } else if (error && typeof error === "object" && "message" in error) {
+    // PostgREST/GoTrace errors are plain objects { message, code, ... }, not Error instances.
+    const m = (error as { message?: unknown }).message;
+    raw = typeof m === "string" ? m : "Unknown error";
+  } else {
+    raw = "Unknown error";
+  }
 
   // Log full error server-side for debugging (never sent to client)
   console.error(
@@ -33,4 +39,18 @@ export function sanitizeDbError(error: unknown, context?: string): string {
 
   // In production, return generic message
   return "Terjadi kesalahan pada server. Silakan coba lagi.";
+}
+
+/**
+ * Safely extract a human-readable message from an unknown caught value
+ * (for `catch (error: unknown)` blocks). Never throws.
+ */
+export function getErrorMessage(error: unknown): string {
+  if (error instanceof Error) return error.message;
+  if (typeof error === "string") return error;
+  if (error && typeof error === "object" && "message" in error) {
+    const m = (error as { message?: unknown }).message;
+    if (typeof m === "string") return m;
+  }
+  return "Unknown error";
 }

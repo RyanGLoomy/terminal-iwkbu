@@ -1,29 +1,14 @@
 import { NextResponse } from "next/server";
 import { sanitizeDbError } from "@/lib/db-error";
-import { getAuthenticatedActor } from "@/lib/auth/server-actor";
-import { ensureRoleOrThrow } from "@/lib/auth/requireRole.server";
+import { requireActor, actorErrorHandler } from "@/lib/auth/actor";
+import { ROLES } from "@/config/roles";
 import { logActivity } from "@/lib/supabase/queries/operasional.server";
 
 const PIN_SESSION_DURATION_MS = 8 * 60 * 60 * 1000;
 
 export async function POST(request: Request) {
    try {
-      const actor = await getAuthenticatedActor();
-      if (!actor) {
-         return NextResponse.json(
-            { message: "Sesi habis. Silakan login ulang." },
-            { status: 401 },
-         );
-      }
-
-      try {
-         ensureRoleOrThrow(actor.user, actor.profile, "loket");
-      } catch (err: unknown) {
-         return NextResponse.json(
-            { message: err instanceof Error ? err.message : "Forbidden" },
-            { status: 403 },
-         );
-      }
+      const actor = await requireActor(ROLES.PETUGAS_LOKET);
 
       if (!actor.terminalId) {
          return NextResponse.json(
@@ -52,7 +37,7 @@ export async function POST(request: Request) {
          .maybeSingle();
 
       if (petugasError) {
-         return NextResponse.json({ message: petugasError.message }, { status: 500 });
+         return NextResponse.json({ message: sanitizeDbError(petugasError, "upsert-pin-session petugas") }, { status: 500 });
       }
 
       if (!petugas || petugas.terminal_id !== actor.terminalId || !petugas.is_active) {
@@ -94,10 +79,7 @@ export async function POST(request: Request) {
       );
 
       return NextResponse.json({ session: data });
-    } catch (error: unknown) {
-      return NextResponse.json(
-         { message: error instanceof Error ? error.message : "Terjadi kesalahan." },
-         { status: 500 },
-      );
+   } catch (error) {
+      return actorErrorHandler(error);
    }
 }

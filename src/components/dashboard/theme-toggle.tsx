@@ -9,7 +9,7 @@ export function ThemeToggle() {
   return (
     <button
       onClick={toggle}
-      className="flex h-11 w-11 items-center justify-center rounded-lg border border-border/70 bg-card/80 text-foreground shadow-sm transition-colors hover:bg-muted"
+      className="flex h-11 w-11 items-center justify-center rounded-lg border border-base-300/70 bg-base-100/80 text-base-content shadow-sm transition-colors hover:bg-base-200"
       title={theme === "dark" ? "Mode Terang" : "Mode Gelap"}
       aria-label={theme === "dark" ? "Mode Terang" : "Mode Gelap"}
     >

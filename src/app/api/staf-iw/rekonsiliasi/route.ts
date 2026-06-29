@@ -1,32 +1,16 @@
 import { NextResponse } from "next/server";
-import { getAuthenticatedActor } from "@/lib/auth/server-actor";
+import { requireActor, actorErrorHandler } from "@/lib/auth/actor";
+import { ROLES } from "@/config/roles";
 import { getRekonsiliasiData } from "@/lib/supabase/queries/rekonsiliasi.server";
 
 export async function GET() {
    try {
-      const actor = await getAuthenticatedActor();
-      if (!actor) {
-         return NextResponse.json(
-            { message: "Unauthorized" },
-            { status: 401 },
-         );
-      }
-
-      if (actor.role !== "staf-iw") {
-         return NextResponse.json(
-            { message: "Forbidden" },
-            { status: 403 },
-         );
-      }
+      await requireActor(ROLES.STAF_IW);
 
       const data = await getRekonsiliasiData();
 
       return NextResponse.json({ data });
-   } catch (error: any) {
-      console.error("[API /rekonsiliasi] Error:", error?.message);
-      return NextResponse.json(
-         { message: error?.message ?? "Internal error" },
-         { status: 500 },
-      );
+   } catch (error) {
+      return actorErrorHandler(error);
    }
 }

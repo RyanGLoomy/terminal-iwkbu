@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import {
    Dialog,
    DialogContent,
@@ -38,7 +38,7 @@ const statusConfig: Record<
 > = {
    draft: {
       label: "Draft",
-      color: "bg-muted text-muted-foreground border border-border",
+      color: "bg-base-200 text-base-content/70 border border-base-300",
       icon: Plus,
    },
    aktif: {
@@ -64,7 +64,7 @@ export function PeriodeRekonsiliasiPanel() {
       catatan: "",
    });
 
-   const loadPeriode = useCallback(async () => {
+   const loadPeriode = async () => {
       try {
          const res = await fetch("/api/staf-iw/periode-rekonsiliasi");
          const payload = await res.json();
@@ -76,7 +76,7 @@ export function PeriodeRekonsiliasiPanel() {
       } finally {
          setLoading(false);
       }
-   }, []);
+   };
 
    useEffect(() => {
       loadPeriode();
@@ -153,28 +153,28 @@ export function PeriodeRekonsiliasiPanel() {
    }
 
    return (
-      <Card className="border-border">
+      <Card className="border-base-300">
          <CardHeader className="pb-4">
             <CardTitle className="text-base flex items-center gap-2">
-               <Calendar className="h-4 w-4 text-primary" />
+               <Calendar className="h-4 w-4 text-primary" aria-hidden="true" />
                Periode Rekonsiliasi
                <Button
                   size="sm"
                   className="ml-auto"
                   onClick={() => setIsCreateOpen(true)}
                >
-                  <Plus className="h-3.5 w-3.5 mr-1" />
+                  <Plus className="h-3.5 w-3.5 mr-1" aria-hidden="true" />
                   Buat Periode
                </Button>
             </CardTitle>
          </CardHeader>
          <CardContent>
             {loading ? (
-               <p className="text-sm text-muted-foreground text-center py-6">
-                  Memuat data...
+               <p className="text-sm text-base-content/70 text-center py-6">
+                  Memuat data…
                </p>
             ) : periodeList.length === 0 ? (
-               <p className="text-sm text-muted-foreground text-center py-6">
+               <p className="text-sm text-base-content/70 text-center py-6">
                   Belum ada periode rekonsiliasi
                </p>
             ) : (
@@ -184,7 +184,7 @@ export function PeriodeRekonsiliasiPanel() {
                      return (
                         <div
                            key={p.id}
-                           className="flex items-center justify-between gap-3 rounded-lg border border-border px-4 py-3"
+                           className="flex items-center justify-between gap-3 rounded-lg border border-base-300 px-4 py-3"
                         >
                            <div className="min-w-0">
                               <div className="flex items-center gap-2">
@@ -195,7 +195,7 @@ export function PeriodeRekonsiliasiPanel() {
                                     {cfg.label}
                                  </Badge>
                               </div>
-                              <p className="text-xs text-muted-foreground mt-0.5">
+                              <p className="text-xs text-base-content/70 mt-0.5">
                                  {new Date(p.tanggal_mulai).toLocaleDateString(
                                     "id-ID",
                                  )}{" "}
@@ -220,7 +220,7 @@ export function PeriodeRekonsiliasiPanel() {
                                           )
                                        }
                                     >
-                                       <Play className="h-3.5 w-3.5 mr-1" />
+                                       <Play className="h-3.5 w-3.5 mr-1" aria-hidden="true" />
                                        Aktifkan
                                     </Button>
                                     <Button
@@ -246,7 +246,7 @@ export function PeriodeRekonsiliasiPanel() {
                                        )
                                     }
                                  >
-                                    <CheckCircle2 className="h-3.5 w-3.5 mr-1" />
+                                    <CheckCircle2 className="h-3.5 w-3.5 mr-1" aria-hidden="true" />
                                     Tutup
                                  </Button>
                               )}

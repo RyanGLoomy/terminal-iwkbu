@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getAuthenticatedActor } from "@/lib/auth/server-actor";
+import { requireActor, actorErrorHandler } from "@/lib/auth/actor";
+import { ROLES } from "@/config/roles";
 import { getAdminRekapHarian } from "@/lib/supabase/queries/operasional.server";
 import type {
    AdminRekapRow,
@@ -10,14 +11,7 @@ import type {
    TerminalReportPoRow,
 } from "@/lib/supabase/queries/operasional.types";
 
-const ALLOWED_ROLES = ["admin-terminal", "staf-iw"] as const;
 const MAX_RANGE_DAYS = 62;
-
-type AllowedRole = (typeof ALLOWED_ROLES)[number];
-
-function isAllowedRole(role: string | null | undefined): role is AllowedRole {
-   return ALLOWED_ROLES.includes(role as AllowedRole);
-}
 
 function parseDateParam(value: string | null) {
    if (!value || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return null;
@@ -204,16 +198,9 @@ function buildReport(
 
 export async function GET(request: NextRequest) {
    try {
-      const actor = await getAuthenticatedActor();
-      if (!actor) {
-         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-      }
+       const actor = await requireActor([ROLES.ADMIN_TERMINAL, ROLES.STAF_IW]);
 
-      if (!isAllowedRole(actor.role)) {
-         return NextResponse.json({ message: "Forbidden" }, { status: 403 });
-      }
-
-      const searchParams = request.nextUrl.searchParams;
+       const searchParams = request.nextUrl.searchParams;
       const requestedTerminalId = searchParams.get("terminalId")?.trim() ?? "";
       const startDate = searchParams.get("startDate");
       const endDate = searchParams.get("endDate");
@@ -268,10 +255,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({
          data: buildReport(effectiveTerminalId, startDate, endDate, rows),
       });
-   } catch (error: unknown) {
-      return NextResponse.json(
-         { message: error instanceof Error ? error.message : "Internal error" },
-         { status: 500 },
-      );
+   } catch (error) {
+      return actorErrorHandler(error);
    }
 }

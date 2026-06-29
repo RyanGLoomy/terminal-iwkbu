@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import {
    getArmadaByPO,
    createArmada,
@@ -22,9 +22,10 @@ import {
 import { Plus, Bus, Search } from "lucide-react";
 import { toast } from "sonner";
 import { ArmadaTable } from "./armada-table";
-import { ArmadaFormDialog } from "./armada-form-dialog";
+import { ArmadaFormDialog, type ArmadaFormValues } from "./armada-form-dialog";
 import { StatusArmadaDialog } from "./status-armada-dialog";
 import { ArmadaDokumenDialog } from "./armada-dokumen-dialog";
+import { getErrorMessage } from "@/lib/db-error";
 
 interface POArmadaManagerProps {
    poId: string;
@@ -45,22 +46,22 @@ export function POArmadaManager({ poId }: POArmadaManagerProps) {
       loadArmada();
    }, [poId]);
 
-   const filteredArmada = useMemo(() => {
-      const q = search.trim().toLowerCase();
-      return armada.filter((a) => {
-         const matchesSearch =
-            !q ||
-            a.nomor_polisi.toLowerCase().includes(q) ||
-            (a.merk ?? "").toLowerCase().includes(q) ||
-            (a.tipe ?? "").toLowerCase().includes(q) ||
-            (a.nomor_lambung ?? "").toLowerCase().includes(q);
-         const matchesStatus =
-            statusFilter === "semua" ||
-            a.status_operasional === statusFilter ||
-            a.status_verifikasi === statusFilter;
-         return matchesSearch && matchesStatus;
-      });
-   }, [armada, search, statusFilter]);
+    const filteredArmada = (() => {
+       const q = search.trim().toLowerCase();
+       return armada.filter((a) => {
+          const matchesSearch =
+             !q ||
+             a.nomor_polisi.toLowerCase().includes(q) ||
+             (a.merk ?? "").toLowerCase().includes(q) ||
+             (a.tipe ?? "").toLowerCase().includes(q) ||
+             (a.nomor_lambung ?? "").toLowerCase().includes(q);
+          const matchesStatus =
+             statusFilter === "semua" ||
+             a.status_operasional === statusFilter ||
+             a.status_verifikasi === statusFilter;
+          return matchesSearch && matchesStatus;
+       });
+    })();
 
    async function loadArmada() {
       try {
@@ -72,7 +73,7 @@ export function POArmadaManager({ poId }: POArmadaManagerProps) {
       }
    }
 
-   const handleCreate = async (data: any) => {
+   const handleCreate = async (data: ArmadaFormValues) => {
       try {
          await createArmada(data);
          toast.success("Armada berhasil ditambahkan");
@@ -83,7 +84,7 @@ export function POArmadaManager({ poId }: POArmadaManagerProps) {
       }
    };
 
-   const handleUpdate = async (id: string, data: any) => {
+   const handleUpdate = async (id: string, data: ArmadaFormValues) => {
       try {
          await updateArmadaByPO(id, data);
          toast.success("Armada berhasil diperbarui");
@@ -121,8 +122,8 @@ export function POArmadaManager({ poId }: POArmadaManagerProps) {
          await deleteArmada(armada.id);
          toast.success("Armada berhasil dihapus");
          await loadArmada();
-      } catch (error: any) {
-         toast.error(error?.message ?? "Gagal menghapus armada");
+      } catch (error: unknown) {
+         toast.error(getErrorMessage(error));
       }
    };
 
@@ -144,13 +145,13 @@ export function POArmadaManager({ poId }: POArmadaManagerProps) {
                      setIsFormOpen(true);
                   }}
                >
-                  <Plus className="mr-2 h-4 w-4" />
+                  <Plus className="mr-2 h-4 w-4" aria-hidden="true" />
                   Tambah Armada
                </Button>
             </div>
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-base-content/70" aria-hidden="true" />
                   <Input
                      placeholder="Cari nopol, merk, lambung..."
                      value={search}
@@ -185,10 +186,10 @@ export function POArmadaManager({ poId }: POArmadaManagerProps) {
             </div>
          </div>
 
-         <Card className="border-border">
+         <Card className="border-base-300">
             <CardHeader className="pb-4">
                 <CardTitle className="text-base flex items-center gap-2">
-                   <Bus className="h-4 w-4 text-primary" />
+                   <Bus className="h-4 w-4 text-primary" aria-hidden="true" />
                    Daftar Armada ({filteredArmada.length}
                    {filteredArmada.length !== armada.length &&
                       ` dari ${armada.length}`})

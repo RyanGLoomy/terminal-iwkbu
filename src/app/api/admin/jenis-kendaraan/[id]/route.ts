@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sanitizeDbError } from "@/lib/db-error";
-import { getAuthenticatedActor } from "@/lib/auth/server-actor";
+import { requireActor, actorErrorHandler } from "@/lib/auth/actor";
+import { ROLES } from "@/config/roles";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { logActivity } from "@/lib/supabase/queries/operasional.server";
 
@@ -9,20 +10,7 @@ export async function PATCH(
    { params }: { params: Promise<{ id: string }> },
 ) {
    try {
-      const actor = await getAuthenticatedActor();
-      if (!actor) {
-         return NextResponse.json(
-            { message: "Unauthorized" },
-            { status: 401 },
-         );
-      }
-
-      if (actor.role !== "staf-iw") {
-         return NextResponse.json(
-            { message: "Forbidden" },
-            { status: 403 },
-         );
-      }
+      const actor = await requireActor(ROLES.STAF_IW);
 
       const { id } = await params;
       const body = await request.json();
@@ -70,11 +58,8 @@ export async function PATCH(
       );
 
       return NextResponse.json({ data });
-   } catch (error: any) {
-      return NextResponse.json(
-         { message: error?.message ?? "Internal error" },
-         { status: 500 },
-      );
+   } catch (error) {
+      return actorErrorHandler(error);
    }
 }
 
@@ -83,20 +68,7 @@ export async function DELETE(
    { params }: { params: Promise<{ id: string }> },
 ) {
    try {
-      const actor = await getAuthenticatedActor();
-      if (!actor) {
-         return NextResponse.json(
-            { message: "Unauthorized" },
-            { status: 401 },
-         );
-      }
-
-      if (actor.role !== "staf-iw") {
-         return NextResponse.json(
-            { message: "Forbidden" },
-            { status: 403 },
-         );
-      }
+      const actor = await requireActor(ROLES.STAF_IW);
 
       const { id } = await params;
 
@@ -121,10 +93,7 @@ export async function DELETE(
       );
 
       return NextResponse.json({ success: true });
-   } catch (error: any) {
-      return NextResponse.json(
-         { message: error?.message ?? "Internal error" },
-         { status: 500 },
-      );
+   } catch (error) {
+      return actorErrorHandler(error);
    }
 }

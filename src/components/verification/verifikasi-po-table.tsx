@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, memo, useMemo } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
    Table,
@@ -33,7 +33,7 @@ interface VerifikasiPOTableProps {
    showActions: boolean;
 }
 
-export const VerifikasiPOTable = memo(function VerifikasiPOTableContent({
+export function VerifikasiPOTable({
    data,
    showActions,
 }: VerifikasiPOTableProps) {
@@ -55,16 +55,16 @@ export const VerifikasiPOTable = memo(function VerifikasiPOTableContent({
    const [search, setSearch] = useState("");
    const router = useRouter();
 
-   const filteredData = useMemo(() => {
-      const q = search.trim().toLowerCase();
-      if (!q) return data;
-      return data.filter(
-         (po) =>
-            po.kode_po.toLowerCase().includes(q) ||
-            po.nama_perusahaan.toLowerCase().includes(q) ||
-            (po.nama_pemilik ?? "").toLowerCase().includes(q),
-      );
-   }, [data, search]);
+    const filteredData = (() => {
+       const q = search.trim().toLowerCase();
+       if (!q) return data;
+       return data.filter(
+          (po) =>
+             po.kode_po.toLowerCase().includes(q) ||
+             po.nama_perusahaan.toLowerCase().includes(q) ||
+             (po.nama_pemilik ?? "").toLowerCase().includes(q),
+       );
+    })();
 
    const openEditDialog = (po: PO) => {
       setEditTarget(po);
@@ -139,8 +139,8 @@ export const VerifikasiPOTable = memo(function VerifikasiPOTableContent({
       return (
          <div className="space-y-3">
             {error && (
-               <div className="flex items-start gap-2 rounded-md border border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950/50 px-3 py-2 text-sm text-destructive">
-                  <AlertCircle className="mt-0.5 h-4 w-4" />
+               <div className="flex items-start gap-2 rounded-md border border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950/50 px-3 py-2 text-sm text-error">
+                  <AlertCircle className="mt-0.5 h-4 w-4" aria-hidden="true" />
                   <span>{error}</span>
                </div>
             )}
@@ -152,14 +152,14 @@ export const VerifikasiPOTable = memo(function VerifikasiPOTableContent({
    return (
       <>
          {error && (
-            <div className="mb-3 flex items-start gap-2 rounded-md border border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950/50 px-3 py-2 text-sm text-destructive">
-               <AlertCircle className="mt-0.5 h-4 w-4" />
+            <div className="mb-3 flex items-start gap-2 rounded-md border border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950/50 px-3 py-2 text-sm text-error">
+               <AlertCircle className="mt-0.5 h-4 w-4" aria-hidden="true" />
                <span>{error}</span>
             </div>
          )}
           <div className="mb-3 flex justify-end">
             <div className="relative w-full sm:w-56">
-               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-base-content/70" aria-hidden="true" />
                <Input
                   placeholder="Cari kode PO, nama..."
                   value={search}
@@ -168,10 +168,10 @@ export const VerifikasiPOTable = memo(function VerifikasiPOTableContent({
                />
             </div>
          </div>
-          <div className="border border-border rounded-lg bg-card overflow-hidden">
+          <div className="border border-base-300 rounded-lg bg-base-100 overflow-hidden">
              <Table caption="Daftar PO menunggu verifikasi">
                <TableHeader>
-                  <TableRow className="bg-muted/50">
+                  <TableRow className="bg-base-200/50">
                      <TableHead className="text-[13px]">Kode PO</TableHead>
                      <TableHead className="text-[13px]">
                         Nama Perusahaan
@@ -197,7 +197,7 @@ export const VerifikasiPOTable = memo(function VerifikasiPOTableContent({
                         <TableCell>
                            <div className="text-sm">
                               <div>{po.telepon || "-"}</div>
-                              <div className="text-muted-foreground">
+                              <div className="text-base-content/70">
                                  {po.profiles?.email}
                               </div>
                            </div>
@@ -233,20 +233,20 @@ export const VerifikasiPOTable = memo(function VerifikasiPOTableContent({
                                     setAction("aktif");
                                  }}
                               >
-                                 <CheckCircle className="h-4 w-4 mr-1" />
+                                 <CheckCircle className="h-4 w-4 mr-1" aria-hidden="true" />
                                  Terima
                               </Button>
                               <Button
                                  size="sm"
                                  variant="outline"
-                                 className="text-destructive border-red-200 hover:bg-red-50 dark:text-red-300 dark:border-red-800 dark:hover:bg-red-950/50"
+                                 className="text-error border-red-200 hover:bg-red-50 dark:text-red-300 dark:border-red-800 dark:hover:bg-red-950/50"
                                  onClick={() => {
                                     setError(null);
                                     setSelectedPO(po);
                                     setAction("ditolak");
                                  }}
                               >
-                                 <XCircle className="h-4 w-4 mr-1" />
+                                 <XCircle className="h-4 w-4 mr-1" aria-hidden="true" />
                                  Tolak
                               </Button>
                            </TableCell>
@@ -298,7 +298,7 @@ export const VerifikasiPOTable = memo(function VerifikasiPOTableContent({
                      variant={action === "aktif" ? "default" : "destructive"}
                   >
                      {loading
-                        ? "Memproses..."
+                        ? "Memproses…"
                         : action === "aktif"
                           ? "Verifikasi"
                           : "Tolak"}
@@ -324,7 +324,7 @@ export const VerifikasiPOTable = memo(function VerifikasiPOTableContent({
                <div className="space-y-3 py-2">
                   <div className="grid grid-cols-2 gap-3">
                      <div className="space-y-1.5">
-                        <label className="text-sm font-medium text-foreground">
+                        <label className="text-sm font-medium text-base-content">
                            Kode PO *
                         </label>
                         <Input
@@ -335,7 +335,7 @@ export const VerifikasiPOTable = memo(function VerifikasiPOTableContent({
                         />
                      </div>
                      <div className="space-y-1.5">
-                        <label className="text-sm font-medium text-foreground">
+                        <label className="text-sm font-medium text-base-content">
                            Telepon
                         </label>
                         <Input
@@ -347,7 +347,7 @@ export const VerifikasiPOTable = memo(function VerifikasiPOTableContent({
                      </div>
                   </div>
                   <div className="space-y-1.5">
-                     <label className="text-sm font-medium text-foreground">
+                     <label className="text-sm font-medium text-base-content">
                         Nama Perusahaan *
                      </label>
                      <Input
@@ -361,7 +361,7 @@ export const VerifikasiPOTable = memo(function VerifikasiPOTableContent({
                      />
                   </div>
                   <div className="space-y-1.5">
-                     <label className="text-sm font-medium text-foreground">
+                     <label className="text-sm font-medium text-base-content">
                         Nama Pemilik
                      </label>
                      <Input
@@ -376,7 +376,7 @@ export const VerifikasiPOTable = memo(function VerifikasiPOTableContent({
                   </div>
                   <div className="grid grid-cols-2 gap-3">
                      <div className="space-y-1.5">
-                        <label className="text-sm font-medium text-foreground">
+                        <label className="text-sm font-medium text-base-content">
                            Alamat
                         </label>
                         <Input
@@ -387,7 +387,7 @@ export const VerifikasiPOTable = memo(function VerifikasiPOTableContent({
                         />
                      </div>
                      <div className="space-y-1.5">
-                        <label className="text-sm font-medium text-foreground">
+                        <label className="text-sm font-medium text-base-content">
                            NPWP
                         </label>
                         <Input
@@ -405,11 +405,11 @@ export const VerifikasiPOTable = memo(function VerifikasiPOTableContent({
                      Batal
                   </Button>
                   <Button onClick={submitEdit} disabled={editLoading}>
-                     {editLoading ? "Menyimpan..." : "Simpan"}
+                     {editLoading ? "Menyimpan…" : "Simpan"}
                   </Button>
                </DialogFooter>
             </DialogContent>
-         </Dialog>
-       </>
-   );
-});
+          </Dialog>
+        </>
+    );
+}

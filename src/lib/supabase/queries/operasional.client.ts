@@ -14,6 +14,34 @@ import type {
    TerminalReport,
 } from "@/lib/supabase/queries/operasional.types";
 
+type MasukPoJoin = NonNullable<ActiveMasuk["po"]>;
+type MasukArmadaJoin = NonNullable<ActiveMasuk["armada"]>;
+type RekapPoJoin = NonNullable<RekapHarianRow["po"]>;
+type RekapArmadaJoin = NonNullable<RekapHarianRow["armada"]>;
+
+type ActiveMasukQueryRow = {
+   id: string;
+   sesi_id: string;
+   petugas_id: string;
+   nomor_polisi: string;
+   waktu_masuk: string;
+   po: MasukPoJoin | MasukPoJoin[] | null;
+   armada: MasukArmadaJoin | MasukArmadaJoin[] | null;
+   kendaraan_keluar: { id: string } | { id: string }[] | null;
+};
+
+type RekapHarianQueryRow = {
+   id: string;
+   nomor_polisi: string;
+   waktu_masuk: string;
+   po: RekapPoJoin | RekapPoJoin[] | null;
+   armada: RekapArmadaJoin | RekapArmadaJoin[] | null;
+   kendaraan_keluar:
+      | { waktu_keluar: string }
+      | { waktu_keluar: string }[]
+      | null;
+};
+
 function normalizeNomorPolisi(value: string) {
    return value.trim().toUpperCase();
 }
@@ -273,13 +301,13 @@ export async function listActiveMasuk(sesiId: string) {
    if (error) throw error;
 
    return (data ?? [])
-      .filter((row: any) => {
-         const keluar = Array.isArray(row.kendaraan_keluar)
-            ? row.kendaraan_keluar[0]
-            : row.kendaraan_keluar;
-         return !keluar;
+      .filter((row: ActiveMasukQueryRow) => {
+          const keluar = Array.isArray(row.kendaraan_keluar)
+             ? row.kendaraan_keluar[0]
+             : row.kendaraan_keluar;
+          return !keluar;
       })
-      .map((row: any) => {
+      .map((row: ActiveMasukQueryRow) => {
          const po = Array.isArray(row.po) ? row.po[0] : row.po;
          const armada = Array.isArray(row.armada) ? row.armada[0] : row.armada;
 
@@ -312,7 +340,7 @@ export async function getRekapHarian(tanggal: string) {
 
    if (error) throw error;
 
-   return (data ?? []).map((row: any) => {
+    return (data ?? []).map((row: RekapHarianQueryRow) => {
       const keluar = Array.isArray(row.kendaraan_keluar)
          ? row.kendaraan_keluar[0]
          : null;

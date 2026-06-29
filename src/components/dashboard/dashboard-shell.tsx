@@ -39,10 +39,10 @@ export function DashboardShell({
    };
 
    return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-base-100">
          <a
             href="#main-content"
-            className="sr-only z-50 rounded-md bg-background px-4 py-2 text-sm font-medium shadow-lg focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
+            className="sr-only z-50 rounded-md bg-base-100 px-4 py-2 text-sm font-medium shadow-lg focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
          >
             Lewati ke konten utama
          </a>
@@ -67,8 +67,8 @@ export function DashboardShell({
             </div>
 
             {/* Mobile topbar */}
-            <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-border bg-card/95 px-4 backdrop-blur lg:hidden">
-               <span className="text-sm font-bold text-foreground">
+            <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-base-300 bg-base-100/95 px-4 lg:hidden">
+               <span className="text-sm font-bold text-base-content">
                   IWKBU Terminal
                </span>
                <div className="flex items-center gap-1">

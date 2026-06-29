@@ -12,10 +12,10 @@ export default async function AdminTerminalLaporanPage() {
    return (
       <section className="space-y-6">
          <div>
-            <h1 className="text-xl font-bold tracking-tight text-foreground">
+            <h1 className="text-xl font-bold tracking-tight text-base-content">
                Laporan Terminal
             </h1>
-            <p className="text-sm text-muted-foreground mt-1">
+            <p className="text-sm text-base-content/70 mt-1">
                Rekapitulasi data kendaraan per PO untuk pelaporan.
             </p>
          </div>

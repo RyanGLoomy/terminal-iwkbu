@@ -1,0 +1,392 @@
+<mxfile host="app.diagrams.net" agent="generator">
+  <diagram name="Class Diagram" id="class-v4">
+    <mxGraphModel dx="857" dy="1743" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2080" pageHeight="1220" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontSize=16;fontStyle=1;strokeColor=none;fillColor=none;" value="Class Diagram — Sistem Integrasi Terminal IWKBU" vertex="1">
+          <mxGeometry height="30" width="700" x="500" y="-20" as="geometry" />
+        </mxCell>
+        <mxCell id="cnt-AUTHENTICATION" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EBF3FB;strokeColor=#B8D4ED;dashed=1;dashPattern=8 4;verticalAlign=top;align=left;spacingTop=6;spacingLeft=12;fontSize=11;fontStyle=1;fontColor=#888888;opacity=25;container=0;" value="AUTHENTICATION" vertex="1">
+          <mxGeometry height="370" width="640" x="20" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="cnt-MASTERDATA" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EEF7EA;strokeColor=#C5DEBA;dashed=1;dashPattern=8 4;verticalAlign=top;align=left;spacingTop=6;spacingLeft=12;fontSize=11;fontStyle=1;fontColor=#888888;opacity=25;container=0;" value="MASTER DATA" vertex="1">
+          <mxGeometry height="320" width="640" x="20" y="420" as="geometry" />
+        </mxCell>
+        <mxCell id="cnt-FLEET" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFBEA;strokeColor=#E8D88A;dashed=1;dashPattern=8 4;verticalAlign=top;align=left;spacingTop=6;spacingLeft=12;fontSize=11;fontStyle=1;fontColor=#888888;opacity=25;container=0;" value="FLEET" vertex="1">
+          <mxGeometry height="350" width="640" x="20" y="780" as="geometry" />
+        </mxCell>
+        <mxCell id="cnt-TERMINALOPERATIONS" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF5EB;strokeColor=#E8C58E;dashed=1;dashPattern=8 4;verticalAlign=top;align=left;spacingTop=6;spacingLeft=12;fontSize=11;fontStyle=1;fontColor=#888888;opacity=25;container=0;" value="TERMINAL OPERATIONS" vertex="1">
+          <mxGeometry height="760" width="680" x="700" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="cnt-COMPLIANCE" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FCEFEF;strokeColor=#E8B8B6;dashed=1;dashPattern=8 4;verticalAlign=top;align=left;spacingTop=6;spacingLeft=12;fontSize=11;fontStyle=1;fontColor=#888888;opacity=25;container=0;" value="COMPLIANCE" vertex="1">
+          <mxGeometry height="300" width="680" x="700" y="800" as="geometry" />
+        </mxCell>
+        <mxCell id="cnt-IWKBURECONCILIATION" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F4EEF8;strokeColor=#D4BCDF;dashed=1;dashPattern=8 4;verticalAlign=top;align=left;spacingTop=6;spacingLeft=12;fontSize=11;fontStyle=1;fontColor=#888888;opacity=25;container=0;" value="IWKBU RECONCILIATION" vertex="1">
+          <mxGeometry height="760" width="620" x="1420" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="cnt-SYSTEM" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FAFAFA;strokeColor=#CCCCCC;dashed=1;dashPattern=8 4;verticalAlign=top;align=left;spacingTop=6;spacingLeft=12;fontSize=11;fontStyle=1;fontColor=#888888;opacity=25;container=0;" value="SYSTEM" vertex="1">
+          <mxGeometry height="260" width="620" x="1420" y="800" as="geometry" />
+        </mxCell>
+        <mxCell id="user" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;swimlaneFillColor=#dae8fc;fillColor=#dae8fc;strokeColor=#6c8ebf;rounded=1;shadow=1;fontSize=11;" value="User «auth.users»" vertex="1">
+          <mxGeometry height="118" width="220" x="40" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="user-a" parent="user" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=10;" value="+ id: uuid «PK»&#xa;+ email: varchar&#xa;+ encrypted_password: varchar&#xa;+ aud: varchar&#xa;+ created_at: timestamptz" vertex="1">
+          <mxGeometry height="88" width="220" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="profile" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;swimlaneFillColor=#dae8fc;fillColor=#dae8fc;strokeColor=#6c8ebf;rounded=1;shadow=1;fontSize=11;" value="Profile" vertex="1">
+          <mxGeometry height="150" width="220" x="40" y="200" as="geometry" />
+        </mxCell>
+        <mxCell id="profile-a" parent="profile" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=10;" value="+ id: uuid «PK, FK→User»&#xa;+ email: varchar «UQ»&#xa;+ full_name: varchar&#xa;+ is_active: boolean&#xa;+ terminal_id: uuid «FK→Terminal»&#xa;+ created_at: timestamptz&#xa;+ updated_at: timestamptz" vertex="1">
+          <mxGeometry height="120" width="220" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="role" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;swimlaneFillColor=#dae8fc;fillColor=#dae8fc;strokeColor=#6c8ebf;rounded=1;shadow=1;fontSize=11;" value="Role" vertex="1">
+          <mxGeometry height="118" width="200" x="320" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="role-a" parent="role" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=10;" value="+ id: int «PK»&#xa;+ name: varchar «UQ»&#xa;+ display_name: varchar&#xa;+ description: text&#xa;+ created_at: timestamptz" vertex="1">
+          <mxGeometry height="88" width="200" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="userrole" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;swimlaneFillColor=#dae8fc;fillColor=#dae8fc;strokeColor=#6c8ebf;rounded=1;shadow=1;fontSize=11;" value="UserRole «join»" vertex="1">
+          <mxGeometry height="86" width="200" x="320" y="200" as="geometry" />
+        </mxCell>
+        <mxCell id="userrole-a" parent="userrole" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=10;" value="+ user_id: uuid «PK, FK→Profile»&#xa;+ role_id: int «PK, FK→Role»&#xa;+ created_at: timestamptz" vertex="1">
+          <mxGeometry height="56" width="200" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="po" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;swimlaneFillColor=#d5e8d4;fillColor=#d5e8d4;strokeColor=#82b366;rounded=1;shadow=1;fontSize=11;" value="PO «Perusahaan Otobus»" vertex="1">
+          <mxGeometry height="198" width="240" x="40" y="450" as="geometry" />
+        </mxCell>
+        <mxCell id="po-a" parent="po" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=10;" value="+ id: uuid «PK, FK→Profile»&#xa;+ kode_po: varchar «UQ»&#xa;+ nama_perusahaan: varchar&#xa;+ nama_pemilik: varchar&#xa;+ alamat: text&#xa;+ telepon: varchar&#xa;+ npwp: varchar&#xa;+ status_verifikasi: varchar {menunggu|aktif|ditolak}&#xa;+ diverifikasi_oleh: uuid «FK→Profile»&#xa;+ tanggal_verifikasi: timestamptz" vertex="1">
+          <mxGeometry height="168" width="240" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="terminal" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;swimlaneFillColor=#d5e8d4;fillColor=#d5e8d4;strokeColor=#82b366;rounded=1;shadow=1;fontSize=11;" value="Terminal" vertex="1">
+          <mxGeometry height="102" width="200" x="320" y="450" as="geometry" />
+        </mxCell>
+        <mxCell id="terminal-a" parent="terminal" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=10;" value="+ id: uuid «PK»&#xa;+ kode: text «UQ»&#xa;+ nama: text&#xa;+ created_at: timestamptz" vertex="1">
+          <mxGeometry height="72" width="200" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="jeniskendaraan" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;swimlaneFillColor=#d5e8d4;fillColor=#d5e8d4;strokeColor=#82b366;rounded=1;shadow=1;fontSize=11;" value="JenisKendaraan «master»" vertex="1">
+          <mxGeometry height="118" width="220" x="320" y="590" as="geometry" />
+        </mxCell>
+        <mxCell id="jeniskendaraan-a" parent="jeniskendaraan" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=10;" value="+ id: uuid «PK»&#xa;+ nama: varchar «UQ»&#xa;+ kode: varchar «UQ»&#xa;+ urutan: int&#xa;+ is_active: boolean" vertex="1">
+          <mxGeometry height="88" width="220" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="armada" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;swimlaneFillColor=#fff2cc;fillColor=#fff2cc;strokeColor=#d6b656;rounded=1;shadow=1;fontSize=11;" value="Armada" vertex="1">
+          <mxGeometry height="278" width="260" x="40" y="800" as="geometry" />
+        </mxCell>
+        <mxCell id="armada-a" parent="armada" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=10;" value="+ id: uuid «PK»&#xa;+ po_id: uuid «FK→PO»&#xa;+ nomor_polisi: varchar&#xa;+ nomor_lambung: varchar&#xa;+ merk: varchar&#xa;+ tipe: varchar&#xa;+ tahun_pembuatan: int&#xa;+ nomor_chassis: varchar&#xa;+ nomor_mesin: varchar&#xa;+ kapasitas_penumpang: int&#xa;+ status_operasional: varchar&#xa;  {aktif|tidak_aktif|rusak|cadangan|dijual}&#xa;+ status_verifikasi: varchar&#xa;  {menunggu|terverifikasi|ditolak}&#xa;+ diverifikasi_oleh: uuid «FK→Profile»" vertex="1">
+          <mxGeometry height="248" width="260" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="armadadok" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;swimlaneFillColor=#fff2cc;fillColor=#fff2cc;strokeColor=#d6b656;rounded=1;shadow=1;fontSize=11;" value="ArmadaDokumen" vertex="1">
+          <mxGeometry height="150" width="220" x="340" y="800" as="geometry" />
+        </mxCell>
+        <mxCell id="armadadok-a" parent="armadadok" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=10;" value="+ id: uuid «PK»&#xa;+ armada_id: uuid «FK→Armada»&#xa;+ jenis_dokumen: text {stck|kir|asuransi|lainnya}&#xa;+ file_path: text&#xa;+ file_name: text&#xa;+ file_size: bigint&#xa;+ mime_type: text" vertex="1">
+          <mxGeometry height="120" width="220" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="petugas" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;swimlaneFillColor=#ffe6cc;fillColor=#ffe6cc;strokeColor=#d79b00;rounded=1;shadow=1;fontSize=11;" value="PetugasTerminal" vertex="1">
+          <mxGeometry height="134" width="220" x="740" y="55" as="geometry" />
+        </mxCell>
+        <mxCell id="petugas-a" parent="petugas" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=10;" value="+ id: uuid «PK»&#xa;+ terminal_id: uuid «FK→Terminal»&#xa;+ nama: text&#xa;+ pin_hash: text&#xa;+ is_active: boolean&#xa;+ created_at: timestamptz" vertex="1">
+          <mxGeometry height="104" width="220" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="pinsess" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;swimlaneFillColor=#ffe6cc;fillColor=#ffe6cc;strokeColor=#d79b00;rounded=1;shadow=1;fontSize=11;" value="PetugasPinSession «PIN gate»" vertex="1">
+          <mxGeometry height="118" width="240" x="1020" y="55" as="geometry" />
+        </mxCell>
+        <mxCell id="pinsess-a" parent="pinsess" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=10;" value="+ user_id: uuid «PK, FK→Profile»&#xa;+ petugas_terminal_id: uuid «FK→Petugas»&#xa;+ petugas_nama: text&#xa;+ verified_at: timestamptz&#xa;+ expires_at: timestamptz" vertex="1">
+          <mxGeometry height="88" width="240" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="sesi" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;swimlaneFillColor=#ffe6cc;fillColor=#ffe6cc;strokeColor=#d79b00;rounded=1;shadow=1;fontSize=11;" value="SesiPetugas" vertex="1">
+          <mxGeometry height="182" width="260" x="740" y="250" as="geometry" />
+        </mxCell>
+        <mxCell id="sesi-a" parent="sesi" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=10;" value="+ id: uuid «PK»&#xa;+ petugas_id: uuid «FK→Profile»&#xa;+ terminal_id: uuid «FK→Terminal»&#xa;+ waktu_mulai: timestamptz&#xa;+ waktu_selesai: timestamptz&#xa;+ status: text {aktif|selesai}&#xa;+ total_transaksi_masuk: int&#xa;+ total_transaksi_keluar: int&#xa;+ total_nominal: numeric" vertex="1">
+          <mxGeometry height="152" width="260" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="masuk" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;swimlaneFillColor=#ffe6cc;fillColor=#ffe6cc;strokeColor=#d79b00;rounded=1;shadow=1;fontSize=11;" value="KendaraanMasuk" vertex="1">
+          <mxGeometry height="150" width="240" x="740" y="520" as="geometry" />
+        </mxCell>
+        <mxCell id="masuk-a" parent="masuk" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=10;" value="+ id: uuid «PK»&#xa;+ sesi_id: uuid «FK→SesiPetugas»&#xa;+ petugas_id: uuid «FK→Profile»&#xa;+ armada_id: uuid «FK→Armada»&#xa;+ po_id: uuid «FK→PO»&#xa;+ nomor_polisi: text&#xa;+ waktu_masuk: timestamptz" vertex="1">
+          <mxGeometry height="120" width="240" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="keluar" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;swimlaneFillColor=#ffe6cc;fillColor=#ffe6cc;strokeColor=#d79b00;rounded=1;shadow=1;fontSize=11;" value="KendaraanKeluar" vertex="1">
+          <mxGeometry height="118" width="220" x="1040" y="520" as="geometry" />
+        </mxCell>
+        <mxCell id="keluar-a" parent="keluar" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=10;" value="+ id: uuid «PK»&#xa;+ masuk_id: uuid «UQ, FK→Masuk»&#xa;+ sesi_id: uuid «FK→SesiPetugas»&#xa;+ petugas_id: uuid «FK→Profile»&#xa;+ waktu_keluar: timestamptz" vertex="1">
+          <mxGeometry height="88" width="220" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="finding" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;swimlaneFillColor=#f8cecc;fillColor=#f8cecc;strokeColor=#b85450;rounded=1;shadow=1;fontSize=11;" value="Finding «Temuan»" vertex="1">
+          <mxGeometry height="246" width="240" x="740" y="840" as="geometry" />
+        </mxCell>
+        <mxCell id="finding-a" parent="finding" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=10;" value="+ id: uuid «PK»&#xa;+ po_id: uuid «FK→PO»&#xa;+ armada_id: uuid «FK→Armada»&#xa;+ nomor_polisi: text&#xa;+ source_type: text {rekonsiliasi|manual|audit}&#xa;+ judul: text&#xa;+ deskripsi: text&#xa;+ severity: text {low|medium|high}&#xa;+ status: text {open|on_progress|closed}&#xa;+ source_date: date&#xa;+ created_by: uuid «FK→Profile»&#xa;+ resolved_by: uuid «FK→Profile»&#xa;+ due_date: date" vertex="1">
+          <mxGeometry height="216" width="240" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="clarif" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;swimlaneFillColor=#f8cecc;fillColor=#f8cecc;strokeColor=#b85450;rounded=1;shadow=1;fontSize=11;" value="FindingClarification" vertex="1">
+          <mxGeometry height="150" width="220" x="1040" y="840" as="geometry" />
+        </mxCell>
+        <mxCell id="clarif-a" parent="clarif" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=10;" value="+ id: uuid «PK»&#xa;+ finding_id: uuid «FK→Finding»&#xa;+ responder_id: uuid «FK→Profile»&#xa;+ responder_role: text {po|staf-iw}&#xa;+ decision: text {menerima|menolak|melengkapi}&#xa;+ message: text&#xa;+ evidence: jsonb" vertex="1">
+          <mxGeometry height="120" width="220" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="iwkbu_stat" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;swimlaneFillColor=#e1d5e7;fillColor=#e1d5e7;strokeColor=#9673a6;rounded=1;shadow=1;fontSize=11;" value="IwkbuSyncStatus «1:1 Armada»" vertex="1">
+          <mxGeometry height="198" width="260" x="1460" y="55" as="geometry" />
+        </mxCell>
+        <mxCell id="iwkbu_stat-a" parent="iwkbu_stat" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=10;" value="+ armada_id: uuid «PK, FK→Armada»&#xa;+ po_id: uuid «FK→PO»&#xa;+ nomor_polisi: text&#xa;+ iwkbu_compliance_status: text&#xa;  {compliant|non_compliant|pending}&#xa;+ reconciliation_status: text&#xa;  {ready|needs_review|blocked}&#xa;+ discrepancy_note: text&#xa;+ terminal_last_seen: timestamptz&#xa;+ last_synced_at: timestamptz" vertex="1">
+          <mxGeometry height="168" width="260" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="iwkbu_run" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;swimlaneFillColor=#e1d5e7;fillColor=#e1d5e7;strokeColor=#9673a6;rounded=1;shadow=1;fontSize=11;" value="IwkbuSyncRun" vertex="1">
+          <mxGeometry height="182" width="220" x="1460" y="295" as="geometry" />
+        </mxCell>
+        <mxCell id="iwkbu_run-a" parent="iwkbu_run" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=10;" value="+ id: uuid «PK»&#xa;+ trigger_type: text {manual|scheduled|api}&#xa;+ status: text {running|success|failed}&#xa;+ started_at: timestamptz&#xa;+ finished_at: timestamptz&#xa;+ initiated_by: uuid «FK→Profile»&#xa;+ periode_id: uuid «FK→Periode»&#xa;+ summary: jsonb&#xa;+ error_message: text" vertex="1">
+          <mxGeometry height="152" width="220" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="iwkbu_src" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;swimlaneFillColor=#e1d5e7;fillColor=#e1d5e7;strokeColor=#9673a6;rounded=1;shadow=1;fontSize=11;" value="IwkbuSourceRecord «raw import»" vertex="1">
+          <mxGeometry height="166" width="220" x="1460" y="535" as="geometry" />
+        </mxCell>
+        <mxCell id="iwkbu_src-a" parent="iwkbu_src" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=10;" value="+ id: uuid «PK»&#xa;+ external_ref: text «UQ»&#xa;+ nomor_polisi: text&#xa;+ compliance_status: text&#xa;  {compliant|non_compliant|pending}&#xa;+ issue_count: int&#xa;+ payload: jsonb&#xa;+ imported_at: timestamptz" vertex="1">
+          <mxGeometry height="136" width="220" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="periode" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;swimlaneFillColor=#e1d5e7;fillColor=#e1d5e7;strokeColor=#9673a6;rounded=1;shadow=1;fontSize=11;" value="RekonsiliasiPeriode" vertex="1">
+          <mxGeometry height="166" width="220" x="1720" y="295" as="geometry" />
+        </mxCell>
+        <mxCell id="periode-a" parent="periode" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=10;" value="+ id: uuid «PK»&#xa;+ nama_periode: text&#xa;+ tanggal_mulai: date&#xa;+ tanggal_selesai: date&#xa;+ status: text {draft|aktif|ditutup}&#xa;+ catatan: text&#xa;+ created_by: uuid «FK→User»&#xa;+ closed_at: timestamptz" vertex="1">
+          <mxGeometry height="136" width="220" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="activitylog" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;swimlaneFillColor=#f5f5f5;fillColor=#f5f5f5;strokeColor=#666666;rounded=1;shadow=1;fontSize=11;" value="ActivityLog «audit trail»" vertex="1">
+          <mxGeometry height="134" width="200" x="1460" y="840" as="geometry" />
+        </mxCell>
+        <mxCell id="activitylog-a" parent="activitylog" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=10;" value="+ id: uuid «PK»&#xa;+ user_id: uuid «FK→Profile»&#xa;+ aksi: text&#xa;+ deskripsi: text&#xa;+ metadata: jsonb&#xa;+ created_at: timestamptz" vertex="1">
+          <mxGeometry height="104" width="200" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="notif" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;swimlaneFillColor=#f5f5f5;fillColor=#f5f5f5;strokeColor=#666666;rounded=1;shadow=1;fontSize=11;" value="Notification" vertex="1">
+          <mxGeometry height="166" width="200" x="1720" y="840" as="geometry" />
+        </mxCell>
+        <mxCell id="notif-a" parent="notif" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=10;" value="+ id: uuid «PK»&#xa;+ user_id: uuid «FK→User»&#xa;+ title: text&#xa;+ message: text&#xa;+ type: text {info|success|warning|error}&#xa;+ link: text&#xa;+ is_read: boolean&#xa;+ created_at: timestamptz" vertex="1">
+          <mxGeometry height="136" width="200" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="e0" edge="1" parent="1" source="profile" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;jumpStyle=arc;strokeWidth=1.5;endArrow=open;endFill=0;endSize=12;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" target="user" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e0-m" connectable="0" parent="e0" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#666666;" value="1 — 1" vertex="1">
+          <mxGeometry relative="1" x="0.15" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e1" edge="1" parent="1" source="po" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;jumpStyle=arc;strokeWidth=1.5;endArrow=open;endFill=0;endSize=12;exitX=0.458;exitY=0.006;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitPerimeter=0;" target="profile" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e1-m" connectable="0" parent="e1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#666666;" value="1 — 1" vertex="1">
+          <mxGeometry relative="1" x="0.15" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="1" source="userrole-a" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;jumpStyle=arc;strokeWidth=1.5;endArrow=open;endFill=0;endSize=12;exitX=0.005;exitY=0.266;exitDx=0;exitDy=0;entryX=1;entryY=0.3;entryDx=0;entryDy=0;exitPerimeter=0;" target="profile" value="user_id">
+          <mxGeometry relative="1" x="-0.1494" y="-15" as="geometry">
+            <mxPoint x="-1" y="-2" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e2-m" connectable="0" parent="e2" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#666666;" value="1..* — 1" vertex="1">
+          <mxGeometry relative="1" x="0.15" as="geometry">
+            <mxPoint x="7" y="13" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e3" edge="1" parent="1" source="userrole" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;jumpStyle=arc;strokeWidth=1.5;endArrow=open;endFill=0;endSize=12;exitX=0.302;exitY=-0.013;exitDx=0;exitDy=0;entryX=0.3;entryY=1;entryDx=0;entryDy=0;exitPerimeter=0;" target="role" value="role_id">
+          <mxGeometry relative="1" x="-0.4061" y="20" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e3-m" connectable="0" parent="e3" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#666666;" value="* — 1" vertex="1">
+          <mxGeometry relative="1" x="0.15" as="geometry">
+            <mxPoint x="20" y="9" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e4" edge="1" parent="1" source="profile" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;jumpStyle=arc;strokeWidth=1.5;endArrow=open;endFill=0;endSize=12;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="terminal" value="terminal_id">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="290" y="501" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e4-m" connectable="0" parent="e4" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#666666;" value="* — 0..1" vertex="1">
+          <mxGeometry relative="1" x="0.15" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e5" edge="1" parent="1" source="po" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;jumpStyle=arc;strokeWidth=1.5;endArrow=open;endFill=0;endSize=12;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" target="armada" value="po_id">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="160" y="800" />
+            </Array>
+            <mxPoint x="160" y="800" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e5-m" connectable="0" parent="e5" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#666666;" value="1 — 1..*" vertex="1">
+          <mxGeometry relative="1" x="0.15" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e6" edge="1" parent="1" source="armada-a" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;jumpStyle=arc;strokeWidth=1.5;endArrow=open;endFill=0;endSize=12;exitX=1.001;exitY=0.062;exitDx=0;exitDy=0;entryX=0;entryY=0.3;entryDx=0;entryDy=0;exitPerimeter=0;" target="armadadok" value="armada_id">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6-m" connectable="0" parent="e6" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#666666;" value="1 — *" vertex="1">
+          <mxGeometry relative="1" x="0.15" as="geometry">
+            <mxPoint x="-3" y="-15" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e7" edge="1" parent="1" source="terminal" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;jumpStyle=arc;strokeWidth=1.5;endArrow=open;endFill=0;endSize=12;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.3;entryDx=0;entryDy=0;" target="petugas" value="terminal_id">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="690" y="501" />
+              <mxPoint x="690" y="95" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e7-m" connectable="0" parent="e7" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#666666;" value="1 — *" vertex="1">
+          <mxGeometry relative="1" x="0.15" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e8" edge="1" parent="1" source="petugas" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;jumpStyle=arc;strokeWidth=1.5;endArrow=open;endFill=0;endSize=12;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="pinsess" value="petugas_terminal_id">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e8-m" connectable="0" parent="e8" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#666666;" value="1 — 0..1" vertex="1">
+          <mxGeometry relative="1" x="0.15" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e9" edge="1" parent="1" source="terminal" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;jumpStyle=arc;strokeWidth=1.5;endArrow=open;endFill=0;endSize=12;exitX=1;exitY=0.8;exitDx=0;exitDy=0;entryX=0;entryY=0.082;entryDx=0;entryDy=0;entryPerimeter=0;" target="sesi-a" value="terminal_id">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="700" y="532" />
+              <mxPoint x="700" y="292" />
+              <mxPoint x="740" y="292" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e9-m" connectable="0" parent="e9" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#666666;" value="1 — *" vertex="1">
+          <mxGeometry relative="1" x="0.15" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e10" edge="1" parent="1" source="profile" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;jumpStyle=arc;strokeWidth=1.5;endArrow=open;endFill=0;endSize=12;exitX=1;exitY=0.9;exitDx=0;exitDy=0;entryX=0;entryY=0.1;entryDx=0;entryDy=0;" target="sesi" value="petugas_id">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="680" y="335" />
+              <mxPoint x="680" y="268" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e10-m" connectable="0" parent="e10" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#666666;" value="1 — *" vertex="1">
+          <mxGeometry relative="1" x="0.15" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e11" edge="1" parent="1" source="sesi-a" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;jumpStyle=arc;strokeWidth=1.5;endArrow=open;endFill=0;endSize=12;exitX=0.275;exitY=1.006;exitDx=0;exitDy=0;entryX=0.3;entryY=0;entryDx=0;entryDy=0;exitPerimeter=0;" target="masuk" value="sesi_id">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e11-m" connectable="0" parent="e11" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#666666;" value="1 — *" vertex="1">
+          <mxGeometry relative="1" x="0.15" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e12" edge="1" parent="1" source="masuk" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;jumpStyle=arc;strokeWidth=1.5;endArrow=open;endFill=0;endSize=12;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.009;entryY=0.503;entryDx=0;entryDy=0;entryPerimeter=0;" target="keluar-a" value="masuk_id">
+          <mxGeometry relative="1" x="-0.021" y="-16" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e12-m" connectable="0" parent="e12" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#666666;" value="1 — 1" vertex="1">
+          <mxGeometry relative="1" x="0.15" as="geometry">
+            <mxPoint x="-5" y="-14" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e13" edge="1" parent="1" source="armada" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;jumpStyle=arc;strokeWidth=1.5;endArrow=open;endFill=0;endSize=12;exitX=0.7;exitY=0;exitDx=0;exitDy=0;entryX=0.005;entryY=0.376;entryDx=0;entryDy=0;entryPerimeter=0;" target="masuk-a" value="armada_id">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="222" y="770" />
+              <mxPoint x="660" y="770" />
+              <mxPoint x="660" y="595" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e13-m" connectable="0" parent="e13" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#666666;" value="1 — *" vertex="1">
+          <mxGeometry relative="1" x="0.15" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e14" edge="1" parent="1" source="armada-a" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;jumpStyle=arc;strokeWidth=1.5;endArrow=open;endFill=0;endSize=12;exitX=1.004;exitY=0.534;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitPerimeter=0;" target="finding" value="armada_id">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="300" y="962" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e14-m" connectable="0" parent="e14" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#666666;" value="1 — *" vertex="1">
+          <mxGeometry relative="1" x="0.15" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e15" edge="1" parent="1" source="po-a" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;jumpStyle=arc;strokeWidth=1.5;endArrow=open;endFill=0;endSize=12;exitX=1;exitY=0.476;exitDx=0;exitDy=0;entryX=0;entryY=0.3;entryDx=0;entryDy=0;exitPerimeter=0;" target="finding" value="po_id">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="690" y="560" />
+              <mxPoint x="690" y="914" />
+              <mxPoint x="740" y="914" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e15-m" connectable="0" parent="e15" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#666666;" value="1 — *" vertex="1">
+          <mxGeometry relative="1" x="0.15" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e16" edge="1" parent="1" source="finding" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;jumpStyle=arc;strokeWidth=1.5;endArrow=open;endFill=0;endSize=12;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="clarif" value="finding_id">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e16-m" connectable="0" parent="e16" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#666666;" value="1 — *" vertex="1">
+          <mxGeometry relative="1" x="0.15" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e17" edge="1" parent="1" source="armada" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;jumpStyle=arc;strokeWidth=1.5;endArrow=open;endFill=0;endSize=12;exitX=0.3;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="iwkbu_stat" value="armada_id">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="118" y="1170" />
+              <mxPoint x="1410" y="1170" />
+              <mxPoint x="1410" y="154" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e17-m" connectable="0" parent="e17" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#666666;" value="1 — 1" vertex="1">
+          <mxGeometry relative="1" x="0.15" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e18" edge="1" parent="1" source="periode" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;jumpStyle=arc;strokeWidth=1.5;endArrow=open;endFill=0;endSize=12;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="iwkbu_run" value="periode_id">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e18-m" connectable="0" parent="e18" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#666666;" value="1 — *" vertex="1">
+          <mxGeometry relative="1" x="0.15" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e19" edge="1" parent="1" source="iwkbu_src" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;jumpStyle=arc;strokeWidth=1.5;endArrow=open;endFill=0;endSize=12;dashed=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" target="iwkbu_run" value="«uses»">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e20" edge="1" parent="1" source="sesi" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;jumpStyle=arc;strokeWidth=1.5;endArrow=open;endFill=0;endSize=12;exitX=0.8;exitY=1;exitDx=0;exitDy=0;entryX=0.3;entryY=0;entryDx=0;entryDy=0;" target="keluar" value="sesi_id">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="948" y="490" />
+              <mxPoint x="1106" y="490" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e20-m" connectable="0" parent="e20" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#666666;" value="1 — *" vertex="1">
+          <mxGeometry relative="1" x="0.15" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="TCR-7dtCrbbM6IdlkWLP-3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EEF7EA;strokeColor=#C5DEBA;dashed=1;dashPattern=8 4;verticalAlign=top;align=left;spacingTop=6;spacingLeft=12;fontSize=11;fontStyle=1;fontColor=#888888;opacity=25;container=0;" value="MASTER DATA" vertex="1">
+          <mxGeometry height="320" width="640" x="30" y="430" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

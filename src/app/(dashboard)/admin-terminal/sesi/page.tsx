@@ -12,10 +12,10 @@ export default async function AdminTerminalSesiPage() {
    return (
       <section className="space-y-6">
          <div>
-            <h1 className="text-xl font-bold tracking-tight text-foreground">
+            <h1 className="text-xl font-bold tracking-tight text-base-content">
                Rekap Sesi Kerja
             </h1>
-            <p className="text-sm text-muted-foreground mt-1">
+            <p className="text-sm text-base-content/70 mt-1">
                Daftar sesi kerja petugas, filter berdasarkan tanggal, dan lihat
                detail transaksi per sesi.
             </p>

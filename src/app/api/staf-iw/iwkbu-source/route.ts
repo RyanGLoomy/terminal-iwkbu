@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getAuthenticatedActor } from "@/lib/auth/server-actor";
+import { requireActor, actorErrorHandler } from "@/lib/auth/actor";
+import { ROLES } from "@/config/roles";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { sanitizeDbError } from "@/lib/db-error";
 import { logActivity } from "@/lib/supabase/queries/operasional.server";
+import { normalizePlate } from "@/lib/rekonsiliasi/engine";
 
 const MAX_IMPORT_ROWS = 5000;
 const MAX_UPLOAD_BYTES = 2 * 1024 * 1024;
@@ -22,10 +25,6 @@ class ImportValidationError extends Error {
       super(message);
       this.name = "ImportValidationError";
    }
-}
-
-function normalizePlate(value: string) {
-   return value.toUpperCase().replace(/\s+/g, "").trim();
 }
 
 function normalizeKey(value: string) {
@@ -387,28 +386,9 @@ function enforceRequestSize(request: NextRequest) {
    }
 }
 
-async function requireStaffActor() {
-   const actor = await getAuthenticatedActor();
-   if (!actor) {
-      return { error: NextResponse.json({ message: "Unauthorized" }, { status: 401 }) };
-   }
-
-   if (actor.role !== "staf-iw") {
-      return {
-         error: NextResponse.json(
-            { message: "Forbidden" },
-            { status: 403 },
-         ),
-      };
-   }
-
-   return { actor };
-}
-
 export async function GET() {
    try {
-      const { error } = await requireStaffActor();
-      if (error) return error;
+      await requireActor(ROLES.STAF_IW);
 
       const admin = createAdminClient();
       const { data, error: queryError } = await admin
@@ -420,22 +400,18 @@ export async function GET() {
          .limit(500);
 
       if (queryError) {
-         return NextResponse.json({ message: queryError.message }, { status: 500 });
+         return NextResponse.json({ message: sanitizeDbError(queryError, "iwkbu-source list") }, { status: 500 });
       }
 
       return NextResponse.json({ data: data ?? [] });
-   } catch (error: unknown) {
-      return NextResponse.json(
-         { message: error instanceof Error ? error.message : "Internal error" },
-         { status: 500 },
-      );
+   } catch (error) {
+      return actorErrorHandler(error);
    }
 }
 
 export async function POST(request: NextRequest) {
    try {
-      const { error } = await requireStaffActor();
-      if (error) return error;
+      await requireActor(ROLES.STAF_IW);
 
       enforceRequestSize(request);
 
@@ -448,7 +424,7 @@ export async function POST(request: NextRequest) {
          .upsert(normalized, { onConflict: "external_ref" });
 
       if (upsertError) {
-         return NextResponse.json({ message: upsertError.message }, { status: 500 });
+         return NextResponse.json({ message: sanitizeDbError(upsertError, "iwkbu-source import") }, { status: 500 });
       }
 
       await logActivity(
@@ -464,11 +440,13 @@ export async function POST(request: NextRequest) {
          },
          { status: 201 },
       );
-   } catch (error: unknown) {
-      const status = error instanceof ImportValidationError ? error.status : 500;
-      return NextResponse.json(
-         { message: error instanceof Error ? error.message : "Internal error" },
-         { status },
-      );
+   } catch (error) {
+      if (error instanceof ImportValidationError) {
+         return NextResponse.json(
+            { message: error.message },
+            { status: 400 },
+         );
+      }
+      return actorErrorHandler(error);
    }
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { getTerminalReport } from "@/lib/supabase/queries/operasional.client";
 import type { AdminRekapRow } from "@/lib/supabase/queries/operasional.types";
 import { exportXlsx } from "@/lib/export/xlsx.client";
@@ -34,18 +34,20 @@ function formatDateTime(value: string | null) {
 }
 
 export function AdminRekapPanel({ terminalId }: { terminalId: string }) {
-   const [startDate, setStartDate] = useState(
-      new Date().toISOString().slice(0, 10),
-   );
-   const [endDate, setEndDate] = useState(
-      new Date().toISOString().slice(0, 10),
-   );
+    const [startDate, setStartDate] = useState("");
+    const [endDate, setEndDate] = useState("");
+
+    useEffect(() => {
+       const today = new Date().toISOString().slice(0, 10);
+       setStartDate(today);
+       setEndDate(today);
+    }, []);
    const [rows, setRows] = useState<AdminRekapRow[]>([]);
    const [loading, setLoading] = useState(true);
    const [error, setError] = useState<string | null>(null);
    const [search, setSearch] = useState("");
 
-   const filteredRows = useMemo(() => {
+   const filteredRows = (() => {
       const q = search.trim().toLowerCase();
       if (!q) return rows;
       return rows.filter(
@@ -54,23 +56,24 @@ export function AdminRekapPanel({ terminalId }: { terminalId: string }) {
             (r.po_kode ?? "").toLowerCase().includes(q) ||
             (r.po_nama ?? "").toLowerCase().includes(q),
       );
-   }, [rows, search]);
+   })();
 
    useEffect(() => {
       let mounted = true;
 
-      const load = async () => {
-         setLoading(true);
-         setError(null);
+       const load = async () => {
+          if (!startDate || !endDate) return;
+          setLoading(true);
+          setError(null);
 
-         try {
-            const data = await getTerminalReport({
-               terminalId,
-               startDate,
-               endDate,
-            });
-            if (!mounted) return;
-            setRows(data.rows);
+          try {
+             const data = await getTerminalReport({
+                terminalId,
+                startDate,
+                endDate,
+             });
+             if (!mounted) return;
+             setRows(data.rows);
          } catch (err: unknown) {
             if (!mounted) return;
             setError(err instanceof Error ? err.message : "Gagal memuat rekap");
@@ -151,13 +154,13 @@ export function AdminRekapPanel({ terminalId }: { terminalId: string }) {
          </div>
 
          {/* Detail table */}
-         <Card className="card-interactive border-border">
+         <Card className="card-interactive border-base-300">
             <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between pb-4">
                <div>
                   <CardTitle className="text-base">
                      Detail Kendaraan Masuk / Keluar
                   </CardTitle>
-                  <p className="text-sm text-muted-foreground mt-1">
+                  <p className="text-sm text-base-content/70 mt-1">
                      {startDate === endDate
                         ? `Data untuk ${new Date(
                              `${startDate}T00:00:00`,
@@ -179,7 +182,7 @@ export function AdminRekapPanel({ terminalId }: { terminalId: string }) {
                </div>
                <div className="flex items-center gap-2 mt-2 sm:mt-0">
                   <div className="relative w-full sm:w-48">
-                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-base-content/70" aria-hidden="true" />
                      <Input
                         placeholder="Cari nopol, PO..."
                         value={search}
@@ -199,11 +202,11 @@ export function AdminRekapPanel({ terminalId }: { terminalId: string }) {
             </CardHeader>
             <CardContent>
                {error && (
-                  <div className="text-sm text-destructive mb-4 animate-fade-in">
+                  <div className="text-sm text-error mb-4 animate-fade-in">
                      {error}
                   </div>
                )}
-               <div className="border border-border rounded-lg bg-card overflow-hidden">
+               <div className="border border-base-300 rounded-lg bg-base-100 overflow-hidden">
                   <Table caption="Rekap transaksi terminal">
                      <TableHeader>
                         <TableRow>
@@ -220,9 +223,9 @@ export function AdminRekapPanel({ terminalId }: { terminalId: string }) {
                         {loading ? (
                            <TableRow>
                               <TableCell colSpan={7}>
-                                 <div className="flex items-center gap-2 text-muted-foreground">
-                                    <Loader2 className="h-4 w-4 animate-spin" />
-                                    Memuat data...
+                                 <div className="flex items-center gap-2 text-base-content/70">
+                                    <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+                                    Memuat data…
                                  </div>
                               </TableCell>
                            </TableRow>
@@ -230,7 +233,7 @@ export function AdminRekapPanel({ terminalId }: { terminalId: string }) {
                             <TableRow>
                                <TableCell
                                   colSpan={7}
-                                  className="text-muted-foreground"
+                                  className="text-base-content/70"
                                >
                                   {rows.length === 0
                                      ? "Tidak ada data pada tanggal ini."

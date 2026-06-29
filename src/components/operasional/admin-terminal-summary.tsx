@@ -16,12 +16,14 @@ export function AdminTerminalSummary({
    initialPetugasPinCount?: number;
    initialAkunLoketCount?: number;
 }) {
-   const [startDate, setStartDate] = useState(
-      new Date().toISOString().slice(0, 10),
-   );
-   const [endDate, setEndDate] = useState(
-      new Date().toISOString().slice(0, 10),
-   );
+    const [startDate, setStartDate] = useState("");
+    const [endDate, setEndDate] = useState("");
+
+    useEffect(() => {
+       const today = new Date().toISOString().slice(0, 10);
+       setStartDate(today);
+       setEndDate(today);
+    }, []);
    const [loading, setLoading] = useState(true);
    const [error, setError] = useState<string | null>(null);
    const [totalMasuk, setTotalMasuk] = useState(0);
@@ -36,12 +38,13 @@ export function AdminTerminalSummary({
    useEffect(() => {
       let mounted = true;
 
-      const load = async () => {
-         setLoading(true);
-         setError(null);
+       const load = async () => {
+          if (!startDate || !endDate) return;
+          setLoading(true);
+          setError(null);
 
-         try {
-            if (!terminalId) {
+          try {
+             if (!terminalId) {
                if (!mounted) return;
                setTotalMasuk(0);
                setTotalKeluar(0);
@@ -116,8 +119,8 @@ export function AdminTerminalSummary({
 
          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
             {loading ? (
-               <div className="col-span-5 flex items-center gap-2 text-muted-foreground">
-                  <Loader2 className="h-4 w-4 animate-spin" /> Memuat...
+               <div className="col-span-5 flex items-center gap-2 text-base-content/70">
+                  <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> Memuat…
                </div>
             ) : (
                <>
@@ -162,7 +165,7 @@ export function AdminTerminalSummary({
             )}
          </div>
 
-         {error && <div className="text-sm text-destructive">{error}</div>}
+         {error && <div className="text-sm text-error">{error}</div>}
       </div>
    );
 }

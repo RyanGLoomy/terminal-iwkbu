@@ -2,11 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { sanitizeDbError } from "@/lib/db-error";
 import { logActivity } from "@/lib/supabase/queries/operasional.server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { getAuthenticatedActor } from "@/lib/auth/server-actor";
-import {
-   ensureRoleOrThrow,
-   AuthorizationError,
-} from "@/lib/auth/requireRole.server";
+import { requireActor, actorErrorHandler } from "@/lib/auth/actor";
+import { ROLES } from "@/config/roles";
 
 const ALLOWED_MIME = [
    "application/pdf",
@@ -24,15 +21,7 @@ export async function POST(
    context: { params: Promise<{ id: string }> },
 ) {
    try {
-      const actor = await getAuthenticatedActor();
-      if (!actor) {
-         return NextResponse.json(
-            { message: "Unauthorized" },
-            { status: 401 },
-         );
-      }
-
-      ensureRoleOrThrow(actor.user, actor.profile, "po");
+      const actor = await requireActor(ROLES.PO);
 
       const { id: armadaId } = await context.params;
       const admin = createAdminClient();
@@ -105,7 +94,7 @@ export async function POST(
 
       if (uploadError) {
          return NextResponse.json(
-            { message: uploadError.message },
+            { message: sanitizeDbError(uploadError, "po-armada-dokumen upload") },
             { status: 500 },
          );
       }
@@ -127,7 +116,7 @@ export async function POST(
       if (dbError) {
          await admin.storage.from("armada-dokumen").remove([filePath]);
          return NextResponse.json(
-            { message: dbError.message },
+            { message: sanitizeDbError(dbError, "po-armada-dokumen insert") },
             { status: 500 },
          );
       }
@@ -140,16 +129,7 @@ export async function POST(
       );
 
       return NextResponse.json({ data }, { status: 201 });
-   } catch (error: any) {
-      if (error instanceof AuthorizationError) {
-         return NextResponse.json(
-            { message: sanitizeDbError(error) },
-            { status: 403 },
-         );
-      }
-      return NextResponse.json(
-         { message: error?.message ?? "Internal error" },
-         { status: 500 },
-      );
+   } catch (error) {
+      return actorErrorHandler(error);
    }
 }

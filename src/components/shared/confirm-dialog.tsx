@@ -69,7 +69,7 @@ function ConfirmDialog({
                      cn(buttonVariants({ variant: "destructive" })),
                )}
             >
-               {loading ? "Memproses..." : confirmLabel}
+                {loading ? "Memproses…" : confirmLabel}
             </AlertDialogAction>
          </AlertDialogFooter>
       </AlertDialogContent>

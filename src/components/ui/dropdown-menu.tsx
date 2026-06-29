@@ -13,6 +13,7 @@ interface DropdownContextValue {
   rootId: string;
   align: "start" | "center" | "end";
   setAlign: (a: "start" | "center" | "end") => void;
+  focusTrigger: () => void;
 }
 
 const DropdownContext = React.createContext<DropdownContextValue | null>(null);
@@ -23,12 +24,33 @@ function useDropdown(component: string) {
   return ctx;
 }
 
+function focusMenuItem(menu: HTMLElement, dir: "next" | "prev" | "first" | "last") {
+  const items = Array.from(
+    menu.querySelectorAll<HTMLButtonElement>('[role="menuitem"]:not([data-disabled])'),
+  );
+  if (items.length === 0) return;
+  const current = items.findIndex((el) => el === document.activeElement);
+  let idx = 0;
+  if (dir === "next") idx = current === -1 ? 0 : (current + 1) % items.length;
+  else if (dir === "prev") idx = current === -1 ? items.length - 1 : (current - 1 + items.length) % items.length;
+  else if (dir === "last") idx = items.length - 1;
+  items[idx]?.focus();
+}
+
 function DropdownMenu({ children }: { children?: React.ReactNode }) {
   const [open, setOpen] = React.useState(false);
   const [align, setAlign] = React.useState<"start" | "center" | "end">("start");
   const rootId = React.useId();
+  const focusTrigger = React.useCallback(() => {
+    window.requestAnimationFrame(() => {
+      document
+        .getElementById(rootId)
+        ?.querySelector<HTMLElement>("[data-slot='dropdown-trigger']")
+        ?.focus();
+    });
+  }, [rootId]);
   return (
-    <DropdownContext.Provider value={{ open, setOpen, rootId, align, setAlign }}>
+    <DropdownContext.Provider value={{ open, setOpen, rootId, align, setAlign, focusTrigger }}>
       <span id={rootId} data-dropdown-root className="relative inline-flex">
         {children}
       </span>
@@ -44,12 +66,46 @@ function DropdownMenuTrigger({
 }: React.ComponentProps<"button"> & { asChild?: boolean }) {
   const ctx = useDropdown("DropdownMenuTrigger");
   const Comp = asChild ? Slot : "button";
+
+  function handleKeyDown(e: React.KeyboardEvent<HTMLButtonElement>) {
+    switch (e.key) {
+      case "ArrowDown":
+      case "Enter":
+      case " ":
+      case "Spacebar":
+        e.preventDefault();
+        if (!ctx.open) {
+          ctx.setOpen(true);
+          // focus first item after it renders
+          window.requestAnimationFrame(() => {
+            const root = document.getElementById(ctx.rootId);
+            const menu = root?.parentElement?.querySelector('[role="menu"]');
+            if (menu instanceof HTMLElement) focusMenuItem(menu, "first");
+          });
+        }
+        break;
+      case "ArrowUp":
+        e.preventDefault();
+        if (!ctx.open) {
+          ctx.setOpen(true);
+          window.requestAnimationFrame(() => {
+            const root = document.getElementById(ctx.rootId);
+            const menu = root?.parentElement?.querySelector('[role="menu"]');
+            if (menu instanceof HTMLElement) focusMenuItem(menu, "last");
+          });
+        }
+        break;
+    }
+  }
+
   return (
     <Comp
+      data-slot="dropdown-trigger"
       type="button"
       aria-haspopup="menu"
       aria-expanded={ctx.open}
       onClick={() => ctx.setOpen(!ctx.open)}
+      onKeyDown={handleKeyDown}
       className={className}
       {...props}
     >
@@ -135,14 +191,63 @@ function DropdownMenuContent({
     };
   }, [ctx, sideOffset]);
 
+  // Focus first item on open for keyboard users; restore focus to trigger on close.
+  React.useEffect(() => {
+    if (!ctx.open) return;
+    const root = document.getElementById(ctx.rootId);
+    if (!root) return;
+    // Only autofocus if opened via keyboard (activeElement is the trigger).
+    const triggerEl = document
+      .getElementById(ctx.rootId)
+      ?.querySelector<HTMLElement>("[data-slot='dropdown-trigger']");
+    const fromTrigger = !!triggerEl && document.activeElement === triggerEl;
+    const id = window.requestAnimationFrame(() => {
+      const menu = root.parentElement?.querySelector('[role="menu"]');
+      if (menu instanceof HTMLElement && fromTrigger) focusMenuItem(menu, "first");
+    });
+    return () => window.cancelAnimationFrame(id);
+  }, [ctx.open, ctx.rootId]);
+
   if (!mounted || typeof document === "undefined" || !ctx.open) return null;
+
+  function handleMenuKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
+    if (!menuRef.current) return;
+    switch (e.key) {
+      case "ArrowDown":
+        e.preventDefault();
+        focusMenuItem(menuRef.current, "next");
+        break;
+      case "ArrowUp":
+        e.preventDefault();
+        focusMenuItem(menuRef.current, "prev");
+        break;
+      case "Home":
+        e.preventDefault();
+        focusMenuItem(menuRef.current, "first");
+        break;
+      case "End":
+        e.preventDefault();
+        focusMenuItem(menuRef.current, "last");
+        break;
+      case "Escape":
+        e.preventDefault();
+        ctx.setOpen(false);
+        ctx.focusTrigger();
+        break;
+      case "Tab":
+        ctx.setOpen(false);
+        break;
+    }
+  }
 
   return createPortal(
     <div
       ref={menuRef}
       role="menu"
+      tabIndex={-1}
+      onKeyDown={handleMenuKeyDown}
       className={cn(
-        "min-w-48 overflow-auto rounded-box border border-base-300 bg-base-100 p-1 text-base-content shadow-lg",
+        "min-w-48 overflow-auto rounded-box border border-base-300 bg-base-100 p-1 text-base-content shadow-sm outline-none",
         "animate-[fadeIn_0.12s_ease]",
         className,
       )}
@@ -170,6 +275,7 @@ function DropdownMenuItem({
       type="button"
       onClick={(e) => {
         ctx.setOpen(false);
+        ctx.focusTrigger();
         onClick?.(e);
       }}
       className={cn(

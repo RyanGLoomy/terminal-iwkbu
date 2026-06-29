@@ -1,6 +1,6 @@
 "use client";
 
-import { useDeferredValue, useMemo, useState } from "react";
+import { useDeferredValue, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -9,53 +9,16 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { DashboardCard } from "@/components/dashboard/dashboard-card";
-import type {
-   FindingRecord,
-   FindingSeverity,
-} from "@/lib/supabase/queries/operasional.types";
+import { StatusBadge } from "@/components/shared/status-badge";
+import type { FindingRecord } from "@/lib/supabase/queries/operasional.types";
 import { toast } from "sonner";
 import { AlertCircle, Loader2, MessageSquare, CheckCircle2, Circle, Paperclip } from "lucide-react";
-
-function statusClass(status: FindingRecord["status"]) {
-   if (status === "closed")
-      return "bg-emerald-100 text-brand-green border-emerald-200 dark:bg-green-950/50 dark:text-green-300 dark:border-green-800";
-   if (status === "on_progress")
-      return "bg-amber-100 text-accent border-amber-200 dark:bg-amber-950/50 dark:text-amber-300 dark:border-amber-800";
-   return "bg-muted text-foreground border-border";
-}
-
-function severityClass(severity: FindingSeverity) {
-   if (severity === "high")
-      return "bg-red-100 text-destructive border-red-200 dark:bg-red-950/50 dark:text-red-300 dark:border-red-800";
-   if (severity === "medium")
-      return "bg-amber-100 text-accent border-amber-200 dark:bg-amber-950/50 dark:text-amber-300 dark:border-amber-800";
-   return "bg-muted text-muted-foreground border-border";
-}
-
-function severityLabel(severity: FindingSeverity) {
-   if (severity === "high") return "Tinggi";
-   if (severity === "medium") return "Sedang";
-   return "Rendah";
-}
-
-function formatDecisionLabel(decision: string) {
-   if (decision === "menerima") return "Menerima";
-   if (decision === "menolak") return "Menolak";
-   if (decision === "melengkapi") return "Melengkapi Bukti";
-   return decision;
-}
-
-function isOverdue(dueDate: string | null, status: string) {
-   if (!dueDate || status === "closed") return false;
-   return new Date(dueDate) < new Date(new Date().toDateString());
-}
-
-function formatDateTime(value: string) {
-   return new Date(value).toLocaleString("id-ID", {
-      dateStyle: "medium",
-      timeStyle: "short",
-   });
-}
+import { getErrorMessage } from "@/lib/db-error";
+import {
+   formatDecisionLabel,
+   formatDateTime,
+   isOverdue,
+} from "./findings-shared";
 
 const FINDINGS_PAGE_SIZE = 10;
 
@@ -109,15 +72,15 @@ function ClarificationForm({ findingId }: { findingId: string }) {
          setEvidenceFile(null);
          toast.success("Klarifikasi berhasil dikirim");
          router.refresh();
-        } catch (err: any) {
-           setError(err?.message ?? "Gagal mengirim klarifikasi");
+        } catch (err: unknown) {
+           setError(getErrorMessage(err));
        } finally {
           setLoading(false);
        }
     };
 
    return (
-      <div className="space-y-3 rounded-lg border border-border bg-muted/50 p-3">
+      <div className="space-y-3 rounded-lg border border-base-300 bg-base-200/50 p-3">
          <div className="grid gap-2 sm:grid-cols-[160px_1fr]">
             <Select value={decision} onValueChange={setDecision}>
                <SelectTrigger>
@@ -140,30 +103,35 @@ function ClarificationForm({ findingId }: { findingId: string }) {
             onChange={(e) => setEvidenceLink(e.target.value)}
             placeholder="Tautan bukti pendukung, jika ada"
          />
-         <div className="flex items-center gap-2">
-            <input
-               type="file"
-               accept=".pdf,.jpg,.jpeg,.png,.webp"
-               onChange={(e) => setEvidenceFile(e.target.files?.[0] ?? null)}
-               className="text-xs text-muted-foreground file:mr-2 file:rounded-md file:border-0 file:bg-muted file:px-3 file:py-1 file:text-xs file:font-medium file:text-foreground hover:file:bg-muted/70"
-            />
-            {evidenceFile && (
-               <span className="text-xs text-muted-foreground">
-                  {evidenceFile.name} ({(evidenceFile.size / 1024).toFixed(0)} KB)
-               </span>
-            )}
-         </div>
-         {error && (
-            <div className="flex items-start gap-2 text-sm text-destructive">
-               <AlertCircle className="mt-0.5 h-4 w-4" />
-               <span>{error}</span>
-            </div>
-         )}
+          <div className="flex items-center gap-2">
+             <label className="inline-flex items-center gap-2 rounded-md bg-base-200 px-3 py-1 text-xs font-medium text-base-content hover:bg-base-300/70 cursor-pointer">
+                <Paperclip className="h-3.5 w-3.5" aria-hidden="true" />
+                Pilih file
+                <input
+                   type="file"
+                   accept=".pdf,.jpg,.jpeg,.png,.webp"
+                   aria-label="Unggah bukti klarifikasi"
+                   onChange={(e) => setEvidenceFile(e.target.files?.[0] ?? null)}
+                   className="sr-only"
+                />
+             </label>
+             {evidenceFile && (
+                <span className="text-xs text-base-content/70 tabular-nums">
+                   {evidenceFile.name} ({(evidenceFile.size / 1024).toFixed(0)}&nbsp;KB)
+                </span>
+             )}
+          </div>
+          {error && (
+             <div className="flex items-start gap-2 text-sm text-error" role="alert" aria-live="polite">
+                <AlertCircle className="mt-0.5 h-4 w-4" aria-hidden="true" />
+                <span>{error}</span>
+             </div>
+          )}
          <Button size="sm" onClick={submit} disabled={loading}>
             {loading ? (
-               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+               <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
             ) : (
-               <MessageSquare className="mr-2 h-4 w-4" />
+               <MessageSquare className="mr-2 h-4 w-4" aria-hidden="true" />
             )}
             Kirim Klarifikasi
          </Button>
@@ -175,16 +143,16 @@ export function PoFindingsPanel({ findings }: { findings: FindingRecord[] }) {
    const [search, setSearch] = useState("");
    const deferredSearch = useDeferredValue(search);
    const [visibleCount, setVisibleCount] = useState(FINDINGS_PAGE_SIZE);
-   const filteredFindings = useMemo(() => {
-      if (!deferredSearch.trim()) return findings;
-      const q = deferredSearch.trim().toLowerCase();
-      return findings.filter(
-         (f) =>
-            f.judul.toLowerCase().includes(q) ||
-            f.nomor_polisi.toLowerCase().includes(q) ||
-         (f.deskripsi ?? "").toLowerCase().includes(q),
-      );
-   }, [findings, deferredSearch]);
+    const filteredFindings = (() => {
+       if (!deferredSearch.trim()) return findings;
+       const q = deferredSearch.trim().toLowerCase();
+       return findings.filter(
+          (f) =>
+             f.judul.toLowerCase().includes(q) ||
+             f.nomor_polisi.toLowerCase().includes(q) ||
+          (f.deskripsi ?? "").toLowerCase().includes(q),
+       );
+    })();
    const visibleFindings = filteredFindings.slice(0, visibleCount);
 
    const openCount = findings.filter((item) => item.status === "open").length;
@@ -233,15 +201,15 @@ export function PoFindingsPanel({ findings }: { findings: FindingRecord[] }) {
          </div>
 
          {findings.length === 0 ? (
-             <Card className="border-border">
-                <CardContent className="py-8 text-center text-sm text-muted-foreground">
+             <Card className="border-base-300">
+                <CardContent className="py-8 text-center text-sm text-base-content/70">
                    Belum ada temuan untuk PO ini.
                 </CardContent>
              </Card>
           ) : (
              <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                   <span className="text-sm text-muted-foreground">
+                   <span className="text-sm text-base-content/70">
                       {filteredFindings.length}
                       {filteredFindings.length !== findings.length &&
                          ` dari ${findings.length}`}{" "}
@@ -259,20 +227,20 @@ export function PoFindingsPanel({ findings }: { findings: FindingRecord[] }) {
                 </div>
                 {filteredFindings.length === 0 ? (
                    <Card>
-                      <CardContent className="py-8 text-center text-sm text-muted-foreground">
+                      <CardContent className="py-8 text-center text-sm text-base-content/70">
                          Tidak ada temuan yang cocok dengan pencarian.
                       </CardContent>
                    </Card>
                 ) : (
                 visibleFindings.map((finding) => (
-                  <Card key={finding.id} className="border-border">
+                  <Card key={finding.id} className="border-base-300">
                      <CardHeader className="space-y-2">
                         <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                            <div>
                                <CardTitle className="text-base">
                                   {finding.judul}
                                </CardTitle>
-                               <p className="text-sm text-muted-foreground mt-1">
+                               <p className="text-sm text-base-content/70 mt-1">
                                   {finding.nomor_polisi} ·{" "}
                                   {formatDateTime(finding.created_at)}
                                   {finding.due_date && (
@@ -283,35 +251,21 @@ export function PoFindingsPanel({ findings }: { findings: FindingRecord[] }) {
                                   )}
                                </p>
                                {isOverdue(finding.due_date, finding.status) && (
-                                  <Badge variant="outline" className="bg-red-100 text-destructive border-red-200 dark:bg-red-950/50 dark:text-red-300 dark:border-red-800 w-fit">
+                                  <Badge variant="outline" className="bg-red-100 text-error border-red-200 dark:bg-red-950/50 dark:text-red-300 dark:border-red-800 w-fit">
                                      Terlambat
                                   </Badge>
                                )}
                            </div>
-                            <Badge
-                               variant="outline"
-                               className={severityClass(finding.severity)}
-                            >
-                               {severityLabel(finding.severity)}
-                            </Badge>
-                            <Badge
-                               variant="outline"
-                               className={statusClass(finding.status)}
-                            >
-                              {finding.status === "open"
-                                 ? "Open"
-                                 : finding.status === "on_progress"
-                                   ? "On Progress"
-                                   : "Closed"}
-                           </Badge>
-                        </div>
+                            <StatusBadge category="severity" value={finding.severity} />
+                            <StatusBadge category="finding" value={finding.status} />
+                         </div>
                      </CardHeader>
                      <CardContent className="space-y-4">
-                        <p className="text-sm text-foreground">
+                        <p className="text-sm text-base-content">
                            {finding.deskripsi}
                         </p>
-                        <div className="rounded-lg border border-border bg-muted/50 p-3 text-sm text-muted-foreground">
-                           <div className="font-medium text-foreground">
+                        <div className="rounded-lg border border-base-300 bg-base-200/50 p-3 text-sm text-base-content/70">
+                           <div className="font-medium text-base-content">
                               Klarifikasi sebelumnya
                            </div>
                            {finding.finding_clarifications?.length ? (
@@ -320,7 +274,7 @@ export function PoFindingsPanel({ findings }: { findings: FindingRecord[] }) {
                                     (clarification) => (
                                        <li
                                           key={clarification.id}
-                                          className="rounded-md border border-border bg-card px-3 py-2"
+                                          className="rounded-md border border-base-300 bg-base-100 px-3 py-2"
                                        >
                                            <div className="flex items-center justify-between gap-3">
                                               <div className="flex items-center gap-2">
@@ -338,19 +292,19 @@ export function PoFindingsPanel({ findings }: { findings: FindingRecord[] }) {
                                                        ? "PO"
                                                        : "Staf IW"}
                                                  </Badge>
-                                                 <span className="font-medium text-foreground">
+                                                 <span className="font-medium text-base-content">
                                                     {formatDecisionLabel(
                                                        clarification.decision,
                                                     )}
                                                  </span>
                                               </div>
-                                             <span className="text-xs text-muted-foreground">
+                                             <span className="text-xs text-base-content/70">
                                                 {formatDateTime(
                                                    clarification.created_at,
                                                 )}
                                              </span>
                                           </div>
-                                           <p className="mt-1 text-sm text-muted-foreground">
+                                           <p className="mt-1 text-sm text-base-content/70">
                                               {clarification.message}
                                            </p>
                                            {clarification.evidence &&
@@ -363,7 +317,7 @@ export function PoFindingsPanel({ findings }: { findings: FindingRecord[] }) {
                                                     <a
                                                        href={clarification.evidence.link}
                                                        target="_blank"
-                                                       rel="noreferrer"
+                                                       rel="noopener noreferrer"
                                                        className="text-primary underline underline-offset-2"
                                                     >
                                                        {clarification.evidence.link}
@@ -375,7 +329,7 @@ export function PoFindingsPanel({ findings }: { findings: FindingRecord[] }) {
                                                        onClick={() => downloadEvidence(clarification.evidence!.file_path as string)}
                                                        className="inline-flex items-center gap-1 text-primary hover:underline"
                                                     >
-                                                       <Paperclip className="h-3 w-3" />
+                                                       <Paperclip className="h-3 w-3" aria-hidden="true" />
                                                        {(clarification.evidence.file_name as string) ?? "Lampiran"}
                                                     </button>
                                                  ) : null}
@@ -386,30 +340,30 @@ export function PoFindingsPanel({ findings }: { findings: FindingRecord[] }) {
                                  )}
                               </ul>
                            ) : (
-                              <p className="mt-2 text-sm text-muted-foreground">
+                              <p className="mt-2 text-sm text-base-content/70">
                                  Belum ada klarifikasi.
                               </p>
                            )}
                          </div>
 
                          {finding.finding_actions && finding.finding_actions.length > 0 && (
-                            <div className="rounded-lg border border-border bg-card p-3">
-                               <div className="text-sm font-medium text-foreground mb-2">
+                            <div className="rounded-lg border border-base-300 bg-base-100 p-3">
+                               <div className="text-sm font-medium text-base-content mb-2">
                                   Tindak Lanjut Staf IW
                                </div>
                                <ul className="space-y-1.5">
                                   {finding.finding_actions.map((action) => (
                                      <li key={action.id} className="flex items-start gap-2">
                                         {action.status === "done" ? (
-                                           <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-brand-green" />
+                                           <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-brand-green" aria-hidden="true" />
                                         ) : (
-                                           <Circle className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
+                                           <Circle className="mt-0.5 h-4 w-4 shrink-0 text-base-content/70" aria-hidden="true" />
                                         )}
                                         <div className="flex-1 min-w-0">
-                                           <span className={`text-sm ${action.status === "done" ? "text-muted-foreground line-through" : "text-foreground"}`}>
+                                           <span className={`text-sm ${action.status === "done" ? "text-base-content/70 line-through" : "text-base-content"}`}>
                                               {action.action_text}
                                            </span>
-                                           <p className="text-[10px] text-muted-foreground mt-0.5">
+                                           <p className="text-[10px] text-base-content/70 mt-0.5">
                                               {formatDateTime(action.created_at)}
                                               {action.status === "done" && action.done_at && ` — selesai ${formatDateTime(action.done_at)}`}
                                            </p>

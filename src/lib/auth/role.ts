@@ -1,4 +1,5 @@
 import { getRoleNameFromProfile } from "@/lib/supabase/role-utils";
+import type { ProfileWithRoles } from "@/lib/supabase/role-utils";
 import type { RoleType } from "@/config/roles";
 
 export type RoleResolution = {
@@ -19,7 +20,7 @@ export type RoleResolution = {
  */
 export function resolveRoleFromUserAndProfile(
    user: unknown,
-   profile?: any,
+   profile?: ProfileWithRoles | null,
 ): RoleResolution {
    void user;
    const roleFromProfile = getRoleNameFromProfile(profile);
