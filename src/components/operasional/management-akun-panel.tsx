@@ -506,6 +506,7 @@ export function ManagementAkunPanel({
                                              size="sm"
                                              className="h-7 w-7 p-0"
                                              title="Edit petugas"
+                                             aria-label="Edit petugas"
                                              onClick={() => handleEdit(row)}
                                           >
                                              <Pencil className="h-3.5 w-3.5" />
@@ -515,6 +516,11 @@ export function ManagementAkunPanel({
                                              size="sm"
                                              className={`h-7 w-7 p-0 ${row.is_active ? "text-accent hover:text-accent" : "text-brand-green hover:text-brand-green"}`}
                                              title={
+                                                row.is_active
+                                                   ? "Nonaktifkan"
+                                                   : "Aktifkan"
+                                             }
+                                             aria-label={
                                                 row.is_active
                                                    ? "Nonaktifkan"
                                                    : "Aktifkan"
@@ -697,6 +703,7 @@ export function ManagementAkunPanel({
                                               size="sm"
                                               className="h-7 w-7 p-0 text-primary hover:text-primary"
                                               title="Reset password"
+                                              aria-label="Reset password"
                                               onClick={() =>
                                                  handleResetDevicePassword(row)
                                               }
@@ -713,6 +720,11 @@ export function ManagementAkunPanel({
                                               size="sm"
                                               className={`h-7 w-7 p-0 ${row.is_active ? "text-accent hover:text-accent" : "text-brand-green hover:text-brand-green"}`}
                                               title={
+                                                 row.is_active
+                                                    ? "Nonaktifkan akun"
+                                                    : "Aktifkan akun"
+                                              }
+                                              aria-label={
                                                  row.is_active
                                                     ? "Nonaktifkan akun"
                                                     : "Aktifkan akun"

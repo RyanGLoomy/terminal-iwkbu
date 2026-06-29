@@ -369,6 +369,7 @@ export function AdminTerminalAccountsPanel({
                                        variant="ghost"
                                        size="icon-sm"
                                        title="Reset password"
+                                       aria-label="Reset password"
                                        onClick={() => handleResetPassword(acc)}
                                        disabled={busyId === acc.id}
                                     >
@@ -378,6 +379,9 @@ export function AdminTerminalAccountsPanel({
                                        variant="ghost"
                                        size="icon-sm"
                                        title={
+                                          acc.is_active ? "Nonaktifkan" : "Aktifkan"
+                                       }
+                                       aria-label={
                                           acc.is_active ? "Nonaktifkan" : "Aktifkan"
                                        }
                                        onClick={() => toggleActive(acc)}

@@ -397,7 +397,7 @@ export default function ProfilePage() {
                         <Mail className="h-3.5 w-3.5" aria-hidden="true" />
                         Email
                      </Label>
-                     <p className="text-sm text-base-content dark:text-base-content/70/50 pl-5">
+                     <p className="text-sm text-base-content dark:text-base-content/70 pl-5">
                         {profile.email}
                      </p>
                   </div>
@@ -424,7 +424,7 @@ export default function ProfilePage() {
                             placeholder="Masukkan nama lengkap"
                          />
                      ) : (
-                        <p className="text-sm text-base-content dark:text-base-content/70/50 pl-5">
+                        <p className="text-sm text-base-content dark:text-base-content/70 pl-5">
                            {isPetugas && petugasIdentity
                               ? petugasIdentity.nama
                               : profile.full_name || "—"}
@@ -482,10 +482,10 @@ export default function ProfilePage() {
                            className="h-10 pr-10"
                            placeholder="Masukkan password saat ini"
                         />
-                        <button
-                           type="button"
-                           tabIndex={-1}
-                           onClick={() => setShowCurrentPw((v) => !v)}
+                         <button
+                            type="button"
+                            aria-label={showCurrentPw ? "Sembunyikan password" : "Tampilkan password"}
+                            onClick={() => setShowCurrentPw((v) => !v)}
                            className="absolute right-3 top-1/2 -translate-y-1/2 text-base-content/70 hover:text-base-content transition-colors"
                         >
                            {showCurrentPw ? (
@@ -514,10 +514,10 @@ export default function ProfilePage() {
                            className="h-10 pr-10"
                            placeholder="Minimal 6 karakter"
                         />
-                        <button
-                           type="button"
-                           tabIndex={-1}
-                           onClick={() => setShowNewPw((v) => !v)}
+                         <button
+                            type="button"
+                            aria-label={showNewPw ? "Sembunyikan password" : "Tampilkan password"}
+                            onClick={() => setShowNewPw((v) => !v)}
                            className="absolute right-3 top-1/2 -translate-y-1/2 text-base-content/70 hover:text-base-content transition-colors"
                         >
                            {showNewPw ? (
