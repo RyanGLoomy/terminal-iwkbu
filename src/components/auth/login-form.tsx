@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import {
@@ -76,56 +77,56 @@ export function LoginForm() {
 
          <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
-            <div className="flex h-12 w-full items-center gap-2 rounded-lg border border-base-300 bg-base-100 px-3 transition-colors focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20">
-                <Mail className="size-4 shrink-0 text-base-content/70" aria-hidden="true" />
-                <input
-                   id="email"
-                   type="email"
-                   name="email"
-                   autoComplete="email"
-                   autoCapitalize="none"
-                   spellCheck={false}
-                   autoFocus
-                   placeholder="nama@perusahaan.com"
-                   value={email}
-                   onChange={(e) => setEmail(e.target.value)}
-                   required
-                   disabled={loading}
-                   className="min-w-0 grow bg-transparent text-sm outline-none placeholder:text-base-content/40 focus:!shadow-none"
-                />
-             </div>
-          </div>
+            <div className="relative">
+               <Mail className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-base-content/50" aria-hidden="true" />
+               <Input
+                  id="email"
+                  type="email"
+                  name="email"
+                  autoComplete="email"
+                  autoCapitalize="none"
+                  spellCheck={false}
+                  autoFocus
+                  placeholder="nama@perusahaan.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  disabled={loading}
+                  className="h-12 pl-10"
+               />
+            </div>
+         </div>
 
-          <div className="space-y-2">
+         <div className="space-y-2">
             <Label htmlFor="password">Password</Label>
-            <div className="flex h-12 w-full items-center gap-2 rounded-lg border border-base-300 bg-base-100 px-3 transition-colors focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20">
-                <LockKeyhole className="size-4 shrink-0 text-base-content/70" aria-hidden="true" />
-                <input
-                   id="password"
-                   name="password"
-                   type={showPassword ? "text" : "password"}
-                   autoComplete="current-password"
-                   placeholder="Masukkan password"
-                   value={password}
-                   onChange={(e) => setPassword(e.target.value)}
-                   required
-                   disabled={loading}
-                   className="min-w-0 grow bg-transparent text-sm outline-none placeholder:text-base-content/40 focus:!shadow-none"
-                />
-                <button
-                   type="button"
-                   onClick={() => setShowPassword((s) => !s)}
-                   className="text-base-content/70 transition-colors hover:text-base-content"
-                   aria-label={showPassword ? "Sembunyikan password" : "Tampilkan password"}
-                   tabIndex={0}
-                >
-                   {showPassword ? (
-                      <EyeOff className="size-4" aria-hidden="true" />
-                   ) : (
-                      <Eye className="size-4" aria-hidden="true" />
-                   )}
-                </button>
-             </div>
+            <div className="relative">
+               <LockKeyhole className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-base-content/50" aria-hidden="true" />
+               <Input
+                  id="password"
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  autoComplete="current-password"
+                  placeholder="Masukkan password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  disabled={loading}
+                  className="h-12 pl-10 pr-10"
+               />
+               <button
+                  type="button"
+                  onClick={() => setShowPassword((s) => !s)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-base-content/50 transition-colors hover:text-base-content"
+                  aria-label={showPassword ? "Sembunyikan password" : "Tampilkan password"}
+                  tabIndex={0}
+               >
+                  {showPassword ? (
+                     <EyeOff className="size-4" aria-hidden="true" />
+                  ) : (
+                     <Eye className="size-4" aria-hidden="true" />
+                  )}
+               </button>
+            </div>
             <div className="flex justify-end">
                <Link
                   href="/lupa-password"
