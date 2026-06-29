@@ -57,8 +57,22 @@ export function formatRetryAfter(ms: number): string {
 }
 
 export function getClientIp(request: Request): string {
+   // Header platform (Vercel) yang di-set dari connecting socket — TIDAK bisa
+   // di-spoof oleh klien. Sebelumnya kita mempercayai octet PERTAMA
+   // x-forwarded-for, yang sepenuhnya dikendalikan klien -> bypass rate limit
+   // dengan memutar IP per request.
+   const vercel = request.headers.get("x-vercel-forwarded-for");
+   if (vercel) return vercel.split(",")[0].trim();
    const forwarded = request.headers.get("x-forwarded-for");
-   if (forwarded) return forwarded.split(",")[0].trim();
+   if (forwarded) {
+      // Entri TERAKANAN paling dekat dengan proxy kita; entri pertama bisa
+      // disisipkan klien. Hindari mempercayainya.
+      const parts = forwarded
+         .split(",")
+         .map((s) => s.trim())
+         .filter(Boolean);
+      if (parts.length > 0) return parts[parts.length - 1];
+   }
    const realIp = request.headers.get("x-real-ip");
    if (realIp) return realIp.trim();
    return "unknown";

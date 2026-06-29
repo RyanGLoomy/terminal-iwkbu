@@ -4,6 +4,10 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { sanitizeDbError } from "@/lib/db-error";
 import { logActivity } from "@/lib/supabase/queries/operasional.server";
 import {
+   PASSWORD_POLICY_MESSAGE,
+   validateAccountPassword,
+} from "@/lib/auth/account-helpers.server";
+import {
    checkRateLimit,
    recordFailedAttempt,
    clearAttempts,
@@ -47,9 +51,9 @@ export async function POST(request: Request) {
          );
       }
 
-      if (password.length < 6) {
+      if (!validateAccountPassword(password)) {
          return NextResponse.json(
-            { message: "Password minimal 6 karakter." },
+            { message: PASSWORD_POLICY_MESSAGE },
             { status: 400 },
          );
       }

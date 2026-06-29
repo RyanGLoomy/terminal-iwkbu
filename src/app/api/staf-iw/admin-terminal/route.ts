@@ -1,40 +1,24 @@
-import { randomInt } from "crypto";
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { requireActor, actorErrorHandler } from "@/lib/auth/actor";
 import { ROLES } from "@/config/roles";
 import { sanitizeDbError, getErrorMessage } from "@/lib/db-error";
 import { logActivity } from "@/lib/supabase/queries/operasional.server";
+import {
+   EMAIL_PATTERN,
+   PASSWORD_POLICY_MESSAGE,
+   normalizeEmail,
+   normalizeText,
+   randomSuffix,
+   validateAccountPassword,
+} from "@/lib/auth/account-helpers.server";
 
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const PASSWORD_MIN_LENGTH = 8;
 // Per spec (UC-13): Staf IW mengelola akun admin-terminal & staf-iw.
 const MANAGED_ROLES = [ROLES.ADMIN_TERMINAL, ROLES.STAF_IW] as const;
 type ManagedRole = (typeof MANAGED_ROLES)[number];
 
-function randomSuffix(length: number) {
-   const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
-   let result = "";
-   for (let i = 0; i < length; i += 1) {
-      result += chars[randomInt(chars.length)];
-   }
-   return result;
-}
-
 function generatePassword() {
    return `${randomSuffix(4).slice(0, 2).toUpperCase()}-${randomSuffix(6)}-${randomSuffix(4)}`;
-}
-
-function normalizeEmail(value: unknown) {
-   return typeof value === "string" ? value.trim().toLowerCase() : "";
-}
-
-function normalizeText(value: unknown) {
-   return typeof value === "string" ? value.trim() : "";
-}
-
-function validatePassword(password: string) {
-   return password.length >= PASSWORD_MIN_LENGTH;
 }
 
 function isManagedRole(value: string): value is ManagedRole {
@@ -142,9 +126,9 @@ export async function POST(request: Request) {
             { status: 400 },
          );
       }
-      if (inputPassword && !validatePassword(inputPassword)) {
+      if (inputPassword && !validateAccountPassword(inputPassword)) {
          return NextResponse.json(
-            { message: `Password minimal ${PASSWORD_MIN_LENGTH} karakter` },
+            { message: PASSWORD_POLICY_MESSAGE },
             { status: 400 },
          );
       }
@@ -259,9 +243,9 @@ export async function PATCH(request: Request) {
             { status: 400 },
          );
       }
-      if (passwordInput && !validatePassword(passwordInput)) {
+      if (passwordInput && !validateAccountPassword(passwordInput)) {
          return NextResponse.json(
-            { message: `Password minimal ${PASSWORD_MIN_LENGTH} karakter` },
+            { message: PASSWORD_POLICY_MESSAGE },
             { status: 400 },
          );
       }

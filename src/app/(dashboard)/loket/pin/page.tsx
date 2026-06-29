@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import {
    getPinSession,
-   upsertPinSession,
    verifyPetugasPin,
 } from "@/lib/supabase/queries/operasional.client";
 import { Button } from "@/components/ui/button";
@@ -61,14 +60,8 @@ export default function LoketPinPage() {
             throw new Error("PIN tidak valid");
          }
 
-         await upsertPinSession(
-            result.petugas_id && result.petugas_nama
-               ? {
-                    petugas_terminal_id: result.petugas_id,
-                    petugas_nama: result.petugas_nama,
-                 }
-               : undefined,
-         );
+         // Sesi petugas dibuat server-side di /api/auth/verify-pin (terikat
+         // bukti PIN). Tidak ada lagi panggilan upsert terpisah tanpa verifikasi.
 
          // Langsung ke dashboard setelah PIN terverifikasi
          window.location.href = "/loket";

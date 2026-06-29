@@ -20,10 +20,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const clientIp = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim()
-      ?? request.headers.get("x-real-ip")?.trim()
-      ?? "unknown";
-    const rateKey = `forgot-password:${clientIp}`;
+    // Key per-EMAIL (bukan IP). Mencegah spam reset email ke satu korban
+    // lewat rotasi IP, dan tak bisa di-bypass dengan spoofing header.
+    const rateKey = `forgot-password:${email.toLowerCase()}`;
 
     const rateCheck = await checkRateLimit(rateKey);
     if (!rateCheck.allowed) {

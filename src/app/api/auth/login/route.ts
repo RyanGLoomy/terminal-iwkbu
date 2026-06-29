@@ -27,7 +27,10 @@ export async function POST(request: NextRequest) {
          );
       }
 
-      const ipKey = `login:${getClientIp(request)}`;
+      // Key per (email + IP terpercaya). Sebelumnya hanya per IP (bisa di-spoof
+      // via X-Forwarded-For -> bypass). getClientIp kini memakai header platform.
+      const clientIp = getClientIp(request);
+      const ipKey = `login:${email.toLowerCase()}:${clientIp}`;
       const rateCheck = await checkRateLimit(ipKey);
       if (!rateCheck.allowed) {
          return NextResponse.json(
@@ -76,7 +79,7 @@ export async function POST(request: NextRequest) {
          await logActivity(
             "LOGIN_GAGAL",
             "Login gagal: kredensial salah",
-            { email, ip: ipKey },
+            { email, ip: clientIp },
             { actorUserId: data.user?.id ?? "unknown" },
          );
          const message = signInError?.message ?? "";

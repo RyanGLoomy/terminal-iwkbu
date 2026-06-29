@@ -101,29 +101,8 @@ export async function verifyPetugasPin(pin: string) {
       verified: json.verified === true,
       petugas_id: json.petugas_id ?? undefined,
       petugas_nama: json.petugas_nama ?? undefined,
+      session: json.session as PinSession | undefined,
    };
-}
-
-export async function upsertPinSession(identity?: {
-   petugas_terminal_id: string;
-   petugas_nama: string;
-}) {
-   const res = await fetch("/api/auth/upsert-pin-session", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-         petugas_terminal_id: identity?.petugas_terminal_id ?? null,
-         petugas_nama: identity?.petugas_nama ?? null,
-      }),
-   });
-
-   const json = await res.json();
-
-   if (!res.ok) {
-      throw new Error(json?.message ?? "Gagal menyimpan sesi PIN");
-   }
-
-   return json.session as PinSession;
 }
 
 export async function clearPinSession() {

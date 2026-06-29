@@ -86,6 +86,39 @@ export async function POST(request: Request) {
 
       await clearAttempts(rateLimitKey);
 
+      // Buat sesi petugas TERKAIT verifikasi ini. Sebelumnya upsert dilakukan
+      // di endpoint terpisah (/api/auth/upsert-pin-session) yang TIDAK memverifikasi
+      // PIN ulang -> loket bisa atribut transaksi ke petugas aktif mana pun di
+      // terminalnya tanpa PIN. Sekarang upsert terjadi hanya bila bcrypt cocok,
+      // terikat actor.user.id + matched.id (server-trusted).
+      const PIN_SESSION_DURATION_MS = 8 * 60 * 60 * 1000;
+      const expiresAt = new Date(
+         Date.now() + PIN_SESSION_DURATION_MS,
+      ).toISOString();
+
+      const { data: session, error: sessionError } = await adminClient
+         .from("petugas_pin_sessions")
+         .upsert(
+            {
+               user_id: actor.user.id,
+               verified_at: new Date().toISOString(),
+               expires_at: expiresAt,
+               updated_at: new Date().toISOString(),
+               petugas_terminal_id: matched.id,
+               petugas_nama: matched.nama,
+            },
+            { onConflict: "user_id" },
+         )
+         .select()
+         .single();
+
+      if (sessionError) {
+         return NextResponse.json(
+            { message: "Terjadi kesalahan internal" },
+            { status: 500 },
+         );
+      }
+
       await logActivity(
          "VERIFIKASI_PIN",
          `Verifikasi PIN petugas: ${matched.nama}`,
@@ -94,9 +127,10 @@ export async function POST(request: Request) {
       );
 
       return NextResponse.json({
-          verified: true,
-          petugas_id: matched.id,
-          petugas_nama: matched.nama,
+         verified: true,
+         petugas_id: matched.id,
+         petugas_nama: matched.nama,
+         session,
       });
    } catch (error) {
       return actorErrorHandler(error);

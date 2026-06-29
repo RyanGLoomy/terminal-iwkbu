@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { requireActor, actorErrorHandler } from "@/lib/auth/actor";
 import { ROLES } from "@/config/roles";
+import { normalizeRoleName } from "@/lib/supabase/role-utils";
 import { logActivity } from "@/lib/supabase/queries/operasional.server";
 
 export async function PATCH(
@@ -67,6 +68,49 @@ export async function PATCH(
          );
       }
 
+      // Cegah eskalasi privilege (vertikal): hanya akun yang SAAT INI ber-role
+      // admin-terminal/staf-iw yang boleh diubah. Sebelumnya hanya role TUJUAN
+      // yang dicek, sehingga PO/loket baru daftar bisa dipromosikan jadi staf-iw.
+      const { data: currentRoleRows } = await admin
+         .from("user_roles")
+         .select("role:roles(name)")
+         .eq("user_id", id);
+      // PostgREST join role:roles(name) dapat diketik sebagai array atau objek
+      // tunggal tergantung inferensi tipe; tangani keduanya.
+      const currentRoleNames = (currentRoleRows ?? [])
+         .map((row) => {
+            const role = (row as {
+               role?: { name?: string } | { name?: string }[] | null;
+            }).role;
+            if (!role) return null;
+            if (Array.isArray(role)) return role[0]?.name ?? null;
+            return role.name ?? null;
+         })
+         .filter((n): n is string => Boolean(n));
+      const allManageable =
+         currentRoleNames.length > 0 &&
+         currentRoleNames.every(
+            (n) =>
+               MANAGEABLE_ROLES.includes(
+                  normalizeRoleName(n) as (typeof MANAGEABLE_ROLES)[number],
+               ),
+         );
+      if (!allManageable) {
+         await logActivity(
+            "UPDATE_USER",
+            `Upaya ubah role ditolak (target bukan akun internal): ${targetProfile.email}`,
+            { target_user_id: id, current_roles: currentRoleNames },
+            { actorUserId: actor.user.id },
+         );
+         return NextResponse.json(
+            {
+               message:
+                  "Hanya akun admin-terminal/staf-iw yang dapat diubah.",
+            },
+            { status: 403 },
+         );
+      }
+
        const { error: insertError } = await admin
           .from("user_roles")
           .insert({ user_id: id, role_id: roleRow.id })
@@ -95,7 +139,7 @@ export async function PATCH(
          {
             target_user_id: id,
             target_email: targetProfile.email,
-            old_role: body?.old_role,
+            old_role: currentRoleNames,
             new_role: newRoleName,
          },
          { actorUserId: actor.user.id },
