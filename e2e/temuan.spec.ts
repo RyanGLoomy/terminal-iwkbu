@@ -21,17 +21,10 @@ test.beforeAll(() => {
 });
 
 test("staf-iw membuat Temuan untuk PO tertentu", async ({ request }) => {
-   await loginAs({ request, goto: async () => {} } as any, stafCred.email, stafCred.password);
+   // PO ID dari creds file (ditulis oleh setup-e2e.mjs).
+   targetPoId = poCred.userId ?? null;
+   expect(targetPoId, "PO userId dari creds").toBeTruthy();
 
-   // Dapatkan PO ID via profile PO user (endpoint /api/staf-iw/po tidak ada).
-   await loginAs({ request, goto: async () => {} } as any, poCred.email, poCred.password);
-   const profRes = await request.get("/api/profile");
-   expect(profRes.ok()).toBeTruthy();
-   const prof = await profRes.json();
-   targetPoId = prof.data?.id ?? prof.id;
-   expect(targetPoId, "PO id dari profile").toBeTruthy();
-
-   // Login kembali sebagai staf-iw.
    await loginAs({ request, goto: async () => {} } as any, stafCred.email, stafCred.password);
 
    const mark = `E2E-${Date.now()}`;

@@ -135,19 +135,21 @@ async function ensurePinSession(supabase, userId, petugasTerminalId, petugasNama
 }
 
 async function ensurePO(supabase, userId) {
-  const { data: existing } = await supabase.from("po").select("id").eq("id", userId).maybeSingle();
-  if (existing) return;
-  await supabase.from("po").insert({ id: userId, kode_po: "E2EPO", nama_perusahaan: "PT PO Demo Playwright", alamat: "Jl. Test No. 1", status_verifikasi: "aktif" });
+   const { data: existing } = await supabase.from("po").select("id").eq("id", userId).maybeSingle();
+   if (existing) return {};
+   const { error } = await supabase.from("po").insert({ id: userId, kode_po: "E2EPO", nama_perusahaan: "PT PO Demo Playwright", alamat: "Jl. Test No. 1", status_verifikasi: "aktif" });
+   return { error };
 }
 
 async function ensureArmada(supabase, poUserId) {
   const { data: existing } = await supabase.from("armada").select("id").eq("po_id", poUserId).limit(1);
-  if (existing && existing.length > 0) return;
-  await supabase.from("armada").insert([
+  if (existing && existing.length > 0) return {};
+  const { error } = await supabase.from("armada").insert([
     { po_id: poUserId, nomor_polisi: "B 1234 CD", nomor_uji: "1234/5678", status_operasional: "aktif", status_verifikasi: "terverifikasi" },
     { po_id: poUserId, nomor_polisi: "B 5678 EF", nomor_uji: "9012/3456", status_operasional: "aktif", status_verifikasi: "terverifikasi" },
     { po_id: poUserId, nomor_polisi: "B 9012 GH", nomor_uji: "7890/1234", status_operasional: "nonaktif", status_verifikasi: "menunggu" },
   ]);
+  return { error };
 }
 
 async function main() {
@@ -168,14 +170,19 @@ async function main() {
 
   let petugasTerminalId;
 
+  const userIds = {};
+
   for (const account of TEST_ACCOUNTS) {
     const tId = account.terminalKode ? terminalId : undefined;
     const userId = await ensureUser(supabase, account, roleIds[account.role], tId);
+    userIds[account.role] = userId;
     console.log(`  ✓ User "${account.email}" (${account.role}) ready`);
 
     if (account.role === "po") {
-      await ensurePO(supabase, userId);
-      await ensureArmada(supabase, userId);
+      const { error: poError } = await ensurePO(supabase, userId);
+      if (poError) console.log(`  ⚠ ensurePO: ${poError}`);
+      const { error: armadaError } = await ensureArmada(supabase, userId);
+      if (armadaError) console.log(`  ⚠ ensureArmada: ${armadaError}`);
       console.log(`  ✓ PO + Armada data seeded`);
     }
 
@@ -188,6 +195,7 @@ async function main() {
 
   const creds = TEST_ACCOUNTS.map((a) => ({
     email: a.email, password: a.password, role: a.role, fullName: a.fullName,
+    userId: userIds[a.role],
     ...(a.pin ? { pin: a.pin } : {}),
   }));
 

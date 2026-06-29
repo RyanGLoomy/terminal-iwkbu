@@ -27,10 +27,10 @@ test("Staf IW dashboard shows PO and Armada summary cards", async ({ page }) => 
   await loginAs(page, cred.email, cred.password);
   await navigateToDashboard(page, "/staf-iw", "staf-iw");
 
-  await expect(page.getByText(/PO Menunggu/)).toBeVisible();
-  await expect(page.getByText(/PO Aktif/)).toBeVisible();
-  await expect(page.getByText(/Armada Menunggu/)).toBeVisible();
-  await expect(page.getByText(/Armada Terverifikasi/)).toBeVisible();
+  await expect(page.getByText(/PO Menunggu/).first()).toBeVisible();
+  await expect(page.getByText(/PO Aktif/).first()).toBeVisible();
+  await expect(page.getByText(/Armada Menunggu/).first()).toBeVisible();
+  await expect(page.getByText(/Armada Terverifikasi/).first()).toBeVisible();
 });
 
 test("Staf IW sidebar shows all menu items", async ({ page }) => {
@@ -39,7 +39,7 @@ test("Staf IW sidebar shows all menu items", async ({ page }) => {
 
   await expect(page.getByRole("link", { name: /Dashboard/i })).toBeVisible();
   await expect(page.getByRole("link", { name: /Temuan/i })).toBeVisible();
-  await expect(page.getByRole("link", { name: /Rekonsiliasi/i })).toBeVisible();
+  await expect(page.getByRole("link", { name: /Rekonsiliasi/i }).first()).toBeVisible();
   await expect(page.getByRole("link", { name: /Audit Trail/i })).toBeVisible();
   await expect(page.getByRole("link", { name: /Sinkronisasi IWKBU/i })).toBeVisible();
 });

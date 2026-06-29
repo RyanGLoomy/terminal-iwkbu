@@ -17,7 +17,7 @@ test("PO dashboard shows correct heading and sidebar navigation", async ({ page 
   await loginAs(page, cred.email, cred.password);
   await navigateToDashboard(page, "/po", "po");
 
-  await expect(page.locator("h1")).toContainText("Manajemen Armada");
+  await expect(page.locator("h1")).toContainText("Dashboard PO");
   await expect(page.getByRole("link", { name: /Dashboard/i })).toBeVisible();
   await expect(page.getByRole("link", { name: /Temuan & Klarifikasi/i })).toBeVisible();
 });
@@ -48,7 +48,7 @@ test("PO sidebar shows role badge", async ({ page }) => {
   await loginAs(page, cred.email, cred.password);
   await navigateToDashboard(page, "/po", "po");
 
-  await expect(page.getByText(/Perusahaan Otobus/).first()).toBeVisible();
+  await expect(page.getByText(/PO Demo Playwright/).first()).toBeVisible();
 });
 
 test("PO can list own armada via API", async ({ request }) => {
