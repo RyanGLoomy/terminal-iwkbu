@@ -131,26 +131,34 @@ export async function executeIwkbuSync(params: {
          }
       }
 
-      for (const pf of findings) {
-         const existingId = existingByArmada.get(pf.armada_id);
+      // Persist paralel. Sebelumnya sekuen per-finding (bisa N round-trip
+      // bergantian). Baris saling independen (armada_id/id berbeda) -> aman
+      // dijalankan concurrency lewat Promise.all.
+      const persistResults = await Promise.all(
+         findings.map(async (pf): Promise<"created" | "updated" | "failed"> => {
+            const existingId = existingByArmada.get(pf.armada_id);
 
-         if (existingId) {
-            const { error: updError } = await admin
-               .from("findings")
-               .update({
-                  judul: pf.judul,
-                  deskripsi: pf.deskripsi,
-                  severity: pf.severity,
-                  updated_at: nowIso,
-               })
-               .eq("id", existingId);
-             if (updError) {
-                console.error("[IWKBU Sync] finding update error:", updError.message);
-                persistErrors.push(`update ${pf.armada_id}: ${updError.message}`);
-             } else {
-                findingsUpdated++;
-             }
-         } else {
+            if (existingId) {
+               const { error: updError } = await admin
+                  .from("findings")
+                  .update({
+                     judul: pf.judul,
+                     deskripsi: pf.deskripsi,
+                     severity: pf.severity,
+                     updated_at: nowIso,
+                  })
+                  .eq("id", existingId);
+               if (updError) {
+                  console.error(
+                     "[IWKBU Sync] finding update error:",
+                     updError.message,
+                  );
+                  persistErrors.push(`update ${pf.armada_id}: ${updError.message}`);
+                  return "failed";
+               }
+               return "updated";
+            }
+
             const { error: insError } = await admin.from("findings").insert({
                po_id: pf.po_id,
                armada_id: pf.armada_id,
@@ -162,14 +170,19 @@ export async function executeIwkbuSync(params: {
                status: "open",
                created_by: createdBy,
             });
-             if (insError) {
-                console.error("[IWKBU Sync] finding insert error:", insError.message);
-                persistErrors.push(`insert ${pf.armada_id}: ${insError.message}`);
-             } else {
-                findingsCreated++;
-             }
-         }
-      }
+            if (insError) {
+               console.error(
+                  "[IWKBU Sync] finding insert error:",
+                  insError.message,
+               );
+               persistErrors.push(`insert ${pf.armada_id}: ${insError.message}`);
+               return "failed";
+            }
+            return "created";
+         }),
+      );
+      findingsCreated = persistResults.filter((r) => r === "created").length;
+      findingsUpdated = persistResults.filter((r) => r === "updated").length;
 
       const summary = {
          total_armada: reconRows.length,

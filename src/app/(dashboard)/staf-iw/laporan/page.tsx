@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { ROLES } from "@/config/roles";
 import { getAuthenticatedActor } from "@/lib/auth/server-actor";
 import { getStaffFindings } from "@/lib/supabase/queries/findings.server";
 import {
@@ -13,7 +14,7 @@ import {
 export default async function StafIwLaporanPage() {
    const actor = await getAuthenticatedActor();
    if (!actor) redirect("/login");
-   if (actor.role !== "staf-iw") redirect("/error");
+   if (actor.role !== ROLES.STAF_IW) redirect("/error");
 
    // Ambil data global secara paralel untuk laporan rekonsiliasi kepatuhan.
    const [findings, poAktif, poMenunggu, armadaTerverifikasi, armadaMenunggu, armadaDitolak] =

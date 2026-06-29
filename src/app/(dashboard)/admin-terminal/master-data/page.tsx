@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { ROLES } from "@/config/roles";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getAuthenticatedActor } from "@/lib/auth/server-actor";
 import { MasterDataPanel, type TerminalMasterRow } from "@/components/operasional/master-data-panel";
@@ -8,7 +9,7 @@ export default async function AdminTerminalMasterDataPage() {
    const actor = await getAuthenticatedActor();
 
    if (!actor) redirect("/login");
-   if (actor.role !== "admin-terminal") redirect("/admin-terminal");
+   if (actor.role !== ROLES.ADMIN_TERMINAL) redirect("/admin-terminal");
    if (!actor.terminalId) redirect("/error");
 
    const adminClient = createAdminClient();

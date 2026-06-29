@@ -1,9 +1,11 @@
+import { ROLES } from "@/config/roles";
+
 export function resolveTerminalId(params: {
    role: string;
    actorTerminalId?: string | null;
    requestedTerminalId?: string | null;
 }) {
-   if (params.role === "admin-terminal") {
+   if (params.role === ROLES.ADMIN_TERMINAL) {
       if (!params.actorTerminalId) {
          return { message: "Terminal tidak ditemukan", status: 400 } as const;
       }

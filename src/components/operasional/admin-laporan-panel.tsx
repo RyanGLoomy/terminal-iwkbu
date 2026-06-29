@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { formatDateTime, formatDateTimeCustom } from "@/lib/utils/format-date";
 import { getTerminalReport } from "@/lib/supabase/queries/operasional.client";
 import { exportXlsx } from "@/lib/export/xlsx.client";
@@ -391,6 +392,7 @@ export function AdminLaporanPanel({ terminalId }: { terminalId: string }) {
             },
           ]);
        } catch {
+          toast.error("Gagal mengekspor laporan (XLSX).");
        }
     };
 
@@ -431,6 +433,7 @@ export function AdminLaporanPanel({ terminalId }: { terminalId: string }) {
 
           doc.save(`laporan-terminal-${startDate}-${endDate}.pdf`);
        } catch {
+          toast.error("Gagal mengekspor laporan (PDF).");
        }
     };
 

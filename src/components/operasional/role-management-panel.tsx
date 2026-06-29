@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/card";
 import { Users } from "lucide-react";
 import { toast } from "sonner";
-import { ROLE_DISPLAY_NAMES } from "@/config/roles";
+import { ROLES, ROLE_DISPLAY_NAMES } from "@/config/roles";
 import {
    Select,
    SelectContent,
@@ -53,7 +53,7 @@ function getRoleName(user: UserProfile): string | null {
 }
 
 // Per spec (UC-13): Staf IW hanya mengelola role admin-terminal & staf-iw.
-const ROLE_OPTIONS = ["admin-terminal", "staf-iw"];
+const ROLE_OPTIONS = [ROLES.ADMIN_TERMINAL, ROLES.STAF_IW];
 
 export function RoleManagementPanel() {
    const [users, setUsers] = useState<UserProfile[]>([]);

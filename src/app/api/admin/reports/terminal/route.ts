@@ -230,7 +230,7 @@ export async function GET(request: NextRequest) {
       }
 
       if (
-         actor.role === "admin-terminal" &&
+         actor.role === ROLES.ADMIN_TERMINAL &&
          requestedTerminalId &&
          requestedTerminalId !== actor.terminalId
       ) {
@@ -238,7 +238,7 @@ export async function GET(request: NextRequest) {
       }
 
       const effectiveTerminalId =
-         actor.role === "admin-terminal" ? actor.terminalId : requestedTerminalId;
+         actor.role === ROLES.ADMIN_TERMINAL ? actor.terminalId : requestedTerminalId;
 
       if (!effectiveTerminalId) {
          return NextResponse.json(

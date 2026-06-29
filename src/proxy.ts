@@ -1,6 +1,6 @@
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
-import { ROLE_ROUTES, PUBLIC_ROUTES, DEFAULT_ROUTES } from "@/config/roles";
+import { ROLES, ROLE_ROUTES, PUBLIC_ROUTES, DEFAULT_ROUTES } from "@/config/roles";
 import { resolveRoleFromUserAndProfile } from "@/lib/auth/role";
 
 export async function proxy(request: NextRequest) {
@@ -181,7 +181,7 @@ export async function proxy(request: NextRequest) {
       return NextResponse.redirect(new URL(defaultRoute, request.url));
    }
 
-   const isPetugasLoket = userRole === "loket";
+   const isPetugasLoket = userRole === ROLES.PETUGAS_LOKET;
    const isPetugasArea = pathname.startsWith("/loket");
    const isPinPage = pathname.startsWith("/loket/pin");
 

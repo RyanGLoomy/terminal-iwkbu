@@ -468,9 +468,10 @@ export function StafFindingsPanel({
                                  startY: 10,
                               });
 
-                              doc.save("temuan-staf-iw.pdf");
-                           } catch {
-                           }
+                               doc.save("temuan-staf-iw.pdf");
+                            } catch {
+                               toast.error("Gagal mengekspor PDF temuan.");
+                            }
                         }}
                      >
                         PDF

@@ -20,7 +20,7 @@ function resolveTerminalId(params: {
    actorTerminalId?: string | null;
    requestedTerminalId: string;
 }) {
-   if (params.actorRole === "admin-terminal") {
+   if (params.actorRole === ROLES.ADMIN_TERMINAL) {
       if (!params.actorTerminalId) {
          return { message: "Terminal tidak ditemukan pada profil." } as const;
       }

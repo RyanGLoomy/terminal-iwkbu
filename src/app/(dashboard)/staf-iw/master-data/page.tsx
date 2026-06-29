@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { ROLES } from "@/config/roles";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getAuthenticatedActor } from "@/lib/auth/server-actor";
 import { MasterDataPanel, type TerminalMasterRow } from "@/components/operasional/master-data-panel";
@@ -8,7 +9,7 @@ export default async function StafIwMasterDataPage() {
    const actor = await getAuthenticatedActor();
 
    if (!actor) redirect("/login");
-   if (actor.role !== "staf-iw") redirect("/staf-iw");
+   if (actor.role !== ROLES.STAF_IW) redirect("/staf-iw");
 
    const adminClient = createAdminClient();
    const [terminalsRes, jenisRes, settingsRes] = await Promise.all([

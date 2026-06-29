@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { ROLES } from "@/config/roles";
 import { AdminTerminalAccountsPanel } from "@/components/operasional/admin-terminal-accounts-panel";
 import { RoleManagementPanel } from "@/components/operasional/role-management-panel";
 import { getAuthenticatedActor } from "@/lib/auth/server-actor";
@@ -12,7 +13,7 @@ export default async function StafIwAkunPage({
    const actor = await getAuthenticatedActor();
 
    if (!actor) redirect("/login");
-   if (actor.role !== "staf-iw") redirect("/error");
+   if (actor.role !== ROLES.STAF_IW) redirect("/error");
 
    const adminClient = createAdminClient();
    const { data: terminals, error } = await adminClient

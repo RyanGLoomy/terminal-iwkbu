@@ -23,7 +23,7 @@ export async function GET() {
          .select("id, kode, nama")
          .order("nama", { ascending: true });
 
-      if (actor.role === "admin-terminal") {
+      if (actor.role === ROLES.ADMIN_TERMINAL) {
          if (!actor.terminalId) {
             return NextResponse.json(
                { message: "Terminal tidak ditemukan" },
@@ -98,7 +98,7 @@ export async function PATCH(request: Request) {
          );
       }
 
-      if (actor.role === "admin-terminal" && id !== actor.terminalId) {
+      if (actor.role === ROLES.ADMIN_TERMINAL && id !== actor.terminalId) {
          return NextResponse.json({ message: "Forbidden" }, { status: 403 });
       }
 
