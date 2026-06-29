@@ -79,21 +79,22 @@ export function LoginForm() {
             <Label htmlFor="email">Email</Label>
             <div className="relative">
                <Mail className="pointer-events-none absolute left-3 top-1/2 z-10 size-4 -translate-y-1/2 text-base-content/50" aria-hidden="true" />
-               <Input
-                  id="email"
-                  type="email"
-                  name="email"
-                  autoComplete="email"
-                  autoCapitalize="none"
-                  spellCheck={false}
-                  autoFocus
-                  placeholder="nama@perusahaan.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  disabled={loading}
-                  className="h-12 pl-10"
-               />
+                <Input
+                   id="email"
+                   type="email"
+                   name="email"
+                   autoComplete="email"
+                   autoCapitalize="none"
+                   spellCheck={false}
+                   maxLength={254}
+                   autoFocus
+                   placeholder="nama@perusahaan.com"
+                   value={email}
+                   onChange={(e) => setEmail(e.target.value)}
+                   required
+                   disabled={loading}
+                   className="h-12 pl-10"
+                />
             </div>
          </div>
 
@@ -101,12 +102,13 @@ export function LoginForm() {
             <Label htmlFor="password">Password</Label>
             <div className="relative">
                <LockKeyhole className="pointer-events-none absolute left-3 top-1/2 z-10 size-4 -translate-y-1/2 text-base-content/50" aria-hidden="true" />
-               <Input
-                  id="password"
-                  name="password"
-                  type={showPassword ? "text" : "password"}
-                  autoComplete="current-password"
-                  placeholder="Masukkan password"
+                <Input
+                   id="password"
+                   name="password"
+                   type={showPassword ? "text" : "password"}
+                   autoComplete="current-password"
+                   maxLength={128}
+                   placeholder="Masukkan password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
