@@ -91,7 +91,7 @@ export function LoginForm() {
                    onChange={(e) => setEmail(e.target.value)}
                    required
                    disabled={loading}
-                   className="min-w-0 grow bg-transparent text-sm outline-none placeholder:text-base-content/40"
+                   className="min-w-0 grow bg-transparent text-sm outline-none placeholder:text-base-content/40 focus:!shadow-none"
                 />
              </div>
           </div>
@@ -110,7 +110,7 @@ export function LoginForm() {
                    onChange={(e) => setPassword(e.target.value)}
                    required
                    disabled={loading}
-                   className="min-w-0 grow bg-transparent text-sm outline-none placeholder:text-base-content/40"
+                   className="min-w-0 grow bg-transparent text-sm outline-none placeholder:text-base-content/40 focus:!shadow-none"
                 />
                 <button
                    type="button"
