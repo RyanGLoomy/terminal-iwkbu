@@ -4,9 +4,17 @@ import { ROLE_ROUTES, PUBLIC_ROUTES, DEFAULT_ROUTES } from "@/config/roles";
 import { resolveRoleFromUserAndProfile } from "@/lib/auth/role";
 
 export async function proxy(request: NextRequest) {
+   // Nonce CSP per-request. Header 'x-nonce' dibaca Next.js dan diterapkan ke
+   // script yang disuntiknya; kita pakai nonce yg sama di script-src. Ini
+   // menutup 'unsafe-inline' pada script-src (sebelumnya XSS bisa mengeksekusi
+   // inline script apa pun). Anti-flash script di layout.tsx juga memakai nonce.
+   const nonce = crypto.randomUUID();
+   const requestHeaders = new Headers(request.headers);
+   requestHeaders.set("x-nonce", nonce);
+
    let response = NextResponse.next({
       request: {
-         headers: request.headers,
+         headers: requestHeaders,
       },
    });
 
@@ -27,6 +35,27 @@ export async function proxy(request: NextRequest) {
          "geolocation=(), microphone=()",
       );
       const isDev = process.env.NODE_ENV !== "production";
+
+      // connect-src allowlist (sebelumnya 'https:' -> XSS bisa eksfiltrasi ke
+      // host HTTPS mana pun). Hanya origin sendiri + Supabase + HIBP (+Sentry
+      // bila DSN diset).
+      const connectHosts = ["'self'"];
+      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+      if (supabaseUrl) {
+         try {
+            connectHosts.push(new URL(supabaseUrl).origin);
+         } catch {
+            // URL env tidak valid -> abaikan
+         }
+      }
+      connectHosts.push("https://api.pwnedpasswords.com");
+      if (
+         process.env.SENTRY_DSN ||
+         process.env.NEXT_PUBLIC_SENTRY_DSN
+      ) {
+         connectHosts.push("https://*.ingest.sentry.io");
+      }
+
       const csp = [
          "default-src 'self'",
          "base-uri 'self'",
@@ -34,12 +63,12 @@ export async function proxy(request: NextRequest) {
          "object-src 'none'",
          "img-src 'self' data: https:",
          "style-src 'self' 'unsafe-inline'",
-         `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
-         `connect-src 'self' https: wss:${isDev ? " ws:" : ""}`,
+         `script-src 'self' 'nonce-${nonce}'${isDev ? " 'unsafe-eval'" : ""}`,
+         `connect-src ${connectHosts.join(" ")}${isDev ? " ws:" : ""}`,
          "font-src 'self' data:",
       ].join("; ");
       response.headers.set("Content-Security-Policy", csp);
-   } catch (e) {
+   } catch {
       // ignore header errors
    }
 

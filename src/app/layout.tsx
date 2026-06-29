@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { headers } from "next/headers";
 import { Plus_Jakarta_Sans, Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "sonner";
@@ -31,19 +32,23 @@ export const viewport: Viewport = {
    ],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
    children,
 }: Readonly<{
    children: React.ReactNode;
 }>) {
+   // Nonce dari middleware (proxy.ts) untuk CSP ketat (script-src 'nonce-...').
+   const nonce = (await headers()).get("x-nonce") ?? undefined;
+
    return (
       <html lang="id" data-theme="jr" suppressHydrationWarning>
           <head>
-             <script
-                dangerouslySetInnerHTML={{
-                   __html: `(function(){try{var s=localStorage.getItem('theme');var d=window.matchMedia('(prefers-color-scheme: dark)').matches;if(s==='dark'||(!s&&d)){document.documentElement.setAttribute('data-theme','jr-dark');}}catch(e){}})();`,
-                }}
-             />
+              <script
+                 nonce={nonce}
+                 dangerouslySetInnerHTML={{
+                    __html: `(function(){try{var s=localStorage.getItem('theme');var d=window.matchMedia('(prefers-color-scheme: dark)').matches;if(s==='dark'||(!s&&d)){document.documentElement.setAttribute('data-theme','jr-dark');}}catch(e){}})();`,
+                 }}
+              />
           </head>
           <body
              className={`${jakartaSans.variable} ${geistMono.variable} font-sans antialiased`}
