@@ -43,7 +43,10 @@ export async function proxy(request: NextRequest) {
       const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
       if (supabaseUrl) {
          try {
-            connectHosts.push(new URL(supabaseUrl).origin);
+            const supaOrigin = new URL(supabaseUrl).origin;
+            connectHosts.push(supaOrigin);
+            // Realtime Supabase memakai WebSocket (wss) ke host yang sama.
+            connectHosts.push(supaOrigin.replace(/^http/i, "ws"));
          } catch {
             // URL env tidak valid -> abaikan
          }
