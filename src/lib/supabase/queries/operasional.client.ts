@@ -320,9 +320,12 @@ export async function getRekapHarian(tanggal: string) {
    if (error) throw error;
 
     return (data ?? []).map((row: RekapHarianQueryRow) => {
+      // kendaraan_keluar.masuk_id punya constraint UNIQUE -> PostgREST
+      // mengembalikan single object (to-one), bukan array. Akses langsung,
+      // jangan drop kasus single-object (bug sebelumnya: selalu null).
       const keluar = Array.isArray(row.kendaraan_keluar)
          ? row.kendaraan_keluar[0]
-         : null;
+         : row.kendaraan_keluar;
       const po = Array.isArray(row.po) ? row.po[0] : row.po;
       const armada = Array.isArray(row.armada) ? row.armada[0] : row.armada;
 

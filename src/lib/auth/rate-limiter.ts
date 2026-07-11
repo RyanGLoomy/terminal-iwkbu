@@ -1,14 +1,19 @@
-import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 interface RateLimitConfig {
    maxAttempts: number;
    lockoutMs: number;
 }
 
+// Rate-limiting adalah infrastruktur server-side, bukan data pengguna. Memakai
+// admin (service-role) client agar pemanggilan RPC tidak bergantung pada grant
+// `anon`/`authenticated` — memungkinkan REVOKE EXECUTE dari anon tanpa
+// menghancurkan alur login pre-auth (yang berjalan sebagai anon di cookie
+// client). service_role bypass EXECUTE grants.
 export async function checkRateLimit(
    key: string,
 ): Promise<{ allowed: true } | { allowed: false; retryAfterMs: number }> {
-   const supabase = await createClient();
+   const supabase = createAdminClient();
    const { data, error } = await supabase.rpc("check_rate_limit", {
       p_key: key,
    });
@@ -28,7 +33,7 @@ export async function recordFailedAttempt(
    key: string,
    { maxAttempts, lockoutMs }: RateLimitConfig,
 ): Promise<{ locked: boolean; retryAfterMs: number }> {
-   const supabase = await createClient();
+   const supabase = createAdminClient();
    const { data, error } = await supabase.rpc("record_rate_limit_attempt", {
       p_key: key,
       p_max_attempts: maxAttempts,
@@ -47,7 +52,7 @@ export async function recordFailedAttempt(
 }
 
 export async function clearAttempts(key: string): Promise<void> {
-   const supabase = await createClient();
+   const supabase = createAdminClient();
    await supabase.rpc("clear_rate_limit", { p_key: key });
 }
 
