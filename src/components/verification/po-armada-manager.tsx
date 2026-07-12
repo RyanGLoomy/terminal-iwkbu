@@ -189,7 +189,7 @@ export function POArmadaManager({ poId }: POArmadaManagerProps) {
                <input
                   ref={fileInputRef}
                   type="file"
-                  accept=".csv,text/csv"
+                  accept=".csv,text/csv,.xlsx,.xls"
                   className="hidden"
                   onChange={handleImport}
                />

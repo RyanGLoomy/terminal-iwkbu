@@ -155,9 +155,13 @@ async function ensureArmada(supabase, poUserId) {
 async function main() {
   console.log("\n=== Setup E2E Test Data ===\n");
 
-  const supabase = createClient(SUPABASE_URL, SERVICE_KEY, {
-    auth: { persistSession: false, autoRefreshToken: false },
-  });
+   const supabase = createClient(SUPABASE_URL, SERVICE_KEY, {
+     auth: { persistSession: false, autoRefreshToken: false },
+   });
+
+   // Clear rate-limit buckets so prior test runs don't lock out test accounts
+   await supabase.from("rate_limit_buckets").delete().neq("key", "__none__");
+   console.log("  ✓ Rate-limit buckets cleared");
 
   const roleIds = {};
   for (const role of ["po", "loket", "admin-terminal", "staf-iw"]) {

@@ -102,6 +102,21 @@ export function RekonsiliasiArmadaTable({
 
    return (
       <div className="rounded-lg border border-base-300 bg-base-100 overflow-hidden">
+         <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 px-3 py-2 border-b border-base-300 bg-base-200/30 text-xs text-base-content/70">
+            <span className="font-medium">Status Rekonsiliasi:</span>
+            <span className="flex items-center gap-1.5">
+               <Badge className={reconColor.ready}>ready</Badge>
+               kepatuhan terverifikasi
+            </span>
+            <span className="flex items-center gap-1.5">
+               <Badge className={reconColor.needs_review}>needs review</Badge>
+               menunggu data IWKBU
+            </span>
+            <span className="flex items-center gap-1.5">
+               <Badge className={reconColor.blocked}>blocked</Badge>
+               tidak patuh
+            </span>
+         </div>
          <Table caption="Daftar rekonsiliasi armada PO">
             <TableHeader>
                <TableRow className="bg-base-200/50">

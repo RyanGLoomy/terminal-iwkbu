@@ -96,8 +96,29 @@ export async function POST(request: NextRequest) {
          );
       }
 
-      const text = await file.text();
-      const rows = parseCsv(text);
+      const fileName = (file.name ?? "").toLowerCase();
+      let rows: Record<string, string>[];
+
+      if (fileName.endsWith(".xlsx") || fileName.endsWith(".xls")) {
+         // xlsx ships without bundled TS types — project convention: dynamic
+         // import only. @ts-ignore suppresses the module-resolution error.
+         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+         // @ts-ignore
+         const XLSX = await import("xlsx");
+         const buffer = Buffer.from(await file.arrayBuffer());
+         const workbook = XLSX.read(buffer, { type: "array" });
+         const sheet = workbook.Sheets[workbook.SheetNames[0]];
+         if (!sheet) {
+            return NextResponse.json(
+               { message: "File Excel tidak memiliki sheet." },
+               { status: 400 },
+            );
+         }
+         rows = XLSX.utils.sheet_to_json(sheet, { defval: "" });
+      } else {
+         const text = await file.text();
+         rows = parseCsv(text);
+      }
 
       if (rows.length === 0) {
          return NextResponse.json(
