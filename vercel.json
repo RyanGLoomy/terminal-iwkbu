@@ -4,6 +4,10 @@
     {
       "path": "/api/cron/iwkbu-fetch",
       "schedule": "0 1 * * *"
+    },
+    {
+      "path": "/api/cron/cleanup-logs",
+      "schedule": "0 3 * * 0"
     }
   ]
 }

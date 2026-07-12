@@ -19,6 +19,7 @@ import type {
 } from "@/lib/supabase/queries/operasional.types";
 import { Button } from "@/components/ui/button";
 import { useOnlineStatus } from "@/lib/hooks/use-online-status";
+import { usePendingTransactions, type PendingTransaction } from "@/lib/hooks/use-pending-transactions";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
@@ -49,6 +50,19 @@ export function PencatatanPanel() {
    const [detectedInfo, setDetectedInfo] = useState<{ po_nama: string; merk: string | null; tipe: string | null } | null>(null);
    const [detecting, setDetecting] = useState(false);
    const { isOnline } = useOnlineStatus();
+   const { pending, enqueue, replaying } = usePendingTransactions(async (tx: PendingTransaction) => {
+      try {
+         const endpoint = tx.type === "masuk" ? "/api/transaksi/masuk" : "/api/transaksi/keluar";
+         const res = await fetch(endpoint, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(tx.data),
+         });
+         return res.ok;
+      } catch {
+         return false;
+      }
+   });
 
    const canSubmitMasuk = session && nomorMasuk.trim() && selectedPo && isOnline;
    const canSubmitKeluar = session && selectedMasukId && isOnline;
@@ -172,14 +186,24 @@ export function PencatatanPanel() {
          setActiveMasuk(masukAktif);
          setSelectedMasukId((current) => current || masukAktif[0]?.id || "");
          setSuccess("Kendaraan masuk berhasil dicatat.");
-      } catch (err: unknown) {
-         setError(getErrorMessage(err));
-      } finally {
-         setActionLoading(false);
-      }
-   };
+       } catch (err: unknown) {
+          if (err instanceof TypeError && err.message.includes("fetch")) {
+             enqueue({
+                id: crypto.randomUUID(),
+                type: "masuk",
+                data: { nomor_polisi: nomorMasuk, po_id: selectedPo, sesi_id: session.id },
+                timestamp: Date.now(),
+             });
+             setError("Koneksi terputus. Transaksi disimpan dan akan dikirim otomatis saat koneksi pulih.");
+          } else {
+             setError(getErrorMessage(err));
+          }
+       } finally {
+          setActionLoading(false);
+       }
+    };
 
-   const handleKeluar = async (event: FormEvent<HTMLFormElement>) => {
+    const handleKeluar = async (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault();
       if (!session) {
          setError("Buka sesi kerja terlebih dahulu.");
@@ -199,9 +223,19 @@ export function PencatatanPanel() {
          setActiveMasuk(masukAktif);
          setSelectedMasukId(masukAktif[0]?.id || "");
          setSuccess("Kendaraan keluar berhasil dicatat.");
-      } catch (err: unknown) {
-         setError(getErrorMessage(err));
-      } finally {
+       } catch (err: unknown) {
+          if (err instanceof TypeError && err.message.includes("fetch")) {
+             enqueue({
+                id: crypto.randomUUID(),
+                type: "keluar",
+                data: { masuk_id: selectedMasukId, sesi_id: session.id },
+                timestamp: Date.now(),
+             });
+             setError("Koneksi terputus. Transaksi disimpan dan akan dikirim otomatis saat koneksi pulih.");
+          } else {
+             setError(getErrorMessage(err));
+          }
+       } finally {
          setActionLoading(false);
       }
    };
@@ -266,6 +300,19 @@ export function PencatatanPanel() {
                <AlertTitle>Koneksi Terputus</AlertTitle>
                <AlertDescription>
                   Anda sedang offline. Transaksi tidak dapat dicatat. Periksa koneksi internet Anda — transaksi akan tersedia kembali saat terhubung.
+               </AlertDescription>
+            </Alert>
+          )}
+
+          {(pending.length > 0 || replaying) && (
+             <Alert className="border-blue-200 bg-blue-50 text-blue-800 dark:border-blue-800 dark:bg-blue-950/50 dark:text-blue-300">
+               <AlertTitle>
+                  {replaying ? "Menyinkronkan transaksi..." : `${pending.length} transaksi pending`}
+               </AlertTitle>
+               <AlertDescription>
+                  {replaying
+                     ? "Mengirim transaksi yang tertunda..."
+                     : "Transaksi akan dikirim otomatis saat koneksi pulih."}
                </AlertDescription>
             </Alert>
           )}

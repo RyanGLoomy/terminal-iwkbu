@@ -5,6 +5,7 @@ import { Sidebar } from "@/components/dashboard/sidebar";
 import { DashboardTopbar } from "@/components/dashboard/dashboard-topbar";
 import { BottomNavigation } from "@/components/dashboard/bottom-navigation";
 import { NotificationBell } from "@/components/dashboard/notification-bell";
+import { ConnectionIndicator } from "@/components/dashboard/connection-indicator";
 import { ThemeToggle } from "@/components/dashboard/theme-toggle";
 import { UserMenu } from "@/components/dashboard/user-menu";
 import { cn } from "@/lib/utils";
@@ -71,8 +72,9 @@ export function DashboardShell({
                <span className="text-sm font-bold text-base-content">
                   IWKBU Terminal
                </span>
-               <div className="flex items-center gap-1">
-                  <NotificationBell />
+                <div className="flex items-center gap-1">
+                   <ConnectionIndicator />
+                   <NotificationBell />
                   <ThemeToggle />
                   <div className="mx-0.5 h-6 w-px bg-border" />
                   <UserMenu userName={userName} userRole={userRole} />

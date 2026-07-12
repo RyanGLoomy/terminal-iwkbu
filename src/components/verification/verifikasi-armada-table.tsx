@@ -24,8 +24,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { verifikasiArmada } from "@/lib/supabase/queries/verification.client";
 import type { Armada } from "@/lib/supabase/queries/verification.types";
 import { toast } from "sonner";
-import { AlertCircle, CheckCircle, XCircle, Bus } from "lucide-react";
+import { AlertCircle, CheckCircle, XCircle, Bus, FolderOpen } from "lucide-react";
 import { EmptyState } from "@/components/shared/empty-state";
+import { ArmadaDokumenDialog } from "./armada-dokumen-dialog";
 
 interface VerifikasiArmadaTableProps {
    data: Armada[];
@@ -46,6 +47,7 @@ export const VerifikasiArmadaTable = memo(
        const [error, setError] = useState<string | null>(null);
        const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
        const [bulkLoading, setBulkLoading] = useState(false);
+       const [dokumenArmada, setDokumenArmada] = useState<Armada | null>(null);
        const router = useRouter();
 
       const handleVerifikasi = async () => {
@@ -159,11 +161,9 @@ export const VerifikasiArmadaTable = memo(
                         <TableHead className="text-[13px]">
                            Status Verifikasi
                         </TableHead>
-                        {showActions && (
-                           <TableHead className="text-right text-[13px]">
-                              Aksi
-                           </TableHead>
-                        )}
+                         <TableHead className="text-right text-[13px]">
+                               Aksi
+                         </TableHead>
                      </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -214,12 +214,19 @@ export const VerifikasiArmadaTable = memo(
                                  value={armada.status_verifikasi}
                               />
                            </TableCell>
-                           {showActions && (
-                              <TableCell className="text-right space-x-2">
-                                 <Button
-                                    size="sm"
-                                    variant="outline"
-                                    className="text-brand-green border-green-200 hover:bg-green-50 dark:text-green-300 dark:border-green-800 dark:hover:bg-green-950/50"
+                            {showActions ? (
+                                <TableCell className="text-right space-x-2">
+                                  <Button
+                                     size="sm"
+                                     variant="ghost"
+                                     onClick={() => setDokumenArmada(armada)}
+                                  >
+                                     <FolderOpen className="h-4 w-4" aria-hidden="true" />
+                                  </Button>
+                                  <Button
+                                     size="sm"
+                                     variant="outline"
+                                     className="text-brand-green border-green-200 hover:bg-green-50 dark:text-green-300 dark:border-green-800 dark:hover:bg-green-950/50"
                                     onClick={() => {
                                        setError(null);
                                        setSelectedArmada(armada);
@@ -240,10 +247,20 @@ export const VerifikasiArmadaTable = memo(
                                     }}
                                  >
                                     <XCircle className="h-4 w-4 mr-1" aria-hidden="true" />
-                                    Tolak
-                                 </Button>
-                              </TableCell>
-            )}
+                                     Tolak
+                                  </Button>
+                               </TableCell>
+                            ) : (
+                               <TableCell className="text-right">
+                                  <Button
+                                     size="sm"
+                                     variant="ghost"
+                                     onClick={() => setDokumenArmada(armada)}
+                                  >
+                                     <FolderOpen className="h-4 w-4" aria-hidden="true" />
+                                  </Button>
+                               </TableCell>
+                            )}
             {showActions && selectedIds.size > 0 && (
                <div className="mb-3 flex flex-wrap items-center gap-2 rounded-md border border-base-300 bg-base-200/50 px-3 py-2">
                   <span className="text-sm font-medium">
@@ -346,8 +363,16 @@ export const VerifikasiArmadaTable = memo(
                      </Button>
                   </DialogFooter>
                </DialogContent>
-            </Dialog>
-         </>
-      );
+             </Dialog>
+
+            <ArmadaDokumenDialog
+               open={!!dokumenArmada}
+               onOpenChange={(o) => !o && setDokumenArmada(null)}
+               armada={dokumenArmada}
+               poId=""
+               readOnly
+            />
+          </>
+       );
    },
 );

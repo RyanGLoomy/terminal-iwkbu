@@ -33,6 +33,7 @@ interface ArmadaDokumenDialogProps {
    onOpenChange: (open: boolean) => void;
    armada: Armada | null;
    poId: string;
+   readOnly?: boolean;
 }
 
 export function ArmadaDokumenDialog({
@@ -40,6 +41,7 @@ export function ArmadaDokumenDialog({
    onOpenChange,
    armada,
    poId,
+   readOnly = false,
 }: ArmadaDokumenDialogProps) {
    const [dokumen, setDokumen] = useState<ArmadaDokumen[]>([]);
    const [loading, setLoading] = useState(false);
@@ -134,27 +136,30 @@ export function ArmadaDokumenDialog({
                   );
                   return (
                      <div key={jenis.value} className="space-y-2">
-                        <div className="flex items-center justify-between">
-                           <label className="text-sm font-medium">
-                              {jenis.label}
-                           </label>
-                           <input
-                              ref={(el) => {
-                                 fileInputRefs.current[jenis.value] = el;
-                              }}
-                              type="file"
-                              accept=".pdf,.jpg,.jpeg,.png,.webp"
-                              className="hidden"
-                              onChange={() => handleUpload(jenis.value)}
-                           />
-                           <Button
-                              size="sm"
-                              variant="outline"
-                              disabled={uploading === jenis.value}
-                              onClick={() =>
-                                 fileInputRefs.current[jenis.value]?.click()
-                              }
-                           >
+                         <div className="flex items-center justify-between">
+                            <label className="text-sm font-medium">
+                               {jenis.label}
+                            </label>
+                            {!readOnly && (
+                            <input
+                               ref={(el) => {
+                                  fileInputRefs.current[jenis.value] = el;
+                               }}
+                               type="file"
+                               accept=".pdf,.jpg,.jpeg,.png,.webp"
+                               className="hidden"
+                               onChange={() => handleUpload(jenis.value)}
+                            />
+                            )}
+                            {!readOnly && (
+                            <Button
+                               size="sm"
+                               variant="outline"
+                               disabled={uploading === jenis.value}
+                               onClick={() =>
+                                  fileInputRefs.current[jenis.value]?.click()
+                               }
+                            >
                               {uploading === jenis.value ? (
                                  "Mengunggah…"
                               ) : (
@@ -163,8 +168,9 @@ export function ArmadaDokumenDialog({
                                     Upload
                                  </>
                               )}
-                           </Button>
-                        </div>
+                            </Button>
+                            )}
+                         </div>
                         {docs.length > 0 && (
                            <div className="space-y-1">
                               {docs.map((dok) => (
@@ -194,15 +200,17 @@ export function ArmadaDokumenDialog({
                                           onClick={() => handleView(dok)}
                                        >
                                           <Eye className="h-3.5 w-3.5" />
-                                       </Button>
-                                        <Button
-                                           size="sm"
-                                           variant="ghost"
-                                           onClick={() => setDeleteTarget(dok)}
-                                        >
-                                          <Trash2 className="h-3.5 w-3.5" />
-                                       </Button>
-                                    </div>
+                                        </Button>
+                                        {!readOnly && (
+                                         <Button
+                                            size="sm"
+                                            variant="ghost"
+                                            onClick={() => setDeleteTarget(dok)}
+                                         >
+                                           <Trash2 className="h-3.5 w-3.5" />
+                                        </Button>
+                                        )}
+                                     </div>
                                  </div>
                               ))}
                            </div>
