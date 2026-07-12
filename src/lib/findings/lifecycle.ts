@@ -1,5 +1,6 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import { sanitizeDbError } from "@/lib/db-error";
+import { detectMimeType } from "@/lib/file-signature";
 import { logActivity } from "@/lib/supabase/queries/operasional.server";
 import { createNotification } from "@/lib/supabase/queries/notifications.server";
 import type { AuthenticatedActor } from "@/lib/auth/server-actor";
@@ -150,13 +151,18 @@ export async function submitClarification(params: {
     }
 
    if (evidenceFile && evidenceFile.size > 0) {
-      if (!ALLOWED_EVIDENCE_MIME.includes(evidenceFile.type)) {
+      if (evidenceFile.size > MAX_EVIDENCE_FILE_SIZE) {
+         throw new InvalidClarificationError("Ukuran file melebihi batas 5 MB");
+      }
+      // APP-04: validate actual file bytes (magic numbers), not the client-
+      // supplied file.type which is trivially spoofable. Detect once, then use
+      // the detected MIME for both the allowlist check and the stored contentType.
+      const fileBuffer = Buffer.from(await evidenceFile.arrayBuffer());
+      const detectedMime = detectMimeType(fileBuffer);
+      if (!detectedMime || !ALLOWED_EVIDENCE_MIME.includes(detectedMime)) {
          throw new InvalidClarificationError(
             "Format file tidak didukung. Gunakan PDF, JPEG, PNG, atau WebP.",
          );
-      }
-      if (evidenceFile.size > MAX_EVIDENCE_FILE_SIZE) {
-         throw new InvalidClarificationError("Ukuran file melebihi batas 5 MB");
       }
 
       // APP-03: sanitize filename before interpolation into the storage key
@@ -168,8 +174,8 @@ export async function submitClarification(params: {
       const filePath = `${finding.id}/${Date.now()}-${safeName}`;
       const { error: uploadError } = await admin.storage
          .from("finding-evidence")
-         .upload(filePath, evidenceFile, {
-            contentType: evidenceFile.type,
+         .upload(filePath, fileBuffer, {
+            contentType: detectedMime,
             upsert: false,
          });
 

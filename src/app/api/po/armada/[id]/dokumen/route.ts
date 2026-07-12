@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sanitizeDbError } from "@/lib/db-error";
+import { detectMimeType } from "@/lib/file-signature";
 import { logActivity } from "@/lib/supabase/queries/operasional.server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { requireActor, actorErrorHandler } from "@/lib/auth/actor";
@@ -64,7 +65,20 @@ export async function POST(
          );
       }
 
-      if (!ALLOWED_MIME.includes(file.type)) {
+      if (file.size > MAX_FILE_SIZE) {
+         return NextResponse.json(
+            { message: "Ukuran file maksimal 5 MB" },
+            { status: 400 },
+         );
+      }
+
+      // APP-04: validate actual file bytes (magic numbers), not the client-
+      // supplied file.type. Derive both the extension and stored contentType
+      // from the detected MIME so a spoofed label cannot smuggle hostile bytes
+      // or an HTML/SVG payload labelled as image/png.
+      const fileBuffer = Buffer.from(await file.arrayBuffer());
+      const detectedMime = detectMimeType(fileBuffer);
+      if (!detectedMime || !ALLOWED_MIME.includes(detectedMime)) {
          return NextResponse.json(
             {
                message: `Tipe file tidak diizinkan. Gunakan: PDF, JPEG, PNG, atau WebP.`,
@@ -73,25 +87,20 @@ export async function POST(
          );
       }
 
-      if (file.size > MAX_FILE_SIZE) {
-         return NextResponse.json(
-            { message: "Ukuran file maksimal 5 MB" },
-            { status: 400 },
-         );
-      }
-
-      // APP-03: sanitize the extension to alphanumerics only — File.name is
-      // client-controlled and could carry traversal/special chars.
-      const rawExt = file.name.split(".").pop() ?? "pdf";
-      const ext = rawExt.replace(/[^a-zA-Z0-9]/g, "").slice(0, 8) || "pdf";
+      const ext =
+         detectedMime === "application/pdf"
+            ? "pdf"
+            : detectedMime === "image/jpeg"
+              ? "jpg"
+              : detectedMime === "image/png"
+                ? "png"
+                : "webp";
       const filePath = `${armada.po_id}/${armadaId}/${jenis}-${Date.now()}.${ext}`;
-
-      const fileBuffer = Buffer.from(await file.arrayBuffer());
 
       const { error: uploadError } = await admin.storage
          .from("armada-dokumen")
          .upload(filePath, fileBuffer, {
-            contentType: file.type,
+            contentType: detectedMime,
             upsert: false,
          });
 

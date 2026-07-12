@@ -40,6 +40,11 @@ export async function proxy(request: NextRequest) {
       // host HTTPS mana pun). Hanya origin sendiri + Supabase + HIBP (+Sentry
       // bila DSN diset).
       const connectHosts = ["'self'"];
+      // APP-05: img-src dipersempit dari `https:` (wildcard) ke origin sendiri
+      // + origin Supabase (gambar dari Storage). Mencegah exfiltrasi via
+      // <img src="https://attacker/..."> bila nilai user-controlled pernah
+      // dirender sebagai img src di masa depan.
+      const imgHosts = ["'self'", "data:"];
       const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
       if (supabaseUrl) {
          try {
@@ -47,6 +52,7 @@ export async function proxy(request: NextRequest) {
             connectHosts.push(supaOrigin);
             // Realtime Supabase memakai WebSocket (wss) ke host yang sama.
             connectHosts.push(supaOrigin.replace(/^http/i, "ws"));
+            imgHosts.push(supaOrigin);
          } catch {
             // URL env tidak valid -> abaikan
          }
@@ -64,7 +70,7 @@ export async function proxy(request: NextRequest) {
          "base-uri 'self'",
          "frame-ancestors 'none'",
          "object-src 'none'",
-         "img-src 'self' data: https:",
+         `img-src ${imgHosts.join(" ")}`,
          "style-src 'self' 'unsafe-inline'",
          `script-src 'self' 'nonce-${nonce}'${isDev ? " 'unsafe-eval'" : ""}`,
          `connect-src ${connectHosts.join(" ")}${isDev ? " ws:" : ""}`,
