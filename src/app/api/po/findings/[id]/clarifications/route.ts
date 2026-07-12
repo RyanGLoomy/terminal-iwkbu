@@ -4,9 +4,9 @@ import { requireActor, actorErrorHandler } from "@/lib/auth/actor";
 import { ROLES } from "@/config/roles";
 import {
    submitClarification,
+   parseClarificationForm,
    FindingClosedError,
    InvalidClarificationError,
-   type ClarificationDecision,
 } from "@/lib/findings/lifecycle";
 
 export async function POST(
@@ -18,31 +18,8 @@ export async function POST(
 
       const { id } = await context.params;
       const formData = await request.formData();
-      const decision = (formData.get("decision") as string | null) ?? undefined;
-      const message = (
-         (formData.get("message") as string | null) ?? ""
-      ).trim();
-      const evidenceLink = (
-         (formData.get("evidenceLink") as string | null) ?? ""
-      ).trim() || undefined;
-      const evidenceFile = formData.get("evidenceFile") as File | null;
-
-      if (
-         !decision ||
-         !["menerima", "menolak", "melengkapi"].includes(decision)
-      ) {
-         return NextResponse.json(
-            { message: "Keputusan klarifikasi tidak valid" },
-            { status: 400 },
-         );
-      }
-
-      if (!message) {
-         return NextResponse.json(
-            { message: "Pesan klarifikasi wajib diisi" },
-            { status: 400 },
-         );
-      }
+      const { decision, message, evidenceLink, evidenceFile } =
+         parseClarificationForm(formData);
 
       const admin = createAdminClient();
       const { data: finding, error: findingError } = await admin
@@ -63,7 +40,7 @@ export async function POST(
          actor,
          responder: "po",
          finding,
-         decision: decision as ClarificationDecision,
+         decision,
          message,
          evidenceLink,
          evidenceFile,

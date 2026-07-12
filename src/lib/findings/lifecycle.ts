@@ -77,7 +77,7 @@ export const ALLOWED_EVIDENCE_MIME = [
 export const MAX_EVIDENCE_FILE_SIZE = 5 * 1024 * 1024;
 
 // Link bukti hanya boleh http/https — blok stored-XSS via `javascript:` (APP-02).
-function isSafeEvidenceUrl(raw: string): boolean {
+export function isSafeEvidenceUrl(raw: string): boolean {
    try {
       const u = new URL(raw);
       return u.protocol === "http:" || u.protocol === "https:";
@@ -104,6 +104,46 @@ export interface ClarificationRecord {
    message: string;
    evidence: Record<string, unknown>;
    created_at: string;
+}
+
+export interface ParsedClarificationForm {
+   decision: ClarificationDecision;
+   message: string;
+   evidenceLink?: string;
+   evidenceFile: File | null;
+}
+
+/**
+ * Parse + validasi FormData klarifikasi (dipakai route PO & Staf IW). Throw
+ * InvalidClarificationError (400) bila decision/message tidak valid — route
+ * menangkapnya di catch block yang sudah ada.
+ */
+export function parseClarificationForm(
+   formData: FormData,
+): ParsedClarificationForm {
+   const decision = (formData.get("decision") as string | null) ?? undefined;
+   const message = ((formData.get("message") as string | null) ?? "").trim();
+   const evidenceLink =
+      ((formData.get("evidenceLink") as string | null) ?? "").trim() ||
+      undefined;
+   const evidenceFile = formData.get("evidenceFile") as File | null;
+
+   if (
+      !decision ||
+      !["menerima", "menolak", "melengkapi"].includes(decision)
+   ) {
+      throw new InvalidClarificationError("Keputusan klarifikasi tidak valid");
+   }
+   if (!message) {
+      throw new InvalidClarificationError("Pesan klarifikasi wajib diisi");
+   }
+
+   return {
+      decision: decision as ClarificationDecision,
+      message,
+      evidenceLink,
+      evidenceFile,
+   };
 }
 
 /**

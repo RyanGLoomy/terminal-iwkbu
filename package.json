@@ -14,7 +14,7 @@
         "test:e2e:setup": "node scripts/setup-e2e.mjs",
         "test:engine": "tsx --test src/lib/rekonsiliasi/engine.test.ts",
         "test:auth": "tsx --test src/lib/auth/actor.test.ts",
-        "test:unit": "tsx --test src/lib/**/*.test.ts",
+        "test:unit": "tsx --test src/lib/*.test.ts src/lib/**/*.test.ts",
         "deps:check": "pnpm outdated",
         "audit": "pnpm audit --audit-level=moderate",
         "size": "pnpm build && size-limit"

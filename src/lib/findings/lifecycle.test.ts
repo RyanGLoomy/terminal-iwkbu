@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 
-import { nextStatus, type FindingStatus } from "./lifecycle";
+import { nextStatus, isSafeEvidenceUrl, type FindingStatus } from "./lifecycle";
 
 const S = {
    open: "open" as FindingStatus,
@@ -52,4 +52,21 @@ test("FindingClosedError guard: semua event clarify di-block saat closed", () =>
    for (const event of ["po_clarify", "staf_clarify"] as const) {
       assert.equal(nextStatus({ from: S.closed, event }), null);
    }
+});
+
+test("isSafeEvidenceUrl: http/https diterima", () => {
+   assert.equal(isSafeEvidenceUrl("https://example.com/evidence.png"), true);
+   assert.equal(isSafeEvidenceUrl("http://localhost:3000/x"), true);
+});
+
+test("isSafeEvidenceUrl: javascript/data/mailto ditolak (APP-02)", () => {
+   assert.equal(isSafeEvidenceUrl("javascript:alert(1)"), false);
+   assert.equal(isSafeEvidenceUrl("data:text/html,<script>"), false);
+   assert.equal(isSafeEvidenceUrl("mailto:x@y"), false);
+});
+
+test("isSafeEvidenceUrl: protocol-relative / string kosong ditolak", () => {
+   assert.equal(isSafeEvidenceUrl("//evil.com/x"), false);
+   assert.equal(isSafeEvidenceUrl(""), false);
+   assert.equal(isSafeEvidenceUrl("   "), false);
 });

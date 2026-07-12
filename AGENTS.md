@@ -6,7 +6,7 @@
 - `CONTEXT.md` is the domain glossary (actors, concepts, vocabulary for seams). `docs/adr/` holds Architecture Decision Records — load-bearing decisions; don't re-suggest alternatives an ADR already rejected.
 - Single Next.js app, not a monorepo (`pnpm-workspace.yaml` only sets build settings).
 - Use `pnpm` only. CI uses Node 20 and pnpm 10.29.1.
-- Unit tests: `pnpm test:unit` (engine + actor + lifecycle pure modules via `node:test` + `tsx`).
+- Unit tests: `pnpm test:unit` (engine + actor + lifecycle + file-signature pure modules via `node:test` + `tsx`).
 
 ## Commands
 
@@ -28,7 +28,7 @@ pnpm test:e2e:dev           # Same but skip build (use running dev server)
 - Integration smoke needs a prod server: `pnpm build && pnpm start`, then `BASE_URL=http://127.0.0.1:3000 pnpm test:integration`.
 - E2E tests use `request.fetch()` (API-level), not browser navigation, across 9 spec files (`auth`, `security`, `po`, `loket`, `admin-terminal`, `staf-iw`, `temuan`, `audit-laporan`, `storage`). Setup script (`scripts/setup-e2e.mjs`) creates test users in Supabase and writes credentials to `/tmp/opencode/iwkbu-test-credentials.json`. It reads `.env.local` automatically.
 - Run a single E2E spec/test against a running server: `npx playwright test e2e/loket.spec.ts` or `npx playwright test -g "pattern"` (config: `playwright.config.ts`). The full `test:e2e*` scripts re-run setup first.
-- Unit tests exist for 3 pure modules (`rekonsiliasi/engine`, `auth/actor`, `findings/lifecycle`) but are **NOT run in CI** — CI runs integration smoke only. Run locally before pushing: `pnpm test:unit`, or one module via `pnpm test:engine` / `pnpm test:auth`.
+- Unit tests exist for 4 pure modules (`rekonsiliasi/engine`, `auth/actor`, `findings/lifecycle`, `file-signature`) but are **NOT run in CI** — CI runs integration smoke only. Run locally before pushing: `pnpm test:unit`, or one module via `pnpm test:engine` / `pnpm test:auth`.
 - Scheduled workflows: `nightly-backup.yml` (02:00 UTC, `pg_dump` via `SUPABASE_DB_URL` → 7-day artifact), `scheduled-audit.yml` (03:00 UTC, opens a GitHub issue on vulns). Dependabot PRs **auto squash-merge when green** — don't merge them manually.
 
 ## App Wiring

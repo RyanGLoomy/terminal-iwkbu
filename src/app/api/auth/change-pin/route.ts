@@ -8,10 +8,8 @@ import {
    recordFailedAttempt,
    clearAttempts,
    formatRetryAfter,
-} from "@/lib/auth/rate-limiter";
+} from "@/lib/auth/pin-rate-limiter";
 import bcrypt from "bcryptjs";
-
-const PIN_LIMIT = { maxAttempts: 5, lockoutMs: 15 * 60 * 1000 };
 
 export async function POST(request: Request) {
    try {
@@ -87,7 +85,7 @@ export async function POST(request: Request) {
       }
 
         if (!matched) {
-          await recordFailedAttempt(pinKey, PIN_LIMIT);
+          await recordFailedAttempt(pinKey);
           return NextResponse.json(
              { message: "PIN lama tidak valid." },
              { status: 400 },
@@ -96,18 +94,29 @@ export async function POST(request: Request) {
 
         await clearAttempts(pinKey);
 
-      // Update PIN using server client (preserves auth.uid() for triggers)
+      // Update PIN using server client (preserves auth.uid() for triggers).
+      // RLS now admits loket for own-terminal pin_hash updates (migration 0060);
+      // the guard trigger rejects any other column. Assert the row was touched so
+      // any future policy drift fails loudly instead of silently no-op'ing.
       const supabase = await createClient();
       const newPinHash = bcrypt.hashSync(newPin, 10);
-      const { error: updateError } = await supabase
+      const { data: updated, error: updateError } = await supabase
          .from("petugas_terminal")
          .update({ pin_hash: newPinHash })
-         .eq("id", matched.id);
+         .eq("id", matched.id)
+         .select("id");
 
       if (updateError) {
          return NextResponse.json(
             { message: "Terjadi kesalahan internal" },
             { status: 500 },
+         );
+      }
+
+      if (!updated || updated.length === 0) {
+         return NextResponse.json(
+            { message: "Gagal memperbarui PIN: petugas tidak dapat diakses." },
+            { status: 404 },
          );
       }
 
