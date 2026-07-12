@@ -75,6 +75,16 @@ export const ALLOWED_EVIDENCE_MIME = [
 ];
 export const MAX_EVIDENCE_FILE_SIZE = 5 * 1024 * 1024;
 
+// Link bukti hanya boleh http/https — blok stored-XSS via `javascript:` (APP-02).
+function isSafeEvidenceUrl(raw: string): boolean {
+   try {
+      const u = new URL(raw);
+      return u.protocol === "http:" || u.protocol === "https:";
+   } catch {
+      return false;
+   }
+}
+
 export interface FindingForClarification {
    id: string;
    po_id: string;
@@ -102,7 +112,8 @@ export interface ClarificationRecord {
  *
  * Throw:
  *   - FindingClosedError (409) bila temuan sudah closed.
- *   - InvalidClarificationError (400) bila MIME/ukuran file tak valid.
+ *   - InvalidClarificationError (400) bila MIME/ukuran file tak valid, atau
+ *     link bukti bukan http/https.
  */
 export async function submitClarification(params: {
    actor: AuthenticatedActor;
@@ -128,8 +139,15 @@ export async function submitClarification(params: {
    }
 
    const admin = createAdminClient();
-   const evidence: Record<string, unknown> = {};
-   if (evidenceLink) evidence.link = evidenceLink;
+    const evidence: Record<string, unknown> = {};
+    if (evidenceLink) {
+       if (!isSafeEvidenceUrl(evidenceLink)) {
+          throw new InvalidClarificationError(
+             "Link bukti tidak valid (hanya http/https).",
+          );
+       }
+       evidence.link = evidenceLink;
+    }
 
    if (evidenceFile && evidenceFile.size > 0) {
       if (!ALLOWED_EVIDENCE_MIME.includes(evidenceFile.type)) {
@@ -141,7 +159,13 @@ export async function submitClarification(params: {
          throw new InvalidClarificationError("Ukuran file melebihi batas 5 MB");
       }
 
-      const filePath = `${finding.id}/${Date.now()}-${evidenceFile.name}`;
+      // APP-03: sanitize filename before interpolation into the storage key
+      // (File.name is fully client-controlled; a name containing '/' or '..'
+      // would nest/escape the finding's folder). Keep the original for display.
+      const safeName = evidenceFile.name
+         .replace(/[^a-zA-Z0-9._-]/g, "_")
+         .slice(0, 100);
+      const filePath = `${finding.id}/${Date.now()}-${safeName}`;
       const { error: uploadError } = await admin.storage
          .from("finding-evidence")
          .upload(filePath, evidenceFile, {

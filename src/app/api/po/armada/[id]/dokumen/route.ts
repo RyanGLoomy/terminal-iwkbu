@@ -80,7 +80,10 @@ export async function POST(
          );
       }
 
-      const ext = file.name.split(".").pop() ?? "pdf";
+      // APP-03: sanitize the extension to alphanumerics only — File.name is
+      // client-controlled and could carry traversal/special chars.
+      const rawExt = file.name.split(".").pop() ?? "pdf";
+      const ext = rawExt.replace(/[^a-zA-Z0-9]/g, "").slice(0, 8) || "pdf";
       const filePath = `${armada.po_id}/${armadaId}/${jenis}-${Date.now()}.${ext}`;
 
       const fileBuffer = Buffer.from(await file.arrayBuffer());
