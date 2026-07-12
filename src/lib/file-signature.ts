@@ -6,8 +6,11 @@
  * dokumen armada (PDF/JPEG/PNG/WebP). Mengembalikan null bila signature tidak
  * dikenali; pemanggil wajib menolak upload dalam kasus itu.
  */
+// Min header size to cover the longest signature we check (WebP reaches offset 11).
+const MIN_HEADER_LEN = 12;
+
 export function detectMimeType(buf: Buffer): string | null {
-   if (buf.length < 12) return null;
+   if (buf.length < MIN_HEADER_LEN) return null;
 
    // PDF: %PDF- (25 50 44 46 2D)
    if (

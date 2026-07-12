@@ -80,11 +80,10 @@ export async function POST(request: Request) {
          );
       }
 
-      await adminClient.from("user_roles").upsert(
-         { user_id: user.id, role_id: poRole.id },
-         { onConflict: "user_id,role_id" },
-      );
-
+      // Insert po master data FIRST so a failure (dup kode_po, CHECK, blip)
+      // leaves nothing committed. The role upsert follows only on success —
+      // otherwise the APP-01 guard above would block a retry (role persisted
+      // without a po row → permanent lockout).
       const { error: poError } = await adminClient.from("po").insert({
          id: user.id,
          kode_po,
@@ -102,6 +101,11 @@ export async function POST(request: Request) {
             { status: 400 },
          );
       }
+
+      await adminClient.from("user_roles").upsert(
+         { user_id: user.id, role_id: poRole.id },
+         { onConflict: "user_id,role_id" },
+      );
 
       return NextResponse.json({ success: true, user_id: user.id });
    } catch {

@@ -15,6 +15,13 @@ const ALLOWED_MIME = [
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
+const EXT_BY_MIME: Record<string, string> = {
+   "application/pdf": "pdf",
+   "image/jpeg": "jpg",
+   "image/png": "png",
+   "image/webp": "webp",
+};
+
 const VALID_JENIS = ["stck", "kir", "asuransi", "lainnya"] as const;
 
 export async function POST(
@@ -87,14 +94,7 @@ export async function POST(
          );
       }
 
-      const ext =
-         detectedMime === "application/pdf"
-            ? "pdf"
-            : detectedMime === "image/jpeg"
-              ? "jpg"
-              : detectedMime === "image/png"
-                ? "png"
-                : "webp";
+      const ext = EXT_BY_MIME[detectedMime] ?? "pdf";
       const filePath = `${armada.po_id}/${armadaId}/${jenis}-${Date.now()}.${ext}`;
 
       const { error: uploadError } = await admin.storage
@@ -119,7 +119,7 @@ export async function POST(
             file_path: filePath,
             file_name: file.name,
             file_size: file.size,
-            mime_type: file.type,
+            mime_type: detectedMime,
             uploaded_by: actor.user.id,
          })
          .select()

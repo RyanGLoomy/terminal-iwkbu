@@ -140,15 +140,15 @@ export async function submitClarification(params: {
    }
 
    const admin = createAdminClient();
-    const evidence: Record<string, unknown> = {};
-    if (evidenceLink) {
-       if (!isSafeEvidenceUrl(evidenceLink)) {
-          throw new InvalidClarificationError(
-             "Link bukti tidak valid (hanya http/https).",
-          );
-       }
-       evidence.link = evidenceLink;
-    }
+   const evidence: Record<string, unknown> = {};
+   if (evidenceLink) {
+      if (!isSafeEvidenceUrl(evidenceLink)) {
+         throw new InvalidClarificationError(
+            "Link bukti tidak valid (hanya http/https).",
+         );
+      }
+      evidence.link = evidenceLink;
+   }
 
    if (evidenceFile && evidenceFile.size > 0) {
       if (evidenceFile.size > MAX_EVIDENCE_FILE_SIZE) {
