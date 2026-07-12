@@ -32,6 +32,7 @@ import {
 } from "lucide-react";
 import { getErrorMessage } from "@/lib/db-error";
 import { formatDecisionLabel, formatDateTime } from "./findings-shared";
+import { EvidenceAttachment } from "./evidence-attachment";
 
 async function downloadEvidence(filePath: string) {
    try {
@@ -235,41 +236,11 @@ export function StafFindingsClarificationDialog({
                            <p className="mt-1 text-sm text-base-content/70">
                               {c.message}
                            </p>
-                           {c.evidence &&
-                           typeof c.evidence === "object" &&
-                           c.evidence !== null ? (
-                              <div className="mt-1 flex flex-wrap items-center gap-2 text-xs">
-                                 {"link" in c.evidence &&
-                                 typeof c.evidence.link === "string" ? (
-                                    <a
-                                       href={c.evidence.link}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                       className="text-primary underline underline-offset-2"
-                                    >
-                                       {c.evidence.link}
-                                    </a>
-                                 ) : null}
-                                 {"file_path" in c.evidence &&
-                                 typeof c.evidence.file_path === "string" ? (
-                                    <button
-                                       onClick={() =>
-                                          downloadEvidence(
-                                             c.evidence!.file_path as string,
-                                          )
-                                       }
-                                       className="inline-flex items-center gap-1 text-primary hover:underline"
-                                    >
-                                       <Paperclip
-                                          className="h-3 w-3"
-                                          aria-hidden="true"
-                                       />
-                                       {(c.evidence.file_name as string) ??
-                                          "Lampiran"}
-                                    </button>
-                                 ) : null}
-                              </div>
-                           ) : null}
+                            {c.evidence &&
+                            typeof c.evidence === "object" &&
+                            c.evidence !== null ? (
+                               <EvidenceAttachment evidence={c.evidence as Record<string, unknown>} />
+                            ) : null}
                         </li>
                      ))}
                   </ul>

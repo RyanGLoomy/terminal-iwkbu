@@ -2,6 +2,7 @@
 
 import { useDeferredValue, useState } from "react";
 import { formatDate } from "@/lib/utils/format-date";
+import { EvidenceAttachment } from "./evidence-attachment";
 import { useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -308,34 +309,12 @@ export function PoFindingsPanel({ findings }: { findings: FindingRecord[] }) {
                                            <p className="mt-1 text-sm text-base-content/70">
                                               {clarification.message}
                                            </p>
-                                           {clarification.evidence &&
-                                           typeof clarification.evidence ===
-                                              "object" &&
-                                           clarification.evidence !== null ? (
-                                              <div className="mt-1 flex flex-wrap items-center gap-2 text-xs">
-                                                 {"link" in clarification.evidence &&
-                                                 typeof clarification.evidence.link === "string" ? (
-                                                    <a
-                                                       href={clarification.evidence.link}
-                                                       target="_blank"
-                                                       rel="noopener noreferrer"
-                                                       className="text-primary underline underline-offset-2"
-                                                    >
-                                                       {clarification.evidence.link}
-                                                    </a>
-                                                 ) : null}
-                                                 {"file_path" in clarification.evidence &&
-                                                 typeof clarification.evidence.file_path === "string" ? (
-                                                    <button
-                                                       onClick={() => downloadEvidence(clarification.evidence!.file_path as string)}
-                                                       className="inline-flex items-center gap-1 text-primary hover:underline"
-                                                    >
-                                                       <Paperclip className="h-3 w-3" aria-hidden="true" />
-                                                       {(clarification.evidence.file_name as string) ?? "Lampiran"}
-                                                    </button>
-                                                 ) : null}
-                                              </div>
-                                           ) : null}
+                                            {clarification.evidence &&
+                                            typeof clarification.evidence ===
+                                               "object" &&
+                                            clarification.evidence !== null ? (
+                                               <EvidenceAttachment evidence={clarification.evidence as Record<string, unknown>} />
+                                            ) : null}
                                        </li>
                                     ),
                                  )}

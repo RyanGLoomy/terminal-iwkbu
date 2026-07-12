@@ -98,6 +98,57 @@ export function StafIwLaporanPanel({
       }
    }
 
+   function handleExportCsv() {
+      if (findings.length === 0) {
+         toast.error("Tidak ada data temuan untuk diekspor");
+         return;
+      }
+      const header = [
+         "Kode PO",
+         "Nama PO",
+         "Nomor Polisi",
+         "Judul",
+         "Severity",
+         "Status",
+         "Sumber",
+         "Dibuat",
+         "Selesai",
+      ];
+      const escape = (v: unknown) => {
+         const s = String(v ?? "");
+         return s.includes(",") || s.includes('"') || s.includes("\n")
+            ? `"${s.replace(/"/g, '""')}"`
+            : s;
+      };
+      const rows = findings
+         .map((f) =>
+            [
+               f.po?.kode_po ?? "-",
+               f.po?.nama_perusahaan ?? "-",
+               f.nomor_polisi,
+               f.judul,
+               f.severity,
+               STATUS_LABEL[f.status],
+               f.source_type,
+               formatDateShort(f.created_at),
+               formatDateShort(f.resolved_at),
+            ]
+               .map(escape)
+               .join(","),
+         )
+         .join("\n");
+      const blob = new Blob([`${header.join(",")}\n${rows}`], {
+         type: "text/csv;charset=utf-8;",
+      });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `laporan-temuan-staf-iw-${new Date().toISOString().slice(0, 10)}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+      toast.success("Laporan temuan diekspor (CSV)");
+   }
+
    return (
       <div className="space-y-6">
          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -138,15 +189,26 @@ export function StafIwLaporanPanel({
                      <FileSpreadsheet className="size-4 text-primary" aria-hidden="true" />
                      Laporan Temuan & Ekspor
                   </span>
-                  <Button
-                     variant="outline"
-                     size="sm"
-                     onClick={handleExportFindings}
-                     disabled={exporting || findings.length === 0}
-                  >
-                     <Download className="size-4" aria-hidden="true" />
-                     Ekspor XLSX
-                  </Button>
+                   <div className="flex gap-2">
+                      <Button
+                         variant="outline"
+                         size="sm"
+                         onClick={handleExportFindings}
+                         disabled={exporting || findings.length === 0}
+                      >
+                         <Download className="size-4" aria-hidden="true" />
+                         XLSX
+                      </Button>
+                      <Button
+                         variant="outline"
+                         size="sm"
+                         onClick={handleExportCsv}
+                         disabled={findings.length === 0}
+                      >
+                         <Download className="size-4" aria-hidden="true" />
+                         CSV
+                      </Button>
+                   </div>
                </CardTitle>
             </CardHeader>
             <CardContent>

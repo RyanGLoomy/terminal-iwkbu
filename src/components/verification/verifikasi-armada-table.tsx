@@ -42,9 +42,11 @@ export const VerifikasiArmadaTable = memo(
          null,
       );
       const [keterangan, setKeterangan] = useState("");
-      const [loading, setLoading] = useState(false);
-      const [error, setError] = useState<string | null>(null);
-      const router = useRouter();
+       const [loading, setLoading] = useState(false);
+       const [error, setError] = useState<string | null>(null);
+       const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+       const [bulkLoading, setBulkLoading] = useState(false);
+       const router = useRouter();
 
       const handleVerifikasi = async () => {
          if (!selectedArmada || !action) return;
@@ -71,6 +73,33 @@ export const VerifikasiArmadaTable = memo(
          } finally {
             setLoading(false);
          }
+       };
+
+      const handleBulkVerifikasi = async (
+         bulkAction: "terverifikasi" | "ditolak",
+      ) => {
+         if (selectedIds.size === 0) return;
+         setBulkLoading(true);
+         setError(null);
+         const ids = Array.from(selectedIds);
+         const results = await Promise.allSettled(
+            ids.map((id) =>
+               verifikasiArmada(id, bulkAction, ""),
+            ),
+         );
+         const success = results.filter((r) => r.status === "fulfilled").length;
+         const failed = results.length - success;
+         if (success > 0) {
+            toast.success(
+               `${success} armada ${bulkAction === "terverifikasi" ? "diverifikasi" : "ditolak"}`,
+            );
+            router.refresh();
+         }
+         if (failed > 0) {
+            toast.error(`${failed} armada gagal diproses`);
+         }
+         setSelectedIds(new Set());
+         setBulkLoading(false);
       };
 
       if (data.length === 0) {
@@ -98,10 +127,30 @@ export const VerifikasiArmadaTable = memo(
             <div className="border border-base-300 rounded-lg bg-base-100 overflow-hidden">
                 <Table caption="Daftar armada menunggu verifikasi">
                   <TableHeader>
-                     <TableRow className="bg-base-200/50">
-                        <TableHead className="text-[13px]">
-                           No. Polisi
-                        </TableHead>
+                      <TableRow className="bg-base-200/50">
+                         {showActions && (
+                            <TableHead className="w-10">
+                               <input
+                                  type="checkbox"
+                                  className="checkbox checkbox-sm"
+                                  checked={
+                                     selectedIds.size === data.length &&
+                                     data.length > 0
+                                  }
+                                  onChange={(e) => {
+                                     setSelectedIds(
+                                        e.target.checked
+                                           ? new Set(data.map((a) => a.id))
+                                           : new Set(),
+                                     );
+                                  }}
+                                  aria-label="Pilih semua"
+                               />
+                            </TableHead>
+                         )}
+                         <TableHead className="text-[13px]">
+                            No. Polisi
+                         </TableHead>
                         <TableHead className="text-[13px]">Merk/Tipe</TableHead>
                         <TableHead className="text-[13px]">PO</TableHead>
                         <TableHead className="text-[13px]">
@@ -119,10 +168,29 @@ export const VerifikasiArmadaTable = memo(
                   </TableHeader>
                   <TableBody>
                      {data.map((armada) => (
-                        <TableRow key={armada.id}>
-                           <TableCell className="font-medium">
-                              {armada.nomor_polisi}
-                           </TableCell>
+                         <TableRow key={armada.id}>
+                            {showActions && (
+                               <TableCell className="w-10">
+                                  <input
+                                     type="checkbox"
+                                     className="checkbox checkbox-sm"
+                                     checked={selectedIds.has(armada.id)}
+                                     onChange={(e) => {
+                                        setSelectedIds((prev) => {
+                                           const next = new Set(prev);
+                                           if (e.target.checked)
+                                              next.add(armada.id);
+                                           else next.delete(armada.id);
+                                           return next;
+                                        });
+                                     }}
+                                     aria-label={`Pilih ${armada.nomor_polisi}`}
+                                  />
+                               </TableCell>
+                            )}
+                            <TableCell className="font-medium">
+                               {armada.nomor_polisi}
+                            </TableCell>
                            <TableCell>
                               {armada.merk} {armada.tipe}
                            </TableCell>
@@ -175,7 +243,42 @@ export const VerifikasiArmadaTable = memo(
                                     Tolak
                                  </Button>
                               </TableCell>
-                           )}
+            )}
+            {showActions && selectedIds.size > 0 && (
+               <div className="mb-3 flex flex-wrap items-center gap-2 rounded-md border border-base-300 bg-base-200/50 px-3 py-2">
+                  <span className="text-sm font-medium">
+                     {selectedIds.size} dipilih
+                  </span>
+                  <Button
+                     size="sm"
+                     variant="outline"
+                     className="text-brand-green border-green-200 hover:bg-green-50 dark:text-green-300 dark:border-green-800 dark:hover:bg-green-950/50"
+                     disabled={bulkLoading}
+                     onClick={() => handleBulkVerifikasi("terverifikasi")}
+                  >
+                     <CheckCircle className="h-4 w-4 mr-1" aria-hidden="true" />
+                     Verifikasi Semua
+                  </Button>
+                  <Button
+                     size="sm"
+                     variant="outline"
+                     className="text-error border-red-200 hover:bg-red-50 dark:text-red-300 dark:border-red-800 dark:hover:bg-red-950/50"
+                     disabled={bulkLoading}
+                     onClick={() => handleBulkVerifikasi("ditolak")}
+                  >
+                     <XCircle className="h-4 w-4 mr-1" aria-hidden="true" />
+                     Tolak Semua
+                  </Button>
+                  <Button
+                     size="sm"
+                     variant="ghost"
+                     disabled={bulkLoading}
+                     onClick={() => setSelectedIds(new Set())}
+                  >
+                     Batal Pilihan
+                  </Button>
+               </div>
+            )}
                         </TableRow>
                      ))}
                   </TableBody>
