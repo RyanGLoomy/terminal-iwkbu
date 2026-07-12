@@ -157,7 +157,7 @@ export function IwkbuSyncPanel({
 
    return (
       <div className="space-y-6 mt-6">
-         <div className="grid gap-4 md:grid-cols-5">
+         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
             <Card>
                <CardHeader className="pb-2">
                   <CardTitle className="text-sm text-base-content/70">

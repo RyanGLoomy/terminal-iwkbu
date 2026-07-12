@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
    getArmadaByPO,
    createArmada,
@@ -19,7 +19,7 @@ import {
    SelectTrigger,
    SelectValue,
 } from "@/components/ui/select";
-import { Plus, Bus, Search } from "lucide-react";
+import { Plus, Bus, Search, Upload, FileDown } from "lucide-react";
 import { toast } from "sonner";
 import { ArmadaTable } from "./armada-table";
 import { ArmadaFormDialog, type ArmadaFormValues } from "./armada-form-dialog";
@@ -41,6 +41,8 @@ export function POArmadaManager({ poId }: POArmadaManagerProps) {
    const [isDokumenOpen, setIsDokumenOpen] = useState(false);
    const [search, setSearch] = useState("");
    const [statusFilter, setStatusFilter] = useState<string>("semua");
+   const [importing, setImporting] = useState(false);
+   const fileInputRef = useRef<HTMLInputElement>(null);
 
    useEffect(() => {
       loadArmada();
@@ -72,6 +74,34 @@ export function POArmadaManager({ poId }: POArmadaManagerProps) {
          setLoading(false);
       }
    }
+
+   const handleImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      setImporting(true);
+      try {
+         const formData = new FormData();
+         formData.append("file", file);
+         const res = await fetch("/api/po/armada/import", {
+            method: "POST",
+            body: formData,
+         });
+         const body = await res.json();
+         if (!res.ok) {
+            toast.error(body?.message ?? "Gagal import CSV");
+         } else {
+            toast.success(
+               `Import berhasil: ${body.success} armada${body.errors?.length > 0 ? `, ${body.errors.length} gagal` : ""}`,
+            );
+            await loadArmada();
+         }
+      } catch {
+         toast.error("Gagal mengunggah file");
+      } finally {
+         setImporting(false);
+         if (fileInputRef.current) fileInputRef.current.value = "";
+      }
+   };
 
    const handleCreate = async (data: ArmadaFormValues) => {
       try {
@@ -138,7 +168,7 @@ export function POArmadaManager({ poId }: POArmadaManagerProps) {
    return (
       <div className="space-y-4">
          <div className="flex flex-col gap-3 sm:flex-row sm:justify-between sm:items-center">
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
                <Button
                   onClick={() => {
                      setSelectedArmada(null);
@@ -148,6 +178,21 @@ export function POArmadaManager({ poId }: POArmadaManagerProps) {
                   <Plus className="mr-2 h-4 w-4" aria-hidden="true" />
                   Tambah Armada
                </Button>
+               <Button
+                  variant="outline"
+                  disabled={importing}
+                  onClick={() => fileInputRef.current?.click()}
+               >
+                  <Upload className="mr-2 h-4 w-4" aria-hidden="true" />
+                  {importing ? "Mengimpor..." : "Import CSV"}
+               </Button>
+               <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept=".csv,text/csv"
+                  className="hidden"
+                  onChange={handleImport}
+               />
             </div>
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
                <div className="relative">
@@ -160,7 +205,7 @@ export function POArmadaManager({ poId }: POArmadaManagerProps) {
                   />
                </div>
                <Select value={statusFilter} onValueChange={setStatusFilter}>
-                  <SelectTrigger className="w-[180px]">
+                  <SelectTrigger className="w-full sm:w-[180px]">
                      <SelectValue placeholder="Semua Status" />
                   </SelectTrigger>
                   <SelectContent>

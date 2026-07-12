@@ -411,17 +411,17 @@ export function AuditTrailPanel() {
                          className="h-10 w-full rounded-md border border-base-300 bg-base-100 pl-9 pr-3 text-sm shadow-sm outline-none"
                       />
                   </div>
-                  <div className="w-[150px]">
+                  <div className="w-full sm:w-[150px]">
                      <DatePicker value={startDate} onChange={setStartDate} />
                   </div>
-                  <div className="w-[150px]">
+                  <div className="w-full sm:w-[150px]">
                      <DatePicker value={endDate} onChange={setEndDate} />
                   </div>
                    <Select
                       value={aksi}
                       onValueChange={(v) => setAksi(v as AksiLog | "SEMUA")}
                    >
-                      <SelectTrigger className="w-[180px]">
+                      <SelectTrigger className="w-full sm:w-[180px]">
                          <SelectValue placeholder="Semua Aksi" />
                       </SelectTrigger>
                       <SelectContent>

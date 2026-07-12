@@ -89,9 +89,9 @@ export function ArmadaFormDialog({
                onSubmit={form.handleSubmit(onSubmit)}
                className="space-y-4 pt-4"
             >
-               <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                     <Label htmlFor="nomor_polisi">Nomor Polisi *</Label>
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                   <div className="space-y-2">
+                      <Label htmlFor="nomor_polisi">Nomor Polisi *</Label>
                       <Input
                          id="nomor_polisi"
                          placeholder="B 1234 XYZ"
@@ -114,9 +114,9 @@ export function ArmadaFormDialog({
                   </div>
                </div>
 
-               <div className="grid grid-cols-2 gap-4">
-                   <div className="space-y-2">
-                      <Label htmlFor="merk">Merk *</Label>
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <div className="space-y-2">
+                       <Label htmlFor="merk">Merk *</Label>
                       <Input
                          id="merk"
                          placeholder="Mercedes-Benz"
@@ -145,9 +145,9 @@ export function ArmadaFormDialog({
                    </div>
                </div>
 
-               <div className="grid grid-cols-3 gap-4">
-                  <div className="space-y-2">
-                     <Label htmlFor="tahun_pembuatan">Tahun Pembuatan</Label>
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                   <div className="space-y-2">
+                      <Label htmlFor="tahun_pembuatan">Tahun Pembuatan</Label>
                       <Input
                          id="tahun_pembuatan"
                          type="number"

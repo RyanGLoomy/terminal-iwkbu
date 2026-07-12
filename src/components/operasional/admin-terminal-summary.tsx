@@ -106,16 +106,14 @@ export function AdminTerminalSummary({
 
    return (
       <div className="space-y-5">
-         <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-               <div className="w-[180px]">
-                  <DatePicker value={startDate} onChange={setStartDate} />
-               </div>
-               <div className="w-[180px]">
-                  <DatePicker value={endDate} onChange={setEndDate} />
-               </div>
-            </div>
-         </div>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+             <div className="w-full sm:w-[180px]">
+                <DatePicker value={startDate} onChange={setStartDate} />
+             </div>
+             <div className="w-full sm:w-[180px]">
+                <DatePicker value={endDate} onChange={setEndDate} />
+             </div>
+          </div>
 
          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
             {loading ? (
