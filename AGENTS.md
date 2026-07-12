@@ -83,4 +83,4 @@ pnpm test:e2e:dev           # Same but skip build (use running dev server)
 3. Validate input manually (no Zod for API routes).
 4. Sanitize error messages — never leak Supabase URLs or DB internals.
 5. Use `rate-limiter.ts` / `pin-rate-limiter.ts` for auth-adjacent endpoints.
-6. Log via `log_activity` RPC for audit trail.
+6. Log via the TS `logActivity()` helper (`src/lib/supabase/queries/operasional.server.ts`) — it inserts into `activity_logs` with the service-role admin client. Table-mutation triggers (`fn_log_*`, SECURITY DEFINER) also auto-log. The `log_activity` SQL RPC was removed in migration 0057; do not call it via `.rpc()`.
