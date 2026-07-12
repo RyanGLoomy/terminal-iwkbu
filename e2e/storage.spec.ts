@@ -32,16 +32,18 @@ test("PO can upload dokumen to own armada", async ({ request }) => {
 
   const armadaId = armadaBody.data[0].id;
 
-  const buffer = Buffer.from("E2E test document content");
+  // Minimal valid PDF header so the server's magic-number validation
+  // (APP-04) accepts the upload — plain text would be correctly rejected.
+  const buffer = Buffer.from("%PDF-1.4\nE2E test document content");
   const res = await request.post(`/api/po/armada/${armadaId}/dokumen`, {
-    multipart: {
-      jenis: "lainnya",
-      file: {
-        name: "e2e-test.pdf",
-        mimeType: "application/pdf",
-        buffer,
-      },
-    },
+     multipart: {
+        jenis: "lainnya",
+        file: {
+           name: "e2e-test.pdf",
+           mimeType: "application/pdf",
+           buffer,
+        },
+     },
   });
 
   expect([201, 400]).toContain(res.status()); // 400 if file too small etc

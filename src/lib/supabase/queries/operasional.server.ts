@@ -126,9 +126,12 @@ export async function getActivityLogs(params: {
    limit: number;
    offset?: number;
 }) {
-   const supabase = createAdminClient();
+    // Use the user-scoped client (not admin) so auth.uid() resolves inside the
+    // SECURITY DEFINER RPC — get_activity_logs checks auth.uid() for authz.
+    // The admin client (service-role) has no user JWT → auth.uid() is NULL → 42501.
+    const supabase = await createClient();
 
-   const { data, error } = await supabase.rpc("get_activity_logs", {
+    const { data, error } = await supabase.rpc("get_activity_logs", {
       p_start_date: params.startDate,
       p_end_date: params.endDate,
       p_aksi: params.aksi ?? null,
@@ -147,27 +150,24 @@ export async function logActivity(
    options?: { actorUserId?: string },
 ) {
    try {
-      if (options?.actorUserId) {
-         const adminClient = createAdminClient();
-         const { error } = await adminClient.from("activity_logs").insert({
-            user_id: options.actorUserId,
-            aksi,
-            deskripsi,
-            metadata,
-         });
+      let userId = options?.actorUserId;
 
-         if (error) {
-            console.error("Failed to log activity:", error.message);
-         }
-
-         return;
+      if (!userId) {
+         const supabase = await createClient();
+         const {
+            data: { user },
+         } = await supabase.auth.getUser();
+         userId = user?.id;
       }
 
-      const supabase = await createClient();
-      const { error } = await supabase.rpc("log_activity", {
-         p_aksi: aksi,
-         p_deskripsi: deskripsi,
-         p_metadata: metadata,
+      if (!userId) return;
+
+      const adminClient = createAdminClient();
+      const { error } = await adminClient.from("activity_logs").insert({
+         user_id: userId,
+         aksi,
+         deskripsi,
+         metadata,
       });
 
       if (error) {
