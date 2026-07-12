@@ -18,6 +18,7 @@ import type {
    ShiftSession,
 } from "@/lib/supabase/queries/operasional.types";
 import { Button } from "@/components/ui/button";
+import { useOnlineStatus } from "@/lib/hooks/use-online-status";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
@@ -47,9 +48,10 @@ export function PencatatanPanel() {
    const [selectedPo, setSelectedPo] = useState("");
    const [detectedInfo, setDetectedInfo] = useState<{ po_nama: string; merk: string | null; tipe: string | null } | null>(null);
    const [detecting, setDetecting] = useState(false);
+   const { isOnline } = useOnlineStatus();
 
-   const canSubmitMasuk = session && nomorMasuk.trim() && selectedPo;
-   const canSubmitKeluar = session && selectedMasukId;
+   const canSubmitMasuk = session && nomorMasuk.trim() && selectedPo && isOnline;
+   const canSubmitKeluar = session && selectedMasukId && isOnline;
 
    useEffect(() => {
       let mounted = true;
@@ -257,9 +259,18 @@ export function PencatatanPanel() {
                   </Button>
                </div>
             </CardContent>
-         </Card>
+          </Card>
 
-         {(error || success) && (
+          {!isOnline && (
+             <Alert className="border-amber-200 bg-amber-50 text-amber-800 dark:border-amber-800 dark:bg-amber-950/50 dark:text-amber-300">
+               <AlertTitle>Koneksi Terputus</AlertTitle>
+               <AlertDescription>
+                  Anda sedang offline. Transaksi tidak dapat dicatat. Periksa koneksi internet Anda — transaksi akan tersedia kembali saat terhubung.
+               </AlertDescription>
+            </Alert>
+          )}
+
+          {(error || success) && (
             <Alert
                variant={error ? "destructive" : "default"}
                className={`animate-fade-in ${!error ? "bg-brand-green/10 border-brand-green/25 text-brand-green" : ""}`}

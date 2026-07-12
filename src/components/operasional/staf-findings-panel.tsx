@@ -94,11 +94,16 @@ export function StafFindingsPanel({
 
    const [search, setSearch] = useState("");
    const deferredSearch = useDeferredValue(search);
+   const [statusFilter, setStatusFilter] = useState("semua");
    const [visibleCount, setVisibleCount] = useState(FINDINGS_PAGE_SIZE);
    const filteredFindings = (() => {
-      if (!deferredSearch.trim()) return initialFindings;
+      let result = initialFindings;
+      if (statusFilter !== "semua") {
+         result = result.filter((f) => f.status === statusFilter);
+      }
+      if (!deferredSearch.trim()) return result;
       const q = deferredSearch.trim().toLowerCase();
-      return initialFindings.filter(
+      return result.filter(
          (f) =>
             f.judul.toLowerCase().includes(q) ||
             f.nomor_polisi.toLowerCase().includes(q) ||
@@ -370,17 +375,28 @@ export function StafFindingsPanel({
                      {filteredFindings.length !== initialFindings.length &&
                         ` dari ${initialFindings.length}`})
                   </span>
-                  <div className="flex items-center gap-2">
-                     <Input
-                        placeholder="Cari temuan..."
-                        value={search}
-                        onChange={(e) => {
-                           setSearch(e.target.value);
-                           setVisibleCount(FINDINGS_PAGE_SIZE);
-                        }}
-                        className="h-8 w-48 text-sm"
-                     />
-                     <Button
+                   <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+                      <Input
+                         placeholder="Cari temuan..."
+                         value={search}
+                         onChange={(e) => {
+                            setSearch(e.target.value);
+                            setVisibleCount(FINDINGS_PAGE_SIZE);
+                         }}
+                         className="h-8 w-full text-sm sm:w-48"
+                      />
+                      <Select value={statusFilter} onValueChange={(v) => { setStatusFilter(v); setVisibleCount(FINDINGS_PAGE_SIZE); }}>
+                         <SelectTrigger className="h-8 w-full text-sm sm:w-32">
+                            <SelectValue />
+                         </SelectTrigger>
+                         <SelectContent>
+                            <SelectItem value="semua">Semua Status</SelectItem>
+                            <SelectItem value="open">Open</SelectItem>
+                            <SelectItem value="on_progress">On Progress</SelectItem>
+                            <SelectItem value="closed">Closed</SelectItem>
+                         </SelectContent>
+                      </Select>
+                      <Button
                         variant="outline"
                         size="sm"
                         onClick={() => {

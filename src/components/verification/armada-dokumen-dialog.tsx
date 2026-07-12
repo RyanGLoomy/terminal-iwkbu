@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Upload, FileText, Trash2, Eye, Paperclip } from "lucide-react";
 import { toast } from "sonner";
+import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import type { Armada, ArmadaDokumen } from "@/lib/supabase/queries/verification.types";
 import {
    getArmadaDokumen,
@@ -43,6 +44,7 @@ export function ArmadaDokumenDialog({
    const [dokumen, setDokumen] = useState<ArmadaDokumen[]>([]);
    const [loading, setLoading] = useState(false);
    const [uploading, setUploading] = useState<string | null>(null);
+   const [deleteTarget, setDeleteTarget] = useState<ArmadaDokumen | null>(null);
    const fileInputRefs = useRef<Record<string, HTMLInputElement | null>>({});
 
    useEffect(() => {
@@ -111,7 +113,8 @@ export function ArmadaDokumenDialog({
 
    if (!armada) return null;
 
-   return (
+    return (
+      <>
       <Dialog open={open} onOpenChange={onOpenChange}>
          <DialogContent className="max-w-lg">
             <DialogHeader>
@@ -192,11 +195,11 @@ export function ArmadaDokumenDialog({
                                        >
                                           <Eye className="h-3.5 w-3.5" />
                                        </Button>
-                                       <Button
-                                          size="sm"
-                                          variant="ghost"
-                                          onClick={() => handleDelete(dok)}
-                                       >
+                                        <Button
+                                           size="sm"
+                                           variant="ghost"
+                                           onClick={() => setDeleteTarget(dok)}
+                                        >
                                           <Trash2 className="h-3.5 w-3.5" />
                                        </Button>
                                     </div>
@@ -219,8 +222,23 @@ export function ArmadaDokumenDialog({
                      Belum ada dokumen diunggah
                   </p>
                )}
-            </div>
-         </DialogContent>
-      </Dialog>
-   );
+             </div>
+          </DialogContent>
+       </Dialog>
+
+      <ConfirmDialog
+         open={!!deleteTarget}
+         onOpenChange={(o) => !o && setDeleteTarget(null)}
+         title="Hapus Dokumen"
+         description={`Yakin ingin menghapus "${deleteTarget?.file_name}"? Tindakan ini tidak dapat dibatalkan.`}
+         confirmLabel="Hapus"
+         destructive
+         onConfirm={async () => {
+            if (!deleteTarget) return;
+            await handleDelete(deleteTarget);
+            setDeleteTarget(null);
+         }}
+      />
+      </>
+    );
 }

@@ -144,11 +144,16 @@ function ClarificationForm({ findingId }: { findingId: string }) {
 export function PoFindingsPanel({ findings }: { findings: FindingRecord[] }) {
    const [search, setSearch] = useState("");
    const deferredSearch = useDeferredValue(search);
+   const [statusFilter, setStatusFilter] = useState("semua");
    const [visibleCount, setVisibleCount] = useState(FINDINGS_PAGE_SIZE);
     const filteredFindings = (() => {
-       if (!deferredSearch.trim()) return findings;
+       let result = findings;
+       if (statusFilter !== "semua") {
+          result = result.filter((f) => f.status === statusFilter);
+       }
+       if (!deferredSearch.trim()) return result;
        const q = deferredSearch.trim().toLowerCase();
-       return findings.filter(
+       return result.filter(
           (f) =>
              f.judul.toLowerCase().includes(q) ||
              f.nomor_polisi.toLowerCase().includes(q) ||
@@ -210,23 +215,36 @@ export function PoFindingsPanel({ findings }: { findings: FindingRecord[] }) {
              </Card>
           ) : (
              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                   <span className="text-sm text-base-content/70">
-                      {filteredFindings.length}
-                      {filteredFindings.length !== findings.length &&
-                         ` dari ${findings.length}`}{" "}
-                      temuan
-                   </span>
-                   <Input
-                      placeholder="Cari temuan..."
-                      value={search}
-                      onChange={(e) => {
-                         setSearch(e.target.value);
-                         setVisibleCount(FINDINGS_PAGE_SIZE);
-                      }}
-                      className="h-8 w-56 text-sm"
-                   />
-                </div>
+                 <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                    <span className="text-sm text-base-content/70">
+                       {filteredFindings.length}
+                       {filteredFindings.length !== findings.length &&
+                          ` dari ${findings.length}`}{" "}
+                       temuan
+                    </span>
+                    <div className="flex flex-col gap-2 sm:flex-row">
+                    <Input
+                       placeholder="Cari temuan..."
+                       value={search}
+                       onChange={(e) => {
+                          setSearch(e.target.value);
+                          setVisibleCount(FINDINGS_PAGE_SIZE);
+                       }}
+                       className="h-8 w-full text-sm sm:w-56"
+                    />
+                    <Select value={statusFilter} onValueChange={(v) => { setStatusFilter(v); setVisibleCount(FINDINGS_PAGE_SIZE); }}>
+                       <SelectTrigger className="h-8 w-full text-sm sm:w-32">
+                          <SelectValue />
+                       </SelectTrigger>
+                       <SelectContent>
+                          <SelectItem value="semua">Semua</SelectItem>
+                          <SelectItem value="open">Open</SelectItem>
+                          <SelectItem value="on_progress">On Progress</SelectItem>
+                          <SelectItem value="closed">Closed</SelectItem>
+                       </SelectContent>
+                    </Select>
+                    </div>
+                 </div>
                 {filteredFindings.length === 0 ? (
                    <Card>
                       <CardContent className="py-8 text-center text-sm text-base-content/70">
