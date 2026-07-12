@@ -1,6 +1,7 @@
 "use client";
 
 import { useDeferredValue, useEffect, useState } from "react";
+import dynamic from "next/dynamic";
 import { formatDateTime, formatDate } from "@/lib/utils/format-date";
 import { useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
@@ -30,9 +31,15 @@ import {
    FINDINGS_PAGE_SIZE,
    isOverdue,
 } from "./findings-shared";
-import { StafFindingsStatusDialog } from "./staf-findings-status-dialog";
-import { StafFindingsClarificationDialog } from "./staf-findings-clarification-dialog";
-import { StafFindingsEditDialog } from "./staf-findings-edit-dialog";
+const StafFindingsStatusDialog = dynamic(() =>
+   import("./staf-findings-status-dialog").then((m) => ({ default: m.StafFindingsStatusDialog })),
+);
+const StafFindingsClarificationDialog = dynamic(() =>
+   import("./staf-findings-clarification-dialog").then((m) => ({ default: m.StafFindingsClarificationDialog })),
+);
+const StafFindingsEditDialog = dynamic(() =>
+   import("./staf-findings-edit-dialog").then((m) => ({ default: m.StafFindingsEditDialog })),
+);
 
 type Option = { id: string; label: string };
 

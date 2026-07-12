@@ -22,9 +22,18 @@ import {
 import { Plus, Bus, Search, Upload, FileDown } from "lucide-react";
 import { toast } from "sonner";
 import { ArmadaTable } from "./armada-table";
-import { ArmadaFormDialog, type ArmadaFormValues } from "./armada-form-dialog";
-import { StatusArmadaDialog } from "./status-armada-dialog";
-import { ArmadaDokumenDialog } from "./armada-dokumen-dialog";
+import dynamic from "next/dynamic";
+import { ArmadaFormValues } from "./armada-form-dialog";
+
+const ArmadaFormDialog = dynamic(() =>
+   import("./armada-form-dialog").then((m) => ({ default: m.ArmadaFormDialog })),
+);
+const StatusArmadaDialog = dynamic(() =>
+   import("./status-armada-dialog").then((m) => ({ default: m.StatusArmadaDialog })),
+);
+const ArmadaDokumenDialog = dynamic(() =>
+   import("./armada-dokumen-dialog").then((m) => ({ default: m.ArmadaDokumenDialog })),
+);
 import { getErrorMessage } from "@/lib/db-error";
 
 interface POArmadaManagerProps {

@@ -26,7 +26,11 @@ import type { Armada } from "@/lib/supabase/queries/verification.types";
 import { toast } from "sonner";
 import { AlertCircle, CheckCircle, XCircle, Bus, FolderOpen } from "lucide-react";
 import { EmptyState } from "@/components/shared/empty-state";
-import { ArmadaDokumenDialog } from "./armada-dokumen-dialog";
+import dynamic from "next/dynamic";
+
+const ArmadaDokumenDialog = dynamic(() =>
+   import("./armada-dokumen-dialog").then((m) => ({ default: m.ArmadaDokumenDialog })),
+);
 
 interface VerifikasiArmadaTableProps {
    data: Armada[];
