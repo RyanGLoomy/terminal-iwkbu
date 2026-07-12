@@ -501,8 +501,8 @@ export function StafFindingsPanel({
                      </Button>
                   </div>
                </div>
-               <div className="overflow-hidden rounded-lg border border-base-300 bg-base-100">
-                  <Table caption="Daftar temuan Staf IW">
+                <div className="hidden overflow-hidden rounded-lg border border-base-300 bg-base-100 sm:block">
+                   <Table caption="Daftar temuan Staf IW">
                      <TableHeader>
                         <TableRow>
                            <TableHead>Waktu</TableHead>
@@ -647,8 +647,59 @@ export function StafFindingsPanel({
                         )}
                      </TableBody>
                   </Table>
-               </div>
-               {visibleCount < filteredFindings.length && (
+                </div>
+
+                {/* Mobile card layout */}
+                <div className="space-y-3 sm:hidden">
+                   {filteredFindings.length === 0 ? (
+                      <Card>
+                         <CardContent className="py-8 text-center text-sm text-base-content/70">
+                            {initialFindings.length === 0
+                               ? "Belum ada temuan."
+                               : "Tidak ada temuan yang cocok."}
+                         </CardContent>
+                      </Card>
+                   ) : (
+                      visibleFindings.map((finding) => (
+                         <Card key={finding.id} className="border-base-300">
+                            <CardContent className="space-y-2 py-3">
+                               <div className="flex items-center gap-2">
+                                  <StatusBadge category="severity" value={finding.severity} />
+                                  <StatusBadge category="finding" value={finding.status} />
+                                  {isOverdue(finding.due_date, finding.status) && (
+                                     <Badge variant="outline" className="bg-red-100 text-error border-red-200 text-[10px] dark:bg-red-950/50 dark:text-red-300 dark:border-red-800">
+                                        Terlambat
+                                     </Badge>
+                                  )}
+                               </div>
+                               <div>
+                                  <p className="font-medium text-sm text-base-content">{finding.judul}</p>
+                                  <p className="text-xs text-base-content/70">{finding.nomor_polisi} · {finding.po?.nama_perusahaan ?? finding.po?.kode_po ?? "-"}</p>
+                               </div>
+                               <p className="text-xs text-base-content/50">{formatDateTime(finding.created_at)}</p>
+                               <div className="flex flex-wrap gap-2 pt-1">
+                                  <Button size="sm" variant="ghost" className="h-7 px-2" onClick={() => setClarificationFinding(finding)}>
+                                     <MessageSquare className="mr-1 h-3.5 w-3.5" />
+                                     {finding.finding_clarifications?.length ?? 0}
+                                  </Button>
+                                  {finding.status !== "closed" && (
+                                     <>
+                                        <Button size="sm" variant="ghost" className="h-7 px-2" onClick={() => setEditFinding(finding)}>
+                                           <Pencil className="h-3.5 w-3.5" />
+                                        </Button>
+                                        <Button size="sm" variant="outline" className="h-7" onClick={() => setStatusDialog({ finding, targetStatus: "closed" })}>
+                                           Tutup
+                                        </Button>
+                                     </>
+                                  )}
+                               </div>
+                            </CardContent>
+                         </Card>
+                      ))
+                   )}
+                </div>
+
+                {visibleCount < filteredFindings.length && (
                   <div className="flex justify-center pt-3">
                      <Button
                         variant="outline"
