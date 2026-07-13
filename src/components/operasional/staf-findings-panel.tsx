@@ -1,6 +1,6 @@
 "use client";
 
-import { useDeferredValue, useEffect, useState } from "react";
+import { useDeferredValue, useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { formatDateTime, formatDate } from "@/lib/utils/format-date";
 import { useRouter } from "next/navigation";
@@ -33,6 +33,7 @@ import {
    isOverdue,
    getDueDateBadge,
 } from "./findings-shared";
+import { HighlightText } from "./highlight-text";
 const StafFindingsStatusDialog = dynamic(() =>
    import("./staf-findings-status-dialog").then((m) => ({ default: m.StafFindingsStatusDialog })),
 );
@@ -103,6 +104,7 @@ export function StafFindingsPanel({
 
    const [search, setSearch] = useState("");
    const deferredSearch = useDeferredValue(search);
+   const searchRef = useRef<HTMLInputElement>(null);
    const [statusFilter, setStatusFilter] = useState("semua");
    const [sortKey, setSortKey] = useState<"created_at" | "severity" | "status" | null>(null);
    const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
@@ -173,6 +175,18 @@ export function StafFindingsPanel({
          .subscribe();
       return () => supabase.removeChannel(channel);
    }, [router]);
+
+   // '/' focuses search (unless already typing in an input)
+   useEffect(() => {
+      const handler = (e: KeyboardEvent) => {
+         if (e.key === "/" && !["INPUT", "TEXTAREA", "SELECT"].includes((e.target as HTMLElement)?.tagName)) {
+            e.preventDefault();
+            searchRef.current?.focus();
+         }
+      };
+      document.addEventListener("keydown", handler);
+      return () => document.removeEventListener("keydown", handler);
+   }, []);
 
    const submitFinding = async () => {
       setLoading(true);
@@ -436,7 +450,8 @@ export function StafFindingsPanel({
                   </span>
                    <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
                       <Input
-                         placeholder="Cari temuan..."
+                         ref={searchRef}
+                         placeholder="Cari temuan... (tekan /)"
                          value={search}
                          onChange={(e) => {
                             setSearch(e.target.value);
@@ -608,14 +623,14 @@ export function StafFindingsPanel({
                                        {finding.po?.nama_perusahaan ?? "-"}
                                     </div>
                                  </TableCell>
-                                 <TableCell>
-                                    <div className="font-medium text-base-content">
-                                       {finding.judul}
-                                    </div>
-                                    <div className="text-xs text-base-content/70">
-                                       {finding.nomor_polisi}
-                                    </div>
-                                 </TableCell>
+                                  <TableCell>
+                                     <div className="font-medium text-base-content">
+                                        <HighlightText text={finding.judul} query={deferredSearch} />
+                                     </div>
+                                     <div className="text-xs text-base-content/70">
+                                        <HighlightText text={finding.nomor_polisi} query={deferredSearch} />
+                                     </div>
+                                  </TableCell>
                                  <TableCell>
                                     <StatusBadge category="severity" value={finding.severity} />
                                  </TableCell>
@@ -743,8 +758,8 @@ export function StafFindingsPanel({
                                   })()}
                                </div>
                                <div>
-                                  <p className="font-medium text-sm text-base-content">{finding.judul}</p>
-                                  <p className="text-xs text-base-content/70">{finding.nomor_polisi} · {finding.po?.nama_perusahaan ?? finding.po?.kode_po ?? "-"}</p>
+                                  <p className="font-medium text-sm text-base-content"><HighlightText text={finding.judul} query={deferredSearch} /></p>
+                                  <p className="text-xs text-base-content/70"><HighlightText text={`${finding.nomor_polisi} · ${finding.po?.nama_perusahaan ?? finding.po?.kode_po ?? "-"}`} query={deferredSearch} /></p>
                                </div>
                                <p className="text-xs text-base-content/50">{formatDateTime(finding.created_at)}</p>
                                <div className="flex flex-wrap gap-2 pt-1">

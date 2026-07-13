@@ -123,21 +123,28 @@ export function ArmadaTable({
       </TableHead>
    );
 
-   if (loading) {
-      return (
-         <div className="text-center py-10 text-base-content/70">
-            <div className="animate-spin h-5 w-5 border-2 border-primary/30 border-t-primary rounded-full mx-auto mb-3" />
-            <p className="text-sm">Memuat data…</p>
-         </div>
-      );
-   }
+    if (loading) {
+       return (
+          <div className="space-y-2">
+             {[1, 2, 3, 4, 5].map((i) => (
+                <div key={i} className="flex items-center gap-4 rounded-lg border border-base-300 px-4 py-3">
+                   <div className="h-4 w-24 rounded bg-base-300 animate-pulse" />
+                   <div className="h-4 w-20 rounded bg-base-300 animate-pulse" />
+                   <div className="h-4 w-32 rounded bg-base-300 animate-pulse" />
+                   <div className="h-4 w-12 rounded bg-base-300 animate-pulse" />
+                   <div className="ml-auto h-6 w-20 rounded-full bg-base-300 animate-pulse" />
+                </div>
+             ))}
+          </div>
+       );
+    }
 
-    if (data.length === 0) {
-        return (
-           <EmptyState
-              title="Tidak ada armada"
-              description="Belum ada armada terdaftar atau tidak ada yang cocok dengan pencarian"
-           />
+     if (data.length === 0) {
+         return (
+            <EmptyState
+               title="Tidak ada armada"
+               description="Belum ada armada terdaftar. Klik 'Tambah Armada' atau 'Import CSV' di atas untuk menambahkan kendaraan."
+            />
         );
      }
 
