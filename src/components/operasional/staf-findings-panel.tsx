@@ -25,11 +25,12 @@ import type {
    FindingStatus,
 } from "@/lib/supabase/queries/operasional.types";
 import { toast } from "sonner";
-import { AlertCircle, MessageSquare, Pencil } from "lucide-react";
+import { AlertCircle, MessageSquare, Pencil, ArrowUp, ArrowDown } from "lucide-react";
 import { getErrorMessage } from "@/lib/db-error";
 import {
    FINDINGS_PAGE_SIZE,
    isOverdue,
+   getDueDateBadge,
 } from "./findings-shared";
 const StafFindingsStatusDialog = dynamic(() =>
    import("./staf-findings-status-dialog").then((m) => ({ default: m.StafFindingsStatusDialog })),
@@ -102,22 +103,50 @@ export function StafFindingsPanel({
    const [search, setSearch] = useState("");
    const deferredSearch = useDeferredValue(search);
    const [statusFilter, setStatusFilter] = useState("semua");
+   const [sortKey, setSortKey] = useState<"created_at" | "severity" | "status" | null>(null);
+   const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
    const [visibleCount, setVisibleCount] = useState(FINDINGS_PAGE_SIZE);
+
+   const SEVERITY_ORDER: Record<string, number> = { low: 0, medium: 1, high: 2 };
+
+   const toggleSort = (key: "created_at" | "severity" | "status") => {
+      if (sortKey === key) {
+         setSortDir((d) => (d === "asc" ? "desc" : "asc"));
+      } else {
+         setSortKey(key);
+         setSortDir("desc");
+      }
+   };
+
    const filteredFindings = (() => {
       let result = initialFindings;
       if (statusFilter !== "semua") {
          result = result.filter((f) => f.status === statusFilter);
       }
-      if (!deferredSearch.trim()) return result;
-      const q = deferredSearch.trim().toLowerCase();
-      return result.filter(
-         (f) =>
-            f.judul.toLowerCase().includes(q) ||
-            f.nomor_polisi.toLowerCase().includes(q) ||
-            (f.po?.kode_po ?? "").toLowerCase().includes(q) ||
-            (f.po?.nama_perusahaan ?? "").toLowerCase().includes(q) ||
-            (f.deskripsi ?? "").toLowerCase().includes(q),
-      );
+      if (deferredSearch.trim()) {
+         const q = deferredSearch.trim().toLowerCase();
+         result = result.filter(
+            (f) =>
+               f.judul.toLowerCase().includes(q) ||
+               f.nomor_polisi.toLowerCase().includes(q) ||
+               (f.po?.kode_po ?? "").toLowerCase().includes(q) ||
+               (f.po?.nama_perusahaan ?? "").toLowerCase().includes(q) ||
+               (f.deskripsi ?? "").toLowerCase().includes(q),
+         );
+      }
+      if (sortKey) {
+         const dir = sortDir === "asc" ? 1 : -1;
+         result = [...result].sort((a, b) => {
+            if (sortKey === "severity") {
+               return (SEVERITY_ORDER[a.severity] - SEVERITY_ORDER[b.severity]) * dir;
+            }
+            if (sortKey === "status") {
+               return a.status.localeCompare(b.status) * dir;
+            }
+            return a.created_at.localeCompare(b.created_at) * dir;
+         });
+      }
+      return result;
    })();
 
    const visibleFindings = filteredFindings.slice(0, visibleCount);
@@ -503,18 +532,33 @@ export function StafFindingsPanel({
                </div>
                 <div className="hidden overflow-hidden rounded-lg border border-base-300 bg-base-100 sm:block">
                    <Table caption="Daftar temuan Staf IW">
-                     <TableHeader>
-                        <TableRow>
-                           <TableHead>Waktu</TableHead>
-                           <TableHead>PO</TableHead>
-                           <TableHead>Judul</TableHead>
-                           <TableHead>Severity</TableHead>
-                           <TableHead>Status</TableHead>
-                           <TableHead>Catatan</TableHead>
-                           <TableHead>Klarifikasi</TableHead>
-                           <TableHead>Aksi</TableHead>
-                        </TableRow>
-                     </TableHeader>
+                      <TableHeader>
+                         <TableRow>
+                            <TableHead>
+                               <button type="button" className="inline-flex items-center gap-1 hover:text-base-content" onClick={() => toggleSort("created_at")}>
+                                  Waktu
+                                  {sortKey === "created_at" && (sortDir === "asc" ? <ArrowUp className="h-3 w-3" /> : <ArrowDown className="h-3 w-3" />)}
+                               </button>
+                            </TableHead>
+                            <TableHead>PO</TableHead>
+                            <TableHead>Judul</TableHead>
+                            <TableHead>
+                               <button type="button" className="inline-flex items-center gap-1 hover:text-base-content" onClick={() => toggleSort("severity")}>
+                                  Severity
+                                  {sortKey === "severity" && (sortDir === "asc" ? <ArrowUp className="h-3 w-3" /> : <ArrowDown className="h-3 w-3" />)}
+                               </button>
+                            </TableHead>
+                            <TableHead>
+                               <button type="button" className="inline-flex items-center gap-1 hover:text-base-content" onClick={() => toggleSort("status")}>
+                                  Status
+                                  {sortKey === "status" && (sortDir === "asc" ? <ArrowUp className="h-3 w-3" /> : <ArrowDown className="h-3 w-3" />)}
+                               </button>
+                            </TableHead>
+                            <TableHead>Catatan</TableHead>
+                            <TableHead>Klarifikasi</TableHead>
+                            <TableHead>Aksi</TableHead>
+                         </TableRow>
+                      </TableHeader>
                      <TableBody>
                         {filteredFindings.length === 0 ? (
                            <TableRow>
@@ -555,14 +599,14 @@ export function StafFindingsPanel({
                                  <TableCell>
                                     <div className="flex flex-wrap gap-1">
                                        <StatusBadge category="finding" value={finding.status} />
-                                       {isOverdue(finding.due_date, finding.status) && (
-                                          <Badge
-                                             variant="outline"
-                                             className="bg-red-100 text-error border-red-200 dark:bg-red-950/50 dark:text-red-300 dark:border-red-800"
-                                          >
-                                             Terlambat
-                                          </Badge>
-                                       )}
+                                       {(() => {
+                                          const badge = getDueDateBadge(finding.due_date, finding.status);
+                                          return badge ? (
+                                             <Badge variant="outline" className={`text-[11px] ${badge.color}`}>
+                                                {badge.label}
+                                             </Badge>
+                                          ) : null;
+                                       })()}
                                     </div>
                                     {finding.due_date && (
                                        <div className="mt-1 text-xs text-base-content/70">
@@ -666,11 +710,14 @@ export function StafFindingsPanel({
                                <div className="flex items-center gap-2">
                                   <StatusBadge category="severity" value={finding.severity} />
                                   <StatusBadge category="finding" value={finding.status} />
-                                  {isOverdue(finding.due_date, finding.status) && (
-                                     <Badge variant="outline" className="bg-red-100 text-error border-red-200 text-[10px] dark:bg-red-950/50 dark:text-red-300 dark:border-red-800">
-                                        Terlambat
-                                     </Badge>
-                                  )}
+                                  {(() => {
+                                     const badge = getDueDateBadge(finding.due_date, finding.status);
+                                     return badge ? (
+                                        <Badge variant="outline" className={`text-[10px] ${badge.color}`}>
+                                           {badge.label}
+                                        </Badge>
+                                     ) : null;
+                                  })()}
                                </div>
                                <div>
                                   <p className="font-medium text-sm text-base-content">{finding.judul}</p>

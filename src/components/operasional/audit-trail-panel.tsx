@@ -27,7 +27,7 @@ import type {
    ActivityLog,
    AksiLog,
 } from "@/lib/supabase/queries/operasional.types";
-import { Download, Loader2, Search } from "lucide-react";
+import { Download, Loader2, Printer, Search } from "lucide-react";
 import { getErrorMessage } from "@/lib/db-error";
 
 const ACTION_OPTIONS: Array<{ value: AksiLog | "SEMUA"; label: string }> = [
@@ -444,9 +444,18 @@ export function AuditTrailPanel() {
                      <Download className="mr-2 h-4 w-4" aria-hidden="true" />
                      CSV
                   </Button>
+                  <Button
+                     type="button"
+                     variant="outline"
+                     onClick={() => window.print()}
+                     disabled={rows.length === 0}
+                  >
+                     <Printer className="mr-2 h-4 w-4" aria-hidden="true" />
+                     Cetak
+                  </Button>
                </div>
             </CardHeader>
-            <CardContent>
+            <CardContent data-printable>
                {error && (
                   <div className="mb-4 rounded-md border border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950/50 px-3 py-2 text-sm text-error">
                      {error}

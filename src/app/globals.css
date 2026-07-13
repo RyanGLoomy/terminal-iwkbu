@@ -350,3 +350,12 @@ select:focus-visible {
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 18%, transparent);
   outline: none;
 }
+
+/* ─── Print styles ─── */
+@media print {
+  body * { visibility: hidden; }
+  [data-printable], [data-printable] * { visibility: visible; }
+  [data-printable] { position: absolute; left: 0; top: 0; width: 100%; }
+  [data-printable] .overflow-auto { overflow: visible !important; }
+  button, nav, .no-print { display: none !important; }
+}
