@@ -751,7 +751,7 @@ export function StafFindingsPanel({
                                   {(() => {
                                      const badge = getDueDateBadge(finding.due_date, finding.status);
                                      return badge ? (
-                                        <Badge variant="outline" className={`text-[10px] ${badge.color}`}>
+                                        <Badge variant="outline" className={`text-[11px] ${badge.color}`}>
                                            {badge.label}
                                         </Badge>
                                      ) : null;

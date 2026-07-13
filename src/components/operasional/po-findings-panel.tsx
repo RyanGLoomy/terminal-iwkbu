@@ -385,7 +385,7 @@ export function PoFindingsPanel({ findings }: { findings: FindingRecord[] }) {
                                            <span className={`text-sm ${action.status === "done" ? "text-base-content/70 line-through" : "text-base-content"}`}>
                                               {action.action_text}
                                            </span>
-                                           <p className="text-[10px] text-base-content/70 mt-0.5">
+                                           <p className="text-xs text-base-content/70 mt-0.5">
                                               {formatDateTime(action.created_at)}
                                               {action.status === "done" && action.done_at && ` — selesai ${formatDateTime(action.done_at)}`}
                                            </p>

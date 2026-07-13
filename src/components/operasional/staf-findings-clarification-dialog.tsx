@@ -361,7 +361,7 @@ export function StafFindingsClarificationDialog({
                               >
                                  {action.action_text}
                               </span>
-                              <p className="text-[10px] text-base-content/70 mt-0.5">
+                              <p className="text-xs text-base-content/70 mt-0.5">
                                  {new Date(action.created_at).toLocaleString(
                                     "id-ID",
                                     {

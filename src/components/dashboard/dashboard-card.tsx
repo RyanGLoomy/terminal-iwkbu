@@ -69,7 +69,7 @@ export function DashboardCard({
          <CardContent className="pb-5 pt-5">
             <div className="flex items-start justify-between gap-3">
                <div className="min-w-0 space-y-1.5">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.10em] text-base-content/55">
+                  <p className="text-xs font-semibold uppercase tracking-[0.10em] text-base-content/55">
                      {title}
                   </p>
                   <p className="text-3xl font-extrabold tracking-tight text-base-content tabular-nums">

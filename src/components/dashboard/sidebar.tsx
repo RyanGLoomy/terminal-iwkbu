@@ -184,8 +184,11 @@ export function Sidebar({ userRole, collapsed, onToggleCollapse }: SidebarProps)
                               ? "is-active bg-sidebar-primary/15 text-sidebar-primary"
                               : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
                         )}
-                     >
-                        <Icon className={cn("size-5 shrink-0", active && "text-sidebar-primary")} aria-hidden="true" />
+                      >
+                         {active && (
+                            <span className="absolute left-0 top-1/2 h-5 w-1 -translate-y-1/2 rounded-r-full bg-sidebar-primary" aria-hidden="true" />
+                         )}
+                         <Icon className={cn("size-5 shrink-0", active && "text-sidebar-primary")} aria-hidden="true" />
                         {!collapsed && <span className="truncate">{item.label}</span>}
                      </Link>
                   );
