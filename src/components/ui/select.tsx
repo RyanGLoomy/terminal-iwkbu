@@ -399,30 +399,6 @@ function SelectItem({
     return unregister;
   }, [value, ctx]);
 
-  // Keep this option scrolled into view within the dropdown (not the page).
-  // Uses manual scrollTop calculation because scrollIntoView on a
-  // position:fixed portal element scrolls the main page instead.
-  React.useEffect(() => {
-    if (!ref.current || ctx.activeIndex < 0) return;
-    const listbox = ref.current.closest('[role="listbox"]');
-    if (!listbox) return;
-    const items = Array.from(
-      listbox.querySelectorAll<HTMLDivElement>('[role="option"]'),
-    );
-    if (items[ctx.activeIndex] === ref.current) {
-      const el = ref.current;
-      const listTop = listbox.scrollTop;
-      const listBottom = listTop + listbox.clientHeight;
-      const elTop = el.offsetTop;
-      const elBottom = elTop + el.offsetHeight;
-      if (elTop < listTop) {
-        listbox.scrollTop = elTop;
-      } else if (elBottom > listBottom) {
-        listbox.scrollTop = elBottom - listbox.clientHeight;
-      }
-    }
-  }, [ctx.activeIndex]);
-
   function handleItemKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
     // Delegate to the listbox by bubbling; but also allow Enter here for safety.
     if (e.key === "Enter" || e.key === " " || e.key === "Spacebar") {
