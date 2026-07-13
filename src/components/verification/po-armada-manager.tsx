@@ -257,17 +257,29 @@ export function POArmadaManager({ poId }: POArmadaManagerProps) {
                       setSelectedArmada(item);
                       setIsFormOpen(true);
                    }}
-                   onChangeStatus={(item) => {
-                      setSelectedArmada(item);
-                      setIsStatusOpen(true);
-                   }}
-                   onDokumen={(item) => {
-                      setSelectedArmada(item);
-                      setIsDokumenOpen(true);
-                   }}
-                   onDelete={handleDelete}
-                   getStatusBadge={getStatusBadge}
-                   getVerifikasiBadge={getVerifikasiBadge}
+                    onChangeStatus={(item) => {
+                       setSelectedArmada(item);
+                       setIsStatusOpen(true);
+                    }}
+                    onDokumen={(item) => {
+                       setSelectedArmada(item);
+                       setIsDokumenOpen(true);
+                    }}
+                    onDelete={handleDelete}
+                    getStatusBadge={getStatusBadge}
+                    getVerifikasiBadge={getVerifikasiBadge}
+                    onQuickStatusChange={async (armada, newStatus) => {
+                       try {
+                          await updateArmadaByPO(armada.id, {
+                             ...armada,
+                             status_operasional: newStatus as Armada["status_operasional"],
+                          });
+                          toast.success(`Status diubah ke ${newStatus.replace("_", " ")}`);
+                          await loadArmada();
+                       } catch {
+                          toast.error("Gagal mengubah status");
+                       }
+                    }}
                 />
             </CardContent>
          </Card>

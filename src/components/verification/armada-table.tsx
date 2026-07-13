@@ -42,6 +42,7 @@ interface ArmadaTableProps {
    onDelete: (armada: Armada) => void;
    getStatusBadge: (status: Armada["status_operasional"]) => React.ReactNode;
    getVerifikasiBadge: (status: string) => React.ReactNode;
+   onQuickStatusChange?: (armada: Armada, newStatus: string) => void;
 }
 
 function getSortValue(item: Armada, key: SortKey): string | number {
@@ -72,6 +73,7 @@ export function ArmadaTable({
    onDelete,
    getStatusBadge,
    getVerifikasiBadge,
+   onQuickStatusChange,
 }: ArmadaTableProps) {
    const [sortKey, setSortKey] = useState<SortKey>("created_at");
    const [sortDir, setSortDir] = useState<SortDir>("desc");
@@ -165,7 +167,21 @@ export function ArmadaTable({
                      </TableCell>
                      <TableCell>{item.tahun_pembuatan || "-"}</TableCell>
                      <TableCell>
-                        {getStatusBadge(item.status_operasional)}
+                        {onQuickStatusChange ? (
+                           <select
+                              className="select select-bordered select-xs w-full max-w-[140px] text-xs"
+                              value={item.status_operasional}
+                              onChange={(e) => onQuickStatusChange(item, e.target.value)}
+                           >
+                              <option value="aktif">Aktif</option>
+                              <option value="tidak_aktif">Tidak Aktif</option>
+                              <option value="rusak">Rusak</option>
+                              <option value="cadangan">Cadangan</option>
+                              <option value="dijual">Dijual</option>
+                           </select>
+                        ) : (
+                           getStatusBadge(item.status_operasional)
+                        )}
                      </TableCell>
                      <TableCell>
                         {getVerifikasiBadge(item.status_verifikasi)}

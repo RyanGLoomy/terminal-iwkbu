@@ -49,6 +49,8 @@ export function PencatatanPanel() {
    const [selectedPo, setSelectedPo] = useState("");
    const [detectedInfo, setDetectedInfo] = useState<{ po_nama: string; merk: string | null; tipe: string | null } | null>(null);
    const [detecting, setDetecting] = useState(false);
+   const [pinWarning, setPinWarning] = useState<string | null>(null);
+   const [recentNopol, setRecentNopol] = useState<string[]>([]);
    const { isOnline } = useOnlineStatus();
    const { pending, enqueue, replaying } = usePendingTransactions(async (tx: PendingTransaction) => {
       try {
@@ -97,10 +99,36 @@ export function PencatatanPanel() {
 
     load();
 
-    return () => {
-       mounted = false;
-    };
-    }, []);
+     return () => {
+        mounted = false;
+     };
+     }, []);
+
+   // X2: PIN session expiry warning — check every 60s
+   useEffect(() => {
+      let active = true;
+      async function checkPin() {
+         try {
+            const res = await fetch("/api/auth/pin-session");
+            const data = await res.json();
+            if (!active) return;
+            if (data.verified && data.expires_at) {
+               const remaining = new Date(data.expires_at).getTime() - Date.now();
+               const minutes = Math.floor(remaining / 60000);
+               if (minutes <= 0) {
+                  setPinWarning("Sesi PIN telah kedaluwarsa. Silakan verifikasi ulang.");
+               } else if (minutes <= 15) {
+                  setPinWarning(`Sesi PIN akan habis dalam ${minutes} menit.`);
+               } else {
+                  setPinWarning(null);
+               }
+            }
+         } catch { /* ignore — offline etc. */ }
+      }
+      checkPin();
+      const interval = setInterval(checkPin, 60000);
+      return () => { active = false; clearInterval(interval); };
+   }, []);
 
    useEffect(() => {
       const q = nomorMasuk.trim();
@@ -182,6 +210,10 @@ export function PencatatanPanel() {
             sesi_id: session.id,
          });
          setNomorMasuk("");
+         setRecentNopol((prev) => {
+            const next = [nomorMasuk, ...prev.filter((n) => n !== nomorMasuk)].slice(0, 5);
+            return next;
+         });
          const masukAktif = await listActiveMasuk(session.id);
          setActiveMasuk(masukAktif);
          setSelectedMasukId((current) => current || masukAktif[0]?.id || "");
@@ -317,6 +349,13 @@ export function PencatatanPanel() {
             </Alert>
           )}
 
+          {pinWarning && (
+             <Alert className="border-amber-200 bg-amber-50 text-amber-800 dark:border-amber-800 dark:bg-amber-950/50 dark:text-amber-300">
+               <AlertTitle>Peringatan Sesi PIN</AlertTitle>
+               <AlertDescription>{pinWarning}</AlertDescription>
+            </Alert>
+          )}
+
           {(error || success) && (
             <Alert
                variant={error ? "destructive" : "default"}
@@ -338,8 +377,23 @@ export function PencatatanPanel() {
                   </CardTitle>
                </CardHeader>
                <CardContent>
-                  <form onSubmit={handleMasuk} className="space-y-4">
-                     <div className="space-y-2">
+                   <form onSubmit={handleMasuk} className="space-y-4">
+                      {recentNopol.length > 0 && (
+                         <div className="flex flex-wrap items-center gap-1.5">
+                            <span className="text-xs text-base-content/50">Terbaru:</span>
+                            {recentNopol.map((nopol) => (
+                               <button
+                                  key={nopol}
+                                  type="button"
+                                  className="rounded-full border border-base-300 bg-base-200/60 px-2.5 py-0.5 text-xs font-medium text-base-content/80 hover:bg-base-200 hover:text-base-content"
+                                  onClick={() => setNomorMasuk(nopol)}
+                               >
+                                  {nopol}
+                               </button>
+                            ))}
+                         </div>
+                      )}
+                      <div className="space-y-2">
                         <Label
                            htmlFor="nomor-polisi-masuk"
                            className="text-[13px]"
