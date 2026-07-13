@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { formatDateTimeCustom } from "@/lib/utils/format-date";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Bell, CheckCheck, Check, ExternalLink } from "lucide-react";
+import { Bell, CheckCheck, Check } from "lucide-react";
 import { EmptyState } from "@/components/shared/empty-state";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
@@ -225,9 +225,10 @@ export function NotificationBell() {
                            <div
                               key={n.id}
                               role="listitem"
-                              className={`group relative px-4 py-3 transition-colors ${
+                              className={`group relative cursor-pointer px-4 py-3 transition-colors ${
                                  !n.is_read ? "bg-primary/5" : ""
                               } hover:bg-base-200/60`}
+                              onClick={() => handleClickLink(n.link, n.id, n.is_read)}
                            >
                               <div className="flex items-start gap-2.5">
                                  {!n.is_read ? (
@@ -256,26 +257,14 @@ export function NotificationBell() {
                                     <p className="text-xs text-base-content/70 line-clamp-2 mt-0.5">
                                        {n.message}
                                     </p>
-                                    <div className="flex items-center justify-between mt-1.5">
-                                       <p className="text-[11px] text-base-content/50 tabular-nums">
-                                          {formatDateTimeCustom(n.created_at, {
-                                             day: "numeric",
-                                             month: "short",
-                                             hour: "2-digit",
-                                             minute: "2-digit",
-                                          })}
-                                       </p>
-                                       {n.link && (
-                                          <button
-                                             type="button"
-                                             className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
-                                             onClick={() => handleClickLink(n.link, n.id, n.is_read)}
-                                          >
-                                             Lihat detail
-                                             <ExternalLink className="h-3 w-3" aria-hidden="true" />
-                                          </button>
-                                       )}
-                                    </div>
+                                    <p className="text-[11px] text-base-content/50 tabular-nums mt-1">
+                                       {formatDateTimeCustom(n.created_at, {
+                                          day: "numeric",
+                                          month: "short",
+                                          hour: "2-digit",
+                                          minute: "2-digit",
+                                       })}
+                                    </p>
                                  </div>
                               </div>
                            </div>

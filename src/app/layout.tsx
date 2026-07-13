@@ -40,18 +40,19 @@ export default async function RootLayout({
    // Nonce dari middleware (proxy.ts) untuk CSP ketat (script-src 'nonce-...').
    const nonce = (await headers()).get("x-nonce") ?? undefined;
 
-   return (
-       <html lang="id" suppressHydrationWarning>
-          <body
-             className={`${jakartaSans.variable} ${geistMono.variable} font-sans antialiased`}
-             suppressHydrationWarning
-          >
+    return (
+       <html lang="id" data-theme="jr" suppressHydrationWarning>
+          <head>
              <script
                 nonce={nonce}
                 dangerouslySetInnerHTML={{
                    __html: `(function(){try{var s=localStorage.getItem('theme');var d=window.matchMedia('(prefers-color-scheme: dark)').matches;if(s==='dark'||(!s&&d)){document.documentElement.setAttribute('data-theme','jr-dark');}}catch(e){}})();`,
                 }}
              />
+          </head>
+          <body
+             className={`${jakartaSans.variable} ${geistMono.variable} font-sans antialiased`}
+          >
              <ThemeProvider>
                 <SentryInit />
                 {children}
@@ -59,5 +60,5 @@ export default async function RootLayout({
              </ThemeProvider>
          </body>
       </html>
-   );
+    );
 }
