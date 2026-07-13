@@ -37,9 +37,10 @@ export default async function RootLayout({
    children: React.ReactNode;
 }>) {
     return (
-       <html lang="id">
+       <html lang="id" suppressHydrationWarning>
           <body
              className={`${jakartaSans.variable} ${geistMono.variable} font-sans antialiased`}
+             suppressHydrationWarning
           >
              <ThemeProvider>
                 <SentryInit />
