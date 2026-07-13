@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { headers } from "next/headers";
 import { Plus_Jakarta_Sans, Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "sonner";
@@ -36,6 +37,11 @@ export default async function RootLayout({
 }: Readonly<{
    children: React.ReactNode;
 }>) {
+    // Membaca nonce dari proxy.ts agar Next.js otomatis menerapkan nonce ke
+    // semua inline script milik framework. Tanpa ini, CSP script-src 'nonce-...'
+    // memblokir script framework → React gagal hydrate → #418.
+    const nonce = (await headers()).get("x-nonce") ?? undefined;
+
     return (
        <html lang="id" suppressHydrationWarning>
           <body
