@@ -155,7 +155,7 @@ export async function PATCH(
                    ? `Temuan "${data.judul}" untuk armada ${data.nomor_polisi} dibuka kembali.`
                    : `Temuan "${data.judul}" untuk armada ${data.nomor_polisi} telah diselesaikan.`,
                 type: isReopen ? "warning" : "success",
-                link: "/po/temuan",
+                link: `/po/temuan?highlight=${id}`,
              });
           }
        }

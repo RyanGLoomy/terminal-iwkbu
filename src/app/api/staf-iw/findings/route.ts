@@ -152,7 +152,7 @@ export async function POST(request: Request) {
           title: "Temuan Baru",
           message: `Temuan untuk armada ${data.nomor_polisi}: ${data.judul}`,
           type: "warning",
-          link: "/po/temuan",
+          link: `/po/temuan?highlight=${data.id}`,
        });
 
         return NextResponse.json({ data }, { status: 201 });

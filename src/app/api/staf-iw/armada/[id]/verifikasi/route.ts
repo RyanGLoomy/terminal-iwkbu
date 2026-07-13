@@ -79,7 +79,7 @@ export async function POST(
                : "Armada Ditolak",
          message: `Armada ${existing.nomor_polisi} ${status === "terverifikasi" ? "telah diverifikasi" : "ditolak"}.`,
          type: status === "terverifikasi" ? "success" : "warning",
-         link: "/po",
+         link: `/po?highlight=${existing.id}`,
       });
 
       return NextResponse.json({ data: armada });

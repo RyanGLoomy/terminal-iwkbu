@@ -73,7 +73,7 @@ export async function POST(
              title: "Tindak Lanjut Ditambahkan",
              message: `Tindakan baru untuk temuan armada ${finding.nomor_polisi}: ${data.action_text}`,
              type: "info",
-             link: "/po/temuan",
+             link: `/po/temuan?highlight=${finding.id}`,
           });
        }
 

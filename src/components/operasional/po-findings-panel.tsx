@@ -3,7 +3,7 @@
 import { useDeferredValue, useEffect, useState } from "react";
 import { formatDate } from "@/lib/utils/format-date";
 import { EvidenceAttachment } from "./evidence-attachment";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -144,6 +144,8 @@ function ClarificationForm({ findingId }: { findingId: string }) {
 
 export function PoFindingsPanel({ findings }: { findings: FindingRecord[] }) {
    const router = useRouter();
+   const searchParams = useSearchParams();
+   const highlightId = searchParams.get("highlight");
    const [search, setSearch] = useState("");
    const deferredSearch = useDeferredValue(search);
    const [statusFilter, setStatusFilter] = useState("semua");
@@ -193,6 +195,13 @@ export function PoFindingsPanel({ findings }: { findings: FindingRecord[] }) {
          .subscribe();
       return () => supabase.removeChannel(channel);
    }, [router]);
+
+   // Scroll to highlighted finding from notification
+   useEffect(() => {
+      if (!highlightId) return;
+      const el = document.querySelector(".highlight-from-notification");
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+   }, [highlightId]);
 
     return (
       <div className="space-y-5">
@@ -276,8 +285,8 @@ export function PoFindingsPanel({ findings }: { findings: FindingRecord[] }) {
                       </CardContent>
                    </Card>
                 ) : (
-                visibleFindings.map((finding) => (
-                  <Card key={finding.id} className="border-base-300">
+                 visibleFindings.map((finding) => (
+                   <Card key={finding.id} className={`border-base-300 ${highlightId === finding.id ? "highlight-from-notification" : ""}`}>
                      <CardHeader className="space-y-2">
                         <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                            <div>

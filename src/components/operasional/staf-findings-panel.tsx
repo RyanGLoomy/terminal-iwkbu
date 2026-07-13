@@ -3,7 +3,7 @@
 import { useDeferredValue, useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { formatDateTime, formatDate } from "@/lib/utils/format-date";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -70,8 +70,10 @@ export function StafFindingsPanel({
       finding: FindingRecord | null;
       targetStatus: FindingStatus;
    }>({ finding: null, targetStatus: "open" });
-   const [clarificationFinding, setClarificationFinding] =
-      useState<FindingRecord | null>(null);
+    const [clarificationFinding, setClarificationFinding] =
+       useState<FindingRecord | null>(null);
+   const searchParams = useSearchParams();
+   const highlightId = searchParams.get("highlight");
    const [editFinding, setEditFinding] = useState<FindingRecord | null>(null);
    const [form, setForm] = useState({
       poId: prefill?.poId ?? poOptions[0]?.id ?? "",
@@ -153,6 +155,15 @@ export function StafFindingsPanel({
    })();
 
    const visibleFindings = filteredFindings.slice(0, visibleCount);
+
+   // Scroll to highlighted finding from notification
+   useEffect(() => {
+      if (!highlightId) return;
+      const el = document.querySelector(".highlight-from-notification");
+      if (el) {
+         el.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+   }, [highlightId, visibleFindings]);
 
    // S4: Live findings updates via Realtime (debounced router.refresh)
    useEffect(() => {
@@ -611,7 +622,7 @@ export function StafFindingsPanel({
                            </TableRow>
                         ) : (
                            visibleFindings.map((finding) => (
-                              <TableRow key={finding.id}>
+                              <TableRow key={finding.id} className={highlightId === finding.id ? "highlight-from-notification" : ""}>
                                  <TableCell className="whitespace-nowrap text-sm text-base-content/70">
                                     {formatDateTime(finding.created_at)}
                                  </TableCell>
@@ -743,7 +754,7 @@ export function StafFindingsPanel({
                       </Card>
                    ) : (
                       visibleFindings.map((finding) => (
-                         <Card key={finding.id} className="border-base-300">
+                         <Card key={finding.id} className={`border-base-300 ${highlightId === finding.id ? "highlight-from-notification" : ""}`}>
                             <CardContent className="space-y-2 py-3">
                                <div className="flex items-center gap-2">
                                   <StatusBadge category="severity" value={finding.severity} />

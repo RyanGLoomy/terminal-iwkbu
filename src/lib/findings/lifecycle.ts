@@ -277,14 +277,14 @@ export async function submitClarification(params: {
    );
 
    // Notifikasi ke lawan: PO -> pembuat temuan (staf-iw); staf-iw -> PO pemilik.
-   if (responder === "po") {
+    if (responder === "po") {
       if (finding.created_by) {
          await createNotification({
             userId: finding.created_by,
             title: "PO Mengirim Klarifikasi",
             message: `PO merespon temuan "${finding.judul}" (${decision})`,
             type: "info",
-            link: "/staf-iw/temuan",
+            link: `/staf-iw/temuan?highlight=${finding.id}`,
          });
       }
    } else {
@@ -294,7 +294,7 @@ export async function submitClarification(params: {
             title: "Staf IW Mengirim Klarifikasi",
             message: `Staf IW merespon temuan "${finding.judul}" (${decision})`,
             type: "info",
-            link: "/po/temuan",
+            link: `/po/temuan?highlight=${finding.id}`,
          });
       }
    }

@@ -77,9 +77,9 @@ export async function PATCH(
             { actorUserId: actor.user.id },
          );
 
-         const { data: f } = await admin
+          const { data: f } = await admin
             .from("findings")
-            .select("po_id, nomor_polisi")
+            .select("id, po_id, nomor_polisi")
             .eq("id", id)
             .single();
          if (f?.po_id) {
@@ -88,7 +88,7 @@ export async function PATCH(
                title: "Tindakan Diselesaikan",
                message: `Tindakan "${existing.action_text}" untuk temuan armada ${f.nomor_polisi} telah diselesaikan.`,
                type: "success",
-               link: "/po/temuan",
+               link: `/po/temuan?highlight=${f.id}`,
             });
          }
       }
