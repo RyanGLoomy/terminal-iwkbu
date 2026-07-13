@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { formatDateTimeCustom } from "@/lib/utils/format-date";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Bell, CheckCheck } from "lucide-react";
+import { Bell, CheckCheck, Check, ExternalLink } from "lucide-react";
 import { EmptyState } from "@/components/shared/empty-state";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
@@ -140,11 +140,21 @@ export function NotificationBell() {
       );
    }
 
-   function handleClickLink(link: string | null) {
+   function handleClickLink(link: string | null, id: string, isRead: boolean) {
+      if (!isRead) markSingleRead(id);
       if (link) {
          router.push(link);
          setOpen(false);
       }
+   }
+
+   async function markSingleRead(id: string) {
+      const supabase = createClient();
+      await supabase.from("notifications").update({ is_read: true }).eq("id", id);
+      setNotifications((prev) =>
+         prev.map((n) => (n.id === id ? { ...n, is_read: true } : n)),
+      );
+      setUnreadCount((prev) => Math.max(0, prev - 1));
    }
 
    return (
@@ -174,63 +184,107 @@ export function NotificationBell() {
             {unreadCount > 0 ? `${unreadCount} notifikasi belum dibaca` : "Tidak ada notifikasi belum dibaca"}
          </span>
 
-         {open && (
-            <div className="absolute right-0 top-full mt-2 w-80 max-h-96 overflow-y-auto rounded-xl border border-base-300 bg-base-100 shadow-sm z-50">
-                <div className="flex items-center justify-between px-4 py-3 border-b border-base-300">
-                   <span className="text-sm font-semibold">Notifikasi</span>
-                   {unreadCount > 0 && (
-                      <Button
-                         variant="ghost"
-                         size="sm"
-                         className="h-7 text-xs"
-                         onClick={markAllRead}
-                      >
-                         <CheckCheck className="h-3.5 w-3.5 mr-1" aria-hidden="true" />
-                         Tandai dibaca
-                      </Button>
-                   )}
+          {open && (
+             <div className="absolute right-0 top-full mt-2 w-[22rem] max-h-[28rem] overflow-y-auto rounded-xl border border-base-300 bg-base-100 shadow-lg z-50">
+                <div className="sticky top-0 flex items-center justify-between border-b border-base-300 bg-base-100/95 backdrop-blur px-4 py-3">
+                   <div className="flex items-center gap-2">
+                      <span className="text-sm font-semibold">Notifikasi</span>
+                      {unreadCount > 0 && (
+                         <Badge className="bg-error text-error-content text-[10px]">
+                            {unreadCount} baru
+                         </Badge>
+                      )}
+                   </div>
+                   <div className="flex items-center gap-1">
+                      {unreadCount > 0 && (
+                         <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-7 text-xs gap-1"
+                            onClick={markAllRead}
+                         >
+                            <CheckCheck className="h-3.5 w-3.5" aria-hidden="true" />
+                            Tandai semua dibaca
+                         </Button>
+                      )}
+                   </div>
                 </div>
                  {notifications.length === 0 ? (
                     <EmptyState title="Tidak ada notifikasi" icon={Bell} className="border-0 py-6" />
                  ) : (
                    <div className="divide-y divide-base-300" role="list">
-                      {notifications.map((n) => (
-                         <button
-                            key={n.id}
-                            type="button"
-                            role="listitem"
-                            className={`w-full text-left px-4 py-3 hover:bg-base-200/60 transition-colors ${
-                               !n.is_read ? "bg-primary/10" : ""
-                            }`}
-                            onClick={() => handleClickLink(n.link)}
-                         >
-                            <div className="flex items-start gap-2">
-                               {!n.is_read && (
-                                  <span className="mt-1.5 h-2 w-2 rounded-full bg-primary shrink-0" aria-hidden="true" />
-                               )}
-                               <div className="min-w-0 flex-1">
-                                  <p className="text-sm font-medium truncate">
-                                     {n.title}
-                                  </p>
-                                  <p className="text-xs text-base-content/70 line-clamp-2 mt-0.5">
-                                     {n.message}
-                                  </p>
-                                  <p className="text-xs text-base-content/50 mt-1 tabular-nums">
-                                      {formatDateTimeCustom(n.created_at, {
-                                         day: "numeric",
-                                         month: "short",
-                                         hour: "2-digit",
-                                         minute: "2-digit",
-                                      })}
-                                  </p>
-                               </div>
-                            </div>
-                         </button>
-                      ))}
+                      {notifications.map((n) => {
+                         const typeStyles: Record<string, { icon: string; color: string }> = {
+                            success: { icon: "✓", color: "bg-success/15 text-success" },
+                            error: { icon: "!", color: "bg-error/15 text-error" },
+                            warning: { icon: "⚠", color: "bg-warning/15 text-warning" },
+                            info: { icon: "ℹ", color: "bg-info/15 text-info" },
+                         };
+                         const ts = typeStyles[n.type] ?? typeStyles.info;
+                         return (
+                           <div
+                              key={n.id}
+                              role="listitem"
+                              className={`group relative px-4 py-3 transition-colors ${
+                                 !n.is_read ? "bg-primary/5" : ""
+                              } hover:bg-base-200/60`}
+                           >
+                              <div className="flex items-start gap-2.5">
+                                 {!n.is_read ? (
+                                    <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-primary" aria-hidden="true" />
+                                 ) : (
+                                    <span className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold ${ts.color}`}>
+                                       {ts.icon}
+                                    </span>
+                                 )}
+                                 <div className="min-w-0 flex-1">
+                                    <div className="flex items-start justify-between gap-1">
+                                       <p className={`text-sm truncate ${!n.is_read ? "font-semibold" : "font-medium"}`}>
+                                          {n.title}
+                                       </p>
+                                       {!n.is_read && (
+                                          <button
+                                             type="button"
+                                             className="shrink-0 rounded-md p-1 text-base-content/40 opacity-0 transition-opacity hover:bg-base-300 hover:text-base-content group-hover:opacity-100"
+                                             onClick={(e) => { e.stopPropagation(); markSingleRead(n.id); }}
+                                             aria-label="Tandai dibaca"
+                                          >
+                                             <Check className="h-3.5 w-3.5" />
+                                          </button>
+                                       )}
+                                    </div>
+                                    <p className="text-xs text-base-content/70 line-clamp-2 mt-0.5">
+                                       {n.message}
+                                    </p>
+                                    <div className="flex items-center justify-between mt-1.5">
+                                       <p className="text-[11px] text-base-content/50 tabular-nums">
+                                          {formatDateTimeCustom(n.created_at, {
+                                             day: "numeric",
+                                             month: "short",
+                                             hour: "2-digit",
+                                             minute: "2-digit",
+                                          })}
+                                       </p>
+                                       {n.link && (
+                                          <button
+                                             type="button"
+                                             className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+                                             onClick={() => handleClickLink(n.link, n.id, n.is_read)}
+                                          >
+                                             Lihat detail
+                                             <ExternalLink className="h-3 w-3" aria-hidden="true" />
+                                          </button>
+                                       )}
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                         );
+                      })}
                    </div>
                 )}
-            </div>
-         )}
+             </div>
+          )}
       </div>
    );
 }
