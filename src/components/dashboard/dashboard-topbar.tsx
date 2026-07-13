@@ -14,7 +14,7 @@ interface DashboardTopbarProps {
 
 export function DashboardTopbar({ userName, userRole }: DashboardTopbarProps) {
    return (
-      <header className="sticky top-0 z-30 flex h-14 items-center justify-between gap-4 border-b border-base-300 bg-base-100/95 px-4 lg:px-6">
+      <header className="sticky top-0 z-30 hidden h-14 items-center justify-between gap-4 border-b border-base-300 bg-base-100/95 px-4 lg:flex lg:px-6">
          <DashboardBreadcrumb />
           <div className="flex items-center gap-1.5">
              <ConnectionIndicator />

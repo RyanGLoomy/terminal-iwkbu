@@ -399,8 +399,8 @@ export function PoFindingsPanel({ findings }: { findings: FindingRecord[] }) {
                          {finding.status !== "closed" ? (
                            <ClarificationForm findingId={finding.id} />
                         ) : (
-                           <div className="rounded-md border border-emerald-200 bg-emerald-50 dark:border-green-800 dark:bg-green-950/50 px-3 py-2 text-sm text-brand-green">
-                              Temuan ini sudah ditutup oleh Staf IW.
+                            <div className="rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-medium text-emerald-700 dark:border-green-800 dark:bg-green-950/50 dark:text-green-300">
+                               Temuan ini sudah ditutup oleh Staf IW.
                            </div>
                         )}
                       </CardContent>

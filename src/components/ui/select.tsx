@@ -213,7 +213,7 @@ function SelectTrigger({
       onClick={() => ctx.setOpen(!ctx.open)}
       onKeyDown={handleKeyDown}
       className={cn(
-        "input input-bordered flex h-11 w-full items-center justify-between gap-2 bg-base-100 pr-3 text-left text-base-content",
+        "input input-bordered flex h-11 w-full cursor-pointer items-center justify-between gap-2 bg-base-100 pr-3 text-left text-base-content",
         ctx.disabled && "cursor-not-allowed opacity-50",
         className,
       )}

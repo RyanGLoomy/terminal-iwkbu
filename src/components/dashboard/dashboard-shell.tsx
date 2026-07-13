@@ -62,10 +62,8 @@ export function DashboardShell({
                mounted && (collapsed ? "lg:pl-[72px]" : "lg:pl-[264px]"),
             )}
          >
-            {/* Desktop topbar */}
-            <div className="hidden lg:block">
-               <DashboardTopbar userName={userName} userRole={userRole} />
-            </div>
+             {/* Desktop topbar */}
+             <DashboardTopbar userName={userName} userRole={userRole} />
 
             {/* Mobile topbar */}
             <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-base-300 bg-base-100/95 px-4 lg:hidden">

@@ -41,7 +41,7 @@ export default async function RootLayout({
    const nonce = (await headers()).get("x-nonce") ?? undefined;
 
    return (
-       <html lang="id" data-theme="jr" suppressHydrationWarning>
+       <html lang="id" suppressHydrationWarning>
           <body
              className={`${jakartaSans.variable} ${geistMono.variable} font-sans antialiased`}
              suppressHydrationWarning
