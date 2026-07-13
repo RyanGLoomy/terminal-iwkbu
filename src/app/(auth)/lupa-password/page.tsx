@@ -99,7 +99,7 @@ export default function LupaPasswordPage() {
             <div className="space-y-2.5">
               <Label htmlFor="email">Email pengguna</Label>
               <div className="relative">
-                <Mail className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-base-content/70" aria-hidden="true" />
+                <Mail className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-primary" aria-hidden="true" />
                 <Input
                   id="email"
                   type="email"
