@@ -41,18 +41,17 @@ export default async function RootLayout({
    const nonce = (await headers()).get("x-nonce") ?? undefined;
 
    return (
-      <html lang="id" data-theme="jr" suppressHydrationWarning>
-          <head>
-              <script
-                 nonce={nonce}
-                 dangerouslySetInnerHTML={{
-                    __html: `(function(){try{var s=localStorage.getItem('theme');var d=window.matchMedia('(prefers-color-scheme: dark)').matches;if(s==='dark'||(!s&&d)){document.documentElement.setAttribute('data-theme','jr-dark');}}catch(e){}})();`,
-                 }}
-              />
-          </head>
+       <html lang="id" data-theme="jr" suppressHydrationWarning>
           <body
              className={`${jakartaSans.variable} ${geistMono.variable} font-sans antialiased`}
+             suppressHydrationWarning
           >
+             <script
+                nonce={nonce}
+                dangerouslySetInnerHTML={{
+                   __html: `(function(){try{var s=localStorage.getItem('theme');var d=window.matchMedia('(prefers-color-scheme: dark)').matches;if(s==='dark'||(!s&&d)){document.documentElement.setAttribute('data-theme','jr-dark');}}catch(e){}})();`,
+                }}
+             />
              <ThemeProvider>
                 <SentryInit />
                 {children}

@@ -173,7 +173,7 @@ export default function ResetPasswordPage() {
               <div className="space-y-2.5">
                 <Label htmlFor="password">Password baru</Label>
                 <div className="relative">
-                  <KeyRound className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-primary" aria-hidden="true" />
+                  <KeyRound className="pointer-events-none absolute left-3.5 top-1/2 z-10 h-4 w-4 -translate-y-1/2 text-primary" aria-hidden="true" />
                   <Input
                     id="password"
                     type={showPassword ? "text" : "password"}
@@ -204,7 +204,7 @@ export default function ResetPasswordPage() {
               <div className="space-y-2.5">
                 <Label htmlFor="confirm-password">Konfirmasi password baru</Label>
                 <div className="relative">
-                  <KeyRound className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-primary" aria-hidden="true" />
+                  <KeyRound className="pointer-events-none absolute left-3.5 top-1/2 z-10 h-4 w-4 -translate-y-1/2 text-primary" aria-hidden="true" />
                   <Input
                     id="confirm-password"
                     type={showPassword ? "text" : "password"}
