@@ -1,9 +1,10 @@
 "use client";
 
-import { useDeferredValue, useState } from "react";
+import { useDeferredValue, useEffect, useState } from "react";
 import { formatDate } from "@/lib/utils/format-date";
 import { EvidenceAttachment } from "./evidence-attachment";
 import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -142,6 +143,7 @@ function ClarificationForm({ findingId }: { findingId: string }) {
 }
 
 export function PoFindingsPanel({ findings }: { findings: FindingRecord[] }) {
+   const router = useRouter();
    const [search, setSearch] = useState("");
    const deferredSearch = useDeferredValue(search);
    const [statusFilter, setStatusFilter] = useState("semua");
@@ -166,11 +168,33 @@ export function PoFindingsPanel({ findings }: { findings: FindingRecord[] }) {
    const progressCount = findings.filter(
       (item) => item.status === "on_progress",
    ).length;
-   const closedCount = findings.filter(
-      (item) => item.status === "closed",
-   ).length;
+    const closedCount = findings.filter(
+       (item) => item.status === "closed",
+    ).length;
 
-   return (
+   // S4: Live findings updates via Realtime (debounced router.refresh)
+   useEffect(() => {
+      const supabase = createClient();
+      let pending = false;
+      const channel = supabase
+         .channel(`findings-po:${crypto.randomUUID()}`)
+         .on(
+            "postgres_changes",
+            { event: "*", schema: "public", table: "findings" },
+            () => {
+               if (pending) return;
+               pending = true;
+               setTimeout(() => {
+                  router.refresh();
+                  pending = false;
+               }, 2000);
+            },
+         )
+         .subscribe();
+      return () => supabase.removeChannel(channel);
+   }, [router]);
+
+    return (
       <div className="space-y-5">
          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <DashboardCard

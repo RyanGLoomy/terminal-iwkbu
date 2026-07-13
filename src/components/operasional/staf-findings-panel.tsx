@@ -4,6 +4,7 @@ import { useDeferredValue, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { formatDateTime, formatDate } from "@/lib/utils/format-date";
 import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -150,6 +151,28 @@ export function StafFindingsPanel({
    })();
 
    const visibleFindings = filteredFindings.slice(0, visibleCount);
+
+   // S4: Live findings updates via Realtime (debounced router.refresh)
+   useEffect(() => {
+      const supabase = createClient();
+      let pending = false;
+      const channel = supabase
+         .channel(`findings-staf:${crypto.randomUUID()}`)
+         .on(
+            "postgres_changes",
+            { event: "*", schema: "public", table: "findings" },
+            () => {
+               if (pending) return;
+               pending = true;
+               setTimeout(() => {
+                  router.refresh();
+                  pending = false;
+               }, 2000);
+            },
+         )
+         .subscribe();
+      return () => supabase.removeChannel(channel);
+   }, [router]);
 
    const submitFinding = async () => {
       setLoading(true);
