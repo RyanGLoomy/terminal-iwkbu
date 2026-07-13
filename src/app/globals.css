@@ -8,6 +8,15 @@
   logs: false;
 }
 
+/* Prevent scroll flicker during React hydration recovery.
+   When #418 occurs, React tears down and re-renders the page.
+   This can cause the browser to briefly scroll to a different
+   position. Forcing instant scroll behavior makes the recovery
+   invisible. Overridden by data-scroll-behavior="smooth" on <html>. */
+html {
+  scroll-behavior: auto;
+}
+
 /* ---------------------------------------------------------------------------
  * Tema DaisyUI — "jr" (terang) & "jr-dark" (gelap)
  * Palet brand JR (navy/sky/gold/green) dipetakan ke token semantik DaisyUI.

@@ -4,7 +4,6 @@ import {
   createContext,
   useContext,
   useEffect,
-  useLayoutEffect,
   useState,
   type ReactNode,
 } from "react";
@@ -47,13 +46,12 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setThemeState] = useState<Theme>("light");
   const [mounted, setMounted] = useState(false);
 
-  // useLayoutEffect: sets data-theme BEFORE browser paints.
-  // This prevents flash AND avoids hydration mismatch because
-  // useLayoutEffect runs after React's hydration check but before paint.
-  useLayoutEffect(() => {
+  // Set theme ASAP via direct DOM manipulation (before React paints).
+  // This runs as a regular effect but is the first thing that happens.
+  useEffect(() => {
     const resolved = resolveInitialTheme();
-    setThemeState(resolved);
     document.documentElement.setAttribute("data-theme", THEME_ATTR[resolved]);
+    setThemeState(resolved);
     setMounted(true);
   }, []);
 
