@@ -8,6 +8,14 @@
   logs: false;
 }
 
+/* Prevent visible flicker during React hydration recovery.
+   When #418 occurs (Vercel Turbopack injects scripts into <head> before
+   React hydrates), React tears down server HTML and re-renders client-side.
+   This prevents the page height from collapsing to 0 during that gap,
+   which is what causes the visible scroll bounce. */
+html { scroll-behavior: auto; }
+body { min-height: 100vh; }
+
 /* ---------------------------------------------------------------------------
  * Tema DaisyUI — "jr" (terang) & "jr-dark" (gelap)
  * Palet brand JR (navy/sky/gold/green) dipetakan ke token semantik DaisyUI.

@@ -43,12 +43,20 @@ function resolveInitialTheme(): Theme {
 }
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>("light");
-  const [mounted, setMounted] = useState(false);
+   const [theme, setThemeState] = useState<Theme>("light");
+   const [mounted, setMounted] = useState(false);
 
-  // Set theme ASAP via direct DOM manipulation (before React paints).
-  // This runs as a regular effect but is the first thing that happens.
-  useEffect(() => {
+   // Prevent browser scroll restoration from fighting React's hydration recovery.
+   // When #418 occurs (Vercel Turbopack injects into <head> before hydration),
+   // React tears down + re-renders — browser scroll restoration causes flicker.
+   useEffect(() => {
+      if ("scrollRestoration" in history) {
+         history.scrollRestoration = "manual";
+      }
+   }, []);
+
+   // Set theme ASAP via direct DOM manipulation (before React paints).
+   useEffect(() => {
     const resolved = resolveInitialTheme();
     document.documentElement.setAttribute("data-theme", THEME_ATTR[resolved]);
     setThemeState(resolved);
