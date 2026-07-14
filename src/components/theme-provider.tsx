@@ -77,8 +77,10 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
      // 3. Force scroll to top (in case recovery left it wrong)
      window.scrollTo(0, 0);
 
-     // 4. Restore visibility — done BEFORE paint so user never sees blank
-     document.body.style.visibility = "visible";
+     // 4. Unlock scroll — CSS sets html { overflow-y: hidden } to prevent
+     //    the browser from scrolling during hydration recovery. Now that
+     //    React has finished, it's safe to allow scrolling again.
+     document.documentElement.style.overflowY = "";
   }, []);
 
   useEffect(() => {

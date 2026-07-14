@@ -8,15 +8,11 @@
   logs: false;
 }
 
-/* Prevent visible flicker during React hydration recovery.
-   When #418 occurs (Vercel Turbopack injects scripts into <head> before
-   React hydrates), React tears down server HTML and re-renders client-side.
-   During the ~50ms gap, body content briefly disappears, causing the
-   browser to scroll. Making body invisible during this gap prevents
-   the user from seeing the scroll bounce. Visibility is restored by
-   ThemeProvider's useEffect (runs after hydration/recovery completes). */
-html { scroll-behavior: auto; }
-body { min-height: 100vh; visibility: hidden; }
+/* Lock scroll during initial load to prevent hydration bounce.
+   React #418 recovery tears down + re-renders the page. During the
+   gap, content briefly disappears and the browser scrolls. Locking
+   overflow prevents ANY scroll until React is ready. */
+html { overflow-y: hidden; scroll-behavior: auto; }
 
 /* ---------------------------------------------------------------------------
  * Tema DaisyUI — "jr" (terang) & "jr-dark" (gelap)
