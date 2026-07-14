@@ -11,10 +11,12 @@
 /* Prevent visible flicker during React hydration recovery.
    When #418 occurs (Vercel Turbopack injects scripts into <head> before
    React hydrates), React tears down server HTML and re-renders client-side.
-   This prevents the page height from collapsing to 0 during that gap,
-   which is what causes the visible scroll bounce. */
+   During the ~50ms gap, body content briefly disappears, causing the
+   browser to scroll. Making body invisible during this gap prevents
+   the user from seeing the scroll bounce. Visibility is restored by
+   ThemeProvider's useEffect (runs after hydration/recovery completes). */
 html { scroll-behavior: auto; }
-body { min-height: 100vh; }
+body { min-height: 100vh; visibility: hidden; }
 
 /* ---------------------------------------------------------------------------
  * Tema DaisyUI — "jr" (terang) & "jr-dark" (gelap)

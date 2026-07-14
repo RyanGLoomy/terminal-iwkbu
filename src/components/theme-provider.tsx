@@ -47,12 +47,14 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
    const [mounted, setMounted] = useState(false);
 
    // Prevent browser scroll restoration from fighting React's hydration recovery.
-   // When #418 occurs (Vercel Turbopack injects into <head> before hydration),
-   // React tears down + re-renders — browser scroll restoration causes flicker.
    useEffect(() => {
       if ("scrollRestoration" in history) {
          history.scrollRestoration = "manual";
       }
+      // Restore body visibility after hydration/recovery completes.
+      // CSS sets body { visibility: hidden } to hide the scroll bounce
+      // that occurs when React tears down server HTML and re-renders.
+      document.body.style.visibility = "visible";
    }, []);
 
    // Set theme ASAP via direct DOM manipulation (before React paints).
