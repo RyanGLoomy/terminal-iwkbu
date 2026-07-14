@@ -70,7 +70,7 @@ pnpm test:e2e:dev           # Same but skip build (use running dev server)
 - Font: **Plus Jakarta Sans** (400–800 via `next/font/google`). Mono: **Geist Mono**.
 - Dark mode: `data-theme="jr|jr-dark"` attribute on `<html>` (set by `src/components/theme-provider.tsx`) + an inline anti-flash script in `src/app/layout.tsx`. `<html suppressHydrationWarning>`.
 - Avoid "gaming" effects (neon glows, heavy gradients, glass blur, `shadow-elevation-3`). Keep visuals clean/Nexus-like: `shadow-sm`, subtle borders (`border-base-300`), restrained accent use. `.command-panel`/`.card-interactive`/`.text-heading`/`.font700/800` are clean legacy bridge classes.
-- React Compiler enabled in `next.config.ts` — avoid `useMemo`/`useCallback` unless measured.
+- React Compiler is DISABLED (causes hydration #418 in Next.js 16 production builds — see vercel/next.js#87696). Manual `useMemo`/`useCallback` may be needed for hot paths. Re-enable once upstream bug is fixed.
 - `xlsx`, `jspdf`, `jspdf-autotable` via dynamic imports only (keep out of static imports).
 - `recharts` via `next/dynamic` with loading skeleton in 3 dashboard pages (keeps bundle under 1.1 MB).
 - Shared components in `src/components/shared/`: `StatusBadge`, `EmptyState`, `LoadingState`, `ConfirmDialog`.
@@ -84,3 +84,14 @@ pnpm test:e2e:dev           # Same but skip build (use running dev server)
 4. Sanitize error messages — never leak Supabase URLs or DB internals.
 5. Use `rate-limiter.ts` / `pin-rate-limiter.ts` for auth-adjacent endpoints.
 6. Log via the TS `logActivity()` helper (`src/lib/supabase/queries/operasional.server.ts`) — it inserts into `activity_logs` with the service-role admin client. Table-mutation triggers (`fn_log_*`, SECURITY DEFINER) also auto-log. The `log_activity` SQL RPC was removed in migration 0057; do not call it via `.rpc()`.
+
+## Agent Harness (ECC)
+
+Plugin `ecc-universal` (npm, v2.0.0) dipasang **lokal** di `.opencode/` (gitignored). Tidak affect project lain. Tim lain tidak perlu install untuk bekerja di repo ini — semua config ECC sepenuhnya opsional dan lokal.
+
+- **Hook profile**: `minimal` via `.envrc` (load dengan `direnv allow`, atau tanpa direnv: `set -a; source .envrc; set +a` sebelum `opencode`). Profile ini menonaktifkan hook yang bisa churn class Tailwind/DaisyUI (Prettier auto-format), memblokir tulis `.md` (doc-file-warning), atau redundant dgn CI gate (tsc on every edit). Hook yang tetap aktif benign: session markers, deteksi `PACKAGE_MANAGER`/`PRIMARY_LANGUAGE`, dan auto-approve operasi read-only/formatter/test (bukan write/commit).
+- **Skills tambahan** (8, namespaced di `.opencode/skills/ecc/`, dimuat via `instructions[]` di `opencode.json`): `backend-patterns`, `frontend-patterns`, `error-handling`, `database-migrations`, `api-design`, `deployment-patterns`, `docker-patterns`, `react-performance`. Tidak overlap dengan 78 skill existing di `.opencode/skills/`.
+- **Diagram skills pack** (6 skill on-demand di `.opencode/skills/diagrams/`, dimuat via `skill` tool saat task diagram): `mermaid-class-diagram`, `mermaid-sequence-diagram`, `mermaid-er-diagram`, `mermaid-state-diagram`, `mermaid-flowchart`, `drawio-xml-fallback`. **Prioritas Mermaid** — gunakan `drawio_open_drawio_mermaid` (auto-layout) untuk diagram generik; raw XML hanya untuk shape spesifik (cloud icons, swimlane, P&ID). Tidak ditambah ke `instructions[]` (zero context cost harian).
+- **Agents** (3, prefix `ecc-` di `opencode.json`): `ecc-code-reviewer` (read-only review), `ecc-database-reviewer` (PostgreSQL/Supabase schema + RLS review), `ecc-security-reviewer` (vulnerability remediation). Invoke via subagent.
+- **Backup**: `.opencode.backup-*` dan `opencode.json.backup-*` (gitignored) dibuat sebelum install.
+- **Uninstall**: hapus `.opencode/node_modules/ecc-universal`, `.opencode/skills/ecc/`, `.opencode/prompts/agents/ecc-*.txt`, `.envrc`; hapus key `plugin`/`instructions`/`agent` dari `opencode.json` (atau restore dari backup); `npm uninstall ecc-universal` di `.opencode/`.
