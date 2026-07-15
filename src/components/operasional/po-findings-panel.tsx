@@ -196,11 +196,16 @@ export function PoFindingsPanel({ findings }: { findings: FindingRecord[] }) {
       return () => supabase.removeChannel(channel);
    }, [router]);
 
-   // Scroll to highlighted finding from notification
+    // Scroll to highlighted finding from notification + trigger glow
+   const [glowKey, setGlowKey] = useState(0);
    useEffect(() => {
       if (!highlightId) return;
-      const el = document.querySelector(".highlight-from-notification");
-      if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+      setGlowKey((k) => k + 1);
+      const timer = setTimeout(() => {
+         const el = document.querySelector("[data-highlight-id]");
+         if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 300);
+      return () => clearTimeout(timer);
    }, [highlightId]);
 
     return (
@@ -286,7 +291,7 @@ export function PoFindingsPanel({ findings }: { findings: FindingRecord[] }) {
                    </Card>
                 ) : (
                  visibleFindings.map((finding) => (
-                   <Card key={finding.id} className={`border-base-300 ${highlightId === finding.id ? "highlight-from-notification" : ""}`}>
+                   <Card key={`${finding.id}-${glowKey}`} className={`border-base-300 ${highlightId === finding.id ? "highlight-from-notification" : ""}`} data-highlight-id={highlightId === finding.id ? "" : undefined}>
                      <CardHeader className="space-y-2">
                         <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                            <div>

@@ -156,14 +156,21 @@ export function StafFindingsPanel({
 
    const visibleFindings = filteredFindings.slice(0, visibleCount);
 
-   // Scroll to highlighted finding from notification
+   // Scroll to highlighted finding from notification + trigger glow
+   const [glowKey, setGlowKey] = useState(0);
    useEffect(() => {
       if (!highlightId) return;
-      const el = document.querySelector(".highlight-from-notification");
-      if (el) {
-         el.scrollIntoView({ behavior: "smooth", block: "center" });
-      }
-   }, [highlightId, visibleFindings]);
+      // Increment glowKey to re-trigger CSS animation on every navigation
+      setGlowKey((k) => k + 1);
+      // Small delay to ensure DOM is settled after router.refresh / hydration
+      const timer = setTimeout(() => {
+         const el = document.querySelector("[data-highlight-id]");
+         if (el) {
+            el.scrollIntoView({ behavior: "smooth", block: "center" });
+         }
+      }, 300);
+      return () => clearTimeout(timer);
+   }, [highlightId]);
 
    // S4: Live findings updates via Realtime (debounced router.refresh)
    useEffect(() => {
@@ -622,7 +629,7 @@ export function StafFindingsPanel({
                            </TableRow>
                         ) : (
                            visibleFindings.map((finding) => (
-                              <TableRow key={finding.id} className={highlightId === finding.id ? "highlight-from-notification" : ""}>
+                               <TableRow key={`${finding.id}-${glowKey}`} className={highlightId === finding.id ? "highlight-from-notification" : ""} data-highlight-id={highlightId === finding.id ? "" : undefined}>
                                  <TableCell className="whitespace-nowrap text-sm text-base-content/70">
                                     {formatDateTime(finding.created_at)}
                                  </TableCell>
@@ -754,7 +761,7 @@ export function StafFindingsPanel({
                       </Card>
                    ) : (
                       visibleFindings.map((finding) => (
-                         <Card key={finding.id} className={`border-base-300 ${highlightId === finding.id ? "highlight-from-notification" : ""}`}>
+                         <Card key={`${finding.id}-${glowKey}`} className={`border-base-300 ${highlightId === finding.id ? "highlight-from-notification" : ""}`} data-highlight-id={highlightId === finding.id ? "" : undefined}>
                             <CardContent className="space-y-2 py-3">
                                <div className="flex items-center gap-2">
                                   <StatusBadge category="severity" value={finding.severity} />
