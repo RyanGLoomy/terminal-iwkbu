@@ -2186,6 +2186,30 @@ Authorization: Bearer <IWKBU_SYNC_CRON_SECRET>
 
 ---
 
+### POST `/api/cron/cleanup-logs`
+
+Menghapus log aktivitas yang berusia lebih dari 90 hari (retention policy).
+
+- **Autentikasi:** Bearer token `IWKBU_SYNC_CRON_SECRET` atau `CRON_SECRET`.
+- **Jadwal:** Mingguan (Minggu 03:00 UTC) via Vercel Cron.
+
+**Header:**
+
+```
+Authorization: Bearer <IWKBU_SYNC_CRON_SECRET>
+```
+
+**Response Sukses (200):**
+
+```json
+{
+  "deleted": 1234,
+  "retention_days": 90
+}
+```
+
+---
+
 ## 8. Findings (Bukti/Evidence)
 
 ### GET `/api/findings/evidence?path={path}`
@@ -2220,7 +2244,66 @@ Menghasilkan signed URL (berlaku 60 detik) untuk mengunduh file bukti klarifikas
 
 ---
 
-## 9. Profile
+## 9. Bulk Import
+
+### POST `/api/po/armada/import`
+
+Import massal armada dari file CSV atau Excel (.xlsx/.xls). Mem-parsing file, memvalidasi setiap baris, dan bulk-insert ke database.
+
+- **Autentikasi:** Wajib login sebagai `po`.
+- **Otorisasi:** PO harus `status_verifikasi === "aktif"`.
+
+**Request (multipart/form-data):**
+
+| Field | Tipe | Wajib | Deskripsi |
+|---|---|---|---|
+| `file` | File | Ya | File CSV atau Excel (.csv, .xlsx, .xls). Maks 2 MB. |
+
+**Format CSV (header wajib):**
+
+```csv
+nomor_polisi,merk,tipe,tahun_pembuatan,nomor_chassis,nomor_mesin,kapasitas_penumpang,nomor_lambung,status_operasional
+B 1234 CD,Mercedes-Benz,O 500,2020,WDD9066351L123456,9066351234567,40,L01,aktif
+B 5678 EF,Toyota,Coaster,2019,,,,,aktif
+```
+
+| Kolom | Wajib | Valid Values |
+|---|---|---|
+| `nomor_polisi` | Ya | Bebas teks |
+| `merk` | Tidak | Bebas teks |
+| `tipe` | Tidak | Bebas teks |
+| `tahun_pembuatan` | Tidak | Integer positif |
+| `nomor_chassis` | Tidak | Bebas teks |
+| `nomor_mesin` | Tidak | Bebas teks |
+| `kapasitas_penumpang` | Tidak | Integer positif |
+| `nomor_lambung` | Tidak | Bebas teks |
+| `status_operasional` | Tidak | `aktif`, `tidak_aktif`, `rusak`, `cadangan`, `dijual` (default: `aktif`) |
+
+**Response Sukses (201):**
+
+```json
+{
+  "success": 48,
+  "errors": [
+    { "row": 5, "message": "nomor_polisi wajib diisi" },
+    { "row": 12, "message": "tahun_pembuatan harus angka positif" }
+  ],
+  "total": 50
+}
+```
+
+**Response Error:**
+
+| Status | Pesan |
+|---|---|
+| 400 | `"File CSV wajib diunggah."` / `"Ukuran file maksimal 2 MB."` / `"File CSV kosong..."` / `"Maksimal 500 baris..."` |
+| 403 | `"PO belum terverifikasi atau tidak aktif"` |
+
+> **Catatan:** Excel (.xlsx/.xls) diparsing via dynamic import `xlsx` library. Semua armada baru diimport dengan `status_verifikasi: "menunggu"` — tetap perlu diverifikasi oleh staf-iw.
+
+---
+
+## 10. Profile
 
 ### PATCH `/api/profile`
 
@@ -2275,6 +2358,40 @@ Sistem menggunakan rate limiter berbasis database (`rate_limit_buckets`) dengan 
 | Forgot password | `forgot-password:{IP}` | 5 percobaan / 15 menit |
 | Reset password | `reset-pwd:{userId}` | 5 percobaan / 15 menit |
 | Verify PIN | `{userId}` | Progresif dengan lockout |
+
+---
+
+## Health Check
+
+### GET `/api/health`
+
+Endpoint monitoring kesehatan aplikasi. Tidak memerlukan autentikasi.
+
+**Response Sukses (200):**
+
+```json
+{
+  "status": "ok",
+  "checks": {
+    "supabase_url": "ok",
+    "service_key": "ok",
+    "database": "ok"
+  }
+}
+```
+
+**Response Degraded (503):**
+
+```json
+{
+  "status": "degraded",
+  "checks": {
+    "supabase_url": "ok",
+    "service_key": "ok",
+    "database": "error: connection refused"
+  }
+}
+```
 
 ---
 
