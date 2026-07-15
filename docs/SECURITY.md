@@ -14,7 +14,7 @@ Dokumentasi langkah-langkah keamanan yang diterapkan pada Sistem Terminal IWKBU,
 | A06 | Vulnerable Components | Terverifikasi | `pnpm audit` = 0 vulnerabilities |
 | A07 | Auth Failures | Terverifikasi | Rate limiting (DB-backed), account lockout, generic error messages |
 | A08 | Data Integrity Failures | Terverifikasi | Input validation server-side, no deserialization dari user input |
-| A09 | Logging Failures | Terverifikasi | Audit trail via `log_activity()` untuk semua aksi penting |
+| A09 | Logging Failures | Terverifikasi | Audit trail via `logActivity()` TS helper untuk semua aksi penting |
 | A10 | SSRF | Terverifikasi | Tidak ada endpoint yang menerima URL dari user untuk di-fetch |
 
 ## Security Headers
@@ -130,7 +130,7 @@ Setiap API route dengan `[id]` parameter memverifikasi ownership:
 
 ## Audit Trail
 
-Semua aksi penting dicatat via `log_activity()` RPC:
+Semua aksi penting dicatat via `logActivity()` TS helper (`src/lib/supabase/queries/operasional.server.ts`):
 
 ```sql
 SELECT log_activity(
@@ -161,3 +161,40 @@ Download via signed URL (60 detik expiry) setelah ownership/role verification.
 ## Pending Manual Actions
 
 - [ ] **0.9**: Enable "Leaked Password Protection" di Supabase Auth dashboard → Settings → Passwords. Mencegah penggunaan password yang sudah ter-compromise (HaveIBeenPwned).
+
+## FASE D: Database Review Round 1-5 (0056-0065)
+
+### Migrasi Keamanan (10 file)
+
+| Migration | Deskripsi |
+|-----------|-----------|
+| 0056 | Draft-only delete guard pada rekonsiliasi_periode + RLS narrowing ke staf-iw |
+| 0057 | FK cascade fix (clarifications), EXECUTE grants, policy roles, search_path, drop dead log_activity RPC |
+| 0058 | Revoke residual direct anon EXECUTE pada 6 dashboard RPCs |
+| 0059 | CHECK pada finding_clarifications, get_userrole enumeration oracle, FORCE RLS, redundant indexes |
+| 0060 | Loket petugas_terminal pin-write contract (column-narrow policy + guard trigger) |
+| 0061 | Atomic rate-limit attempt + 3 covering indexes |
+| 0062 | Wrap auth.uid() in loket policy (initplan pattern) |
+| 0063 | Restore EXECUTE grant get_activity_logs to authenticated |
+| 0064 | Fix get_activity_logs return type (varchar/text mismatch) |
+| 0065 | Add findings to Supabase Realtime publication |
+
+### App Security Fixes
+
+- **APP-01**: register-po guard (reject if caller already has role or po row exists)
+- **APP-02**: Evidence link URL scheme validation (http/https only, blok javascript:)
+- **APP-03**: Filename sanitization sebelum storage key interpolation
+- **APP-04**: Magic-number file validation (PDF/JPEG/PNG/WebP) — bukan client file.type
+- **APP-05**: CSP img-src tightened dari wildcard https: ke self + Supabase origin
+- **APP-06**: safeCompare hash-then-compare (SHA-256 digest, no length leak)
+- **Q-01**: mime_type column consistency (detectedMime, bukan file.type)
+- **Q-02**: register-po ordering (po insert first, role upsert after)
+- **DRY**: PIN config dedup, clarification form parsing, unit tests (25→36)
+
+### Hasil Review
+
+- 6 rounds database review → 10 migrations (0056-0065)
+- 3 rounds application security review → register-po guard, XSS/upload/CSP/safeCompare
+- 1 round code quality review → DRY, consistency, tests
+- 110/110 E2E tests green
+- Black-box testing: 14/14 cross-role RBAC blocks, 5/5 security headers

@@ -113,7 +113,7 @@ src/
 │   └── monitoring.ts         # Sentry wrapper
 ├── proxy.ts                  # Middleware (auth, roles, security headers)
 e2e/                          # Playwright E2E tests
-supabase/migrations/          # 21 SQL migrations (0000_01-0015)
+supabase/migrations/          # 66 SQL migrations (0000-0065)
 docs/                         # Dokumentasi teknis
 ```
 
@@ -130,7 +130,7 @@ Role didefinisikan di `src/config/roles.ts`. Middleware `src/proxy.ts` menangani
 
 ## Database
 
-21 migration files di `supabase/migrations/`. Lihat [docs/DATABASE.md](docs/DATABASE.md) untuk skema lengkap.
+66 migration files di `supabase/migrations/`.
 
 ## Dokumentasi
 

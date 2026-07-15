@@ -28,7 +28,7 @@ pnpm test:e2e:dev           # Same but skip build (use running dev server)
 - Integration smoke needs a prod server: `pnpm build && pnpm start`, then `BASE_URL=http://127.0.0.1:3000 pnpm test:integration`.
 - E2E tests use `request.fetch()` (API-level), not browser navigation, across 9 spec files (`auth`, `security`, `po`, `loket`, `admin-terminal`, `staf-iw`, `temuan`, `audit-laporan`, `storage`). Setup script (`scripts/setup-e2e.mjs`) creates test users in Supabase and writes credentials to `/tmp/opencode/iwkbu-test-credentials.json`. It reads `.env.local` automatically.
 - Run a single E2E spec/test against a running server: `npx playwright test e2e/loket.spec.ts` or `npx playwright test -g "pattern"` (config: `playwright.config.ts`). The full `test:e2e*` scripts re-run setup first.
-- Unit tests exist for 4 pure modules (`rekonsiliasi/engine`, `auth/actor`, `findings/lifecycle`, `file-signature`) but are **NOT run in CI** — CI runs integration smoke only. Run locally before pushing: `pnpm test:unit`, or one module via `pnpm test:engine` / `pnpm test:auth`.
+- Unit tests exist for 4 pure modules (`rekonsiliasi/engine`, `auth/actor`, `findings/lifecycle`, `file-signature`) and **ARE run in CI** (`pnpm test:unit` step after typecheck). Run locally: `pnpm test:unit`, or one module via `pnpm test:engine` / `pnpm test:auth`.
 - Scheduled workflows: `nightly-backup.yml` (02:00 UTC, `pg_dump` via `SUPABASE_DB_URL` → 7-day artifact), `scheduled-audit.yml` (03:00 UTC, opens a GitHub issue on vulns). Dependabot PRs **auto squash-merge when green** — don't merge them manually.
 
 ## App Wiring
@@ -38,7 +38,7 @@ pnpm test:e2e:dev           # Same but skip build (use running dev server)
 - Roles (`src/config/roles.ts`): `po`, `loket`, `admin-terminal`, `staf-iw`. App names use hyphens; DB/RPC may use underscores. Normalize via `resolveRoleFromUserAndProfile()` (`src/lib/auth/role.ts`) and `normalizeRoleName()` (`src/lib/supabase/role-utils.ts`) — two different files.
 - Supabase clients: `server.ts` (Server Components/handlers), `client.ts` (browser singleton), `admin.ts` (service-role). Query modules in `src/lib/supabase/queries/` split by `.server.ts` vs `.client.ts` — keep that boundary.
 - IWKBU sync: `src/lib/iwkbu/adaptor.ts` switches between mock and real API via `IWKBU_API_URL` + `IWKBU_API_KEY`. Cron endpoints at `src/app/api/cron/iwkbu-fetch/route.ts` (fetch + sync) and `iwkbu-sync/route.ts` (sync only). Both use timing-safe Bearer comparison (`src/lib/auth/safe-compare.ts`).
-- Migrations: `supabase/migrations/` (29 files). `0000_01`–`0000_06` are captured from live DB to reconcile drift; `0001`–`0023` are canonical local migrations. Plus `supabase/seed.sql`.
+- Migrations: `supabase/migrations/` (66 files). `0000_01`–`0000_06` captured from live DB to reconcile drift; `0001`–`0065` canonical local migrations. Plus `supabase/seed.sql`.
 
 ## PostgREST Relationship Quirk
 

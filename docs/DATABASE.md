@@ -1,6 +1,6 @@
 # Dokumentasi Skema Database — Sistem Integrasi Data Terminal–IWKBU
 
-> **Sumber kebenaran:** `supabase/migrations/0001`–`0014` + `supabase/seed.sql`.
+> **Sumber kebenaran:** `supabase/migrations/0001-0065` + `supabase/seed.sql`.
 > Dokumen ini menjelaskan seluruh skema PostgreSQL, kebijakan RLS, constraint,
 > trigger, storage bucket, dan sistem rate limiting yang berjalan di Supabase.
 
@@ -37,7 +37,7 @@
 | Metrik | Jumlah |
 |---|---|
 | Tabel aplikasi | 21 (+ 1 dihapus: `terminal_pins`) |
-| Migrasi | 14 file (0001–0014) |
+| Migrasi | 66 file (0001-0065) |
 | Storage bucket | 2 (`armada-dokumen`, `finding-evidence`) |
 | Trigger functions | 13 |
 | Triggers | 16 |
@@ -51,7 +51,7 @@ Migrasi bersifat **baseline snapshot**, bukan inkremental. Untuk mereplikasi
 skema dari nol, gunakan `supabase db reset` pada database baru:
 
 ```bash
-supabase db reset    # menjalankan 0001–0014 + seed.sql secara berurutan
+supabase db reset    # menjalankan 0001-0065 + seed.sql secara berurutan
 ```
 
 > **Catatan:** Jangan menjalankan migrasi ini pada DB yang sudah berjalan

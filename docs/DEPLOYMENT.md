@@ -53,7 +53,7 @@ git remote -v     # pastikan remote GitHub terkonfigurasi
 
 ### 2.2 Jalankan Migrations
 
-Aplikasi ini menggunakan **14 file migration** di `supabase/migrations/` (0001–0014). Repo sudah self-contained untuk `supabase db reset`.
+Aplikasi ini menggunakan **66 file migration** di `supabase/migrations/` (0000-0065). Repo sudah self-contained untuk `supabase db reset`.
 
 **Opsi A — Via Supabase CLI (rekomendasi, reproducible):**
 
@@ -64,7 +64,7 @@ pnpm exec supabase --version
 # Link ke project remote
 pnpm exec supabase link --project-ref <PROJECT_REF>
 
-# Push semua migration (0001–0014) ke database remote
+# Push semua migration (0000-0065) ke database remote
 pnpm exec supabase db push
 
 # (Opsional) Jalankan seed data ke remote DB dengan psql
@@ -75,7 +75,7 @@ psql "<SUPABASE_DB_URL>" -f supabase/seed.sql
 
 **Opsi B — Via Supabase MCP / SQL Editor (alternatif):**
 
-Jalankan setiap file `.sql` di `supabase/migrations/` secara berurutan (0001 → 0014) melalui **Dashboard → SQL Editor**.
+Jalankan setiap file `.sql` di `supabase/migrations/` secara berurutan (0000-0065) melalui **Dashboard → SQL Editor**.
 
 Urutan migration wajib dijalankan secara berurutan karena ada dependensi antar file:
 
@@ -612,7 +612,7 @@ Saat melakukan rollback, pastikan konsistensi antara aplikasi dan database:
 
 ```
 [ ] 1. Supabase project dibuat (region sesuai)
-[ ] 2. 14 migration dijalankan (0001–0014) secara berurutan
+[ ] 2. 14 migration dijalankan (0000-0065) secara berurutan
 [ ] 3. RLS diverifikasi aktif (FORCE RLS di semua tabel sensitif)
 [ ] 4. Storage buckets ada (armada-dokumen, finding-evidence)
 [ ] 5. Auth: Email enabled, Site URL & Redirect URLs di-set
