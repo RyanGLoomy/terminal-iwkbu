@@ -6,6 +6,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import { DashboardCard } from "@/components/dashboard/dashboard-card";
 import { getPoIwkbuStatus } from "@/lib/supabase/queries/iwkbu-sync.server";
+import { PoComplianceChartClient } from "@/components/dashboard/po-compliance-chart-client";
 
 export default async function PODashboard() {
    const supabase = await createClient();
@@ -151,9 +152,36 @@ export default async function PODashboard() {
                icon="clock"
                accent={armadaMenunggu > 0 ? "violet" : "default"}
             />
-         </div>
+          </div>
 
-         <POArmadaManager poId={user.id} />
+          <div className="grid gap-4 lg:grid-cols-2">
+             <PoComplianceChartClient data={iwkbuSummary} />
+             <div className="rounded-xl border border-base-300 bg-base-100 p-5">
+                <h3 className="text-sm font-semibold text-base-content mb-4">
+                   Ringkasan Armada
+                </h3>
+                <div className="space-y-3">
+                   <div className="flex items-center justify-between">
+                      <span className="text-sm text-base-content/70">Terverifikasi</span>
+                      <span className="text-lg font-bold text-success">{armadaTerverifikasi}</span>
+                   </div>
+                   <div className="flex items-center justify-between">
+                      <span className="text-sm text-base-content/70">Menunggu Verifikasi</span>
+                      <span className="text-lg font-bold text-warning">{armadaMenunggu}</span>
+                   </div>
+                   <div className="flex items-center justify-between">
+                      <span className="text-sm text-base-content/70">Temuan Aktif</span>
+                      <span className="text-lg font-bold text-error">{temuanAktif}</span>
+                   </div>
+                   <div className="flex items-center justify-between border-t border-base-300 pt-3">
+                      <span className="text-sm font-medium text-base-content">Total Armada</span>
+                      <span className="text-2xl font-extrabold text-base-content">{totalArmada}</span>
+                   </div>
+                </div>
+             </div>
+          </div>
+
+          <POArmadaManager poId={user.id} />
       </section>
    );
 }

@@ -73,10 +73,14 @@ function DialogContent({
   const ctx = useDialog("DialogContent");
   const ref = React.useRef<HTMLDialogElement | null>(null);
 
+  const previouslyFocused = React.useRef<HTMLElement | null>(null);
+
   React.useEffect(() => {
     const el = ref.current;
     if (!el) return;
     if (ctx.open && !el.open) {
+      // Save focus to restore on close (a11y)
+      previouslyFocused.current = document.activeElement as HTMLElement;
       try {
         el.showModal();
       } catch {
@@ -84,6 +88,8 @@ function DialogContent({
       }
     } else if (!ctx.open && el.open) {
       el.close();
+      // Restore focus to the element that opened the dialog
+      previouslyFocused.current?.focus();
     }
   }, [ctx.open]);
 
