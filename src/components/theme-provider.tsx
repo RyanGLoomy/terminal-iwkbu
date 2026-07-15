@@ -79,8 +79,9 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
      // 4. Unlock scroll — CSS sets html { overflow-y: hidden } to prevent
      //    the browser from scrolling during hydration recovery. Now that
-     //    React has finished, it's safe to allow scrolling again.
-     document.documentElement.style.overflowY = "";
+     //    React has finished, explicitly set overflow to auto (inline style
+     //    overrides CSS rule). Using "" would fall back to the CSS hidden!
+     document.documentElement.style.overflowY = "auto";
   }, []);
 
   useEffect(() => {
