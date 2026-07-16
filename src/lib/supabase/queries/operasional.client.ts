@@ -22,10 +22,10 @@ type RekapArmadaJoin = NonNullable<RekapHarianRow["armada"]>;
 type ActiveMasukQueryRow = {
    id: string;
    sesi_id: string;
-   petugas_id: string;
-   nomor_polisi: string;
-   waktu_masuk: string;
-   po: MasukPoJoin | MasukPoJoin[] | null;
+    petugas_id: string | null;
+    nomor_polisi: string;
+    waktu_masuk: string;
+    po: MasukPoJoin | MasukPoJoin[] | null;
    armada: MasukArmadaJoin | MasukArmadaJoin[] | null;
    kendaraan_keluar: { id: string } | { id: string }[] | null;
 };

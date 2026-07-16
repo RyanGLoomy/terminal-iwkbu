@@ -2,7 +2,7 @@ export type SesiStatus = "aktif" | "selesai";
 
 export interface ShiftSession {
    id: string;
-   petugas_id: string;
+   petugas_id: string | null;
    terminal_id: string | null;
    waktu_mulai: string;
    waktu_selesai: string | null;
@@ -36,7 +36,7 @@ export interface AdminRekapRow {
 export interface KendaraanMasuk {
    id: string;
    sesi_id: string;
-   petugas_id: string;
+   petugas_id: string | null;
    armada_id: string;
    po_id: string;
    nomor_polisi: string;
@@ -47,7 +47,7 @@ export interface KendaraanMasuk {
 export interface KendaraanKeluar {
    id: string;
    sesi_id: string;
-   petugas_id: string;
+   petugas_id: string | null;
    masuk_id: string;
    waktu_keluar: string;
    created_at: string;
@@ -62,7 +62,7 @@ export interface ActivePO {
 export interface ActiveMasuk {
    id: string;
    sesi_id: string;
-   petugas_id: string;
+   petugas_id: string | null;
    nomor_polisi: string;
    waktu_masuk: string;
    po: {
@@ -110,7 +110,7 @@ export interface RekapHarianRow {
 // Sprint 4: Rekap Sesi
 export interface RekapSesiRow {
    sesi_id: string;
-   petugas_id: string;
+   petugas_id: string | null;
    petugas_nama: string;
    terminal_id: string;
    waktu_mulai: string;
@@ -175,7 +175,7 @@ export type AksiLog =
 
 export interface ActivityLog {
    id: string;
-   user_id: string;
+   user_id: string | null;
    user_name: string;
    aksi: AksiLog;
    deskripsi: string | null;
@@ -205,7 +205,7 @@ export interface FindingAction {
    status: "open" | "done";
    done_at: string | null;
    done_by: string | null;
-   created_by: string;
+   created_by: string | null;
    created_at: string;
 }
 
@@ -221,7 +221,7 @@ export interface FindingRecord {
    status: FindingStatus;
    source_date: string | null;
    due_date: string | null;
-   created_by: string;
+   created_by: string | null;
    resolved_by: string | null;
    resolved_at: string | null;
    resolution_note: string | null;

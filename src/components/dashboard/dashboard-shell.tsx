@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import { Sidebar } from "@/components/dashboard/sidebar";
 import { DashboardTopbar } from "@/components/dashboard/dashboard-topbar";
 import { BottomNavigation } from "@/components/dashboard/bottom-navigation";
@@ -65,11 +66,21 @@ export function DashboardShell({
              {/* Desktop topbar */}
              <DashboardTopbar userName={userName} userRole={userRole} />
 
-            {/* Mobile topbar */}
-            <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-base-300 bg-base-100/95 px-4 lg:hidden">
-               <span className="text-sm font-bold text-base-content">
-                  IWKBU Terminal
-               </span>
+             {/* Mobile topbar */}
+             <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-base-300 bg-base-100/95 px-4 lg:hidden">
+                <div className="flex items-center gap-2">
+                   <Image
+                      src="/jr-logo.png"
+                      alt="Logo Jasa Raharja"
+                      width={24}
+                      height={24}
+                      priority
+                      className="object-contain"
+                   />
+                   <span className="text-sm font-bold text-base-content">
+                      IWKBU Terminal
+                   </span>
+                </div>
                 <div className="flex items-center gap-1">
                    <ConnectionIndicator />
                    <NotificationBell />

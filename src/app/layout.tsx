@@ -19,13 +19,20 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-   title: "Sistem Integrasi Terminal | IWKBU Jasa Raharja",
+   title: {
+      default: "IWKBU Terminal — Jasa Raharja",
+      template: "%s — IWKBU Terminal",
+   },
    description:
       "Sistem pencatatan dan pengelolaan operasional terminal IWKBU Jasa Raharja",
+   applicationName: "IWKBU Terminal",
+   creator: "Jasa Raharja",
+   publisher: "Jasa Raharja",
+   formatDetection: { telephone: false },
    manifest: "/manifest.json",
    appleWebApp: {
       capable: true,
-      statusBarStyle: "default",
+      statusBarStyle: "black-translucent",
       title: "IWKBU Terminal",
    },
    icons: {
@@ -40,7 +47,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
    viewportFit: "cover",
    themeColor: [
-      { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+      { media: "(prefers-color-scheme: light)", color: "#0050b3" },
       { media: "(prefers-color-scheme: dark)", color: "#0f172a" },
    ],
 };

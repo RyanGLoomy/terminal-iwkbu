@@ -1,0 +1,20 @@
+ALGORITMA MODUL AUTENTIKASI
+Sistem Integrasi Terminal IWKBU
+
+Modul Autentikasi (Registrasi PO)
+PROCEDURE RegistrasiPO: INPUT nama_perusahaan, email, password IF email = "" OR password = "" THEN SHOW "Email dan password wajib diisi" ELSE user = AUTH_SIGNUP(email, password, metadata{role:"po"}) IF user EXISTS THEN DB_INSERT("INSERT INTO po (id, nama_perusahaan, status_verifikasi) VALUES (?, ?, 'menunggu')", user.id, nama_perusahaan) LOG "Registrasi PO berhasil, menunggu verifikasi" SHOW "Registrasi berhasil, menunggu verifikasi" ELSE SHOW "Registrasi gagal, email sudah terdaftar" END IF END IF END PROCEDURE
+
+Modul Autentikasi (Login)
+PROCEDURE Login: INPUT email, password IF email = "" OR password = "" THEN SHOW "Email dan password wajib diisi" ELSE IF RATE_LIMIT_EXCEEDED(email, ip) THEN SHOW "Terlalu banyak percobaan, coba lagi nanti" ELSE user = AUTH_SIGNIN(email, password) IF user NOT EXISTS THEN DB_LOG("LOGIN_GAGAL", "Kredensial salah") SHOW "Email atau password salah" ELSE profile = DB_QUERY("SELECT is_active FROM profiles WHERE id = ?", user.id) IF profile.is_active = FALSE THEN AUTH_SIGNOUT() SHOW "Akun tidak aktif, hubungi admin" ELSE role = RESOLVE_ROLE(user.id) IF role NOT FOUND THEN SHOW "Role tidak ditemukan, hubungi admin" ELSE SET SESSION user_id = user.id SET SESSION role = role DB_LOG("LOGIN", "Login berhasil sebagai " + role) CLEAR_RATE_LIMIT(email, ip) SET COOKIE session GOTO Dashboard(role) END IF END IF END IF END IF END IF END PROCEDURE
+
+Modul Autentikasi (Verifikasi PIN Petugas)
+PROCEDURE VerifikasiPIN: INPUT pin_input, terminal_id IF RATE_LIMIT_EXCEEDED(user_id) THEN SHOW "Terlalu banyak percobaan PIN" ELSE petugas_list = DB_QUERY("SELECT id, nama, pin_hash FROM petugas_terminal WHERE terminal_id = ? AND is_active = true", terminal_id) matched = NULL FOR EACH petugas IN petugas_list IF BCRYPT_COMPARE(pin_input, petugas.pin_hash) = TRUE THEN matched = petugas BREAK END IF NEXT petugas IF matched = NULL THEN DB_LOG("PIN_GAGAL", "PIN tidak valid") SHOW "PIN tidak valid" ELSE DB_UPSERT("INSERT INTO petugas_pin_sessions (user_id, petugas_terminal_id, expires_at) VALUES (?, ?, NOW() + 8h)", user_id, matched.id) DB_LOG("VERIFIKASI_PIN", "PIN terverifikasi: " + matched.nama) RETURN matched.id, matched.nama END IF END IF END PROCEDURE
+
+Modul Autentikasi (Otorisasi API)
+PROCEDURE OtorisasiAPI: INPUT allowed_roles actor = GET_AUTHENTICATED_ACTOR(session) IF actor NOT EXISTS THEN RETURN Error 401 "Sesi habis, silakan login ulang" ELSE IF actor.role NOT IN allowed_roles THEN RETURN Error 403 "Akses ditolak" ELSE RETURN actor END IF END IF END PROCEDURE
+
+Modul Autentikasi (Logout)
+PROCEDURE Logout: AUTH_SIGNOUT() CLEAR COOKIE session DB_LOG("LOGOUT", "User logout") GOTO Login END PROCEDURE
+
+Modul Autentikasi (Middleware Rute)
+PROCEDURE MiddlewareRute: INPUT request IF request.path IN PUBLIC_ROUTES THEN PASS request ELSE session = GET_SESSION(cookie) IF session NOT EXISTS THEN REDIRECT Login ELSE role = RESOLVE_ROLE(session.user_id) IF request.path NOT IN ROLE_ROUTES[role] THEN REDIRECT Dashboard(role) ELSE SET SECURITY_HEADERS PASS request END IF END IF END IF END PROCEDURE

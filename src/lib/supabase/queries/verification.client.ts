@@ -30,18 +30,21 @@ export async function registerPO(data: {
    if (authError) throw authError;
    if (!authData.user) throw new Error("Registrasi gagal");
 
-   const { error: poError } = await supabase.from("po").insert({
-      id: authData.user.id,
-      kode_po: data.kode_po,
-      nama_perusahaan: data.nama_perusahaan,
-      nama_pemilik: data.nama_pemilik,
-      alamat: data.alamat,
-      telepon: data.telepon,
-      npwp: data.npwp,
-      status_verifikasi: "menunggu",
+   const res = await fetch("/api/auth/register-po", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+         kode_po: data.kode_po,
+         nama_perusahaan: data.nama_perusahaan,
+         nama_pemilik: data.nama_pemilik,
+         alamat: data.alamat,
+         telepon: data.telepon,
+         npwp: data.npwp,
+      }),
    });
 
-   if (poError) throw poError;
+   const payload = await res.json();
+   if (!res.ok) throw new Error(payload?.message ?? "Registrasi PO gagal");
 
    return authData.user;
 }

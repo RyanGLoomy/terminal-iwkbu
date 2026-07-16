@@ -48,6 +48,9 @@ yarn-error.log*
 /.opencode
 /.claude
 /.cursor
+/.envrc
+/.opencode.backup-*
+/opencode.json.backup-*
 
 # misc local files
 /PROSKIP VINI.docx
@@ -60,3 +63,5 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+skripsi/
+*.Zone.Identifier

@@ -1,11 +1,10 @@
 "use client";
 
-import { useEffect, useState, type ElementType } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
    Activity,
-   Bus,
    CalendarClock,
    ClipboardList,
    FileText,
@@ -130,41 +129,46 @@ export function Sidebar({ userRole, collapsed, onToggleCollapse }: SidebarProps)
                 collapsed ? "w-[72px]" : "w-[264px]",
              )}
          >
-            {/* Header: logo + toggle collapse (terintegrasi, bukan floating) */}
-            <div className="flex h-16 items-center gap-3 border-b border-sidebar-border px-4">
-               {collapsed ? (
-                  <button
-                     type="button"
-                     onClick={onToggleCollapse}
-                     className="btn btn-ghost btn-square btn-sm mx-auto"
-                     aria-label="Lebarkan sidebar"
-                  >
-                     <PanelLeftOpen className="size-5" />
-                  </button>
-               ) : (
-                  <>
-                     <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                        <Bus className="size-5" aria-hidden="true" />
-                     </div>
-                     <div className="min-w-0 flex-1">
-                        <span className="block truncate text-sm font-bold leading-tight text-sidebar-foreground">
-                           IWKBU Terminal
-                        </span>
-                        <span className="text-[11px] font-medium uppercase tracking-wider text-sidebar-foreground/50">
-                           Jasa Raharja
-                        </span>
-                     </div>
-                     <button
-                        type="button"
-                        onClick={onToggleCollapse}
-                        className="btn btn-ghost btn-square btn-sm text-sidebar-foreground/70 hover:text-sidebar-foreground"
-                        aria-label="Persempit sidebar"
-                     >
-                        <PanelLeftClose className="size-4" />
-                     </button>
-                  </>
-               )}
-            </div>
+             {/* Header: JR logo + toggle collapse */}
+             <div className="flex h-16 items-center gap-3 border-b border-sidebar-border px-4">
+                {collapsed ? (
+                   <button
+                      type="button"
+                      onClick={onToggleCollapse}
+                      className="btn btn-ghost btn-square btn-sm mx-auto"
+                      aria-label="Lebarkan sidebar"
+                   >
+                      <PanelLeftOpen className="size-5" />
+                   </button>
+                ) : (
+                   <>
+                      <Image
+                         src="/jr-logo.png"
+                         alt="Logo Jasa Raharja"
+                         width={32}
+                         height={32}
+                         priority
+                         className="shrink-0 object-contain"
+                      />
+                      <div className="min-w-0 flex-1">
+                         <span className="block truncate text-sm font-bold leading-tight text-sidebar-foreground">
+                            IWKBU Terminal
+                         </span>
+                         <span className="text-[11px] font-medium uppercase tracking-wider text-sidebar-foreground/50">
+                            Jasa Raharja
+                         </span>
+                      </div>
+                      <button
+                         type="button"
+                         onClick={onToggleCollapse}
+                         className="btn btn-ghost btn-square btn-sm text-sidebar-foreground/70 hover:text-sidebar-foreground"
+                         aria-label="Persempit sidebar"
+                      >
+                         <PanelLeftClose className="size-4" />
+                      </button>
+                   </>
+                )}
+             </div>
 
             {/* Nav */}
             <nav

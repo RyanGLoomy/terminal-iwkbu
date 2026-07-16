@@ -1,30 +1,39 @@
 import { LoginForm } from "@/components/auth/login-form";
-import { Bus } from "lucide-react";
+import { JRBrand } from "@/components/brand/jr-brand";
 
 export default function LoginPage() {
    return (
       <main className="relative flex min-h-screen items-center justify-center px-4 py-10">
-         <div className="card w-full max-w-md rounded-2xl border border-base-300 bg-base-100 p-8 shadow-sm sm:p-10">
-            {/* Logo + judul */}
-            <div className="mb-8 flex flex-col items-center gap-3 text-center">
-               <div className="flex size-14 items-center justify-center rounded-2xl bg-primary text-primary-content">
-                  <Bus className="size-7" aria-hidden="true" />
-               </div>
-               <div>
-                  <h1 className="text-xl font-bold tracking-tight text-base-content">
-                     IWKBU Terminal
-                  </h1>
-                  <p className="mt-0.5 text-xs font-medium uppercase tracking-wider text-base-content/60">
-                     Jasa Raharja
-                  </p>
-               </div>
+         {/* Background watermark */}
+         <div
+            className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-[0.03]"
+            aria-hidden="true"
+         >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+               src="/jr-logo.png"
+               alt=""
+               width={400}
+               height={400}
+               className="select-none"
+            />
+         </div>
+
+         <div className="card relative w-full max-w-md rounded-2xl border border-base-300 bg-base-100/95 p-8 shadow-lg backdrop-blur-sm sm:p-10">
+            {/* Brand identity */}
+            <div className="mb-8 flex justify-center">
+               <JRBrand size="lg" orientation="stacked" />
             </div>
 
-            <h2 className="mb-6 text-center text-lg font-semibold text-base-content">
-               Masuk ke dashboard
-            </h2>
+            <div className="mb-6 flex items-center gap-3">
+               <div className="h-px flex-1 bg-base-300" />
+               <span className="text-xs font-medium uppercase tracking-widest text-base-content/40">
+                  Masuk
+               </span>
+               <div className="h-px flex-1 bg-base-300" />
+            </div>
 
-            <LoginForm />
+             <LoginForm />
          </div>
       </main>
    );

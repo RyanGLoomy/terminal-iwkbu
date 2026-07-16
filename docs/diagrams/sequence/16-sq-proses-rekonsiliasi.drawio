@@ -4,16 +4,13 @@
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="title" value="Sequence Diagram: Proses Rekonsiliasi Data" style="text;html=1;align=center;verticalAlign=middle;fontSize=14;fontStyle=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
-          <mxGeometry x="100" y="10" width="1140" height="30" as="geometry" />
-        </mxCell>
-        <mxCell id="p0" value="Staf IW" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;fontSize=10;" vertex="1" parent="1">
-          <mxGeometry x="145" y="50" width="30" height="55" as="geometry" />
+        <mxCell id="frame" value="Proses Rekonsiliasi Data" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;fillColor=none;strokeColor=#999999;fontSize=12;fontStyle=1;lightOpacity=50;tabWidth=258;tabHeight=22;width=258;height=35;" vertex="1" parent="1"><mxGeometry x="70.0" y="5.0" width="1230.0" height="795.0" as="geometry" /></mxCell><mxCell id="p0" value="Staf IW" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="130.0" y="50" width="30" height="55" as="geometry" />
         </mxCell>
         <mxCell id="ll0" style="endArrow=dash;dashed=1;html=1;strokeWidth=1;strokeColor=#999999;" edge="1" parent="1">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="160" y="105" as="sourcePoint" />
-            <mxPoint x="160" y="740" as="targetPoint" />
+            <mxPoint x="145.0" y="145.0" as="sourcePoint" />
+            <mxPoint x="145.0" y="740" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="p1" value="Browser" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=10;" vertex="1" parent="1">
@@ -25,8 +22,7 @@
             <mxPoint x="360" y="740" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="p2" value="/api/staf-iw/
-iwkbu-sync" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=10;" vertex="1" parent="1">
+        <mxCell id="p2" value="/api/staf-iw/ iwkbu-sync" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=10;" vertex="1" parent="1">
           <mxGeometry x="480" y="50" width="160" height="45" as="geometry" />
         </mxCell>
         <mxCell id="ll2" style="endArrow=dash;dashed=1;html=1;strokeWidth=1;strokeColor=#999999;" edge="1" parent="1">
@@ -62,88 +58,88 @@ iwkbu-sync" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColo
             <mxPoint x="1160" y="740" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="m0" value="Klik &quot;Jalankan Sync&quot;" style="endArrow=block;endFill=1;html=1;fontSize=9;" edge="1" parent="1">
+        <mxCell id="act-p1" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e8e8e8;strokeColor=#666666;strokeWidth=1;" vertex="1" parent="1"><mxGeometry x="355.0" y="130.0" width="10" height="540.0" as="geometry" /></mxCell><mxCell id="act-p2" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e8e8e8;strokeColor=#666666;strokeWidth=1;" vertex="1" parent="1"><mxGeometry x="555.0" y="170.0" width="10" height="460.0" as="geometry" /></mxCell><mxCell id="act-p3" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e8e8e8;strokeColor=#666666;strokeWidth=1;" vertex="1" parent="1"><mxGeometry x="755.0" y="210.0" width="10" height="380.0" as="geometry" /></mxCell><mxCell id="act-p4" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e8e8e8;strokeColor=#666666;strokeWidth=1;" vertex="1" parent="1"><mxGeometry x="955.0" y="290.0" width="10" height="60.0" as="geometry" /></mxCell><mxCell id="act-p5" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e8e8e8;strokeColor=#666666;strokeWidth=1;" vertex="1" parent="1"><mxGeometry x="1155.0" y="250.0" width="10" height="300.0" as="geometry" /></mxCell><mxCell id="m0" value="1: Klik &quot;Jalankan Sync&quot;" style="endArrow=block;endFill=1;html=1;fontSize=9;" edge="1" parent="1">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="160" y="120" as="sourcePoint" />
-            <mxPoint x="360" y="120" as="targetPoint" />
+            <mxPoint x="145.0" y="140.0" as="sourcePoint" />
+            <mxPoint x="355" y="140.0" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="m1" value="POST {}" style="endArrow=block;endFill=1;html=1;fontSize=9;" edge="1" parent="1">
+        <mxCell id="m1" value="2: POST {}" style="endArrow=block;endFill=1;html=1;fontSize=9;" edge="1" parent="1">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="360" y="160" as="sourcePoint" />
-            <mxPoint x="560" y="160" as="targetPoint" />
+            <mxPoint x="365" y="180.0" as="sourcePoint" />
+            <mxPoint x="555" y="180.0" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="m2" value="executeIwkbuSync(trigger:&quot;manual&quot;)" style="endArrow=block;endFill=1;html=1;fontSize=9;" edge="1" parent="1">
+        <mxCell id="m2" value="3: executeIwkbuSync(trigger:&quot;manual&quot;)" style="endArrow=block;endFill=1;html=1;fontSize=9;" edge="1" parent="1">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="560" y="200" as="sourcePoint" />
-            <mxPoint x="760" y="200" as="targetPoint" />
+            <mxPoint x="565" y="220.0" as="sourcePoint" />
+            <mxPoint x="755" y="220.0" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="m3" value="INSERT iwkbu_sync_runs (status:&quot;running&quot;)" style="endArrow=block;endFill=1;html=1;fontSize=9;" edge="1" parent="1">
+        <mxCell id="m3" value="4: INSERT iwkbu_sync_runs (status:&quot;running&quot;)" style="endArrow=block;endFill=1;html=1;fontSize=9;" edge="1" parent="1">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="760" y="240" as="sourcePoint" />
-            <mxPoint x="1160" y="240" as="targetPoint" />
+            <mxPoint x="765" y="260.0" as="sourcePoint" />
+            <mxPoint x="1155" y="260.0" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="m4" value="POST /compliance/check {plates}" style="endArrow=block;endFill=1;html=1;fontSize=9;" edge="1" parent="1">
+        <mxCell id="m4" value="5: POST /compliance/check {plates}" style="endArrow=block;endFill=1;html=1;fontSize=9;" edge="1" parent="1">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="760" y="280" as="sourcePoint" />
-            <mxPoint x="960" y="280" as="targetPoint" />
+            <mxPoint x="765" y="300.0" as="sourcePoint" />
+            <mxPoint x="955" y="300.0" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="m5" value="Compliance data per armada" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=9;strokeColor=#666666;" edge="1" parent="1">
+        <mxCell id="m5" value="6: Compliance data per armada" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=9;strokeColor=#666666;" edge="1" parent="1">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="960" y="320" as="sourcePoint" />
-            <mxPoint x="760" y="320" as="targetPoint" />
+            <mxPoint x="955" y="340.0" as="sourcePoint" />
+            <mxPoint x="765" y="340.0" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="m6" value="UPSERT iwkbu_source_records" style="endArrow=block;endFill=1;html=1;fontSize=9;" edge="1" parent="1">
+        <mxCell id="m6" value="7: UPSERT iwkbu_source_records" style="endArrow=block;endFill=1;html=1;fontSize=9;" edge="1" parent="1">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="760" y="360" as="sourcePoint" />
-            <mxPoint x="1160" y="360" as="targetPoint" />
+            <mxPoint x="765" y="380.0" as="sourcePoint" />
+            <mxPoint x="1155" y="380.0" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="m7" value="SELECT armada + po status" style="endArrow=block;endFill=1;html=1;fontSize=9;" edge="1" parent="1">
+        <mxCell id="m7" value="8: SELECT armada + po status" style="endArrow=block;endFill=1;html=1;fontSize=9;" edge="1" parent="1">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="760" y="400" as="sourcePoint" />
-            <mxPoint x="1160" y="400" as="targetPoint" />
+            <mxPoint x="765" y="420.0" as="sourcePoint" />
+            <mxPoint x="1155" y="420.0" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="m8" value="Compare: terminal vs IWKBU" style="endArrow=block;endFill=1;html=1;fontSize=9;" edge="1" parent="1">
+        <mxCell id="m8" value="9: Compare terminal &amp;harr; IWKBU" style="endArrow=block;endFill=1;html=1;fontSize=9;" edge="1" parent="1">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="760" y="440" as="sourcePoint" />
-            <mxPoint x="760" y="440" as="targetPoint" />
+            <mxPoint x="760" y="460.0" as="sourcePoint" />
+            <mxPoint x="760.0" y="485.0" as="targetPoint" />
+          <Array as="points"><mxPoint x="795.0" y="460.0" /><mxPoint x="795.0" y="485.0" /></Array></mxGeometry>
+        </mxCell>
+        <mxCell id="m9" value="10: UPSERT iwkbu_sync_status" style="endArrow=block;endFill=1;html=1;fontSize=9;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="765" y="500.0" as="sourcePoint" />
+            <mxPoint x="1155" y="500.0" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="m9" value="UPSERT iwkbu_sync_status" style="endArrow=block;endFill=1;html=1;fontSize=9;" edge="1" parent="1">
+        <mxCell id="m10" value="11: UPDATE iwkbu_sync_runs (summary)" style="endArrow=block;endFill=1;html=1;fontSize=9;" edge="1" parent="1">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="760" y="480" as="sourcePoint" />
-            <mxPoint x="1160" y="480" as="targetPoint" />
+            <mxPoint x="765" y="540.0" as="sourcePoint" />
+            <mxPoint x="1155" y="540.0" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="m10" value="UPDATE iwkbu_sync_runs (summary)" style="endArrow=block;endFill=1;html=1;fontSize=9;" edge="1" parent="1">
+        <mxCell id="m11" value="12: {synced: N, issues: M}" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=9;strokeColor=#666666;" edge="1" parent="1">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="760" y="520" as="sourcePoint" />
-            <mxPoint x="1160" y="520" as="targetPoint" />
+            <mxPoint x="755" y="580.0" as="sourcePoint" />
+            <mxPoint x="565" y="580.0" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="m11" value="{synced: N, issues: M}" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=9;strokeColor=#666666;" edge="1" parent="1">
+        <mxCell id="m12" value="13: &quot;Rekonsiliasi selesai&quot;" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=9;strokeColor=#666666;" edge="1" parent="1">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="760" y="560" as="sourcePoint" />
-            <mxPoint x="560" y="560" as="targetPoint" />
+            <mxPoint x="555" y="620.0" as="sourcePoint" />
+            <mxPoint x="365" y="620.0" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="m12" value="&quot;Rekonsiliasi selesai&quot;" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=9;strokeColor=#666666;" edge="1" parent="1">
+        <mxCell id="m13" value="14: Tampilkan hasil summary" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=9;strokeColor=#666666;" edge="1" parent="1">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="560" y="600" as="sourcePoint" />
-            <mxPoint x="360" y="600" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="m13" value="Tampilkan hasil summary" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=9;strokeColor=#666666;" edge="1" parent="1">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="360" y="640" as="sourcePoint" />
-            <mxPoint x="160" y="640" as="targetPoint" />
+            <mxPoint x="355" y="660.0" as="sourcePoint" />
+            <mxPoint x="145.0" y="660.0" as="targetPoint" />
           </mxGeometry>
         </mxCell>
       </root>
