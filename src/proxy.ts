@@ -71,6 +71,7 @@ export async function proxy(request: NextRequest) {
          "frame-ancestors 'none'",
          "object-src 'none'",
          `img-src ${imgHosts.join(" ")}`,
+         "manifest-src 'self'",
          "style-src 'self' 'unsafe-inline'",
          `script-src 'self' 'nonce-${nonce}'${isDev ? " 'unsafe-eval'" : ""}`,
          `connect-src ${connectHosts.join(" ")}${isDev ? " ws:" : ""}`,
