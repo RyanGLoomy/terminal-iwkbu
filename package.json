@@ -45,6 +45,7 @@
         "jspdf-autotable": "^5.0.8"
     },
     "devDependencies": {
+        "@axe-core/playwright": "^4.12.1",
         "@playwright/test": "^1.61.0",
         "@size-limit/preset-small-lib": "^12.1.0",
         "@supabase/mcp-server-supabase": "^0.8.2",
