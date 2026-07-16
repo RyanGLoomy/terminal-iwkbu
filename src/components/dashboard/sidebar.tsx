@@ -16,6 +16,7 @@ import {
    Search,
    Settings,
    Shield,
+   TrendingUp,
    Users,
    type LucideIcon,
 } from "lucide-react";
@@ -39,6 +40,7 @@ const iconMap: Record<string, LucideIcon> = {
    Activity,
    CalendarClock,
    Settings,
+   TrendingUp,
 };
 
 const menuItems: Record<
@@ -71,6 +73,7 @@ const menuItems: Record<
       { href: "/staf-iw/master-data", label: "Master Data", icon: "Settings" },
        { href: "/staf-iw/temuan", label: "Temuan", icon: "Shield" },
        { href: "/staf-iw/laporan", label: "Laporan", icon: "FileText" },
+       { href: "/staf-iw/analytics", label: "Analitik", icon: "TrendingUp" },
        { href: "/staf-iw/audit-trail", label: "Audit Trail", icon: "ClipboardList" },
     ],
 };
