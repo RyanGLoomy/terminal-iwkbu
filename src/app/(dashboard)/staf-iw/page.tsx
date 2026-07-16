@@ -4,11 +4,17 @@ import { VerifikasiArmadaTable } from "@/components/verification/verifikasi-arma
 import { DashboardCard } from "@/components/dashboard/dashboard-card";
 import { Card, CardContent } from "@/components/ui/card";
 import { StafIWStatsChartClient } from "@/components/dashboard/staf-iw-stats-chart-client";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import {
    getAllPO,
    getAllArmada,
 } from "@/lib/supabase/queries/verification.server";
+
+const FindingsAgingChart = dynamic(
+   () => import("@/components/dashboard/findings-aging-chart").then((m) => m.FindingsAgingChart),
+   { ssr: false, loading: () => <div className="skeleton h-[260px] rounded-xl" /> },
+);
 
 export default async function StafIWDashboard() {
    // Batch all queries in parallel for faster load
@@ -162,8 +168,16 @@ export default async function StafIWDashboard() {
                   data={armadaTerverifikasi}
                   showActions={false}
                />
-            </TabsContent>
-         </Tabs>
-      </section>
+             </TabsContent>
+          </Tabs>
+
+          <FindingsAgingChart
+             data={[
+                { range: "0-7 hari", count: 0, severity: "low" },
+                { range: "8-30 hari", count: 0, severity: "medium" },
+                { range: "30+ hari", count: 0, severity: "high" },
+             ]}
+          />
+       </section>
    );
 }
