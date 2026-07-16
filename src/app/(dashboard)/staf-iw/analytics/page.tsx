@@ -1,13 +1,11 @@
 import { redirect } from "next/navigation";
 import { getAuthenticatedActor } from "@/lib/auth/server-actor";
 import { createClient } from "@/lib/supabase/server";
-import dynamic from "next/dynamic";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
-const ActivityHeatmap = dynamic(() => import("@/components/analytics/activity-heatmap").then((m) => m.ActivityHeatmap), { ssr: false, loading: () => <div className="skeleton h-[300px] rounded-xl" /> });
-const FindingResolutionTrend = dynamic(() => import("@/components/analytics/finding-resolution-trend").then((m) => m.FindingResolutionTrend), { ssr: false, loading: () => <div className="skeleton h-[300px] rounded-xl" /> });
-const SyncSuccessChart = dynamic(() => import("@/components/analytics/sync-success-chart").then((m) => m.SyncSuccessChart), { ssr: false, loading: () => <div className="skeleton h-[300px] rounded-xl" /> });
-const PoComplianceOverview = dynamic(() => import("@/components/analytics/po-compliance-overview").then((m) => m.PoComplianceOverview), { ssr: false, loading: () => <div className="skeleton h-[300px] rounded-xl" /> });
+import { ActivityHeatmap } from "@/components/analytics/activity-heatmap";
+import { FindingResolutionTrend } from "@/components/analytics/finding-resolution-trend";
+import { SyncSuccessChart } from "@/components/analytics/sync-success-chart";
+import { PoComplianceOverview } from "@/components/analytics/po-compliance-overview";
 
 export default async function AnalyticsPage() {
    const actor = await getAuthenticatedActor();
