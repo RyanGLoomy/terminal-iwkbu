@@ -1041,6 +1041,57 @@ Diimplementasikan via `src/lib/auth/rate-limiter.ts` dan
 | 0012 | `0012_check_constraints.sql` | check_constraints | 9 CHECK constraints pada kolom enum-like |
 | 0013 | `0013_cleanup_terminal_pins_and_roles.sql` | cleanup_terminal_pins_and_roles | Drop `terminal_pins`, fix `is_super_admin()` (hanya `staf-iw`), hapus role legacy (`admin_terminal`, `staf_iw`) |
 | 0014 | `0014_finding_evidence_bucket.sql` | finding_evidence_bucket | Storage bucket `finding-evidence` (private, 5MB, PDF/JPEG/PNG/WebP) |
+| 0015 | `0015_fix_trigger_search_path.sql` | fix_trigger_search_path | Set `search_path = public` pada semua trigger functions |
+| 0016 | `0016_finding_evidence_storage_policies.sql` | finding_evidence_storage_policies | Storage policies untuk bucket finding-evidence |
+| 0017 | `0017_terminals_admin_rls.sql` | terminals_admin_rls | RLS untuk terminals (admin-terminal + staf-iw) |
+| 0018 | `0018_fix_auth_rls_criticals.sql` | fix_auth_rls_criticals | Fix critical RLS policies pada auth flow |
+| 0019 | `0019_rls_batch_medium.sql` | rls_batch_medium | Batch RLS narrowing (medium priority) |
+| 0020 | `0020_rls_06_lock_rate_limit_buckets.sql` | rls_lock_rate_limit | Lock rate_limit_buckets dengan deny-all policy |
+| 0021 | `0021_seed_system_user.sql` | seed_system_user | Seed user system untuk cron auto-finding |
+| 0022 | `0022_revoke_anon_rpc_execute.sql` | revoke_anon_rpc_execute | Revoke EXECUTE dari anon pada semua RPC |
+| 0023 | `0023_security_definer_to_invoker.sql` | security_definer_to_invoker | Konversi function INVOKER (security) |
+| 0024 | `0024_rls_loket_po_armada_read.sql` | rls_loket_po_armada_read | RLS read untuk loket/po/armada |
+| 0025 | `0025_revoke_anon_rate_limit_rpc.sql` | revoke_anon_rate_limit_rpc | Revoke anon EXECUTE pada rate limit RPCs |
+| 0026 | `0026_indexes_hot_paths.sql` | indexes_hot_paths | Index pada hot paths |
+| 0027 | `0027_finding_actions_fk_profiles.sql` | finding_actions_fk_profiles | FK finding_actions → profiles |
+| 0028 | `0028_profiles_auth_users_fk.sql` | profiles_auth_users_fk | FK profiles.id → auth.users.id |
+| 0029 | `0029_rls_admin_terminal_scope.sql` | rls_admin_terminal_scope | RLS scope admin-terminal |
+| 0030 | `0030_finding_evidence_delete_policy.sql` | finding_evidence_delete_policy | Delete policy untuk finding evidence |
+| 0031 | `0031_activity_logs_aksi_check.sql` | activity_logs_aksi_check | CHECK pada activity_logs.aksi |
+| 0032 | `0032_rpc_sargable_dates.sql` | rpc_sargable_dates | Sargable date filters pada RPCs |
+| 0033 | `0033_security_remediation.sql` | security_remediation | Security batch fix |
+| 0034 | `0034_performance_and_schema.sql` | performance_and_schema | Performance + schema improvements |
+| 0035 | `0035_rls_narrowing.sql` | rls_narrowing | RLS narrowing batch |
+| 0036 | `0036_rate_limit_cleanup.sql` | rate_limit_cleanup | Rate limit cleanup |
+| 0037 | `0037_aksi_add_hapus_transaksi.sql` | aksi_add_hapus_transaksi | Aksi HAPUS_TRANSAKSI |
+| 0038 | `0038_petugas_pin_sessions_dedupe.sql` | petugas_pin_sessions_dedupe | Dedupe petugas_pin_sessions |
+| 0039 | `0039_rate_limit_revoke_and_pin_audit.sql` | rate_limit_revoke_and_pin_audit | Rate limit revoke + PIN audit |
+| 0040 | `0040_policy_consolidation_and_log_scope.sql` | policy_consolidation | Policy consolidation + log scope |
+| 0041 | `0041_rls_initplan_wrap.sql` | rls_initplan_wrap | Wrap auth.uid() dalam InitPlan |
+| 0042 | `0042_indexes_missing_fks.sql` | indexes_missing_fks | Indexes untuk missing FKs |
+| 0043 | `0043_fk_standardize_and_cleanup.sql` | fk_standardize_and_cleanup | FK standardize + cleanup |
+| 0044 | `0044_audit_remediation.sql` | audit_remediation | Audit remediation (dedupe CHECKs) |
+| 0045 | `0045_handle_new_user_no_self_grant.sql` | handle_new_user_no_self_grant | Fix handle_new_user (no self-grant) |
+| 0046 | `0046_fk_integrity_preserve_records.sql` | fk_integrity_preserve_records | FK integrity preserve records |
+| 0047 | `0047_rls_hardening.sql` | rls_hardening | RLS hardening batch |
+| 0048 | `0048_pin_hash_column_revoke.sql` | pin_hash_column_revoke | Pin hash column revoke |
+| 0049 | `0049_log_activity_lockdown.sql` | log_activity_lockdown | Log activity lockdown |
+| 0050 | `0050_updated_at_triggers.sql` | updated_at_triggers | Updated_at triggers |
+| 0051 | `0051_activity_logs_reconcile.sql` | activity_logs_reconcile | Activity logs reconcile |
+| 0052 | `0052_force_rls_reapply.sql` | force_rls_reapply | FORCE RLS pada semua tabel |
+| 0053 | `0053_rls_policy_consolidation.sql` | rls_policy_consolidation | RLS policy consolidation |
+| 0054 | `0054_index_cleanup_and_hot_paths.sql` | index_cleanup_and_hot_paths | Index cleanup + hot paths |
+| 0055 | `0055_keep_rls_auto_enable.sql` | keep_rls_auto_enable | Event trigger untuk auto-enable RLS |
+| 0056 | `0056_review_fixups.sql` | review_fixups | Draft-only delete guard + periode RLS narrowing |
+| 0057 | `0057_hardening_followups.sql` | hardening_followups | FK cascade, EXECUTE grants, policy roles, search_path, drop log_activity RPC |
+| 0058 | `0058_revoke_anon_execute_dashboards.sql` | revoke_anon_execute_dashboards | Revoke direct anon EXECUTE pada 6 dashboard RPCs |
+| 0059 | `0059_round3_hardening.sql` | round3_hardening | CHECK clarifications, get_user_role oracle, FORCE RLS, redundant indexes |
+| 0060 | `0060_petugas_terminal_pin_loket.sql` | petugas_terminal_pin_loket | Loket petugas_terminal pin-write contract |
+| 0061 | `0061_round4_perf.sql` | round4_perf | Atomic rate-limit attempt + 3 covering indexes |
+| 0062 | `0062_loket_policy_initplan_wrap.sql` | loket_policy_initplan_wrap | Wrap auth.uid() in loket policy |
+| 0063 | `0063_grant_activity_logs_to_authenticated.sql` | grant_activity_logs | Restore EXECUTE grant get_activity_logs |
+| 0064 | `0064_fix_get_activity_logs_return_type.sql` | fix_get_activity_logs_return_type | Fix varchar/text return type mismatch |
+| 0065 | `0065_realtime_findings.sql` | realtime_findings | Add findings to Supabase Realtime publication |
 
 ### Urutan Eksekusi
 

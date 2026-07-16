@@ -14,7 +14,7 @@ export default function LoginPage() {
                   <h1 className="text-xl font-bold tracking-tight text-base-content">
                      IWKBU Terminal
                   </h1>
-                  <p className="mt-0.5 text-xs font-medium uppercase tracking-wider text-base-content/50">
+                  <p className="mt-0.5 text-xs font-medium uppercase tracking-wider text-base-content/60">
                      Jasa Raharja
                   </p>
                </div>

@@ -380,7 +380,7 @@ export function PencatatanPanel() {
                    <form onSubmit={handleMasuk} className="space-y-4">
                       {recentNopol.length > 0 && (
                          <div className="flex flex-wrap items-center gap-1.5">
-                            <span className="text-xs text-base-content/50">Terbaru:</span>
+                            <span className="text-xs text-base-content/60">Terbaru:</span>
                             {recentNopol.map((nopol) => (
                                <button
                                   key={nopol}

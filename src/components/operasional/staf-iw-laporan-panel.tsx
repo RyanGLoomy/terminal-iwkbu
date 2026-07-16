@@ -235,7 +235,7 @@ export function StafIwLaporanPanel({
                            <TableRow key={f.id}>
                               <TableCell className="font-medium">
                                  {f.po?.kode_po ?? "-"}
-                                 <span className="block text-xs font-normal text-base-content/50">
+                                 <span className="block text-xs font-normal text-base-content/60">
                                     {f.po?.nama_perusahaan ?? "-"}
                                  </span>
                               </TableCell>

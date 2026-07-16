@@ -779,7 +779,7 @@ export function StafFindingsPanel({
                                   <p className="font-medium text-sm text-base-content"><HighlightText text={finding.judul} query={deferredSearch} /></p>
                                   <p className="text-xs text-base-content/70"><HighlightText text={`${finding.nomor_polisi} · ${finding.po?.nama_perusahaan ?? finding.po?.kode_po ?? "-"}`} query={deferredSearch} /></p>
                                </div>
-                               <p className="text-xs text-base-content/50">{formatDateTime(finding.created_at)}</p>
+                               <p className="text-xs text-base-content/60">{formatDateTime(finding.created_at)}</p>
                                <div className="flex flex-wrap gap-2 pt-1">
                                   <Button size="sm" variant="ghost" className="h-7 px-2" onClick={() => setClarificationFinding(finding)}>
                                      <MessageSquare className="mr-1 h-3.5 w-3.5" />

@@ -26,7 +26,7 @@ export function PoComplianceChart({ data }: { data: ComplianceData }) {
    if (total === 0) {
       return (
          <div className="flex h-[280px] items-center justify-center rounded-xl border border-base-300 bg-base-100">
-            <p className="text-sm text-base-content/50">Belum ada data sinkronisasi IWKBU</p>
+            <p className="text-sm text-base-content/60">Belum ada data sinkronisasi IWKBU</p>
          </div>
       );
    }
@@ -75,7 +75,7 @@ export function PoComplianceChart({ data }: { data: ComplianceData }) {
             <span className="font-bold text-2xl text-base-content">
                {total > 0 ? Math.round((data.ready / total) * 100) : 0}%
             </span>
-            <span className="text-base-content/50 self-center">kepatuhan</span>
+            <span className="text-base-content/60 self-center">kepatuhan</span>
          </div>
       </div>
    );

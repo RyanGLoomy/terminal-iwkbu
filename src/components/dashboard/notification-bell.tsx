@@ -257,7 +257,7 @@ export function NotificationBell() {
                                     <p className="text-xs text-base-content/70 line-clamp-2 mt-0.5">
                                        {n.message}
                                     </p>
-                                    <p className="text-[11px] text-base-content/50 tabular-nums mt-1">
+                                    <p className="text-[11px] text-base-content/60 tabular-nums mt-1">
                                        {formatDateTimeCustom(n.created_at, {
                                           day: "numeric",
                                           month: "short",

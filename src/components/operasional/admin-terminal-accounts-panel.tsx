@@ -217,7 +217,7 @@ export function AdminTerminalAccountsPanel({
                   <div className="space-y-2">
                      <Label htmlFor="ad-email">
                         Email{" "}
-                        <span className="text-xs font-normal text-base-content/50">
+                        <span className="text-xs font-normal text-base-content/60">
                            (opsional — kosongkan untuk auto-generate)
                         </span>
                      </Label>
@@ -232,7 +232,7 @@ export function AdminTerminalAccountsPanel({
                   <div className="space-y-2">
                      <Label htmlFor="ad-pass">
                         Password{" "}
-                        <span className="text-xs font-normal text-base-content/50">
+                        <span className="text-xs font-normal text-base-content/60">
                            (opsional — min 8 karakter)
                         </span>
                      </Label>
@@ -263,7 +263,7 @@ export function AdminTerminalAccountsPanel({
                               Password:{" "}
                               <span className="font-mono">{createdCreds.password}</span>
                            </p>
-                           <p className="mt-1 text-xs text-base-content/50">
+                           <p className="mt-1 text-xs text-base-content/60">
                               Salin &amp; berikan ke admin terminal. Password tidak ditampilkan lagi.
                            </p>
                         </div>
