@@ -74,6 +74,7 @@ export async function proxy(request: NextRequest) {
          "manifest-src 'self'",
          "style-src 'self' 'unsafe-inline'",
          `script-src 'self' 'nonce-${nonce}'${isDev ? " 'unsafe-eval'" : ""}`,
+         "worker-src 'self'",
          `connect-src ${connectHosts.join(" ")}${isDev ? " ws:" : ""}`,
          "font-src 'self' data:",
       ].join("; ");

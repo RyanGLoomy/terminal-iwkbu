@@ -13,6 +13,7 @@
         "test:e2e:dev": "node scripts/setup-e2e.mjs && npx playwright test",
         "test:e2e:setup": "node scripts/setup-e2e.mjs",
         "test:engine": "tsx --test src/lib/rekonsiliasi/engine.test.ts",
+        "gen:vapid": "web-push generate-vapid-keys",
         "test:auth": "tsx --test src/lib/auth/actor.test.ts",
         "test:unit": "tsx --test src/lib/*.test.ts src/lib/**/*.test.ts",
         "deps:check": "pnpm outdated",
@@ -38,6 +39,7 @@
         "styled-jsx": "^5.1.7",
         "supabase": "^2.107.0",
         "tailwind-merge": "^3.6.0",
+        "web-push": "^3.6.7",
         "xlsx": "^0.18.5",
         "zod": "^3.25.28"
     },
@@ -54,6 +56,7 @@
         "@types/node": "^20",
         "@types/react": "^19",
         "@types/react-dom": "^19",
+        "@types/web-push": "^3.6.4",
         "babel-plugin-react-compiler": "1.0.0",
         "daisyui": "^5.5.23",
         "eslint": "9.39.4",

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { sanitizeDbError } from "@/lib/db-error";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { requireActor, actorErrorHandler } from "@/lib/auth/actor";
@@ -81,6 +82,8 @@ export async function POST(
          type: status === "terverifikasi" ? "success" : "warning",
          link: `/po?highlight=${existing.id}`,
       });
+
+      revalidateTag("armada-stats", "default");
 
       return NextResponse.json({ data: armada });
    } catch (error) {

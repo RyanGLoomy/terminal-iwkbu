@@ -8,6 +8,7 @@ import { Bell, CheckCheck, Check } from "lucide-react";
 import { EmptyState } from "@/components/shared/empty-state";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
+import { PushToggle } from "@/components/dashboard/push-toggle";
 
 interface Notification {
    id: string;
@@ -270,10 +271,15 @@ export function NotificationBell() {
                            </div>
                          );
                       })}
-                   </div>
-                )}
-             </div>
-          )}
-      </div>
-   );
+                    </div>
+                 )}
+
+                 {/* Push notification toggle */}
+                 <div className="border-t border-base-300 p-2">
+                    <PushToggle />
+                 </div>
+              </div>
+           )}
+       </div>
+    );
 }

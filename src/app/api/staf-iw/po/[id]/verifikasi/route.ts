@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { sanitizeDbError } from "@/lib/db-error";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { requireActor, actorErrorHandler } from "@/lib/auth/actor";
@@ -97,6 +98,8 @@ export async function POST(
          type: status === "aktif" ? "success" : "error",
          link: status === "aktif" ? "/po" : undefined,
       });
+
+      revalidateTag("po-stats", "default");
 
       return NextResponse.json({ data: po });
    } catch (error) {

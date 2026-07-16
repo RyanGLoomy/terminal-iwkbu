@@ -4,6 +4,7 @@ import { Plus_Jakarta_Sans, Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "sonner";
 import SentryInit from "@/components/sentry-init";
+import { SWRegister } from "@/components/sw-register";
 import "./globals.css";
 
 const jakartaSans = Plus_Jakarta_Sans({
@@ -69,6 +70,7 @@ export default async function RootLayout({
           >
              <ThemeProvider>
                 <SentryInit />
+                <SWRegister />
                 {children}
                 <Toaster richColors closeButton position="top-center" />
              </ThemeProvider>
