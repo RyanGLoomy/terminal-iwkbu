@@ -4,6 +4,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { requireActor, actorErrorHandler } from "@/lib/auth/actor";
 import { ROLES } from "@/config/roles";
 import { logActivity } from "@/lib/supabase/queries/operasional.server";
+import { executeIwkbuSync } from "@/lib/supabase/queries/iwkbu-sync.server";
 
 export async function PATCH(
    request: NextRequest,
@@ -16,6 +17,22 @@ export async function PATCH(
       const body = await request.json();
       const updatePayload: Record<string, unknown> = {};
 
+      const admin = createAdminClient();
+
+      // Cek status saat ini untuk validasi transisi
+      const { data: current } = await admin
+         .from("rekonsiliasi_periode")
+         .select("id, status, nama_periode")
+         .eq("id", id)
+         .single();
+
+      if (!current) {
+         return NextResponse.json(
+            { message: "Periode tidak ditemukan" },
+            { status: 404 },
+         );
+      }
+
       if (body?.status !== undefined) {
          const status = body.status as string;
          if (!["draft", "aktif", "ditutup"].includes(status)) {
@@ -24,9 +41,41 @@ export async function PATCH(
                { status: 400 },
             );
          }
+
+         // Validasi transisi: tidak boleh mundur dari ditutup
+         if (current.status === "ditutup" && status !== "ditutup") {
+            return NextResponse.json(
+               { message: "Periode yang sudah ditutup tidak dapat diubah statusnya." },
+               { status: 400 },
+            );
+         }
+
          updatePayload.status = status;
+         const nowIso = new Date().toISOString();
+
+         // === AKTIVASI: draft → aktif ===
+         if (status === "aktif" && current.status !== "aktif") {
+            // 1. Tutup semua periode aktif lain
+            await admin
+               .from("rekonsiliasi_periode")
+               .update({ status: "ditutup", closed_at: nowIso, updated_at: nowIso })
+               .eq("status", "aktif")
+               .neq("id", id);
+
+            updatePayload.closed_at = null;
+            updatePayload.updated_at = nowIso;
+         }
+
+         // === PENUTUPAN: aktif → ditutup ===
          if (status === "ditutup") {
-            updatePayload.closed_at = new Date().toISOString();
+            updatePayload.closed_at = nowIso;
+
+            // Auto-close semua findings open/on_progress dari periode ini
+            await admin
+               .from("findings")
+               .update({ status: "closed", updated_at: nowIso })
+               .eq("periode_id", id)
+               .in("status", ["open", "on_progress"]);
          }
       }
 
@@ -50,9 +99,8 @@ export async function PATCH(
          );
       }
 
-      updatePayload.updated_at = new Date().toISOString();
+      updatePayload.updated_at = updatePayload.updated_at ?? new Date().toISOString();
 
-      const admin = createAdminClient();
       const { data, error } = await admin
          .from("rekonsiliasi_periode")
          .update(updatePayload)
@@ -70,6 +118,19 @@ export async function PATCH(
          { periode_id: id, changes: Object.keys(updatePayload) },
          { actorUserId: actor.user.id },
       );
+
+      // === AUTO-TRIGGER SYNC saat aktivasi ===
+      if (body?.status === "aktif" && current.status !== "aktif") {
+         try {
+            await executeIwkbuSync({
+               triggerType: "manual",
+               initiatedBy: actor.user.id,
+               periodeId: id,
+            });
+         } catch (syncErr) {
+            console.error("[Periode] Auto-sync failed:", syncErr);
+         }
+      }
 
       return NextResponse.json({ data });
    } catch (error) {

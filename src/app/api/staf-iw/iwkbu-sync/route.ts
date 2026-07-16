@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { requireActor, actorErrorHandler } from "@/lib/auth/actor";
 import { ROLES } from "@/config/roles";
 import {
@@ -18,19 +18,23 @@ export async function GET() {
    }
 }
 
-export async function POST() {
+export async function POST(request: NextRequest) {
    try {
       const actor = await requireActor(ROLES.STAF_IW);
+
+      const body = await request.json().catch(() => ({}));
+      const periodeId = (body as { periodeId?: string })?.periodeId ?? undefined;
 
       const result = await executeIwkbuSync({
          triggerType: "manual",
          initiatedBy: actor.user.id,
+         periodeId,
       });
 
       await logActivity(
          "JALANKAN_SYNC",
          "Menjalankan IWKBU sync manual",
-         { sync_run_id: result.runId, trigger: "manual" },
+         { sync_run_id: result.runId, trigger: "manual", periode_id: periodeId ?? null },
       );
 
       return NextResponse.json({ data: result }, { status: 201 });

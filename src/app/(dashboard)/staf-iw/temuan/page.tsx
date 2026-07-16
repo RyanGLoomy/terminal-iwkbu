@@ -4,6 +4,7 @@ import {
    getAllPO,
 } from "@/lib/supabase/queries/verification.server";
 import { getStaffFindings } from "@/lib/supabase/queries/findings.server";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 export default async function StafIwTemuanPage({
    searchParams,
@@ -26,10 +27,16 @@ export default async function StafIwTemuanPage({
       }
    }
 
-   const [findings, poList, armadaList] = await Promise.all([
+   const admin = createAdminClient();
+
+   const [findings, poList, armadaList, periodeList] = await Promise.all([
       getStaffFindings(),
       getAllPO(),
       getAllArmada(),
+      admin
+         .from("rekonsiliasi_periode")
+         .select("id, nama_periode")
+         .order("tanggal_mulai", { ascending: false }),
    ]);
 
    return (
@@ -55,6 +62,10 @@ export default async function StafIwTemuanPage({
                 label: `${item.nomor_polisi}${item.nomor_lambung ? ` · ${item.nomor_lambung}` : ""}`,
              }))}
              prefill={Object.keys(prefill).length > 0 ? prefill : undefined}
+             periodeOptions={(periodeList.data ?? []).map((p: { id: string; nama_periode: string }) => ({
+                id: p.id,
+                nama_periode: p.nama_periode,
+             }))}
           />
       </section>
    );

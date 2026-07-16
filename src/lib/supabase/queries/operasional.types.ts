@@ -227,6 +227,7 @@ export interface FindingRecord {
    resolution_note: string | null;
    created_at: string;
    updated_at: string;
+   periode_id: string | null;
    po?: {
       kode_po: string;
       nama_perusahaan: string;

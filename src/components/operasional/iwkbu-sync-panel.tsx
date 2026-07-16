@@ -71,15 +71,17 @@ export function IwkbuSyncPanel({
 
    const latestRun = initialData.runs[0] ?? null;
 
-   const runSync = async () => {
-      setSyncing(true);
-      setMessage(null);
-      setError(null);
+    const runSync = async () => {
+       setSyncing(true);
+       setMessage(null);
+       setError(null);
 
-      try {
-         const response = await fetch("/api/staf-iw/iwkbu-sync", {
-            method: "POST",
-         });
+       try {
+          const response = await fetch("/api/staf-iw/iwkbu-sync", {
+             method: "POST",
+             headers: { "Content-Type": "application/json" },
+             body: JSON.stringify({}),
+          });
 
          const json = await response.json();
          if (!response.ok) {

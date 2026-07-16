@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Plus, Trash2, Play, CheckCircle2, Calendar } from "lucide-react";
+import { Plus, Trash2, Play, CheckCircle2, Calendar, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import {
    Card,
@@ -115,27 +115,35 @@ export function PeriodeRekonsiliasiPanel() {
       }
    }
 
-   async function handleStatusChange(
-      id: string,
-      namaPeriode: string,
-      status: "draft" | "aktif" | "ditutup",
-   ) {
-      const res = await fetch(`/api/staf-iw/periode-rekonsiliasi/${id}`, {
-         method: "PATCH",
-         headers: { "Content-Type": "application/json" },
-         body: JSON.stringify({ status }),
-      });
+    const [activating, setActivating] = useState(false);
 
-      if (res.ok) {
-         toast.success(
-            `Periode "${namaPeriode}" ${status === "aktif" ? "diaktifkan" : status === "ditutup" ? "ditutup" : "diubah ke draft"}`,
-         );
-         await loadPeriode();
-      } else {
-         const payload = await res.json();
-         toast.error(payload?.message ?? "Gagal mengubah status");
-      }
-   }
+    async function handleStatusChange(
+       id: string,
+       namaPeriode: string,
+       status: "draft" | "aktif" | "ditutup",
+    ) {
+       if (status === "aktif") setActivating(true);
+       const res = await fetch(`/api/staf-iw/periode-rekonsiliasi/${id}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ status }),
+       });
+
+       if (res.ok) {
+          if (status === "aktif") {
+             toast.success(`Periode "${namaPeriode}" diaktifkan. Sinkronisasi dimulai otomatis.`);
+          } else if (status === "ditutup") {
+             toast.success(`Periode "${namaPeriode}" ditutup. Semua temuan terbuka ditutup otomatis.`);
+          } else {
+             toast.success(`Periode "${namaPeriode}" diubah ke draft`);
+          }
+          await loadPeriode();
+       } else {
+          const payload = await res.json();
+          toast.error(payload?.message ?? "Gagal mengubah status");
+       }
+       setActivating(false);
+    }
 
    async function handleDelete(id: string, namaPeriode: string) {
       if (!confirm(`Hapus periode "${namaPeriode}"?`)) return;
@@ -205,21 +213,26 @@ export function PeriodeRekonsiliasiPanel() {
                            </div>
                            <div className="flex items-center gap-1 shrink-0">
                               {p.status === "draft" && (
-                                 <>
-                                    <Button
-                                       size="sm"
-                                       variant="outline"
-                                       onClick={() =>
-                                          handleStatusChange(
-                                             p.id,
-                                             p.nama_periode,
-                                             "aktif",
-                                          )
-                                       }
-                                    >
-                                       <Play className="h-3.5 w-3.5 mr-1" aria-hidden="true" />
-                                       Aktifkan
-                                    </Button>
+                                  <>
+                                     <Button
+                                        size="sm"
+                                        variant="outline"
+                                        disabled={activating}
+                                        onClick={() =>
+                                           handleStatusChange(
+                                              p.id,
+                                              p.nama_periode,
+                                              "aktif",
+                                           )
+                                        }
+                                     >
+                                        {activating ? (
+                                           <Loader2 className="h-3.5 w-3.5 mr-1 animate-spin" aria-hidden="true" />
+                                        ) : (
+                                           <Play className="h-3.5 w-3.5 mr-1" aria-hidden="true" />
+                                        )}
+                                        {activating ? "Mengaktifkan..." : "Aktifkan"}
+                                     </Button>
                                     <Button
                                        size="sm"
                                        variant="ghost"

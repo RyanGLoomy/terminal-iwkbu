@@ -19,6 +19,7 @@ const FINDING_SELECT = `
    resolution_note,
    created_at,
    updated_at,
+   periode_id,
    po:po_id(kode_po, nama_perusahaan),
    armada:armada_id(nomor_polisi, nomor_lambung, status_verifikasi, status_operasional),
    finding_clarifications(id, finding_id, responder_id, responder_role, decision, message, evidence, created_at),

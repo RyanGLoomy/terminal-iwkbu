@@ -51,6 +51,7 @@ export function StafFindingsPanel({
    poOptions,
    armadaOptions,
    prefill,
+   periodeOptions,
 }: {
    initialFindings: FindingRecord[];
    poOptions: Option[];
@@ -62,6 +63,7 @@ export function StafFindingsPanel({
       judul?: string;
       deskripsi?: string;
    };
+   periodeOptions?: { id: string; nama_periode: string }[];
 }) {
    const router = useRouter();
    const [loading, setLoading] = useState(false);
@@ -107,7 +109,8 @@ export function StafFindingsPanel({
    const [search, setSearch] = useState("");
    const deferredSearch = useDeferredValue(search);
    const searchRef = useRef<HTMLInputElement>(null);
-   const [statusFilter, setStatusFilter] = useState("semua");
+    const [statusFilter, setStatusFilter] = useState("semua");
+   const [periodeFilter, setPeriodeFilter] = useState("semua");
    const [sortKey, setSortKey] = useState<"created_at" | "severity" | "status" | null>(null);
    const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
    const [visibleCount, setVisibleCount] = useState(FINDINGS_PAGE_SIZE);
@@ -123,11 +126,18 @@ export function StafFindingsPanel({
       }
    };
 
-   const filteredFindings = (() => {
-      let result = initialFindings;
-      if (statusFilter !== "semua") {
-         result = result.filter((f) => f.status === statusFilter);
-      }
+    const filteredFindings = (() => {
+       let result = initialFindings;
+       if (statusFilter !== "semua") {
+          result = result.filter((f) => f.status === statusFilter);
+       }
+       if (periodeFilter !== "semua") {
+          if (periodeFilter === "tanpa_periode") {
+             result = result.filter((f) => !f.periode_id);
+          } else {
+             result = result.filter((f) => f.periode_id === periodeFilter);
+          }
+       }
       if (deferredSearch.trim()) {
          const q = deferredSearch.trim().toLowerCase();
          result = result.filter(
@@ -477,17 +487,31 @@ export function StafFindingsPanel({
                          }}
                          className="h-8 w-full text-sm sm:w-48"
                       />
-                      <Select value={statusFilter} onValueChange={(v) => { setStatusFilter(v); setVisibleCount(FINDINGS_PAGE_SIZE); }}>
-                         <SelectTrigger className="h-8 w-full text-sm sm:w-32">
-                            <SelectValue />
-                         </SelectTrigger>
-                         <SelectContent>
-                            <SelectItem value="semua">Semua Status</SelectItem>
-                            <SelectItem value="open">Open</SelectItem>
-                            <SelectItem value="on_progress">On Progress</SelectItem>
-                            <SelectItem value="closed">Closed</SelectItem>
-                         </SelectContent>
-                      </Select>
+                       <Select value={statusFilter} onValueChange={(v) => { setStatusFilter(v); setVisibleCount(FINDINGS_PAGE_SIZE); }}>
+                          <SelectTrigger className="h-8 w-full text-sm sm:w-32">
+                             <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                             <SelectItem value="semua">Semua Status</SelectItem>
+                             <SelectItem value="open">Open</SelectItem>
+                             <SelectItem value="on_progress">On Progress</SelectItem>
+                             <SelectItem value="closed">Closed</SelectItem>
+                          </SelectContent>
+                       </Select>
+                       {periodeOptions && periodeOptions.length > 0 && (
+                          <Select value={periodeFilter} onValueChange={(v) => { setPeriodeFilter(v); setVisibleCount(FINDINGS_PAGE_SIZE); }}>
+                             <SelectTrigger className="h-8 w-full text-sm sm:w-40">
+                                <SelectValue />
+                             </SelectTrigger>
+                             <SelectContent>
+                                <SelectItem value="semua">Semua Periode</SelectItem>
+                                <SelectItem value="tanpa_periode">Tanpa Periode</SelectItem>
+                                {periodeOptions.map((p) => (
+                                   <SelectItem key={p.id} value={p.id}>{p.nama_periode}</SelectItem>
+                                ))}
+                             </SelectContent>
+                          </Select>
+                       )}
                       <Button
                         variant="outline"
                         size="sm"

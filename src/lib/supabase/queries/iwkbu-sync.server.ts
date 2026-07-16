@@ -16,8 +16,23 @@ export async function executeIwkbuSync(params: {
    initiatedBy?: string | null;
    /** true bila fetch API IWKBU gagal/env kosong -> rekonsiliasi vs cache, run degraded. */
    degraded?: boolean;
+   /** ID periode rekonsiliasi aktif. Auto-resolved jika tidak disediakan. */
+   periodeId?: string | null;
 }) {
    const admin = createAdminClient();
+
+   // Auto-resolve active period jika tidak explicit
+   let periodeId = params.periodeId ?? null;
+   if (!periodeId) {
+      const { data: active } = await admin
+         .from("rekonsiliasi_periode")
+         .select("id")
+         .eq("status", "aktif")
+         .order("tanggal_mulai", { ascending: false })
+         .limit(1)
+         .maybeSingle();
+      periodeId = active?.id ?? null;
+   }
 
    const { data: runRow, error: runCreateError } = await admin
       .from("iwkbu_sync_runs")
@@ -26,6 +41,7 @@ export async function executeIwkbuSync(params: {
          initiated_by: params.initiatedBy ?? null,
          status: "running",
          summary: {},
+         periode_id: periodeId,
       })
       .select("id, started_at")
       .single();
@@ -160,15 +176,16 @@ export async function executeIwkbuSync(params: {
             }
 
             const { error: insError } = await admin.from("findings").insert({
-               po_id: pf.po_id,
-               armada_id: pf.armada_id,
-               nomor_polisi: pf.nomor_polisi,
-               source_type: "rekonsiliasi",
-               judul: pf.judul,
-               deskripsi: pf.deskripsi,
-               severity: pf.severity,
-               status: "open",
-               created_by: createdBy,
+                po_id: pf.po_id,
+                armada_id: pf.armada_id,
+                nomor_polisi: pf.nomor_polisi,
+                source_type: "rekonsiliasi",
+                judul: pf.judul,
+                deskripsi: pf.deskripsi,
+                severity: pf.severity,
+                status: "open",
+                created_by: createdBy,
+                periode_id: periodeId,
             });
             if (insError) {
                console.error(
@@ -239,11 +256,11 @@ export async function getIwkbuSyncDashboard(limit = 100) {
       { data: statuses, error: statusError },
       { count: sourceRecordsCount, error: sourceCountError },
    ] = await Promise.all([
-      admin
-         .from("iwkbu_sync_runs")
-         .select(
-            "id, trigger_type, status, started_at, finished_at, initiated_by, summary, error_message",
-         )
+         admin
+            .from("iwkbu_sync_runs")
+            .select(
+               "id, trigger_type, status, started_at, finished_at, initiated_by, periode_id, summary, error_message",
+            )
          .order("started_at", { ascending: false })
          .limit(20),
       admin
