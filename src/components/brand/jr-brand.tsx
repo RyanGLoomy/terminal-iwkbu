@@ -16,15 +16,15 @@ interface JRBrandProps {
 }
 
 const sizeMap = {
-   sm: { logo: 28, title: "text-xs", subtitle: "text-[10px]", gap: "gap-2" },
-   md: { logo: 36, title: "text-sm", subtitle: "text-[11px]", gap: "gap-2.5" },
-   lg: { logo: 56, title: "text-xl", subtitle: "text-xs", gap: "gap-3" },
+   sm: { logo: 24, title: "text-xs", subtitle: "text-[10px]", gap: "gap-2" },
+   md: { logo: 32, title: "text-sm", subtitle: "text-[11px]", gap: "gap-2.5" },
+   lg: { logo: 64, title: "text-xl", subtitle: "text-xs", gap: "gap-3" },
 };
 
 /**
  * JR (Jasa Raharja) brand identity component.
- * Renders the official JR logo with optional wordmark.
- * Used in sidebar, login page, mobile topbar, and print headers.
+ * Renders the JR logo mark (icon-only, no wordmark baked into the image)
+ * with optional text label. Used in sidebar, login page, mobile topbar.
  */
 export function JRBrand({
    size = "md",
@@ -40,7 +40,7 @@ export function JRBrand({
       return (
          <div className={cn("flex flex-col items-center", s.gap, className)}>
             <Image
-               src="/jr-logo.png"
+               src="/jr-mark.png"
                alt="Logo Jasa Raharja"
                width={s.logo}
                height={s.logo}
@@ -64,7 +64,7 @@ export function JRBrand({
    return (
       <div className={cn("flex items-center", s.gap, className)}>
          <Image
-            src="/jr-logo.png"
+            src="/jr-mark.png"
             alt="Logo Jasa Raharja"
             width={s.logo}
             height={s.logo}

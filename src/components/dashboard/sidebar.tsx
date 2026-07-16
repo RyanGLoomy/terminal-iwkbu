@@ -143,7 +143,7 @@ export function Sidebar({ userRole, collapsed, onToggleCollapse }: SidebarProps)
                 ) : (
                    <>
                       <Image
-                         src="/jr-logo.png"
+                         src="/jr-mark.png"
                          alt="Logo Jasa Raharja"
                          width={32}
                          height={32}

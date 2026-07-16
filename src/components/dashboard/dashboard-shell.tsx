@@ -70,7 +70,7 @@ export function DashboardShell({
              <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-base-300 bg-base-100/95 px-4 lg:hidden">
                 <div className="flex items-center gap-2">
                    <Image
-                      src="/jr-logo.png"
+                      src="/jr-mark.png"
                       alt="Logo Jasa Raharja"
                       width={24}
                       height={24}
