@@ -21,14 +21,14 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
    title: {
-      default: "IWKBU Terminal — Jasa Raharja",
+      default: "IWKBU Terminal — Jasa Raharja Banten",
       template: "%s — IWKBU Terminal",
    },
    description:
-      "Sistem pencatatan dan pengelolaan operasional terminal IWKBU Jasa Raharja",
+      "Sistem pencatatan dan pengelolaan operasional terminal IWKBU Jasa Raharja khusus wilayah Banten",
    applicationName: "IWKBU Terminal",
-   creator: "Jasa Raharja",
-   publisher: "Jasa Raharja",
+   creator: "Jasa Raharja Banten",
+   publisher: "Jasa Raharja Banten",
    formatDetection: { telephone: false },
    manifest: "/manifest.json",
    appleWebApp: {

@@ -115,7 +115,7 @@ export function RegistrasiPOForm() {
                 </h3>
                 <p className="mx-auto mb-6 max-w-sm text-sm leading-6 text-base-content/70">
                    Akun Anda telah terdaftar dan sedang menunggu verifikasi dari
-                   Staf IW Jasa Raharja. Anda akan menerima email notifikasi
+                   Staf IW Jasa Raharja Banten. Anda akan menerima email notifikasi
                    setelah akun diverifikasi.
                 </p>
                <Button

@@ -1,6 +1,6 @@
 import { LoginForm } from "@/components/auth/login-form";
 import Image from "next/image";
-import { ShieldCheck, Bus, FileCheck2, TrendingUp } from "lucide-react";
+import { MapPin, ShieldCheck, Bus, FileCheck2, TrendingUp } from "lucide-react";
 
 export default function LoginPage() {
    return (
@@ -34,7 +34,7 @@ export default function LoginPage() {
                <div className="flex items-center gap-3">
                   <Image
                      src="/jr-mark.png"
-                     alt="Logo Jasa Raharja"
+                     alt="Logo Jasa Raharja Banten"
                      width={48}
                      height={48}
                      priority
@@ -45,7 +45,7 @@ export default function LoginPage() {
                         IWKBU Terminal
                      </p>
                      <p className="text-xs font-semibold uppercase tracking-widest text-white/60">
-                        Jasa Raharja
+                        Jasa Raharja Banten
                      </p>
                   </div>
                </div>
@@ -60,8 +60,14 @@ export default function LoginPage() {
                </h1>
                <p className="mt-4 text-sm leading-relaxed text-white/70">
                   Pencatatan, verifikasi, dan rekonsiliasi operasional terminal
-                  yang terintegrasi dengan sistem pusat Jasa Raharja.
+                  khusus wilayah Provinsi Banten.
                </p>
+               <div className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1.5 backdrop-blur-sm">
+                  <MapPin className="size-3.5 text-white/70" aria-hidden="true" />
+                  <span className="text-xs font-semibold text-white/80">
+                     Kanwil Banten
+                  </span>
+               </div>
             </div>
 
             {/* Bottom: Feature highlights */}
@@ -92,7 +98,7 @@ export default function LoginPage() {
                   <div className="flex flex-col items-center gap-3">
                      <Image
                         src="/jr-mark.png"
-                        alt="Logo Jasa Raharja"
+                        alt="Logo Jasa Raharja Banten"
                         width={56}
                         height={56}
                         priority
@@ -103,7 +109,7 @@ export default function LoginPage() {
                            IWKBU Terminal
                         </p>
                         <p className="text-xs font-semibold uppercase tracking-widest text-base-content/50">
-                           Jasa Raharja
+                           Jasa Raharja Banten
                         </p>
                      </div>
                   </div>
@@ -123,7 +129,7 @@ export default function LoginPage() {
 
                {/* Footer */}
                <p className="mt-8 text-center text-xs text-base-content/40">
-                  &copy; {new Date().getFullYear()} PT Jasa Raharja (Persero)
+                  &copy; {new Date().getFullYear()} Jasa Raharja Banten
                </p>
             </div>
          </div>

@@ -1,7 +1,7 @@
 {
-   "name": "IWKBU Terminal — Jasa Raharja",
+   "name": "IWKBU Terminal — Jasa Raharja Banten",
    "short_name": "IWKBU Terminal",
-   "description": "Sistem Integrasi Terminal IWKBU Jasa Raharja — pencatatan, verifikasi, dan rekonsiliasi operasional terminal",
+   "description": "Sistem Integrasi Terminal IWKBU Jasa Raharja khusus wilayah Banten — pencatatan, verifikasi, dan rekonsiliasi operasional terminal",
    "start_url": "/login",
    "scope": "/",
    "display": "standalone",

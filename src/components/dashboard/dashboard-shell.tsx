@@ -71,15 +71,20 @@ export function DashboardShell({
                 <div className="flex items-center gap-2">
                    <Image
                       src="/jr-mark.png"
-                      alt="Logo Jasa Raharja"
+                      alt="Logo Jasa Raharja Banten"
                       width={24}
                       height={24}
                       priority
                       className="object-contain"
                    />
-                   <span className="text-sm font-bold text-base-content">
-                      IWKBU Terminal
-                   </span>
+                   <div className="flex flex-col leading-tight">
+                      <span className="text-sm font-bold text-base-content">
+                         IWKBU Terminal
+                      </span>
+                      <span className="text-[10px] font-medium text-base-content/50">
+                         Banten
+                      </span>
+                   </div>
                 </div>
                 <div className="flex items-center gap-1">
                    <ConnectionIndicator />

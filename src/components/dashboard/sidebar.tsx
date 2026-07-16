@@ -141,7 +141,7 @@ export function Sidebar({ userRole, collapsed, onToggleCollapse }: SidebarProps)
                    <>
                       <Image
                          src="/jr-mark.png"
-                         alt="Logo Jasa Raharja"
+                         alt="Logo Jasa Raharja Banten"
                          width={32}
                          height={32}
                          priority
@@ -152,7 +152,7 @@ export function Sidebar({ userRole, collapsed, onToggleCollapse }: SidebarProps)
                             IWKBU Terminal
                          </span>
                          <span className="text-[11px] font-medium uppercase tracking-wider text-sidebar-foreground/50">
-                            Jasa Raharja
+                            JR Banten
                          </span>
                       </div>
                       <button

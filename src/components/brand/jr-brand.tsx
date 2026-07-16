@@ -41,7 +41,7 @@ export function JRBrand({
          <div className={cn("flex flex-col items-center", s.gap, className)}>
             <Image
                src="/jr-mark.png"
-               alt="Logo Jasa Raharja"
+               alt="Logo Jasa Raharja Banten"
                width={s.logo}
                height={s.logo}
                priority
@@ -52,9 +52,9 @@ export function JRBrand({
                   <span className={cn("block font-bold tracking-tight text-base-content", s.title)}>
                      IWKBU Terminal
                   </span>
-                  <span className={cn("font-semibold uppercase tracking-widest text-base-content/50", s.subtitle)}>
-                     Jasa Raharja
-                  </span>
+                   <span className={cn("font-semibold uppercase tracking-widest text-base-content/50", s.subtitle)}>
+                      JR Banten
+                   </span>
                </div>
             )}
          </div>
@@ -65,7 +65,7 @@ export function JRBrand({
       <div className={cn("flex items-center", s.gap, className)}>
          <Image
             src="/jr-mark.png"
-            alt="Logo Jasa Raharja"
+            alt="Logo Jasa Raharja Banten"
             width={s.logo}
             height={s.logo}
             priority
@@ -76,9 +76,9 @@ export function JRBrand({
                <span className={cn("block truncate font-bold tracking-tight text-base-content", s.title)}>
                   IWKBU Terminal
                </span>
-               <span className={cn("font-semibold uppercase tracking-wider text-base-content/50", s.subtitle)}>
-                  Jasa Raharja
-               </span>
+                  <span className={cn("font-semibold uppercase tracking-widest text-base-content/50", s.subtitle)}>
+                     JR Banten
+                  </span>
             </div>
          )}
       </div>

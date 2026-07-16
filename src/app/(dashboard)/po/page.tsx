@@ -75,7 +75,7 @@ export default async function PODashboard() {
                        <br />
                      </>
                    )}
-                   Mohon hubungi Staf IW Jasa Raharja untuk informasi lebih
+                   Mohon hubungi Staf IW Jasa Raharja Banten untuk informasi lebih
                    lanjut.
                 </AlertDescription>
             </Alert>
