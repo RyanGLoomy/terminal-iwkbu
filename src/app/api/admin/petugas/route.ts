@@ -173,14 +173,11 @@ export async function POST(request: Request) {
       const password = inputPassword || generatePassword();
 
       const { data: authData, error: authError } =
-         await adminClient.auth.admin.createUser({
-            email,
-            password,
-            email_confirm: true,
-            app_metadata: {
-               role: "loket",
-            },
-         });
+          await adminClient.auth.admin.createUser({
+             email,
+             password,
+             email_confirm: true,
+          });
 
       if (authError || !authData?.user?.id) {
          const authMsg = getErrorMessage(authError);

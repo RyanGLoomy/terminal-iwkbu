@@ -129,11 +129,7 @@ export async function PATCH(
          .eq("user_id", id)
          .neq("role_id", roleRow.id);
 
-      await admin.auth.admin.updateUserById(id, {
-         app_metadata: { role: newRoleName },
-      });
-
-      await logActivity(
+       await logActivity(
          "UPDATE_USER",
          `Mengubah role ${targetProfile.email} menjadi ${newRoleName}`,
          {
