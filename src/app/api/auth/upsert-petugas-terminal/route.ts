@@ -165,7 +165,7 @@ export async function POST(request: Request) {
          nama,
       };
       if (!petugasId) payload.is_active = true;
-      if (finalPin) payload.pin_hash = bcrypt.hashSync(finalPin, 10);
+      if (finalPin) payload.pin_hash = bcrypt.hashSync(finalPin, 12);
 
       const query = petugasId
          ? adminClient

@@ -27,7 +27,11 @@ export async function checkRateLimit(
    if (error || !data) {
       // DB failed → consult in-memory fallback instead of failing open
       const entry = memoryFallback.get(key);
-      if (entry && Date.now() < entry.expires && entry.count >= MEMORY_MAX_ATTEMPTS) {
+      if (entry && Date.now() >= entry.expires) {
+         memoryFallback.delete(key);
+         return { allowed: true };
+      }
+      if (entry && entry.count >= MEMORY_MAX_ATTEMPTS) {
          return { allowed: false, retryAfterMs: entry.expires - Date.now() };
       }
       return { allowed: true };

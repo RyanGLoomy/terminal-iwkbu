@@ -98,7 +98,7 @@ export async function POST(request: Request) {
       // the guard trigger rejects any other column. Assert the row was touched so
       // any future policy drift fails loudly instead of silently no-op'ing.
       const supabase = await createClient();
-      const newPinHash = bcrypt.hashSync(newPin, 10);
+      const newPinHash = bcrypt.hashSync(newPin, 12);
       const { data: updated, error: updateError } = await supabase
          .from("petugas_terminal")
          .update({ pin_hash: newPinHash })

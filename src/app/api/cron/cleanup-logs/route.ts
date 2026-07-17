@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { isCronAuthorized } from "@/lib/auth/cron-auth";
-import { sanitizeDbError } from "@/lib/db-error";
 
 const RETENTION_DAYS = 90;
 
