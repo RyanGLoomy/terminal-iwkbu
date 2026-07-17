@@ -154,16 +154,17 @@ export async function executeIwkbuSync(params: {
          findings.map(async (pf): Promise<"created" | "updated" | "failed"> => {
             const existingId = existingByArmada.get(pf.armada_id);
 
-            if (existingId) {
-               const { error: updError } = await admin
-                  .from("findings")
-                  .update({
-                     judul: pf.judul,
-                     deskripsi: pf.deskripsi,
-                     severity: pf.severity,
-                     updated_at: nowIso,
-                  })
-                  .eq("id", existingId);
+             if (existingId) {
+                const { error: updError } = await admin
+                   .from("findings")
+                   .update({
+                      judul: pf.judul,
+                      deskripsi: pf.deskripsi,
+                      severity: pf.severity,
+                      updated_at: nowIso,
+                      periode_id: periodeId,
+                   })
+                   .eq("id", existingId);
                if (updError) {
                   console.error(
                      "[IWKBU Sync] finding update error:",
