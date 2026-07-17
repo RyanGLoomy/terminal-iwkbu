@@ -59,13 +59,12 @@ export async function POST(request: Request) {
          );
       }
 
-      let matched = null;
-      for (const pt of rows ?? []) {
-         if (pt.pin_hash && bcrypt.compareSync(pinInput, pt.pin_hash)) {
-            matched = pt;
-            break;
-         }
-      }
+       let matched = null;
+       for (const pt of rows ?? []) {
+          if (pt.pin_hash && bcrypt.compareSync(pinInput, pt.pin_hash)) {
+             matched = pt;
+          }
+       }
 
       if (!matched) {
          const result = await recordFailedAttempt(rateLimitKey);

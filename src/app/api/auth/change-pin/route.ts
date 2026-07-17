@@ -76,13 +76,12 @@ export async function POST(request: Request) {
       }
 
       // Cari petugas yang PIN-nya cocok
-      let matched = null;
-      for (const pt of rows ?? []) {
-         if (pt.pin_hash && bcrypt.compareSync(currentPin, pt.pin_hash)) {
-            matched = pt;
-            break;
-         }
-      }
+       let matched = null;
+       for (const pt of rows ?? []) {
+          if (pt.pin_hash && bcrypt.compareSync(currentPin, pt.pin_hash)) {
+             matched = pt;
+          }
+       }
 
         if (!matched) {
           await recordFailedAttempt(pinKey);

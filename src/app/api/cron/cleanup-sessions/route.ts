@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { safeCompare } from "@/lib/auth/safe-compare";
+import { isCronAuthorized } from "@/lib/auth/cron-auth";
+import { sanitizeDbError } from "@/lib/db-error";
 
 /**
  * Cron: Close stale loket sessions.
@@ -10,13 +11,7 @@ import { safeCompare } from "@/lib/auth/safe-compare";
 const MAX_SESSION_HOURS = 24;
 
 export async function POST(request: Request) {
-   const authHeader = request.headers.get("authorization");
-   const token = authHeader?.replace("Bearer ", "");
-   const secret = process.env.IWKBU_SYNC_CRON_SECRET ?? process.env.CRON_SECRET;
-
-   if (!secret || !token || !safeCompare(token, secret)) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-   }
+   if (!isCronAuthorized(request)) { return NextResponse.json({ error: "Unauthorized" }, { status: 401 }); }
 
    try {
       const admin = createAdminClient();
@@ -38,7 +33,7 @@ export async function POST(request: Request) {
       });
    } catch (error: unknown) {
       return NextResponse.json(
-         { error: error instanceof Error ? error.message : "Unknown error" },
+         { error: sanitizeDbError(error, "cleanup-sessions") },
          { status: 500 },
       );
    }

@@ -101,21 +101,10 @@ export async function POST(request: NextRequest) {
       let rows: Record<string, string>[];
 
       if (fileName.endsWith(".xlsx") || fileName.endsWith(".xls")) {
-         // xlsx ships without bundled TS types — project convention: dynamic
-         // import only. @ts-ignore suppresses the module-resolution error.
-         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-         // @ts-ignore
-         const XLSX = await import("xlsx");
-         const buffer = Buffer.from(await file.arrayBuffer());
-         const workbook = XLSX.read(buffer, { type: "array" });
-         const sheet = workbook.Sheets[workbook.SheetNames[0]];
-         if (!sheet) {
-            return NextResponse.json(
-               { message: "File Excel tidak memiliki sheet." },
-               { status: 400 },
-            );
-         }
-         rows = XLSX.utils.sheet_to_json(sheet, { defval: "" });
+         return NextResponse.json(
+            { message: "Format Excel (.xlsx/.xls) tidak lagi didukung. Silakan simpan sebagai CSV (.csv) dan unggah ulang." },
+            { status: 400 },
+         );
       } else {
          const text = await file.text();
          rows = parseCsv(text);

@@ -2,18 +2,12 @@ import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { fetchIwkbuCompliance } from "@/lib/iwkbu/adaptor";
 import { executeIwkbuSync } from "@/lib/supabase/queries/iwkbu-sync.server";
-import { safeCompare } from "@/lib/auth/safe-compare";
+import { isCronAuthorized } from "@/lib/auth/cron-auth";
 import { sanitizeDbError } from "@/lib/db-error";
 import { normalizePlate } from "@/lib/rekonsiliasi/engine";
 
 export async function POST(request: Request) {
-   const authHeader = request.headers.get("authorization");
-   const token = authHeader?.replace(/^Bearer\s+/i, "");
-
-   const secret =
-      process.env.IWKBU_SYNC_CRON_SECRET ?? process.env.CRON_SECRET;
-
-   if (!secret || !safeCompare(token ?? "", secret)) {
+   if (!isCronAuthorized(request)) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
    }
 

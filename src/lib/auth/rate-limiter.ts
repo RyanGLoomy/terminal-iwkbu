@@ -5,6 +5,12 @@ interface RateLimitConfig {
    lockoutMs: number;
 }
 
+// In-memory fallback when DB RPC fails — prevents fail-open during DB outage.
+// Per-instance, bounded; caps brute-force even when Postgres is unreachable.
+const memoryFallback = new Map<string, { count: number; expires: number }>();
+const MEMORY_MAX_ATTEMPTS = 5;
+const MEMORY_LOCKOUT_MS = 15 * 60 * 1000;
+
 // Rate-limiting adalah infrastruktur server-side, bukan data pengguna. Memakai
 // admin (service-role) client agar pemanggilan RPC tidak bergantung pada grant
 // `anon`/`authenticated` — memungkinkan REVOKE EXECUTE dari anon tanpa
@@ -19,6 +25,11 @@ export async function checkRateLimit(
    });
 
    if (error || !data) {
+      // DB failed → consult in-memory fallback instead of failing open
+      const entry = memoryFallback.get(key);
+      if (entry && Date.now() < entry.expires && entry.count >= MEMORY_MAX_ATTEMPTS) {
+         return { allowed: false, retryAfterMs: entry.expires - Date.now() };
+      }
       return { allowed: true };
    }
 
@@ -41,6 +52,16 @@ export async function recordFailedAttempt(
    });
 
    if (error || data === null) {
+      // DB failed → track in memory fallback
+      const entry = memoryFallback.get(key) ?? { count: 0, expires: Date.now() + MEMORY_LOCKOUT_MS };
+      entry.count++;
+      if (entry.count >= MEMORY_MAX_ATTEMPTS) {
+         entry.expires = Date.now() + MEMORY_LOCKOUT_MS;
+      }
+      memoryFallback.set(key, entry);
+      if (entry.count >= MEMORY_MAX_ATTEMPTS) {
+         return { locked: true, retryAfterMs: entry.expires - Date.now() };
+      }
       return { locked: false, retryAfterMs: 0 };
    }
 
