@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import { StafFindingsPanel } from "@/components/operasional/staf-findings-panel";
 import {
    getAllArmada,
@@ -5,12 +6,18 @@ import {
 } from "@/lib/supabase/queries/verification.server";
 import { getStaffFindings } from "@/lib/supabase/queries/findings.server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { getAuthenticatedActor } from "@/lib/auth/server-actor";
+import { ROLES } from "@/config/roles";
 
 export default async function StafIwTemuanPage({
    searchParams,
 }: {
    searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
+   const actor = await getAuthenticatedActor();
+   if (!actor) redirect("/login");
+   if (actor.role !== ROLES.STAF_IW) redirect("/staf-iw");
+
    const sp = await searchParams;
 
    const prefill: Record<string, string> = {};

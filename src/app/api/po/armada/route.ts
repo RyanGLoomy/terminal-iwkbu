@@ -3,6 +3,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { requireActor, actorErrorHandler } from "@/lib/auth/actor";
 import { ROLES } from "@/config/roles";
 import { logActivity } from "@/lib/supabase/queries/operasional.server";
+import { createNotificationForRole } from "@/lib/supabase/queries/notifications.server";
 
 const STATUS_OPERASIONAL = new Set([
    "aktif",
@@ -156,6 +157,13 @@ export async function POST(request: NextRequest) {
          },
          { actorUserId: actor.user.id },
       );
+
+      await createNotificationForRole(ROLES.STAF_IW, {
+         title: "Armada Baru Perlu Verifikasi",
+         message: `${armada.nomor_polisi} menunggu verifikasi dari PO ${actor.user.email}.`,
+         type: "info",
+         link: "/staf-iw",
+      });
 
       return NextResponse.json({ data: armada }, { status: 201 });
    } catch (error) {

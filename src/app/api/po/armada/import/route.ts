@@ -3,6 +3,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { requireActor, actorErrorHandler } from "@/lib/auth/actor";
 import { ROLES } from "@/config/roles";
 import { logActivity } from "@/lib/supabase/queries/operasional.server";
+import { createNotificationForRole } from "@/lib/supabase/queries/notifications.server";
 
 const MAX_ROWS = 500;
 
@@ -186,11 +187,11 @@ export async function POST(request: NextRequest) {
 
       let successCount = 0;
       if (insertRows.length > 0) {
-         const { error } = await admin.from("armada").insert(insertRows);
-         if (error) {
-            return NextResponse.json(
-               { message: `Gagal import: ${error.message}`, errors },
-               { status: 400 },
+          const { error } = await admin.from("armada").insert(insertRows);
+          if (error) {
+             return NextResponse.json(
+                { message: "Gagal import data armada. Periksa format dan duplikasi.", errors },
+                { status: 400 },
             );
          }
          successCount = insertRows.length;
@@ -202,6 +203,15 @@ export async function POST(request: NextRequest) {
          { imported: successCount, errors: errors.length },
          { actorUserId: actor.user.id },
       );
+
+      if (successCount > 0) {
+         await createNotificationForRole(ROLES.STAF_IW, {
+            title: "Import Armada Baru",
+            message: `${successCount} armada baru diimport oleh PO, menunggu verifikasi.`,
+            type: "info",
+            link: "/staf-iw",
+         });
+      }
 
       return NextResponse.json(
          { success: successCount, errors, total: rows.length },

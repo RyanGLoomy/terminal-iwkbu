@@ -1,8 +1,15 @@
+import { redirect } from "next/navigation";
 import { RekonsiliasiPanel } from "@/components/operasional/rekonsiliasi-panel";
 import { PeriodeRekonsiliasiPanel } from "@/components/operasional/periode-rekonsiliasi-panel";
 import { getRekonsiliasiData } from "@/lib/supabase/queries/rekonsiliasi.server";
+import { getAuthenticatedActor } from "@/lib/auth/server-actor";
+import { ROLES } from "@/config/roles";
 
 export default async function RekonsiliasiPage() {
+   const actor = await getAuthenticatedActor();
+   if (!actor) redirect("/login");
+   if (actor.role !== ROLES.STAF_IW) redirect("/staf-iw");
+
    const { poAktif, poMenunggu, armada } = await getRekonsiliasiData();
 
    return (

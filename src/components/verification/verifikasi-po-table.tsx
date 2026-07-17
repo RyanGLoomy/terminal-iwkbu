@@ -53,6 +53,7 @@ export function VerifikasiPOTable({
    });
    const [editLoading, setEditLoading] = useState(false);
    const [search, setSearch] = useState("");
+   const [visibleCount, setVisibleCount] = useState(15);
    const router = useRouter();
 
     const filteredData = (() => {
@@ -187,7 +188,7 @@ export function VerifikasiPOTable({
                   </TableRow>
                </TableHeader>
                <TableBody>
-                   {filteredData.map((po) => (
+                    {filteredData.slice(0, visibleCount).map((po) => (
                      <TableRow key={po.id}>
                         <TableCell className="font-medium">
                            {po.kode_po}
@@ -254,8 +255,20 @@ export function VerifikasiPOTable({
                      </TableRow>
                   ))}
                </TableBody>
-            </Table>
-         </div>
+             </Table>
+          </div>
+
+          {visibleCount < filteredData.length && (
+             <div className="flex justify-center pt-3">
+                <Button
+                   variant="outline"
+                   size="sm"
+                   onClick={() => setVisibleCount((c) => c + 15)}
+                >
+                   Tampilkan Lebih Banyak ({filteredData.length - visibleCount} lagi)
+                </Button>
+             </div>
+          )}
 
          <Dialog open={!!selectedPO} onOpenChange={() => setSelectedPO(null)}>
             <DialogContent>

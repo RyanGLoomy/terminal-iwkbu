@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ChevronRight, ChevronDown } from "lucide-react";
+import { ChevronRight, ChevronDown, Download } from "lucide-react";
 import type { Armada } from "@/lib/supabase/queries/verification.types";
 
 const verifikasiColor: Record<string, string> = {
@@ -79,9 +79,30 @@ export function RekonsiliasiArmadaTable({
    iwkbuMap,
 }: RekonsiliasiArmadaTableProps) {
    const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [visibleCount, setVisibleCount] = useState(15);
 
    const toggleExpand = (id: string) => {
       setExpandedId((prev) => (prev === id ? null : id));
+   };
+
+   const handleExportCSV = () => {
+      const headers = ["No Polisi", "Merk/Tipe", "Status Operasional", "Verifikasi", "IWKBU", "Rekonsiliasi"];
+      const rows = armada.map((a: Armada) => [
+         a.nomor_polisi,
+         `${a.merk ?? "-"} ${a.tipe ?? ""}`.trim(),
+         a.status_operasional,
+         a.status_verifikasi,
+         iwkbuMap?.[a.id]?.iwkbu_compliance_status ?? "belum tersinkron",
+         iwkbuMap?.[a.id]?.reconciliation_status ?? "-",
+      ]);
+      const csv = [headers, ...rows].map((r) => r.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(",")).join("\n");
+      const blob = new Blob(["\ufeff" + csv], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "rekonsiliasi-armada.csv";
+      a.click();
+      URL.revokeObjectURL(url);
    };
 
    if (armada.length === 0) {
@@ -93,12 +114,12 @@ export function RekonsiliasiArmadaTable({
                      <TableCell className="py-8 text-center text-sm text-base-content/70">
                         Belum ada armada terdaftar.
                      </TableCell>
-                  </TableRow>
-               </TableBody>
-            </Table>
-         </div>
-      );
-   }
+                    </TableRow>
+                 </TableBody>
+           </Table>
+        </div>
+    );
+}
 
    return (
       <div className="rounded-lg border border-base-300 bg-base-100 overflow-hidden">
@@ -116,6 +137,10 @@ export function RekonsiliasiArmadaTable({
                <Badge className={reconColor.blocked}>blocked</Badge>
                tidak patuh
             </span>
+            <Button variant="outline" size="sm" className="ml-auto h-7 text-xs" onClick={handleExportCSV}>
+               <Download className="size-3.5 mr-1" />
+               CSV
+            </Button>
          </div>
          <Table caption="Daftar rekonsiliasi armada PO">
             <TableHeader>
@@ -133,7 +158,7 @@ export function RekonsiliasiArmadaTable({
                </TableRow>
             </TableHeader>
             <TableBody>
-               {armada.map((a: Armada) => {
+               {armada.slice(0, visibleCount).map((a: Armada) => {
                   const sync = iwkbuMap[a.id];
                   const isExpanded = expandedId === a.id;
                   return (

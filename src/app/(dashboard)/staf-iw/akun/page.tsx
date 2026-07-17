@@ -5,11 +5,7 @@ import { RoleManagementPanel } from "@/components/operasional/role-management-pa
 import { getAuthenticatedActor } from "@/lib/auth/server-actor";
 import { createAdminClient } from "@/lib/supabase/admin";
 
-export default async function StafIwAkunPage({
-   searchParams,
-}: {
-   searchParams: Promise<{ terminalId?: string }>;
-}) {
+export default async function StafIwAkunPage() {
    const actor = await getAuthenticatedActor();
 
    if (!actor) redirect("/login");
@@ -24,8 +20,6 @@ export default async function StafIwAkunPage({
    if (error) throw error;
 
    const terminalOptions = terminals ?? [];
-   const sp = await searchParams;
-   void sp;
 
    return (
       <section className="space-y-6">

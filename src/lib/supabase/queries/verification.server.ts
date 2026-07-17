@@ -1,6 +1,5 @@
 import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
-import { unstable_cache } from "next/cache";
 import type { Armada, PO } from "@/lib/supabase/queries/verification.types";
 
 // ============================================================
@@ -67,48 +66,3 @@ async function getAllPORaw(status?: "menunggu" | "aktif" | "ditolak") {
  * Use this in Server Components that need fresh data.
  */
 export const getAllPO = cache(getAllPORaw);
-
-/**
- * Cached version for dashboard stat counts.
- * Revalidate: 60 seconds. Tag: "po-stats".
- * Invalidate with: revalidateTag("po-stats")
- */
-export const getCachedPOCounts = unstable_cache(
-   async () => {
-      const supabase = await createClient();
-      const [menunggu, aktif, ditolak] = await Promise.all([
-         supabase.from("po").select("id", { count: "exact", head: true }).eq("status_verifikasi", "menunggu"),
-         supabase.from("po").select("id", { count: "exact", head: true }).eq("status_verifikasi", "aktif"),
-         supabase.from("po").select("id", { count: "exact", head: true }).eq("status_verifikasi", "ditolak"),
-      ]);
-      return {
-         menunggu: menunggu.count ?? 0,
-         aktif: aktif.count ?? 0,
-         ditolak: ditolak.count ?? 0,
-      };
-   },
-   ["po-stats-cache"],
-   { tags: ["po-stats"], revalidate: 60 },
-);
-
-/**
- * Cached armada counts for dashboard.
- * Revalidate: 60 seconds. Tag: "armada-stats".
- */
-export const getCachedArmadaCounts = unstable_cache(
-   async () => {
-      const supabase = await createClient();
-      const [menunggu, terverifikasi, ditolak] = await Promise.all([
-         supabase.from("armada").select("id", { count: "exact", head: true }).eq("status_verifikasi", "menunggu"),
-         supabase.from("armada").select("id", { count: "exact", head: true }).eq("status_verifikasi", "terverifikasi"),
-         supabase.from("armada").select("id", { count: "exact", head: true }).eq("status_verifikasi", "ditolak"),
-      ]);
-      return {
-         menunggu: menunggu.count ?? 0,
-         terverifikasi: terverifikasi.count ?? 0,
-         ditolak: ditolak.count ?? 0,
-      };
-   },
-   ["armada-stats-cache"],
-   { tags: ["armada-stats"], revalidate: 60 },
-);

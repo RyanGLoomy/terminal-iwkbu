@@ -1,7 +1,14 @@
+import { redirect } from "next/navigation";
 import { IwkbuSyncPanel } from "@/components/operasional/iwkbu-sync-panel";
 import { getIwkbuSyncDashboard } from "@/lib/supabase/queries/iwkbu-sync.server";
+import { getAuthenticatedActor } from "@/lib/auth/server-actor";
+import { ROLES } from "@/config/roles";
 
 export default async function IwkbuSyncPage() {
+   const actor = await getAuthenticatedActor();
+   if (!actor) redirect("/login");
+   if (actor.role !== ROLES.STAF_IW) redirect("/staf-iw");
+
    const data = await getIwkbuSyncDashboard(200);
 
    return (

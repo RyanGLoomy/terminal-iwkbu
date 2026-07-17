@@ -52,6 +52,7 @@ export const VerifikasiArmadaTable = memo(
        const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
        const [bulkLoading, setBulkLoading] = useState(false);
        const [dokumenArmada, setDokumenArmada] = useState<Armada | null>(null);
+       const [visibleCount, setVisibleCount] = useState(15);
        const router = useRouter();
 
       const handleVerifikasi = async () => {
@@ -171,7 +172,7 @@ export const VerifikasiArmadaTable = memo(
                      </TableRow>
                   </TableHeader>
                   <TableBody>
-                     {data.map((armada) => (
+                     {data.slice(0, visibleCount).map((armada) => (
                          <TableRow key={armada.id}>
                             {showActions && (
                                <TableCell className="w-10">
@@ -303,8 +304,20 @@ export const VerifikasiArmadaTable = memo(
                         </TableRow>
                      ))}
                   </TableBody>
-               </Table>
-            </div>
+                </Table>
+             </div>
+
+             {visibleCount < data.length && (
+                <div className="flex justify-center pt-3">
+                   <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setVisibleCount((c) => c + 15)}
+                   >
+                      Tampilkan Lebih Banyak ({data.length - visibleCount} lagi)
+                   </Button>
+                </div>
+             )}
 
             <Dialog
                open={!!selectedArmada}
