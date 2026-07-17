@@ -69,6 +69,7 @@ export async function POST(request: Request) {
          .eq("is_active", true);
 
        if (fetchError) {
+          console.error("[change-pin] DB error:", fetchError.message);
          return NextResponse.json(
             { message: "Terjadi kesalahan internal" },
             { status: 500 },
@@ -106,6 +107,7 @@ export async function POST(request: Request) {
          .select("id");
 
       if (updateError) {
+         console.error("[change-pin] DB error:", updateError.message);
          return NextResponse.json(
             { message: "Terjadi kesalahan internal" },
             { status: 500 },

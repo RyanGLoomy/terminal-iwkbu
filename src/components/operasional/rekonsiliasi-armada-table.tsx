@@ -117,7 +117,7 @@ export function RekonsiliasiArmadaTable({
                     </TableRow>
                  </TableBody>
            </Table>
-        </div>
+       </div>
     );
 }
 

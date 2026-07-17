@@ -125,13 +125,48 @@ export const VerifikasiArmadaTable = memo(
 
       return (
          <>
-            {error && (
-               <div className="mb-3 flex items-start gap-2 rounded-md border border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950/50 px-3 py-2 text-sm text-error">
-                  <AlertCircle className="mt-0.5 h-4 w-4" aria-hidden="true" />
-                  <span>{error}</span>
-               </div>
-            )}
-            <div className="border border-base-300 rounded-lg bg-base-100 overflow-hidden">
+             {error && (
+                <div className="mb-3 flex items-start gap-2 rounded-md border border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950/50 px-3 py-2 text-sm text-error">
+                   <AlertCircle className="mt-0.5 h-4 w-4" aria-hidden="true" />
+                   <span>{error}</span>
+                </div>
+             )}
+             {showActions && selectedIds.size > 0 && (
+                <div className="mb-3 flex flex-wrap items-center gap-2 rounded-md border border-base-300 bg-base-200/50 px-3 py-2">
+                   <span className="text-sm font-medium">
+                      {selectedIds.size} dipilih
+                   </span>
+                   <Button
+                      size="sm"
+                      variant="outline"
+                      className="text-brand-green border-green-200 hover:bg-green-50 dark:text-green-300 dark:border-green-800 dark:hover:bg-green-950/50"
+                      disabled={bulkLoading}
+                      onClick={() => handleBulkVerifikasi("terverifikasi")}
+                   >
+                      <CheckCircle className="h-4 w-4 mr-1" aria-hidden="true" />
+                      Verifikasi Semua
+                   </Button>
+                   <Button
+                      size="sm"
+                      variant="outline"
+                      className="text-error border-red-200 hover:bg-red-50 dark:text-red-300 dark:border-red-800 dark:hover:bg-red-950/50"
+                      disabled={bulkLoading}
+                      onClick={() => handleBulkVerifikasi("ditolak")}
+                   >
+                      <XCircle className="h-4 w-4 mr-1" aria-hidden="true" />
+                      Tolak Semua
+                   </Button>
+                   <Button
+                      size="sm"
+                      variant="ghost"
+                      disabled={bulkLoading}
+                      onClick={() => setSelectedIds(new Set())}
+                   >
+                      Batal Pilihan
+                   </Button>
+                </div>
+             )}
+             <div className="border border-base-300 rounded-lg bg-base-100 overflow-hidden">
                 <Table caption="Daftar armada menunggu verifikasi">
                   <TableHeader>
                       <TableRow className="bg-base-200/50">
@@ -264,46 +299,11 @@ export const VerifikasiArmadaTable = memo(
                                   >
                                      <FolderOpen className="h-4 w-4" aria-hidden="true" />
                                   </Button>
-                               </TableCell>
-                            )}
-            {showActions && selectedIds.size > 0 && (
-               <div className="mb-3 flex flex-wrap items-center gap-2 rounded-md border border-base-300 bg-base-200/50 px-3 py-2">
-                  <span className="text-sm font-medium">
-                     {selectedIds.size} dipilih
-                  </span>
-                  <Button
-                     size="sm"
-                     variant="outline"
-                     className="text-brand-green border-green-200 hover:bg-green-50 dark:text-green-300 dark:border-green-800 dark:hover:bg-green-950/50"
-                     disabled={bulkLoading}
-                     onClick={() => handleBulkVerifikasi("terverifikasi")}
-                  >
-                     <CheckCircle className="h-4 w-4 mr-1" aria-hidden="true" />
-                     Verifikasi Semua
-                  </Button>
-                  <Button
-                     size="sm"
-                     variant="outline"
-                     className="text-error border-red-200 hover:bg-red-50 dark:text-red-300 dark:border-red-800 dark:hover:bg-red-950/50"
-                     disabled={bulkLoading}
-                     onClick={() => handleBulkVerifikasi("ditolak")}
-                  >
-                     <XCircle className="h-4 w-4 mr-1" aria-hidden="true" />
-                     Tolak Semua
-                  </Button>
-                  <Button
-                     size="sm"
-                     variant="ghost"
-                     disabled={bulkLoading}
-                     onClick={() => setSelectedIds(new Set())}
-                  >
-                     Batal Pilihan
-                  </Button>
-               </div>
-            )}
-                        </TableRow>
-                     ))}
-                  </TableBody>
+                                </TableCell>
+                             )}
+                         </TableRow>
+                      ))}
+                   </TableBody>
                 </Table>
              </div>
 

@@ -135,16 +135,16 @@ export async function POST(request: NextRequest) {
             return;
          }
 
-         const readNum = (key: string): number | null => {
-            const v = row[key];
-            if (!v || v.trim() === "") return null;
-            const n = Number(v);
-            if (!Number.isInteger(n) || n < 0) {
-               errors.push({ row: rowNum, message: `${key} harus angka positif` });
-               return Number.NaN;
-            }
-            return n;
-         };
+          const readNum = (key: string): number | null => {
+             const v = row[key];
+             if (!v || v.trim() === "") return null;
+             const n = Number(v);
+             if (!Number.isInteger(n) || n < 0) {
+                errors.push({ row: rowNum, message: `${key} harus angka positif` });
+                return null;
+             }
+             return n;
+          };
 
          const status_ops = (row.status_operasional ?? "aktif").trim();
          if (!ALLOWED_OPERASIONAL.has(status_ops)) {
@@ -157,7 +157,7 @@ export async function POST(request: NextRequest) {
 
          const tahun = readNum("tahun_pembuatan");
          const kapasitas = readNum("kapasitas_penumpang");
-         if (tahun === Number.NaN || kapasitas === Number.NaN) return;
+         if (tahun === null || kapasitas === null) return;
 
          insertRows.push({
             po_id: actor.user.id,

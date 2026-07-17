@@ -53,6 +53,7 @@ export async function POST(request: Request) {
          .eq("is_active", true);
 
       if (error) {
+         console.error("[verify-pin] petugas fetch:", error.message);
          return NextResponse.json(
             { message: "Terjadi kesalahan internal" },
             { status: 500 },
@@ -112,6 +113,7 @@ export async function POST(request: Request) {
          .single();
 
       if (sessionError) {
+         console.error("[verify-pin] DB error:", sessionError.message);
          return NextResponse.json(
             { message: "Terjadi kesalahan internal" },
             { status: 500 },
