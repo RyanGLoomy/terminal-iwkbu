@@ -152,7 +152,7 @@ export function Sidebar({ userRole, collapsed, onToggleCollapse }: SidebarProps)
                             IWKBU Terminal
                          </span>
                          <span className="text-[11px] font-medium uppercase tracking-wider text-sidebar-foreground/50">
-                            JR Banten
+                            Jasa Raharja Banten
                          </span>
                       </div>
                       <button

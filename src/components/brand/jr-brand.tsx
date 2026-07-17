@@ -53,7 +53,7 @@ export function JRBrand({
                      IWKBU Terminal
                   </span>
                    <span className={cn("font-semibold uppercase tracking-widest text-base-content/50", s.subtitle)}>
-                      JR Banten
+                      Jasa Raharja Banten
                    </span>
                </div>
             )}
@@ -77,7 +77,7 @@ export function JRBrand({
                   IWKBU Terminal
                </span>
                   <span className={cn("font-semibold uppercase tracking-widest text-base-content/50", s.subtitle)}>
-                     JR Banten
+                     Jasa Raharja Banten
                   </span>
             </div>
          )}
