@@ -76,7 +76,9 @@ export async function createNotificationForRole(
             title: params.title,
             body: params.message,
             url: params.link ?? undefined,
-         }).catch(() => {});
+         }).catch((e) => {
+            console.error("[createNotificationForRole] Push failed:", e);
+         });
       }
    } catch (error) {
       console.error("[createNotificationForRole] Failed:", error);

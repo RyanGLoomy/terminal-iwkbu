@@ -122,6 +122,7 @@ export function RekonsiliasiArmadaTable({
 }
 
    return (
+      <>
       <div className="rounded-lg border border-base-300 bg-base-100 overflow-hidden">
          <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 px-3 py-2 border-b border-base-300 bg-base-200/30 text-xs text-base-content/70">
             <span className="font-medium">Status Rekonsiliasi:</span>
@@ -163,7 +164,7 @@ export function RekonsiliasiArmadaTable({
                   const isExpanded = expandedId === a.id;
                   return (
                       <Fragment key={a.id}>
-                         <TableRow key={a.id}>
+                         <TableRow>
                            <TableCell className="p-0">
                               <Button
                                  variant="ghost"
@@ -323,5 +324,18 @@ export function RekonsiliasiArmadaTable({
             </TableBody>
          </Table>
       </div>
+
+      {visibleCount < armada.length && (
+         <div className="flex justify-center pt-3">
+            <Button
+               variant="outline"
+               size="sm"
+               onClick={() => setVisibleCount((c) => c + 15)}
+            >
+               Tampilkan Lebih Banyak ({armada.length - visibleCount} lagi)
+            </Button>
+         </div>
+      )}
+      </>
    );
 }
