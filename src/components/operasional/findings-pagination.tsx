@@ -45,13 +45,9 @@ export function FindingsPagination({
    const to = Math.min(total, page * pageSize);
 
    return (
-      <div className="flex flex-col items-center justify-between gap-3 pt-3 sm:flex-row">
-         <p className="text-xs text-base-content/60">
-            Menampilkan {from}–{to} dari {total} temuan
-            {pageCount > 1 && ` · halaman ${page} dari ${pageCount}`}
-         </p>
+      <div className="flex flex-col items-center gap-3 pt-3">
          {pageCount > 1 && (
-            <div className="flex items-center gap-1">
+            <div className="flex flex-wrap items-center justify-center gap-1">
                <Button
                   variant="outline"
                   size="sm"
@@ -116,6 +112,10 @@ export function FindingsPagination({
                </Button>
             </div>
          )}
+         <p className="text-center text-xs text-base-content/60">
+            Menampilkan {from}–{to} dari {total} temuan
+            {pageCount > 1 && ` · halaman ${page} dari ${pageCount}`}
+         </p>
       </div>
    );
 }
