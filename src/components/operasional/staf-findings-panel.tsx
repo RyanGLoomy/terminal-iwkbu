@@ -43,6 +43,9 @@ const StafFindingsClarificationDialog = dynamic(() =>
 const StafFindingsEditDialog = dynamic(() =>
    import("./staf-findings-edit-dialog").then((m) => ({ default: m.StafFindingsEditDialog })),
 );
+const StafFindingDetailSheet = dynamic(() =>
+   import("./staf-finding-detail-sheet").then((m) => ({ default: m.StafFindingDetailSheet })),
+);
 
 type Option = { id: string; label: string };
 
@@ -77,6 +80,7 @@ export function StafFindingsPanel({
    const searchParams = useSearchParams();
    const highlightId = searchParams.get("highlight");
    const [editFinding, setEditFinding] = useState<FindingRecord | null>(null);
+   const [detailFinding, setDetailFinding] = useState<FindingRecord | null>(null);
    const [form, setForm] = useState({
       poId: prefill?.poId ?? poOptions[0]?.id ?? "",
       armadaId: prefill?.armadaId ?? armadaOptions[0]?.id ?? "",
@@ -166,21 +170,28 @@ export function StafFindingsPanel({
 
    const visibleFindings = filteredFindings.slice(0, visibleCount);
 
-   // Scroll to highlighted finding from notification + trigger glow
-   const [glowKey, setGlowKey] = useState(0);
-   useEffect(() => {
-      if (!highlightId) return;
-      // Increment glowKey to re-trigger CSS animation on every navigation
-      setGlowKey((k) => k + 1);
-      // Small delay to ensure DOM is settled after router.refresh / hydration
-      const timer = setTimeout(() => {
-         const el = document.querySelector("[data-highlight-id]");
-         if (el) {
-            el.scrollIntoView({ behavior: "smooth", block: "center" });
-         }
-      }, 300);
-      return () => clearTimeout(timer);
-   }, [highlightId]);
+    // Scroll to highlighted finding from notification + trigger glow.
+    // Reset filter & expand pagination first so the target row is guaranteed
+    // to be in the DOM; otherwise scrollIntoView silently fails when the row
+    // is filtered out or beyond the "show more" page.
+    const [glowKey, setGlowKey] = useState(0);
+    useEffect(() => {
+       if (!highlightId) return;
+       if (!initialFindings.some((f) => f.id === highlightId)) return;
+       setSearch("");
+       setStatusFilter("semua");
+       setPeriodeFilter("semua");
+       setVisibleCount(initialFindings.length);
+       setGlowKey((k) => k + 1);
+       const timer = setTimeout(() => {
+          const el = document.querySelector("[data-highlight-id]");
+          if (el) {
+             el.scrollIntoView({ behavior: "smooth", block: "center" });
+          }
+       }, 300);
+       return () => clearTimeout(timer);
+       // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [highlightId]);
 
    // S4: Live findings updates via Realtime (debounced router.refresh)
    useEffect(() => {
@@ -653,7 +664,12 @@ export function StafFindingsPanel({
                            </TableRow>
                         ) : (
                            visibleFindings.map((finding) => (
-                               <TableRow key={`${finding.id}-${glowKey}`} className={highlightId === finding.id ? "highlight-from-notification" : ""} data-highlight-id={highlightId === finding.id ? "" : undefined}>
+                                <TableRow
+                                   key={`${finding.id}-${glowKey}`}
+                                   className={`cursor-pointer transition-colors hover:bg-base-200/50 ${highlightId === finding.id ? "highlight-from-notification" : ""}`}
+                                   data-highlight-id={highlightId === finding.id ? "" : undefined}
+                                   onClick={() => setDetailFinding(finding)}
+                                >
                                  <TableCell className="whitespace-nowrap text-sm text-base-content/70">
                                     {formatDateTime(finding.created_at)}
                                  </TableCell>
@@ -700,29 +716,29 @@ export function StafFindingsPanel({
                                        {finding.resolution_note ?? "-"}
                                     </div>
                                  </TableCell>
-                                 <TableCell className="text-sm text-base-content/70">
-                                    <Button
-                                       size="sm"
-                                       variant="ghost"
-                                       className="h-7 px-2"
-                                       onClick={() =>
-                                          setClarificationFinding(finding)
-                                       }
-                                    >
+                                 <TableCell className="text-sm text-base-content/70" onClick={(e) => e.stopPropagation()}>
+                                     <Button
+                                        size="sm"
+                                        variant="ghost"
+                                        className="h-7 px-2"
+                                        onClick={() =>
+                                           setClarificationFinding(finding)
+                                        }
+                                     >
                                        <MessageSquare className="mr-1 h-3.5 w-3.5" aria-hidden="true" />
                                        {finding.finding_clarifications?.length ??
                                           0}
                                     </Button>
                                  </TableCell>
-                                 <TableCell>
+                                 <TableCell onClick={(e) => e.stopPropagation()}>
                                     <div className="flex flex-wrap gap-2">
-                                       {finding.status !== "closed" && (
-                                          <Button
-                                             size="sm"
-                                             variant="ghost"
-                                             className="h-7 px-2"
-                                             onClick={() => setEditFinding(finding)}
-                                          >
+                                        {finding.status !== "closed" && (
+                                           <Button
+                                              size="sm"
+                                              variant="ghost"
+                                              className="h-7 px-2"
+                                              onClick={() => setEditFinding(finding)}
+                                           >
                                              <Pencil className="h-3.5 w-3.5" />
                                           </Button>
                                        )}
@@ -784,9 +800,14 @@ export function StafFindingsPanel({
                          </CardContent>
                       </Card>
                    ) : (
-                      visibleFindings.map((finding) => (
-                         <Card key={`${finding.id}-${glowKey}`} className={`border-base-300 ${highlightId === finding.id ? "highlight-from-notification" : ""}`} data-highlight-id={highlightId === finding.id ? "" : undefined}>
-                            <CardContent className="space-y-2 py-3">
+                       visibleFindings.map((finding) => (
+                          <Card
+                             key={`${finding.id}-${glowKey}`}
+                             className={`cursor-pointer transition-colors hover:bg-base-200/40 ${highlightId === finding.id ? "highlight-from-notification" : ""}`}
+                             data-highlight-id={highlightId === finding.id ? "" : undefined}
+                             onClick={() => setDetailFinding(finding)}
+                          >
+                             <CardContent className="space-y-2 py-3">
                                <div className="flex items-center gap-2">
                                   <StatusBadge category="severity" value={finding.severity} />
                                   <StatusBadge category="finding" value={finding.status} />
@@ -804,8 +825,8 @@ export function StafFindingsPanel({
                                   <p className="text-xs text-base-content/70"><HighlightText text={`${finding.nomor_polisi} · ${finding.po?.nama_perusahaan ?? finding.po?.kode_po ?? "-"}`} query={deferredSearch} /></p>
                                </div>
                                <p className="text-xs text-base-content/60">{formatDateTime(finding.created_at)}</p>
-                               <div className="flex flex-wrap gap-2 pt-1">
-                                  <Button size="sm" variant="ghost" className="h-7 px-2" onClick={() => setClarificationFinding(finding)}>
+                                <div className="flex flex-wrap gap-2 pt-1" onClick={(e) => e.stopPropagation()}>
+                                   <Button size="sm" variant="ghost" className="h-7 px-2" onClick={() => setClarificationFinding(finding)}>
                                      <MessageSquare className="mr-1 h-3.5 w-3.5" />
                                      {finding.finding_clarifications?.length ?? 0}
                                   </Button>
@@ -857,12 +878,22 @@ export function StafFindingsPanel({
             onChanged={() => router.refresh()}
          />
 
-         <StafFindingsEditDialog
-            open={!!editFinding}
-            finding={editFinding}
-            onClose={() => setEditFinding(null)}
-            onChanged={() => router.refresh()}
-         />
-      </div>
-   );
+          <StafFindingsEditDialog
+             open={!!editFinding}
+             finding={editFinding}
+             onClose={() => setEditFinding(null)}
+             onChanged={() => router.refresh()}
+          />
+
+          <StafFindingDetailSheet
+             finding={detailFinding}
+             open={!!detailFinding}
+             onOpenChange={(o) => { if (!o) setDetailFinding(null); }}
+             onEdit={(f) => setEditFinding(f)}
+             onStatusChange={(f, target) => setStatusDialog({ finding: f, targetStatus: target })}
+             onReopen={(id) => reopenFinding(id)}
+             onClarify={(f) => setClarificationFinding(f)}
+          />
+       </div>
+    );
 }

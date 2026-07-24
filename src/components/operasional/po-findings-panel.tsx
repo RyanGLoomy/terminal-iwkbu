@@ -15,15 +15,14 @@ import { DashboardCard } from "@/components/dashboard/dashboard-card";
 import { StatusBadge } from "@/components/shared/status-badge";
 import type { FindingRecord } from "@/lib/supabase/queries/operasional.types";
 import { toast } from "sonner";
-import { AlertCircle, Loader2, MessageSquare, CheckCircle2, Circle, Paperclip } from "lucide-react";
+import { AlertCircle, Loader2, MessageSquare, CheckCircle2, Circle, Paperclip, ChevronDown } from "lucide-react";
 import { getErrorMessage } from "@/lib/db-error";
 import {
+   FINDINGS_PAGE_SIZE,
    formatDecisionLabel,
    formatDateTime,
    isOverdue,
 } from "./findings-shared";
-
-const FINDINGS_PAGE_SIZE = 10;
 
 async function downloadEvidence(filePath: string) {
    try {
@@ -150,6 +149,16 @@ export function PoFindingsPanel({ findings }: { findings: FindingRecord[] }) {
    const deferredSearch = useDeferredValue(search);
    const [statusFilter, setStatusFilter] = useState("semua");
    const [visibleCount, setVisibleCount] = useState(FINDINGS_PAGE_SIZE);
+   const [expanded, setExpanded] = useState<Set<string>>(new Set());
+
+   function toggleExpand(id: string) {
+      setExpanded((prev) => {
+         const next = new Set(prev);
+         if (next.has(id)) next.delete(id);
+         else next.add(id);
+         return next;
+      });
+   }
     const filteredFindings = (() => {
        let result = findings;
        if (statusFilter !== "semua") {
@@ -196,17 +205,26 @@ export function PoFindingsPanel({ findings }: { findings: FindingRecord[] }) {
       return () => supabase.removeChannel(channel);
    }, [router]);
 
-    // Scroll to highlighted finding from notification + trigger glow
-   const [glowKey, setGlowKey] = useState(0);
-   useEffect(() => {
-      if (!highlightId) return;
-      setGlowKey((k) => k + 1);
-      const timer = setTimeout(() => {
-         const el = document.querySelector("[data-highlight-id]");
-         if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
-      }, 300);
-      return () => clearTimeout(timer);
-   }, [highlightId]);
+    // Scroll to highlighted finding from notification + trigger glow.
+    // Reset filter, expand pagination, and auto-expand the target card so the
+    // element is guaranteed to be in the DOM before scrollIntoView.
+    const [glowKey, setGlowKey] = useState(0);
+    useEffect(() => {
+       if (!highlightId) return;
+       if (!findings.some((f) => f.id === highlightId)) return;
+       setSearch("");
+       setStatusFilter("semua");
+       setVisibleCount(findings.length);
+       setExpanded((prev) => new Set(prev).add(highlightId));
+       setGlowKey((k) => k + 1);
+       const timer = setTimeout(() => {
+          const el = document.querySelector("[data-highlight-id]");
+          if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+       }, 300);
+       return () => clearTimeout(timer);
+       // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [highlightId]);
+
 
     return (
       <div className="space-y-5">
@@ -292,12 +310,20 @@ export function PoFindingsPanel({ findings }: { findings: FindingRecord[] }) {
                 ) : (
                  visibleFindings.map((finding) => (
                    <Card key={`${finding.id}-${glowKey}`} className={`border-base-300 ${highlightId === finding.id ? "highlight-from-notification" : ""}`} data-highlight-id={highlightId === finding.id ? "" : undefined}>
-                     <CardHeader className="space-y-2">
-                        <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-                           <div>
-                               <CardTitle className="text-base">
-                                  {finding.judul}
-                               </CardTitle>
+                      <CardHeader
+                         className="cursor-pointer space-y-2 transition-colors hover:bg-base-200/40"
+                         onClick={() => toggleExpand(finding.id)}
+                         aria-expanded={expanded.has(finding.id)}
+                      >
+                         <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                            <div className="pr-8">
+                                <CardTitle className="flex items-center gap-2 text-base">
+                                   {finding.judul}
+                                   <ChevronDown
+                                      className={`h-4 w-4 shrink-0 text-base-content/50 transition-transform ${expanded.has(finding.id) ? "rotate-180" : ""}`}
+                                      aria-hidden="true"
+                                   />
+                                </CardTitle>
                                <p className="text-sm text-base-content/70 mt-1">
                                   {finding.nomor_polisi} ·{" "}
                                   {formatDateTime(finding.created_at)}
@@ -317,8 +343,10 @@ export function PoFindingsPanel({ findings }: { findings: FindingRecord[] }) {
                             <StatusBadge category="severity" value={finding.severity} />
                             <StatusBadge category="finding" value={finding.status} />
                          </div>
-                     </CardHeader>
-                     <CardContent className="space-y-4">
+                      </CardHeader>
+                      {expanded.has(finding.id) && (
+                      <CardContent className="space-y-4">
+
                         <p className="text-sm text-base-content">
                            {finding.deskripsi}
                         </p>
@@ -418,8 +446,10 @@ export function PoFindingsPanel({ findings }: { findings: FindingRecord[] }) {
                            </div>
                         )}
                       </CardContent>
-                   </Card>
-                 ))
+                      )}
+                    </Card>
+                  ))
+
                  )}
                  {visibleCount < filteredFindings.length && (
                     <div className="flex justify-center pt-2">

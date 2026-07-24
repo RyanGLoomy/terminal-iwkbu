@@ -69,23 +69,33 @@ export function NotificationBell() {
             .on(
                "postgres_changes",
                {
-                  event: "INSERT",
+                  event: "*",
                   schema: "public",
                   table: "notifications",
                   filter: `user_id=eq.${user.id}`,
                },
-               (payload: { new: Notification | null }) => {
-                  const newRow = payload.new;
-                  if (!newRow) {
-                     loadNotifications();
+               (
+                  payload: {
+                     eventType: string;
+                     new: Notification | null;
+                  },
+               ) => {
+                  const row = payload.new;
+                  // INSERT: optimistic prepend for instant feedback (fast path).
+                  if (payload.eventType === "INSERT" && row) {
+                     setNotifications((prev) =>
+                        prev.some((n) => n.id === row.id)
+                           ? prev
+                           : [row, ...prev].slice(0, 20),
+                     );
+                     if (!row.is_read) setUnreadCount((prev) => prev + 1);
                      return;
                   }
-                  setNotifications((prev) =>
-                     prev.some((n) => n.id === newRow.id)
-                        ? prev
-                        : [newRow, ...prev].slice(0, 20),
-                  );
-                  if (!newRow.is_read) setUnreadCount((prev) => prev + 1);
+                  // UPDATE (e.g. marked read on another device/tab) or DELETE:
+                  // re-fetch to keep list + unread badge in sync cross-device.
+                  if (payload.eventType === "UPDATE" || payload.eventType === "DELETE") {
+                     loadNotifications();
+                  }
                },
             )
             .subscribe();
