@@ -15,7 +15,7 @@ import { DashboardCard } from "@/components/dashboard/dashboard-card";
 import { StatusBadge } from "@/components/shared/status-badge";
 import type { FindingRecord } from "@/lib/supabase/queries/operasional.types";
 import { toast } from "sonner";
-import { AlertCircle, Loader2, MessageSquare, CheckCircle2, Circle, Paperclip, ChevronDown } from "lucide-react";
+import { AlertCircle, Loader2, MessageSquare, CheckCircle2, Circle, Paperclip } from "lucide-react";
 import { getErrorMessage } from "@/lib/db-error";
 import {
    FINDINGS_PAGE_SIZE,
@@ -23,6 +23,7 @@ import {
    formatDateTime,
    isOverdue,
 } from "./findings-shared";
+import { FindingsPagination } from "./findings-pagination";
 
 async function downloadEvidence(filePath: string) {
    try {
@@ -148,18 +149,9 @@ export function PoFindingsPanel({ findings }: { findings: FindingRecord[] }) {
    const [search, setSearch] = useState("");
    const deferredSearch = useDeferredValue(search);
    const [statusFilter, setStatusFilter] = useState("semua");
-   const [visibleCount, setVisibleCount] = useState(FINDINGS_PAGE_SIZE);
-   const [expanded, setExpanded] = useState<Set<string>>(new Set());
+   const [page, setPage] = useState(1);
 
-   function toggleExpand(id: string) {
-      setExpanded((prev) => {
-         const next = new Set(prev);
-         if (next.has(id)) next.delete(id);
-         else next.add(id);
-         return next;
-      });
-   }
-    const filteredFindings = (() => {
+     const filteredFindings = (() => {
        let result = findings;
        if (statusFilter !== "semua") {
           result = result.filter((f) => f.status === statusFilter);
@@ -173,7 +165,12 @@ export function PoFindingsPanel({ findings }: { findings: FindingRecord[] }) {
           (f.deskripsi ?? "").toLowerCase().includes(q),
        );
     })();
-   const visibleFindings = filteredFindings.slice(0, visibleCount);
+   const pageCount = Math.max(1, Math.ceil(filteredFindings.length / FINDINGS_PAGE_SIZE));
+   const safePage = Math.min(page, pageCount);
+   const pagedFindings = filteredFindings.slice(
+      (safePage - 1) * FINDINGS_PAGE_SIZE,
+      safePage * FINDINGS_PAGE_SIZE,
+   );
 
    const openCount = findings.filter((item) => item.status === "open").length;
    const progressCount = findings.filter(
@@ -206,16 +203,16 @@ export function PoFindingsPanel({ findings }: { findings: FindingRecord[] }) {
    }, [router]);
 
     // Scroll to highlighted finding from notification + trigger glow.
-    // Reset filter, expand pagination, and auto-expand the target card so the
+    // Reset filter + jump to the page containing the target card so the
     // element is guaranteed to be in the DOM before scrollIntoView.
     const [glowKey, setGlowKey] = useState(0);
     useEffect(() => {
        if (!highlightId) return;
-       if (!findings.some((f) => f.id === highlightId)) return;
+       const idx = findings.findIndex((f) => f.id === highlightId);
+       if (idx === -1) return;
        setSearch("");
        setStatusFilter("semua");
-       setVisibleCount(findings.length);
-       setExpanded((prev) => new Set(prev).add(highlightId));
+       setPage(Math.floor(idx / FINDINGS_PAGE_SIZE) + 1);
        setGlowKey((k) => k + 1);
        const timer = setTimeout(() => {
           const el = document.querySelector("[data-highlight-id]");
@@ -282,13 +279,13 @@ export function PoFindingsPanel({ findings }: { findings: FindingRecord[] }) {
                     <Input
                        placeholder="Cari temuan..."
                        value={search}
-                       onChange={(e) => {
-                          setSearch(e.target.value);
-                          setVisibleCount(FINDINGS_PAGE_SIZE);
-                       }}
+                        onChange={(e) => {
+                           setSearch(e.target.value);
+                           setPage(1);
+                        }}
                        className="h-8 w-full text-sm sm:w-56"
                     />
-                    <Select value={statusFilter} onValueChange={(v) => { setStatusFilter(v); setVisibleCount(FINDINGS_PAGE_SIZE); }}>
+                     <Select value={statusFilter} onValueChange={(v) => { setStatusFilter(v); setPage(1); }}>
                        <SelectTrigger className="h-8 w-full text-sm sm:w-32">
                           <SelectValue />
                        </SelectTrigger>
@@ -308,21 +305,13 @@ export function PoFindingsPanel({ findings }: { findings: FindingRecord[] }) {
                       </CardContent>
                    </Card>
                 ) : (
-                 visibleFindings.map((finding) => (
-                   <Card key={`${finding.id}-${glowKey}`} className={`border-base-300 ${highlightId === finding.id ? "highlight-from-notification" : ""}`} data-highlight-id={highlightId === finding.id ? "" : undefined}>
-                      <CardHeader
-                         className="cursor-pointer space-y-2 transition-colors hover:bg-base-200/40"
-                         onClick={() => toggleExpand(finding.id)}
-                         aria-expanded={expanded.has(finding.id)}
-                      >
-                         <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-                            <div className="pr-8">
-                                <CardTitle className="flex items-center gap-2 text-base">
+                  pagedFindings.map((finding) => (
+                    <Card key={`${finding.id}-${glowKey}`} className={`border-base-300 ${highlightId === finding.id ? "highlight-from-notification" : ""}`} data-highlight-id={highlightId === finding.id ? "" : undefined}>
+                       <CardHeader className="space-y-2">
+                          <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                             <div>
+                                <CardTitle className="text-base">
                                    {finding.judul}
-                                   <ChevronDown
-                                      className={`h-4 w-4 shrink-0 text-base-content/50 transition-transform ${expanded.has(finding.id) ? "rotate-180" : ""}`}
-                                      aria-hidden="true"
-                                   />
                                 </CardTitle>
                                <p className="text-sm text-base-content/70 mt-1">
                                   {finding.nomor_polisi} ·{" "}
@@ -343,9 +332,8 @@ export function PoFindingsPanel({ findings }: { findings: FindingRecord[] }) {
                             <StatusBadge category="severity" value={finding.severity} />
                             <StatusBadge category="finding" value={finding.status} />
                          </div>
-                      </CardHeader>
-                      {expanded.has(finding.id) && (
-                      <CardContent className="space-y-4">
+                       </CardHeader>
+                       <CardContent className="space-y-4">
 
                         <p className="text-sm text-base-content">
                            {finding.deskripsi}
@@ -445,25 +433,20 @@ export function PoFindingsPanel({ findings }: { findings: FindingRecord[] }) {
                                Temuan ini sudah ditutup oleh Staf IW.
                            </div>
                         )}
-                      </CardContent>
-                      )}
-                    </Card>
-                  ))
+                       </CardContent>
+                     </Card>
+                   ))
 
-                 )}
-                 {visibleCount < filteredFindings.length && (
-                    <div className="flex justify-center pt-2">
-                       <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => setVisibleCount((count) => count + FINDINGS_PAGE_SIZE)}
-                       >
-                          Tampilkan Lebih Banyak ({filteredFindings.length - visibleCount} lagi)
-                       </Button>
-                    </div>
-                 )}
-              </div>
-           )}
+                  )}
+                  <FindingsPagination
+                     page={safePage}
+                     pageCount={pageCount}
+                     total={filteredFindings.length}
+                     pageSize={FINDINGS_PAGE_SIZE}
+                     onPageChange={setPage}
+                  />
+               </div>
+            )}
       </div>
    );
 }

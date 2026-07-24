@@ -34,7 +34,7 @@ import {
    getDueDateBadge,
 } from "./findings-shared";
 import { HighlightText } from "./highlight-text";
-import { StafFindingDetailSheet } from "./staf-finding-detail-sheet";
+import { FindingsPagination } from "./findings-pagination";
 const StafFindingsStatusDialog = dynamic(() =>
    import("./staf-findings-status-dialog").then((m) => ({ default: m.StafFindingsStatusDialog })),
 );
@@ -78,7 +78,6 @@ export function StafFindingsPanel({
    const searchParams = useSearchParams();
    const highlightId = searchParams.get("highlight");
    const [editFinding, setEditFinding] = useState<FindingRecord | null>(null);
-   const [detailFinding, setDetailFinding] = useState<FindingRecord | null>(null);
    const [form, setForm] = useState({
       poId: prefill?.poId ?? poOptions[0]?.id ?? "",
       armadaId: prefill?.armadaId ?? armadaOptions[0]?.id ?? "",
@@ -115,18 +114,19 @@ export function StafFindingsPanel({
    const [periodeFilter, setPeriodeFilter] = useState("semua");
    const [sortKey, setSortKey] = useState<"created_at" | "severity" | "status" | null>(null);
    const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
-   const [visibleCount, setVisibleCount] = useState(FINDINGS_PAGE_SIZE);
+    const [page, setPage] = useState(1);
 
    const SEVERITY_ORDER: Record<string, number> = { low: 0, medium: 1, high: 2 };
 
-   const toggleSort = (key: "created_at" | "severity" | "status") => {
-      if (sortKey === key) {
-         setSortDir((d) => (d === "asc" ? "desc" : "asc"));
-      } else {
-         setSortKey(key);
-         setSortDir("desc");
-      }
-   };
+    const toggleSort = (key: "created_at" | "severity" | "status") => {
+       if (sortKey === key) {
+          setSortDir((d) => (d === "asc" ? "desc" : "asc"));
+       } else {
+          setSortKey(key);
+          setSortDir("desc");
+       }
+       setPage(1);
+    };
 
     const filteredFindings = (() => {
        let result = initialFindings;
@@ -166,20 +166,25 @@ export function StafFindingsPanel({
       return result;
    })();
 
-   const visibleFindings = filteredFindings.slice(0, visibleCount);
+   const pageCount = Math.max(1, Math.ceil(filteredFindings.length / FINDINGS_PAGE_SIZE));
+   const safePage = Math.min(page, pageCount);
+   const pagedFindings = filteredFindings.slice(
+      (safePage - 1) * FINDINGS_PAGE_SIZE,
+      safePage * FINDINGS_PAGE_SIZE,
+   );
 
     // Scroll to highlighted finding from notification + trigger glow.
-    // Reset filter & expand pagination first so the target row is guaranteed
-    // to be in the DOM; otherwise scrollIntoView silently fails when the row
-    // is filtered out or beyond the "show more" page.
+    // Reset filter + jump to the page containing the target row so
+    // scrollIntoView reliably finds it (it lives on a specific paginated page).
     const [glowKey, setGlowKey] = useState(0);
     useEffect(() => {
        if (!highlightId) return;
-       if (!initialFindings.some((f) => f.id === highlightId)) return;
+       const idx = initialFindings.findIndex((f) => f.id === highlightId);
+       if (idx === -1) return;
        setSearch("");
        setStatusFilter("semua");
        setPeriodeFilter("semua");
-       setVisibleCount(initialFindings.length);
+       setPage(Math.floor(idx / FINDINGS_PAGE_SIZE) + 1);
        setGlowKey((k) => k + 1);
        const timer = setTimeout(() => {
           const el = document.querySelector("[data-highlight-id]");
@@ -490,13 +495,13 @@ export function StafFindingsPanel({
                          ref={searchRef}
                          placeholder="Cari temuan... (tekan /)"
                          value={search}
-                         onChange={(e) => {
-                            setSearch(e.target.value);
-                            setVisibleCount(FINDINGS_PAGE_SIZE);
-                         }}
+                          onChange={(e) => {
+                             setSearch(e.target.value);
+                             setPage(1);
+                          }}
                          className="h-8 w-full text-sm sm:w-48"
                       />
-                       <Select value={statusFilter} onValueChange={(v) => { setStatusFilter(v); setVisibleCount(FINDINGS_PAGE_SIZE); }}>
+                        <Select value={statusFilter} onValueChange={(v) => { setStatusFilter(v); setPage(1); }}>
                           <SelectTrigger className="h-8 w-full text-sm sm:w-32">
                              <SelectValue />
                           </SelectTrigger>
@@ -508,7 +513,7 @@ export function StafFindingsPanel({
                           </SelectContent>
                        </Select>
                        {periodeOptions && periodeOptions.length > 0 && (
-                          <Select value={periodeFilter} onValueChange={(v) => { setPeriodeFilter(v); setVisibleCount(FINDINGS_PAGE_SIZE); }}>
+                           <Select value={periodeFilter} onValueChange={(v) => { setPeriodeFilter(v); setPage(1); }}>
                              <SelectTrigger className="h-8 w-full text-sm sm:w-40">
                                 <SelectValue />
                              </SelectTrigger>
@@ -661,12 +666,11 @@ export function StafFindingsPanel({
                               </TableCell>
                            </TableRow>
                         ) : (
-                           visibleFindings.map((finding) => (
+                            pagedFindings.map((finding) => (
                                 <TableRow
                                    key={`${finding.id}-${glowKey}`}
-                                   className={`cursor-pointer transition-colors hover:bg-base-200/50 ${highlightId === finding.id ? "highlight-from-notification" : ""}`}
+                                   className={highlightId === finding.id ? "highlight-from-notification" : ""}
                                    data-highlight-id={highlightId === finding.id ? "" : undefined}
-                                   onClick={() => setDetailFinding(finding)}
                                 >
                                  <TableCell className="whitespace-nowrap text-sm text-base-content/70">
                                     {formatDateTime(finding.created_at)}
@@ -714,22 +718,22 @@ export function StafFindingsPanel({
                                        {finding.resolution_note ?? "-"}
                                     </div>
                                  </TableCell>
-                                 <TableCell className="text-sm text-base-content/70" onClick={(e) => e.stopPropagation()}>
-                                     <Button
-                                        size="sm"
-                                        variant="ghost"
-                                        className="h-7 px-2"
-                                        onClick={() =>
-                                           setClarificationFinding(finding)
-                                        }
-                                     >
+                                  <TableCell className="text-sm text-base-content/70">
+                                      <Button
+                                         size="sm"
+                                         variant="ghost"
+                                         className="h-7 px-2"
+                                         onClick={() =>
+                                            setClarificationFinding(finding)
+                                         }
+                                      >
                                        <MessageSquare className="mr-1 h-3.5 w-3.5" aria-hidden="true" />
                                        {finding.finding_clarifications?.length ??
                                           0}
                                     </Button>
                                  </TableCell>
-                                 <TableCell onClick={(e) => e.stopPropagation()}>
-                                    <div className="flex flex-wrap gap-2">
+                                  <TableCell>
+                                     <div className="flex flex-wrap gap-2">
                                         {finding.status !== "closed" && (
                                            <Button
                                               size="sm"
@@ -798,14 +802,13 @@ export function StafFindingsPanel({
                          </CardContent>
                       </Card>
                    ) : (
-                       visibleFindings.map((finding) => (
-                          <Card
-                             key={`${finding.id}-${glowKey}`}
-                             className={`cursor-pointer transition-colors hover:bg-base-200/40 ${highlightId === finding.id ? "highlight-from-notification" : ""}`}
-                             data-highlight-id={highlightId === finding.id ? "" : undefined}
-                             onClick={() => setDetailFinding(finding)}
-                          >
-                             <CardContent className="space-y-2 py-3">
+                        pagedFindings.map((finding) => (
+                           <Card
+                              key={`${finding.id}-${glowKey}`}
+                              className={`border-base-300 ${highlightId === finding.id ? "highlight-from-notification" : ""}`}
+                              data-highlight-id={highlightId === finding.id ? "" : undefined}
+                           >
+                              <CardContent className="space-y-2 py-3">
                                <div className="flex items-center gap-2">
                                   <StatusBadge category="severity" value={finding.severity} />
                                   <StatusBadge category="finding" value={finding.status} />
@@ -823,7 +826,7 @@ export function StafFindingsPanel({
                                   <p className="text-xs text-base-content/70"><HighlightText text={`${finding.nomor_polisi} · ${finding.po?.nama_perusahaan ?? finding.po?.kode_po ?? "-"}`} query={deferredSearch} /></p>
                                </div>
                                <p className="text-xs text-base-content/60">{formatDateTime(finding.created_at)}</p>
-                                <div className="flex flex-wrap gap-2 pt-1" onClick={(e) => e.stopPropagation()}>
+                                <div className="flex flex-wrap gap-2 pt-1">
                                    <Button size="sm" variant="ghost" className="h-7 px-2" onClick={() => setClarificationFinding(finding)}>
                                      <MessageSquare className="mr-1 h-3.5 w-3.5" />
                                      {finding.finding_clarifications?.length ?? 0}
@@ -845,19 +848,15 @@ export function StafFindingsPanel({
                    )}
                 </div>
 
-                {visibleCount < filteredFindings.length && (
-                  <div className="flex justify-center pt-3">
-                     <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => setVisibleCount((c) => c + FINDINGS_PAGE_SIZE)}
-                     >
-                        Tampilkan Lebih Banyak ({filteredFindings.length - visibleCount} lagi)
-                     </Button>
-                  </div>
-               )}
-            </CardContent>
-         </Card>
+                 <FindingsPagination
+                    page={safePage}
+                    pageCount={pageCount}
+                    total={filteredFindings.length}
+                    pageSize={FINDINGS_PAGE_SIZE}
+                    onPageChange={setPage}
+                 />
+             </CardContent>
+          </Card>
 
          <StafFindingsStatusDialog
             open={!!statusDialog.finding}
@@ -876,22 +875,12 @@ export function StafFindingsPanel({
             onChanged={() => router.refresh()}
          />
 
-          <StafFindingsEditDialog
-             open={!!editFinding}
-             finding={editFinding}
-             onClose={() => setEditFinding(null)}
-             onChanged={() => router.refresh()}
-          />
-
-          <StafFindingDetailSheet
-             finding={detailFinding}
-             open={!!detailFinding}
-             onOpenChange={(o) => { if (!o) setDetailFinding(null); }}
-             onEdit={(f) => setEditFinding(f)}
-             onStatusChange={(f, target) => setStatusDialog({ finding: f, targetStatus: target })}
-             onReopen={(id) => reopenFinding(id)}
-             onClarify={(f) => setClarificationFinding(f)}
-          />
-       </div>
-    );
+           <StafFindingsEditDialog
+              open={!!editFinding}
+              finding={editFinding}
+              onClose={() => setEditFinding(null)}
+              onChanged={() => router.refresh()}
+           />
+        </div>
+     );
 }
