@@ -72,7 +72,9 @@ function Select({
     const el = document
       .getElementById(rootId)
       ?.querySelector<HTMLElement>("[data-slot='select-trigger']");
-    el?.focus();
+    // preventScroll: refocusing the trigger (e.g. after selecting an option)
+    // must never scroll the page or the #main-content scroll container.
+    el?.focus({ preventScroll: true });
   }, [rootId]);
 
   const onItemSelect = React.useCallback(
@@ -101,10 +103,13 @@ function Select({
 
   const focusActive = React.useCallback(() => {
     const items = itemsRef.current;
+    // preventScroll: option items live inside a position:fixed portal. A plain
+    // focus() makes the browser scroll the MAIN PAGE / #main-content instead
+    // of the dropdown listbox, which is exactly the "page jumps down" bug.
     if (items[activeIndex]) {
-      items[activeIndex].element.focus();
+      items[activeIndex].element.focus({ preventScroll: true });
     } else if (items[0]) {
-      items[0].element.focus();
+      items[0].element.focus({ preventScroll: true });
     }
   }, [activeIndex]);
 
@@ -118,7 +123,9 @@ function Select({
     );
     setActiveIndexState(idx);
     const id = window.requestAnimationFrame(() => {
-      items[idx]?.element.focus();
+      // preventScroll: focusing an option in the fixed-position portal must not
+      // scroll the page; the listbox has <=5 items so no internal scroll needed.
+      items[idx]?.element.focus({ preventScroll: true });
     });
     return () => window.cancelAnimationFrame(id);
   }, [open, current]);

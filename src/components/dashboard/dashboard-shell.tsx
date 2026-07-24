@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useLayoutEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { Sidebar } from "@/components/dashboard/sidebar";
 import { DashboardTopbar } from "@/components/dashboard/dashboard-topbar";
@@ -27,12 +28,29 @@ export function DashboardShell({
 }: DashboardShellProps) {
    const [collapsed, setCollapsed] = useState(false);
    const [mounted, setMounted] = useState(false);
+   const pathname = usePathname();
+   const mainRef = useRef<HTMLElement>(null);
 
    useEffect(() => {
       const stored = localStorage.getItem(COLLAPSE_KEY);
       setCollapsed(stored === "true");
       setMounted(true);
    }, []);
+
+   // Reset the scroll position of the main content container whenever the
+   // route changes (client-side navigation) AND on initial mount (hard
+   // refresh). The dashboard uses #main-content (overflow-auto) as its own
+   // scroll owner; without this, the previous route's scrollTop is carried
+   // over and the page appears scrolled-down on first visit to a route.
+   // Next.js only resets the window/document scroll, not this nested
+   // container. The ?highlight deep-link feature still works: it calls
+   // scrollIntoView() ~300ms later, which overrides this reset.
+   // useLayoutEffect (before paint) avoids a visible flash of the wrong
+   // scroll position.
+   useLayoutEffect(() => {
+      if (mainRef.current) mainRef.current.scrollTop = 0;
+      if (typeof window !== "undefined") window.scrollTo(0, 0);
+   }, [pathname]);
 
    const toggleCollapse = () => {
       const next = !collapsed;
@@ -95,11 +113,12 @@ export function DashboardShell({
                </div>
             </header>
 
-            {/* Main content */}
-            <main
+             {/* Main content */}
+             <main
+               ref={mainRef}
                id="main-content"
                className="flex-1 overflow-auto p-4 pb-20 sm:p-6 lg:p-8 lg:pb-8"
-            >
+             >
                <div className="mx-auto w-full max-w-[1500px]">{children}</div>
             </main>
          </div>

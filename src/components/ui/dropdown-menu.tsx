@@ -34,7 +34,10 @@ function focusMenuItem(menu: HTMLElement, dir: "next" | "prev" | "first" | "last
   if (dir === "next") idx = current === -1 ? 0 : (current + 1) % items.length;
   else if (dir === "prev") idx = current === -1 ? items.length - 1 : (current - 1 + items.length) % items.length;
   else if (dir === "last") idx = items.length - 1;
-  items[idx]?.focus();
+  // preventScroll: the menu is a position:fixed portal. A plain focus() makes
+  // the browser scroll the MAIN PAGE instead of the menu, reproducing the
+  // "page jumps down when opening/using the dropdown" bug.
+  items[idx]?.focus({ preventScroll: true });
 }
 
 function DropdownMenu({ children }: { children?: React.ReactNode }) {
@@ -46,7 +49,9 @@ function DropdownMenu({ children }: { children?: React.ReactNode }) {
       document
         .getElementById(rootId)
         ?.querySelector<HTMLElement>("[data-slot='dropdown-trigger']")
-        ?.focus();
+        // preventScroll: restoring focus to the trigger on close must not
+        // scroll the page or #main-content.
+        ?.focus({ preventScroll: true });
     });
   }, [rootId]);
   return (
