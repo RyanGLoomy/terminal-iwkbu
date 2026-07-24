@@ -34,6 +34,7 @@ import {
    getDueDateBadge,
 } from "./findings-shared";
 import { HighlightText } from "./highlight-text";
+import { StafFindingDetailSheet } from "./staf-finding-detail-sheet";
 const StafFindingsStatusDialog = dynamic(() =>
    import("./staf-findings-status-dialog").then((m) => ({ default: m.StafFindingsStatusDialog })),
 );
@@ -42,9 +43,6 @@ const StafFindingsClarificationDialog = dynamic(() =>
 );
 const StafFindingsEditDialog = dynamic(() =>
    import("./staf-findings-edit-dialog").then((m) => ({ default: m.StafFindingsEditDialog })),
-);
-const StafFindingDetailSheet = dynamic(() =>
-   import("./staf-finding-detail-sheet").then((m) => ({ default: m.StafFindingDetailSheet })),
 );
 
 type Option = { id: string; label: string };
