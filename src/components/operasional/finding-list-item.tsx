@@ -34,9 +34,11 @@ function latestSnippet(finding: FindingRecord): string | null {
 export function FindingListItem({
    finding,
    href,
+   highlight = false,
 }: {
    finding: FindingRecord;
    href: string;
+   highlight?: boolean;
 }) {
    const dueBadge = getDueDateBadge(finding.due_date, finding.status);
    const snippet = latestSnippet(finding);
@@ -44,7 +46,8 @@ export function FindingListItem({
    return (
       <Link
          href={href}
-         className="group flex items-start gap-3 rounded-xl border border-base-300 bg-base-100 p-3.5 transition-colors hover:bg-base-200/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+         data-highlight-id={highlight ? "" : undefined}
+         className={`group flex items-start gap-3 rounded-xl border border-base-300 bg-base-100 p-3.5 transition-colors hover:bg-base-200/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 ${highlight ? "highlight-from-notification" : ""}`}
       >
          <div className="min-w-0 flex-1 space-y-1.5">
             <div className="flex items-start justify-between gap-2">
