@@ -88,7 +88,7 @@ export async function PATCH(
                title: "Tindakan Diselesaikan",
                message: `Tindakan "${existing.action_text}" untuk temuan armada ${f.nomor_polisi} telah diselesaikan.`,
                type: "success",
-               link: `/po/temuan?highlight=${f.id}`,
+               link: `/po/temuan/${f.id}`,
             });
          }
       }

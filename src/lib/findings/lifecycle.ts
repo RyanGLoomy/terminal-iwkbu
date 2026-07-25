@@ -284,7 +284,7 @@ export async function submitClarification(params: {
             title: "PO Mengirim Klarifikasi",
             message: `PO merespon temuan "${finding.judul}" (${decision})`,
             type: "info",
-            link: `/staf-iw/temuan?highlight=${finding.id}`,
+            link: `/staf-iw/temuan/${finding.id}`,
          });
       }
    } else {
@@ -294,7 +294,7 @@ export async function submitClarification(params: {
             title: "Staf IW Mengirim Klarifikasi",
             message: `Staf IW merespon temuan "${finding.judul}" (${decision})`,
             type: "info",
-            link: `/po/temuan?highlight=${finding.id}`,
+            link: `/po/temuan/${finding.id}`,
          });
       }
    }
