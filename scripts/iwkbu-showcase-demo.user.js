@@ -18,11 +18,11 @@
    // CONFIG — TIMING TUNED FOR 12-13 MINUTE PRESENTATION
    // ════════════════════════════════════════════════════════════
 
-   const T_INTRO = 8000;     // 8s — baca penjelasan overlay
-   const T_VIEW = 18000;     // 18s — lihat halaman
+   const T_INTRO = 3000;     // 3s — banner singkat + highlight
+   const T_VIEW = 15000;     // 15s — lihat halaman
    const T_ACTION = 3000;    // 3s — setelah aksi (klik, input)
    const T_LOGIN = 6000;     // 6s — tunggu redirect login
-   const T_LOGOUT = 4000;    // 4s — logout transition
+   const T_LOGOUT = 3000;    // 3s — logout transition
 
    const ACCOUNTS = {
       po:     { email: "arimbi@iwkbu-banten.id",         password: "Banten2026!" },
@@ -85,6 +85,9 @@
       sessionStorage.setItem("demo_running", "1");
       if (url) {
          window.location.href = url;
+      } else {
+         // No navigation — trigger next step directly after brief pause
+         setTimeout(() => runStep(), 800);
       }
    }
 
@@ -102,57 +105,35 @@
    }
 
    // ════════════════════════════════════════════════════════════
-   // PRESENTATION OVERLAY — speaker notes on screen
+   // VISUAL CUE — minimal bottom banner + highlight only
    // ════════════════════════════════════════════════════════════
 
    function showPresentationOverlay(title, description, points, duration) {
       removeOverlay();
 
+      // Small minimal banner — just the title
       const overlay = document.createElement("div");
       overlay.id = "demo-presentation-overlay";
       overlay.style.cssText = [
-         "position:fixed", "top:0", "left:0", "right:0", "z-index:99998",
-         "background:linear-gradient(135deg, rgba(0,80,179,0.95), rgba(15,23,42,0.95))",
-         "color:white", "padding:20px 30px",
-         "font-family:'Plus Jakarta Sans',system-ui,sans-serif",
-         "box-shadow:0 4px 20px rgba(0,0,0,0.4)",
-         "animation:demo-slide-down 0.5s ease-out",
-         "border-bottom:3px solid #fbbf24",
+         "position:fixed", "bottom:16px", "left:50%", "transform:translateX(-50%)",
+         "background:rgba(0,80,179,0.92)", "color:white",
+         "padding:8px 24px", "border-radius:9999px",
+         "font-size:14px", "font-family:system-ui,sans-serif", "font-weight:600",
+         "z-index:99998", "box-shadow:0 4px 16px rgba(0,0,0,0.3)",
+         "backdrop-filter:blur(8px)", "pointer-events:none",
       ].join(";");
 
-      let pointsHtml = "";
-      if (points && points.length > 0) {
-         pointsHtml = '<ul style="margin:8px 0 0;padding-left:20px;font-size:14px;opacity:0.9;line-height:1.6;">' +
-            points.map((p) => `<li>${p}</li>`).join("") +
-            "</ul>";
-      }
+      overlay.textContent = title.replace(/[🚌📊🏛️⚡🔄📝🔍🔑✅👋]/gu, "").trim();
+      document.body.appendChild(overlay);
 
-      overlay.innerHTML = `
-         <div style="display:flex;align-items:start;gap:16px;">
-            <div style="font-size:28px;flex-shrink:0;">${getRoleIcon()}</div>
-            <div style="flex:1;">
-               <div style="font-size:18px;font-weight:700;letter-spacing:-0.02em;">${title}</div>
-               <div style="font-size:14px;opacity:0.85;margin-top:4px;">${description}</div>
-               ${pointsHtml}
-            </div>
-            <div style="font-size:12px;opacity:0.5;flex-shrink:0;margin-top:4px;">
-               <span id="demo-timer">${Math.round(duration / 1000)}s</span>
-            </div>
-         </div>
-      `;
-
-      // Add animation style if not exists
+      // Add highlight animation style if not exists
       if (!document.getElementById("demo-anim-style")) {
          const style = document.createElement("style");
          style.id = "demo-anim-style";
          style.textContent = `
-            @keyframes demo-slide-down {
-               from { transform: translateY(-100%); opacity: 0; }
-               to { transform: translateY(0); opacity: 1; }
-            }
             @keyframes demo-pulse-highlight {
-               0%, 100% { box-shadow: 0 0 0 4px rgba(251,191,36,0.8), 0 0 20px rgba(251,191,36,0.4); }
-               50% { box-shadow: 0 0 0 4px rgba(251,191,36,0.4), 0 0 30px rgba(251,191,36,0.6); }
+               0%, 100% { box-shadow: 0 0 0 4px rgba(251,191,36,0.9), 0 0 24px rgba(251,191,36,0.5); }
+               50% { box-shadow: 0 0 0 6px rgba(251,191,36,0.5), 0 0 36px rgba(251,191,36,0.7); }
             }
             .demo-highlight {
                animation: demo-pulse-highlight 1.5s ease-in-out infinite !important;
@@ -163,17 +144,6 @@
          `;
          document.head.appendChild(style);
       }
-
-      document.body.appendChild(overlay);
-
-      // Countdown timer
-      const timerEl = document.getElementById("demo-timer");
-      let remaining = Math.round(duration / 1000);
-      const interval = setInterval(() => {
-         remaining--;
-         if (timerEl) timerEl.textContent = `${remaining}s`;
-         if (remaining <= 0) clearInterval(interval);
-      }, 1000);
 
       // Auto-remove after duration
       setTimeout(() => removeOverlay(), duration);
@@ -305,22 +275,21 @@
    }
 
    async function showPage(stepId, nextStep, nextUrl, title, desc, points, highlightSelector, scroll) {
-      showPresentationOverlay(title, desc, points, T_INTRO);
-      await sleep(T_INTRO);
+      showPresentationOverlay(title, desc, points, T_INTRO + T_VIEW);
 
       if (highlightSelector) {
          await sleep(500);
-         highlightElement(highlightSelector, T_VIEW);
+         highlightElement(highlightSelector, T_INTRO + T_VIEW);
       }
 
       if (scroll) {
-         await sleep(2000);
+         await sleep(1500);
          window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
-         await sleep(3000);
-         window.scrollTo({ top: 0, behavior: "smooth" });
-         await sleep(1000);
-      } else {
          await sleep(T_VIEW);
+         window.scrollTo({ top: 0, behavior: "smooth" });
+         await sleep(500);
+      } else {
+         await sleep(T_INTRO + T_VIEW);
       }
 
       goNext(nextStep, nextUrl);
