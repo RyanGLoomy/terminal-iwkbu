@@ -265,27 +265,26 @@
          return;
       }
 
-      // Type-like animation for presentation effect
-      setNativeValue(emailInput, "");
-      await sleep(200);
+      // Type-like animation — use setNativeValue per char (React compatible)
+      let typed = "";
       for (const char of account.email) {
-         emailInput.value += char;
-         emailInput.dispatchEvent(new Event("input", { bubbles: true }));
+         typed += char;
+         setNativeValue(emailInput, typed);
          await sleep(30);
       }
       await sleep(300);
 
-      setNativeValue(passInput, "");
-      await sleep(200);
+      typed = "";
       for (const char of account.password) {
-         passInput.value += char;
-         passInput.dispatchEvent(new Event("input", { bubbles: true }));
+         typed += char;
+         setNativeValue(passInput, typed);
          await sleep(20);
       }
       await sleep(500);
 
-      clickByText("button", "Masuk");
+      // Set next step BEFORE clicking (page will redirect after click)
       goNext(nextStep, null);
+      clickByText("button", "Masuk");
       await sleep(T_LOGIN + 2000);
    }
 
