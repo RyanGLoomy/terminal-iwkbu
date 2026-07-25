@@ -50,3 +50,18 @@ export async function getPoFindings(poId: string, limit = 100) {
    if (error) throw error;
    return (data ?? []) as unknown as FindingRecord[];
 }
+
+/**
+ * Ambil satu finding beserta relasinya (klarifikasi, tindak lanjut, po, armada).
+ * RLS berlaku: Staf IW bisa membaca semua, PO hanya miliknya. Untuk gate
+ * eksplisit di sisi PO, caller dapat menambahkan filter poId (opsional).
+ * Mengembalikan null bila tidak ada / tidak berhak.
+ */
+export async function getFindingById(id: string, poId?: string) {
+   const supabase = await createClient();
+   let query = supabase.from("findings").select(FINDING_SELECT).eq("id", id);
+   if (poId) query = query.eq("po_id", poId);
+   const { data, error } = await query.maybeSingle();
+   if (error) throw error;
+   return (data ?? null) as unknown as FindingRecord | null;
+}
