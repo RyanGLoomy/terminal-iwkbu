@@ -202,6 +202,29 @@ export async function executeIwkbuSync(params: {
       findingsCreated = persistResults.filter((r) => r === "created").length;
       findingsUpdated = persistResults.filter((r) => r === "updated").length;
 
+      // Auto-close findings untuk armada yang sekarang "ready" (tidak bermasalah lagi).
+      // Engine hanya buat/update finding untuk armada bermasalah — tapi tidak pernah
+      // bersihkan finding lama saat armada sudah compliant. Tanpa ini, finding stale
+      // menumpuk di halaman temuan.
+      const readyArmadaIds = reconRows
+         .filter((r) => r.reconciliation_status === "ready")
+         .map((r) => r.armada_id);
+      let findingsAutoClosed = 0;
+      if (readyArmadaIds.length > 0) {
+         const { data: closedData, error: closeError } = await admin
+            .from("findings")
+            .update({ status: "closed", updated_at: nowIso })
+            .in("armada_id", readyArmadaIds)
+            .eq("source_type", "rekonsiliasi")
+            .eq("status", "open")
+            .select("id");
+         if (closeError) {
+            persistErrors.push(`auto-close: ${closeError.message}`);
+         } else {
+            findingsAutoClosed = closedData?.length ?? 0;
+         }
+      }
+
       const summary = {
          total_armada: reconRows.length,
          with_iwkbu_data: reconRows.filter(
@@ -215,6 +238,7 @@ export async function executeIwkbuSync(params: {
             .length,
           findings_created: findingsCreated,
           findings_updated: findingsUpdated,
+          findings_auto_closed: findingsAutoClosed,
           degraded: params.degraded === true,
           partial_failure: persistErrors.length > 0,
           persist_errors: persistErrors.slice(0, 20),
