@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, memo } from "react";
+import { useState, memo, Fragment } from "react";
 import { useRouter } from "next/navigation";
 import {
    Table,
@@ -51,8 +51,9 @@ export const VerifikasiArmadaTable = memo(
        const [error, setError] = useState<string | null>(null);
        const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
        const [bulkLoading, setBulkLoading] = useState(false);
-       const [dokumenArmada, setDokumenArmada] = useState<Armada | null>(null);
-       const [visibleCount, setVisibleCount] = useState(15);
+      const [dokumenArmada, setDokumenArmada] = useState<Armada | null>(null);
+      const [visibleCount, setVisibleCount] = useState(15);
+      const [expandedId, setExpandedId] = useState<string | null>(null);
        const router = useRouter();
 
       const handleVerifikasi = async () => {
@@ -207,8 +208,9 @@ export const VerifikasiArmadaTable = memo(
                      </TableRow>
                   </TableHeader>
                   <TableBody>
-                     {data.slice(0, visibleCount).map((armada) => (
-                         <TableRow key={armada.id}>
+                      {data.slice(0, visibleCount).map((armada) => (
+                        <Fragment key={armada.id}>
+                          <TableRow className="cursor-pointer hover:bg-base-200/50" onClick={() => setExpandedId((prev) => prev === armada.id ? null : armada.id)}>
                             {showActions && (
                                <TableCell className="w-10">
                                   <input
@@ -290,20 +292,37 @@ export const VerifikasiArmadaTable = memo(
                                      Tolak
                                   </Button>
                                </TableCell>
-                            ) : (
-                               <TableCell className="text-right">
-                                  <Button
-                                     size="sm"
-                                     variant="ghost"
-                                     onClick={() => setDokumenArmada(armada)}
-                                  >
-                                     <FolderOpen className="h-4 w-4" aria-hidden="true" />
-                                  </Button>
-                                </TableCell>
-                             )}
-                         </TableRow>
-                      ))}
-                   </TableBody>
+                             ) : (
+                                <TableCell className="text-right">
+                                   <Button
+                                      size="sm"
+                                      variant="ghost"
+                                      onClick={() => setDokumenArmada(armada)}
+                                   >
+                                      <FolderOpen className="h-4 w-4" aria-hidden="true" />
+                                   </Button>
+                                 </TableCell>
+                              )}
+                          </TableRow>
+                         {expandedId === armada.id && (
+                           <TableRow key={`${armada.id}-detail`} className="bg-base-200/30">
+                             <TableCell colSpan={showActions ? 8 : 7} className="py-3">
+                               <div className="grid grid-cols-2 gap-x-6 gap-y-1.5 text-sm sm:grid-cols-3 lg:grid-cols-4">
+                                 <div><span className="text-base-content/50">No. Lambung:</span> <span className="font-medium">{armada.nomor_lambung || "-"}</span></div>
+                                 <div><span className="text-base-content/50">No. Chassis:</span> <span className="font-medium">{armada.nomor_chassis || "-"}</span></div>
+                                 <div><span className="text-base-content/50">No. Mesin:</span> <span className="font-medium">{armada.nomor_mesin || "-"}</span></div>
+                                 <div><span className="text-base-content/50">Tahun:</span> <span className="font-medium">{armada.tahun_pembuatan || "-"}</span></div>
+                                 <div><span className="text-base-content/50">Kapasitas:</span> <span className="font-medium">{armada.kapasitas_penumpang ? `${armada.kapasitas_penumpang} penumpang` : "-"}</span></div>
+                                 <div><span className="text-base-content/50">Merk:</span> <span className="font-medium">{armada.merk || "-"}</span></div>
+                                 <div><span className="text-base-content/50">Tipe:</span> <span className="font-medium">{armada.tipe || "-"}</span></div>
+                                 <div><span className="text-base-content/50">Status Ops:</span> <span className="font-medium">{armada.status_operasional}</span></div>
+                               </div>
+                             </TableCell>
+                           </TableRow>
+                          )}
+                        </Fragment>
+                       ))}
+                    </TableBody>
                 </Table>
              </div>
 

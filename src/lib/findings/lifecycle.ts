@@ -74,7 +74,7 @@ export const ALLOWED_EVIDENCE_MIME = [
    "image/png",
    "image/webp",
 ];
-export const MAX_EVIDENCE_FILE_SIZE = 5 * 1024 * 1024;
+export const MAX_EVIDENCE_FILE_SIZE = 4 * 1024 * 1024;
 
 // Link bukti hanya boleh http/https — blok stored-XSS via `javascript:` (APP-02).
 export function isSafeEvidenceUrl(raw: string): boolean {

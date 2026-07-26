@@ -14,7 +14,9 @@ import {
    SelectTrigger,
    SelectValue,
 } from "@/components/ui/select";
-import { getErrorMessage } from "@/lib/db-error";
+
+const MAX_FILE_SIZE_MB = 4;
+const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
 
 export function PoClarificationForm({ findingId }: { findingId: string }) {
    const router = useRouter();
@@ -24,6 +26,16 @@ export function PoClarificationForm({ findingId }: { findingId: string }) {
    const [evidenceFile, setEvidenceFile] = useState<File | null>(null);
    const [loading, setLoading] = useState(false);
    const [error, setError] = useState<string | null>(null);
+
+   const handleFileChange = (file: File | null) => {
+      if (file && file.size > MAX_FILE_SIZE_BYTES) {
+         setError(`Ukuran file maksimal ${MAX_FILE_SIZE_MB} MB. File Anda: ${(file.size / 1024 / 1024).toFixed(1)} MB`);
+         setEvidenceFile(null);
+         return;
+      }
+      setError(null);
+      setEvidenceFile(file);
+   };
 
    const submit = async () => {
       setLoading(true);
@@ -44,7 +56,16 @@ export function PoClarificationForm({ findingId }: { findingId: string }) {
             },
          );
 
-         const payload = await response.json();
+         let payload: { message?: string } = {};
+         try {
+            payload = await response.json();
+         } catch {
+            if (response.status === 413) {
+               throw new Error(`Ukuran file terlalu besar. Maksimal ${MAX_FILE_SIZE_MB} MB.`);
+            }
+            throw new Error("Gagal mengirim klarifikasi. Coba lagi.");
+         }
+
          if (!response.ok) {
             throw new Error(payload.message ?? "Gagal mengirim klarifikasi");
          }
@@ -55,7 +76,7 @@ export function PoClarificationForm({ findingId }: { findingId: string }) {
          toast.success("Klarifikasi berhasil dikirim");
          router.refresh();
       } catch (err: unknown) {
-         setError(getErrorMessage(err));
+         setError(err instanceof Error ? err.message : "Gagal mengirim klarifikasi");
       } finally {
          setLoading(false);
       }
@@ -88,12 +109,12 @@ export function PoClarificationForm({ findingId }: { findingId: string }) {
          <div className="flex items-center gap-2">
             <label className="inline-flex items-center gap-2 rounded-md bg-base-200 px-3 py-1 text-xs font-medium text-base-content hover:bg-base-300/70 cursor-pointer">
                <Paperclip className="h-3.5 w-3.5" aria-hidden="true" />
-               Pilih file
+               Pilih file (maks {MAX_FILE_SIZE_MB} MB)
                <input
                   type="file"
                   accept=".pdf,.jpg,.jpeg,.png,.webp"
                   aria-label="Unggah bukti klarifikasi"
-                  onChange={(e) => setEvidenceFile(e.target.files?.[0] ?? null)}
+                  onChange={(e) => handleFileChange(e.target.files?.[0] ?? null)}
                   className="sr-only"
                />
             </label>

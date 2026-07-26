@@ -49,6 +49,7 @@ yarn-error.log*
 /.claude
 /.cursor
 /.envrc
+/.agents
 /.opencode.backup-*
 /opencode.json.backup-*
 
@@ -65,3 +66,7 @@ yarn-error.log*
 next-env.d.ts
 skripsi/
 *.Zone.Identifier
+
+# tampermonkey presentation scripts (may contain test credentials)
+*.user.js
+scripts/README-presentasi.md
