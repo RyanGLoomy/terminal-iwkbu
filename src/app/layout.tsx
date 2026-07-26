@@ -6,6 +6,7 @@ import { Toaster } from "sonner";
 import SentryInit from "@/components/sentry-init";
 import { SWRegister } from "@/components/sw-register";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 const jakartaSans = Plus_Jakarta_Sans({
@@ -73,6 +74,7 @@ export default async function RootLayout({
                 <SentryInit />
                 <SWRegister />
                 <SpeedInsights />
+                <Analytics />
                 {children}
                 <Toaster richColors closeButton position="top-center" />
              </ThemeProvider>
