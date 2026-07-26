@@ -26,7 +26,7 @@ const FINDING_SELECT = `
    finding_actions(id, finding_id, action_text, status, done_at, done_by, created_by, created_at)
 `;
 
-export async function getStaffFindings(limit = 100) {
+export async function getStaffFindings(limit = 5000) {
    const supabase = await createClient();
    const { data, error } = await supabase
       .from("findings")
@@ -38,7 +38,7 @@ export async function getStaffFindings(limit = 100) {
    return (data ?? []) as unknown as FindingRecord[];
 }
 
-export async function getPoFindings(poId: string, limit = 100) {
+export async function getPoFindings(poId: string, limit = 5000) {
    const supabase = await createClient();
    const { data, error } = await supabase
       .from("findings")
