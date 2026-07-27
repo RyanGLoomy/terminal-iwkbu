@@ -31,7 +31,7 @@ export function NotificationBell() {
    const [open, setOpen] = useState(false);
    const dropdownRef = useRef<HTMLDivElement>(null);
    const bellWrapRef = useRef<HTMLSpanElement>(null);
-   const bellRef = useRef<any>(null);
+   const bellLottieRef = useRef<any>(null);
    const router = useRouter();
 
    const loadNotifications = async () => {
@@ -114,6 +114,17 @@ export function NotificationBell() {
    }, [loadNotifications]);
 
    useEffect(() => {
+      const anim = bellLottieRef.current;
+      if (!anim) return;
+      if (unreadCount > 0) {
+         anim.play();
+      } else {
+         anim.stop();
+         anim.goToAndStop(0, true);
+      }
+   }, [unreadCount]);
+
+   useEffect(() => {
       function handleClickOutside(e: MouseEvent) {
          if (
             dropdownRef.current &&
@@ -186,9 +197,10 @@ export function NotificationBell() {
             >
                    <span className="inline-flex items-center justify-center dark:hue-[-172deg] dark:brightness-[1.4]">
                       <Lottie
+                         lottieRef={bellLottieRef}
                          animationData={notificationBellLottie}
-                         loop={true}
-                         autoplay={true}
+                         loop={unreadCount > 0}
+                         autoplay={unreadCount > 0}
                          style={{ width: 22, height: 22 }}
                       />
                    </span>
