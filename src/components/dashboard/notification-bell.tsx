@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { CheckCheck, Check } from "lucide-react";
 import { EmptyState } from "@/components/shared/empty-state";
 import inboxEmptyLottie from "@/lib/lottie/inbox-empty.json";
-import notificationBellLottie from "@/lib/lottie/notification-bell.json";
+import checkCircleLottie from "@/lib/lottie/check-circle.json";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { PushToggle } from "@/components/dashboard/push-toggle";
@@ -188,7 +188,7 @@ export function NotificationBell() {
             >
                    <span className="inline-flex items-center justify-center dark:hue-[-172deg] dark:brightness-[1.4]">
                       <Lottie
-                         animationData={notificationBellLottie}
+                         animationData={checkCircleLottie}
                          loop={true}
                          autoplay={true}
                          style={{ width: 22, height: 22 }}
