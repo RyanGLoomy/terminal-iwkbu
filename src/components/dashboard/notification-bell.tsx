@@ -13,7 +13,7 @@ import { useRouter } from "next/navigation";
 import { PushToggle } from "@/components/dashboard/push-toggle";
 import dynamic from "next/dynamic";
 
-const Lottie = dynamic(() => import("lottie-react").then(m => m.default), { ssr: false });
+const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 
 interface Notification {
    id: string;
@@ -186,13 +186,14 @@ export function NotificationBell() {
                aria-expanded={open}
                onClick={() => setOpen((v) => !v)}
             >
-                   <Lottie
-                      animationData={notificationBellLottie}
-                      loop={true}
-                      autoplay={true}
-                      style={{ width: 22, height: 22 }}
-                      className={`${unreadCount > 0 ? "text-primary" : "text-base-content/70"} dark:hue-[-172deg] dark:brightness-[1.4]`}
-                   />
+                   <span className="inline-flex items-center justify-center dark:hue-[-172deg] dark:brightness-[1.4]">
+                      <Lottie
+                         animationData={notificationBellLottie}
+                         loop={true}
+                         autoplay={true}
+                         style={{ width: 22, height: 22 }}
+                      />
+                   </span>
                {unreadCount > 0 && (
                   <span
                      className="absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-error px-1 text-[10px] font-bold text-error-content"
