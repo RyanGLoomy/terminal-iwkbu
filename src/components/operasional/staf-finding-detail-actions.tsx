@@ -10,7 +10,7 @@ import type {
    FindingRecord,
    FindingStatus,
 } from "@/lib/supabase/queries/operasional.types";
-import { Pencil, MessageSquare, RefreshCw } from "lucide-react";
+import { IconPencil, IconMessage, IconRefresh } from "@tabler/icons-react";
 
 const StafFindingsStatusDialog = dynamic(() =>
    import("./staf-findings-status-dialog").then((m) => ({ default: m.StafFindingsStatusDialog })),
@@ -60,14 +60,14 @@ export function StafFindingDetailActions({ finding }: { finding: FindingRecord }
             variant="ghost"
             onClick={() => setClarificationFinding(finding)}
          >
-            <MessageSquare className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" />
+            <IconMessage className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" />
             Kelola Klarifikasi
          </Button>
          <div className="flex-1" />
          {!closed && (
             <>
                <Button size="sm" variant="ghost" onClick={() => setEditFinding(finding)}>
-                  <Pencil className="h-3.5 w-3.5" aria-hidden="true" />
+                  <IconPencil className="h-3.5 w-3.5" aria-hidden="true" />
                   Edit
                </Button>
                <Button
@@ -87,7 +87,7 @@ export function StafFindingDetailActions({ finding }: { finding: FindingRecord }
          )}
          {closed && (
             <Button size="sm" variant="outline" onClick={() => reopenFinding(finding.id)}>
-               <RefreshCw className="h-3.5 w-3.5" aria-hidden="true" />
+               <IconRefresh className="h-3.5 w-3.5" aria-hidden="true" />
                Buka Ulang
             </Button>
          )}

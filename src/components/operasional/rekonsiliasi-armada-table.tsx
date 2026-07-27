@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ChevronRight, ChevronDown, Download } from "lucide-react";
+import { IconChevronRight, IconChevronDown, IconDownload } from "@tabler/icons-react";
 import type { Armada } from "@/lib/supabase/queries/verification.types";
 
 const verifikasiColor: Record<string, string> = {
@@ -139,7 +139,7 @@ export function RekonsiliasiArmadaTable({
                tidak patuh
             </span>
             <Button variant="outline" size="sm" className="ml-auto h-7 text-xs" onClick={handleExportCSV}>
-               <Download className="size-3.5 mr-1" />
+               <IconDownload className="size-3.5 mr-1" />
                CSV
             </Button>
          </div>
@@ -173,9 +173,9 @@ export function RekonsiliasiArmadaTable({
                                  onClick={() => toggleExpand(a.id)}
                               >
                                  {isExpanded ? (
-                                    <ChevronDown className="h-4 w-4" />
+                                    <IconChevronDown className="h-4 w-4" />
                                  ) : (
-                                    <ChevronRight className="h-4 w-4" />
+                                    <IconChevronRight className="h-4 w-4" />
                                  )}
                               </Button>
                            </TableCell>

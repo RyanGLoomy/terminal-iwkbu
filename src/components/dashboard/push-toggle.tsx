@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState, useCallback } from "react";
-import { Bell, BellOff, Loader2 } from "lucide-react";
+import { IconBell, IconBellOff, IconLoader2 } from "@tabler/icons-react";
 import { isPushAvailable, subscribeToPush, unsubscribeFromPush, isPushSubscribed } from "@/lib/push/push.client";
 import { toast } from "sonner";
 
@@ -48,11 +48,11 @@ export function PushToggle() {
          className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium text-base-content/70 transition-colors hover:bg-base-200/50 disabled:opacity-50"
       >
          {loading ? (
-            <Loader2 className="size-4 animate-spin" />
+            <IconLoader2 className="size-4 animate-spin" />
          ) : subscribed ? (
-            <Bell className="size-4 text-success" />
+            <IconBell className="size-4 text-success" />
          ) : (
-            <BellOff className="size-4 text-base-content/40" />
+            <IconBellOff className="size-4 text-base-content/40" />
          )}
          {subscribed ? "Notifikasi Push Aktif" : "Aktifkan Notifikasi Push"}
       </button>

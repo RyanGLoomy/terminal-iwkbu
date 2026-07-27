@@ -24,8 +24,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { verifikasiArmada } from "@/lib/supabase/queries/verification.client";
 import type { Armada } from "@/lib/supabase/queries/verification.types";
 import { toast } from "sonner";
-import { AlertCircle, CheckCircle, XCircle, Bus, FolderOpen } from "lucide-react";
+import { IconAlertCircle, IconCircleCheck, IconCircleX, IconBus, IconFolderOpen } from "@tabler/icons-react";
 import { EmptyState } from "@/components/shared/empty-state";
+import busLottie from "@/lib/lottie/bus.json";
 import dynamic from "next/dynamic";
 
 const ArmadaDokumenDialog = dynamic(() =>
@@ -115,11 +116,11 @@ export const VerifikasiArmadaTable = memo(
             <div className="space-y-3">
                {error && (
                   <div className="flex items-start gap-2 rounded-md border border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950/50 px-3 py-2 text-sm text-error">
-                     <AlertCircle className="mt-0.5 h-4 w-4" aria-hidden="true" />
+                     <IconAlertCircle className="mt-0.5 h-4 w-4" aria-hidden="true" />
                      <span>{error}</span>
                   </div>
                )}
-               <EmptyState title="Tidak ada data armada" icon={Bus} />
+               <EmptyState title="Tidak ada data armada" lottieAnimation={busLottie} />
             </div>
          );
       }
@@ -128,7 +129,7 @@ export const VerifikasiArmadaTable = memo(
          <>
              {error && (
                 <div className="mb-3 flex items-start gap-2 rounded-md border border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950/50 px-3 py-2 text-sm text-error">
-                   <AlertCircle className="mt-0.5 h-4 w-4" aria-hidden="true" />
+                   <IconAlertCircle className="mt-0.5 h-4 w-4" aria-hidden="true" />
                    <span>{error}</span>
                 </div>
              )}
@@ -144,7 +145,7 @@ export const VerifikasiArmadaTable = memo(
                       disabled={bulkLoading}
                       onClick={() => handleBulkVerifikasi("terverifikasi")}
                    >
-                      <CheckCircle className="h-4 w-4 mr-1" aria-hidden="true" />
+                      <IconCircleCheck className="h-4 w-4 mr-1" aria-hidden="true" />
                       Verifikasi Semua
                    </Button>
                    <Button
@@ -154,7 +155,7 @@ export const VerifikasiArmadaTable = memo(
                       disabled={bulkLoading}
                       onClick={() => handleBulkVerifikasi("ditolak")}
                    >
-                      <XCircle className="h-4 w-4 mr-1" aria-hidden="true" />
+                      <IconCircleX className="h-4 w-4 mr-1" aria-hidden="true" />
                       Tolak Semua
                    </Button>
                    <Button
@@ -263,7 +264,7 @@ export const VerifikasiArmadaTable = memo(
                                      variant="ghost"
                                      onClick={() => setDokumenArmada(armada)}
                                   >
-                                     <FolderOpen className="h-4 w-4" aria-hidden="true" />
+                                     <IconFolderOpen className="h-4 w-4" aria-hidden="true" />
                                   </Button>
                                   <Button
                                      size="sm"
@@ -275,7 +276,7 @@ export const VerifikasiArmadaTable = memo(
                                        setAction("terverifikasi");
                                     }}
                                  >
-                                    <CheckCircle className="h-4 w-4 mr-1" aria-hidden="true" />
+                                    <IconCircleCheck className="h-4 w-4 mr-1" aria-hidden="true" />
                                     Terima
                                  </Button>
                                  <Button
@@ -288,7 +289,7 @@ export const VerifikasiArmadaTable = memo(
                                        setAction("ditolak");
                                     }}
                                  >
-                                    <XCircle className="h-4 w-4 mr-1" aria-hidden="true" />
+                                    <IconCircleX className="h-4 w-4 mr-1" aria-hidden="true" />
                                      Tolak
                                   </Button>
                                </TableCell>
@@ -299,7 +300,7 @@ export const VerifikasiArmadaTable = memo(
                                       variant="ghost"
                                       onClick={() => setDokumenArmada(armada)}
                                    >
-                                      <FolderOpen className="h-4 w-4" aria-hidden="true" />
+                                      <IconFolderOpen className="h-4 w-4" aria-hidden="true" />
                                    </Button>
                                  </TableCell>
                               )}

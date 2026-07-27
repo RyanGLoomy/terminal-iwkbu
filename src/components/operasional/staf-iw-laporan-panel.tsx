@@ -14,6 +14,7 @@ import shieldCheckLottie from "@/lib/lottie/shield-check.json";
 import checkCircleLottie from "@/lib/lottie/check-circle.json";
 import alertTriangleLottie from "@/lib/lottie/alert-triangle.json";
 import usersLottie from "@/lib/lottie/users.json";
+import fileTextLottie from "@/lib/lottie/file-text.json";
 import {
    Table,
    TableBody,
@@ -24,7 +25,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { EmptyState } from "@/components/shared/empty-state";
-import { Download, FileSpreadsheet, ShieldCheck, ClipboardList, CheckCircle2, AlertTriangle } from "lucide-react";
+import { IconDownload, IconFileSpreadsheet, IconShieldCheck, IconClipboardList, IconCircleCheck, IconAlertTriangle } from "@tabler/icons-react";
 import { toast } from "sonner";
 import { exportXlsx } from "@/lib/export/xlsx.client";
 import type { FindingRecord, FindingStatus } from "@/lib/supabase/queries/operasional.types";
@@ -194,7 +195,7 @@ export function StafIwLaporanPanel({
             <CardHeader className="pb-4">
                <CardTitle className="flex flex-wrap items-center justify-between gap-3 text-base">
                   <span className="flex items-center gap-2">
-                     <FileSpreadsheet className="size-4 text-primary" aria-hidden="true" />
+                     <IconFileSpreadsheet className="size-4 text-primary" aria-hidden="true" />
                      Laporan Temuan & Ekspor
                   </span>
                    <div className="flex gap-2">
@@ -204,7 +205,7 @@ export function StafIwLaporanPanel({
                          onClick={handleExportFindings}
                          disabled={exporting || findings.length === 0}
                       >
-                         <Download className="size-4" aria-hidden="true" />
+                         <IconDownload className="size-4" aria-hidden="true" />
                          XLSX
                       </Button>
                       <Button
@@ -213,7 +214,7 @@ export function StafIwLaporanPanel({
                          onClick={handleExportCsv}
                          disabled={findings.length === 0}
                       >
-                         <Download className="size-4" aria-hidden="true" />
+                         <IconDownload className="size-4" aria-hidden="true" />
                          CSV
                       </Button>
                    </div>
@@ -221,11 +222,11 @@ export function StafIwLaporanPanel({
             </CardHeader>
             <CardContent>
                {findings.length === 0 ? (
-                  <EmptyState
-                     title="Belum ada temuan tercatat"
-                     icon={ClipboardList}
-                     className="border-0 py-6"
-                  />
+<EmptyState
+                      title="Belum ada temuan tercatat"
+                      lottieAnimation={fileTextLottie}
+                      className="border-0 py-6"
+                   />
                ) : (
                   <Table caption="Daftar temuan rekonsiliasi kepatuhan">
                      <TableHeader>

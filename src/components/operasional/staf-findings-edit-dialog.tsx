@@ -21,7 +21,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import type { FindingRecord } from "@/lib/supabase/queries/operasional.types";
 import { toast } from "sonner";
-import { AlertCircle, Loader2 } from "lucide-react";
+import { IconAlertCircle, IconLoader2 } from "@tabler/icons-react";
 import { getErrorMessage } from "@/lib/db-error";
 
 export function StafFindingsEditDialog({
@@ -180,7 +180,7 @@ export function StafFindingsEditDialog({
                   role="alert"
                   aria-live="polite"
                >
-                  <AlertCircle className="mt-0.5 h-4 w-4" aria-hidden="true" />
+                  <IconAlertCircle className="mt-0.5 h-4 w-4" aria-hidden="true" />
                   <span>{error}</span>
                </div>
             )}
@@ -191,7 +191,7 @@ export function StafFindingsEditDialog({
                </Button>
                <Button onClick={submit} disabled={editSaving}>
                   {editSaving ? (
-                     <Loader2
+                     <IconLoader2
                         className="mr-2 h-4 w-4 animate-spin"
                         aria-hidden="true"
                      />

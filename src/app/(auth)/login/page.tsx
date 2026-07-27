@@ -1,6 +1,6 @@
 import { LoginForm } from "@/components/auth/login-form";
 import Image from "next/image";
-import { MapPin, ShieldCheck, Bus, FileCheck2, TrendingUp } from "lucide-react";
+import { IconMapPin, IconShieldCheck, IconBus, IconFileCheck, IconTrendingUp } from "@tabler/icons-react";
 import { LoginHeroLottie } from "@/components/auth/login-hero-lottie";
 
 export default function LoginPage() {
@@ -64,7 +64,7 @@ export default function LoginPage() {
                   khusus wilayah Provinsi Banten.
                </p>
                <div className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1.5 backdrop-blur-sm">
-                  <MapPin className="size-3.5 text-white/70" aria-hidden="true" />
+                  <IconMapPin className="size-3.5 text-white/70" aria-hidden="true" />
                   <span className="text-xs font-semibold text-white/80">
                      Kanwil Banten
                   </span>
@@ -79,10 +79,10 @@ export default function LoginPage() {
             {/* Bottom: Feature highlights */}
             <div className="relative z-10 grid grid-cols-1 gap-3">
                {[
-                  { icon: ShieldCheck, label: "Verifikasi & Validasi Terjamin" },
-                  { icon: Bus, label: "Manajemen Armada Real-Time" },
-                  { icon: FileCheck2, label: "Rekonsiliasi Otomatis" },
-                  { icon: TrendingUp, label: "Analitik & Laporan Terpadu" },
+                  { icon: IconShieldCheck, label: "Verifikasi & Validasi Terjamin" },
+                  { icon: IconBus, label: "Manajemen Armada Real-Time" },
+                  { icon: IconFileCheck, label: "Rekonsiliasi Otomatis" },
+                  { icon: IconTrendingUp, label: "Analitik & Laporan Terpadu" },
                ].map((f) => (
                   <div key={f.label} className="flex items-center gap-3">
                      <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-white/10 backdrop-blur-sm">

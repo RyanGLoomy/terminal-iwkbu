@@ -32,7 +32,7 @@ import {
    SelectValue,
 } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, LogIn, LogOut, Bus } from "lucide-react";
+import { IconLoader2, IconLogin, IconLogout, IconBus } from "@tabler/icons-react";
 import { getErrorMessage } from "@/lib/db-error";
 
 export function PencatatanPanel() {
@@ -305,9 +305,9 @@ export function PencatatanPanel() {
                      disabled={!!session || actionLoading}
                   >
                      {actionLoading && !session ? (
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
+                        <IconLoader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
                      ) : (
-                        <LogIn className="mr-2 h-4 w-4" aria-hidden="true" />
+                        <IconLogin className="mr-2 h-4 w-4" aria-hidden="true" />
                      )}
                      Buka Sesi
                   </Button>
@@ -317,9 +317,9 @@ export function PencatatanPanel() {
                      disabled={!session || actionLoading}
                   >
                      {actionLoading && session ? (
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        <IconLoader2 className="mr-2 h-4 w-4 animate-spin" />
                      ) : (
-                        <LogOut className="mr-2 h-4 w-4" />
+                        <IconLogout className="mr-2 h-4 w-4" />
                      )}
                      Tutup Sesi
                   </Button>
@@ -372,7 +372,7 @@ export function PencatatanPanel() {
             <Card className="card-interactive border-base-300">
                <CardHeader className="pb-4">
                   <CardTitle className="text-base flex items-center gap-2">
-                     <LogIn className="h-4 w-4 text-primary" aria-hidden="true" />
+                     <IconLogin className="h-4 w-4 text-primary" aria-hidden="true" />
                      Pencatatan Kendaraan Masuk
                   </CardTitle>
                </CardHeader>
@@ -412,7 +412,7 @@ export function PencatatanPanel() {
                         />
                         {detectedInfo && (
                            <div className="flex items-center gap-2 rounded-md border border-emerald-200 bg-emerald-50 dark:border-green-800 dark:bg-green-950/50 px-3 py-1.5 text-xs text-brand-green">
-                              <Bus className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                              <IconBus className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                               <span>
                                  {detectedInfo.merk} {detectedInfo.tipe} —{" "}
                                  <strong>{detectedInfo.po_nama}</strong>
@@ -421,7 +421,7 @@ export function PencatatanPanel() {
                         )}
                         {detecting && (
                            <p className="text-xs text-base-content/70 flex items-center gap-1">
-                              <Loader2 className="h-3 w-3 animate-spin" aria-hidden="true" />
+                              <IconLoader2 className="h-3 w-3 animate-spin" aria-hidden="true" />
                               Mencari kendaraan…
                            </p>
                         )}
@@ -455,7 +455,7 @@ export function PencatatanPanel() {
                         className="w-full sm:w-auto"
                      >
                         {actionLoading && (
-                           <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
+                           <IconLoader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
                         )}
                         Simpan Kendaraan Masuk
                      </Button>
@@ -466,7 +466,7 @@ export function PencatatanPanel() {
             <Card className="card-interactive border-base-300">
                <CardHeader className="pb-4">
                   <CardTitle className="text-base flex items-center gap-2">
-                     <LogOut className="h-4 w-4 text-violet-500" aria-hidden="true" />
+                     <IconLogout className="h-4 w-4 text-violet-500" aria-hidden="true" />
                      Pencatatan Kendaraan Keluar
                   </CardTitle>
                </CardHeader>
@@ -510,7 +510,7 @@ export function PencatatanPanel() {
                         className="w-full sm:w-auto"
                      >
                         {actionLoading && (
-                           <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
+                           <IconLoader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
                         )}
                         Simpan Kendaraan Keluar
                      </Button>
@@ -521,7 +521,7 @@ export function PencatatanPanel() {
 
          {loading && (
             <div className="flex items-center gap-2 text-sm text-base-content/70 animate-fade-in">
-               <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+               <IconLoader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
                Memuat data…
             </div>
          )}

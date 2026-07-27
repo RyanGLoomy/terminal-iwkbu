@@ -27,7 +27,8 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { EmptyState } from "@/components/shared/empty-state";
-import { ShieldCheck, UserPlus, KeyRound, Power, Copy, Check } from "lucide-react";
+import { IconShieldCheck, IconUserPlus, IconKey, IconPower, IconCopy, IconCheck } from "@tabler/icons-react";
+import shieldCheckLottie from "@/lib/lottie/shield-check.json";
 import { toast } from "sonner";
 import {
    listAdminTerminalAccounts,
@@ -166,7 +167,7 @@ export function AdminTerminalAccountsPanel({
          <Card>
              <CardHeader className="pb-4">
                 <CardTitle className="flex items-center gap-2 text-base">
-                   <UserPlus className="size-4 text-primary" aria-hidden="true" />
+                   <IconUserPlus className="size-4 text-primary" aria-hidden="true" />
                    Tambah Akun Admin Terminal / Staf IW
                 </CardTitle>
             </CardHeader>
@@ -275,9 +276,9 @@ export function AdminTerminalAccountsPanel({
                               onClick={copyCreds}
                            >
                               {copied ? (
-                                 <Check className="size-4" aria-hidden="true" />
+                                 <IconCheck className="size-4" aria-hidden="true" />
                               ) : (
-                                 <Copy className="size-4" aria-hidden="true" />
+                                 <IconCopy className="size-4" aria-hidden="true" />
                               )}
                               Salin
                            </Button>
@@ -300,7 +301,7 @@ export function AdminTerminalAccountsPanel({
          <Card>
             <CardHeader className="pb-4">
                <CardTitle className="flex items-center gap-2 text-base">
-                  <ShieldCheck className="size-4 text-primary" aria-hidden="true" />
+                  <IconShieldCheck className="size-4 text-primary" aria-hidden="true" />
                   Daftar Akun Admin Terminal &amp; Staf IW
                </CardTitle>
             </CardHeader>
@@ -310,11 +311,11 @@ export function AdminTerminalAccountsPanel({
                      Memuat data…
                   </p>
                ) : accounts.length === 0 ? (
-                  <EmptyState
-                     title="Belum ada akun admin terminal"
-                     icon={ShieldCheck}
-                     className="border-0 py-6"
-                  />
+<EmptyState
+                      title="Belum ada akun admin terminal"
+                      lottieAnimation={shieldCheckLottie}
+                      className="border-0 py-6"
+                   />
                ) : (
                   <Table caption="Daftar akun admin terminal">
                      <TableHeader>
@@ -373,7 +374,7 @@ export function AdminTerminalAccountsPanel({
                                        onClick={() => handleResetPassword(acc)}
                                        disabled={busyId === acc.id}
                                     >
-                                       <KeyRound className="size-4" />
+                                       <IconKey className="size-4" />
                                     </Button>
                                     <Button
                                        variant="ghost"
@@ -387,7 +388,7 @@ export function AdminTerminalAccountsPanel({
                                        onClick={() => toggleActive(acc)}
                                        disabled={busyId === acc.id}
                                     >
-                                       <Power className="size-4" />
+                                       <IconPower className="size-4" />
                                     </Button>
                                  </div>
                               </TableCell>

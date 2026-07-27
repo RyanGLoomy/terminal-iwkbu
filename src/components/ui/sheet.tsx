@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { X } from "lucide-react";
+import { IconX } from "@tabler/icons-react";
 
 import { cn } from "@/lib/utils";
 import { Slot } from "@/lib/slot";
@@ -161,7 +161,7 @@ function SheetContent({
           className="btn btn-circle btn-ghost btn-sm absolute right-3 top-3"
           aria-label="Tutup"
         >
-          <X className="size-4" aria-hidden="true" />
+          <IconX className="size-4" aria-hidden="true" />
         </button>
       </div>
     </div>

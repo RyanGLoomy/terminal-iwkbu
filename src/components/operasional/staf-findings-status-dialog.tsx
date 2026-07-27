@@ -16,7 +16,7 @@ import type {
    FindingStatus,
 } from "@/lib/supabase/queries/operasional.types";
 import { toast } from "sonner";
-import { AlertCircle } from "lucide-react";
+import { IconAlertCircle } from "@tabler/icons-react";
 import { getErrorMessage } from "@/lib/db-error";
 
 export function StafFindingsStatusDialog({
@@ -122,7 +122,7 @@ export function StafFindingsStatusDialog({
                   role="alert"
                   aria-live="polite"
                >
-                  <AlertCircle className="mt-0.5 h-4 w-4" aria-hidden="true" />
+                  <IconAlertCircle className="mt-0.5 h-4 w-4" aria-hidden="true" />
                   <span>{error}</span>
                </div>
             )}

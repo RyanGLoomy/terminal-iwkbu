@@ -31,7 +31,7 @@ import type {
    ActivityLog,
    AksiLog,
 } from "@/lib/supabase/queries/operasional.types";
-import { Download, Loader2, Printer, Search } from "lucide-react";
+import { IconDownload, IconLoader2, IconPrinter, IconSearch } from "@tabler/icons-react";
 import { getErrorMessage } from "@/lib/db-error";
 
 const ACTION_OPTIONS: Array<{ value: AksiLog | "SEMUA"; label: string }> = [
@@ -409,7 +409,7 @@ export function AuditTrailPanel() {
                </div>
                 <div className="flex flex-wrap items-center gap-2">
                    <div className="relative w-full sm:w-[220px]">
-                      <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-base-content/70" aria-hidden="true" />
+                      <IconSearch className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-base-content/70" aria-hidden="true" />
                       <input
                          type="search"
                          aria-label="Cari audit trail"
@@ -449,7 +449,7 @@ export function AuditTrailPanel() {
                      onClick={() => exportCsv(rows)}
                      disabled={rows.length === 0}
                   >
-                     <Download className="mr-2 h-4 w-4" aria-hidden="true" />
+                     <IconDownload className="mr-2 h-4 w-4" aria-hidden="true" />
                      CSV
                   </Button>
                   <Button
@@ -458,7 +458,7 @@ export function AuditTrailPanel() {
                      onClick={() => window.print()}
                      disabled={rows.length === 0}
                   >
-                     <Printer className="mr-2 h-4 w-4" aria-hidden="true" />
+                     <IconPrinter className="mr-2 h-4 w-4" aria-hidden="true" />
                      Cetak
                   </Button>
                </div>
@@ -544,7 +544,7 @@ export function AuditTrailPanel() {
                      >
                         {loadingMore ? (
                            <>
-                              <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
+                              <IconLoader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
                               Memuat…
                            </>
                         ) : (

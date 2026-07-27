@@ -10,7 +10,7 @@ import {
    DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Upload, FileText, Trash2, Eye, Paperclip } from "lucide-react";
+import { IconUpload, IconFileText, IconTrash, IconEye, IconPaperclip } from "@tabler/icons-react";
 import { toast } from "sonner";
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import type { Armada, ArmadaDokumen } from "@/lib/supabase/queries/verification.types";
@@ -45,7 +45,7 @@ export function ArmadaDokumenDialog({
 }: ArmadaDokumenDialogProps) {
    const [dokumen, setDokumen] = useState<ArmadaDokumen[]>([]);
    const [loading, setLoading] = useState(false);
-   const [uploading, setUploading] = useState<string | null>(null);
+   const [uploading, setIconUploading] = useState<string | null>(null);
    const [deleteTarget, setDeleteTarget] = useState<ArmadaDokumen | null>(null);
    const fileInputRefs = useRef<Record<string, HTMLInputElement | null>>({});
 
@@ -66,7 +66,7 @@ export function ArmadaDokumenDialog({
       }
    }
 
-   async function handleUpload(jenis: string) {
+   async function handleIconUpload(jenis: string) {
       const input = fileInputRefs.current[jenis];
       if (!input?.files?.[0] || !armada) return;
 
@@ -76,7 +76,7 @@ export function ArmadaDokumenDialog({
          return;
       }
 
-      setUploading(jenis);
+      setIconUploading(jenis);
       try {
          await uploadArmadaDokumen(
             armada.id,
@@ -89,7 +89,7 @@ export function ArmadaDokumenDialog({
       } catch (error: unknown) {
          toast.error(getErrorMessage(error));
       } finally {
-         setUploading(null);
+         setIconUploading(null);
          input.value = "";
       }
    }
@@ -121,7 +121,7 @@ export function ArmadaDokumenDialog({
          <DialogContent className="max-w-lg">
             <DialogHeader>
                <DialogTitle className="flex items-center gap-2">
-                  <Paperclip className="h-4 w-4" aria-hidden="true" />
+                  <IconPaperclip className="h-4 w-4" aria-hidden="true" />
                   Dokumen Armada
                </DialogTitle>
                <DialogDescription>
@@ -148,7 +148,7 @@ export function ArmadaDokumenDialog({
                                type="file"
                                accept=".pdf,.jpg,.jpeg,.png,.webp"
                                className="hidden"
-                               onChange={() => handleUpload(jenis.value)}
+                               onChange={() => handleIconUpload(jenis.value)}
                             />
                             )}
                             {!readOnly && (
@@ -164,8 +164,8 @@ export function ArmadaDokumenDialog({
                                  "Mengunggah…"
                               ) : (
                                  <>
-                                    <Upload className="h-3.5 w-3.5 mr-1" aria-hidden="true" />
-                                    Upload
+                                    <IconUpload className="h-3.5 w-3.5 mr-1" aria-hidden="true" />
+                                    IconUpload
                                  </>
                               )}
                             </Button>
@@ -179,7 +179,7 @@ export function ArmadaDokumenDialog({
                                     className="flex items-center justify-between gap-2 rounded-lg border border-base-300 px-3 py-2"
                                  >
                                     <div className="flex items-center gap-2 min-w-0">
-                                       <FileText className="h-4 w-4 text-base-content/70 shrink-0" aria-hidden="true" />
+                                       <IconFileText className="h-4 w-4 text-base-content/70 shrink-0" aria-hidden="true" />
                                        <div className="min-w-0">
                                           <p className="text-sm truncate">
                                              {dok.file_name}
@@ -199,7 +199,7 @@ export function ArmadaDokumenDialog({
                                           variant="ghost"
                                           onClick={() => handleView(dok)}
                                        >
-                                          <Eye className="h-3.5 w-3.5" />
+                                          <IconEye className="h-3.5 w-3.5" />
                                         </Button>
                                         {!readOnly && (
                                          <Button
@@ -207,7 +207,7 @@ export function ArmadaDokumenDialog({
                                             variant="ghost"
                                             onClick={() => setDeleteTarget(dok)}
                                          >
-                                           <Trash2 className="h-3.5 w-3.5" />
+                                           <IconTrash className="h-3.5 w-3.5" />
                                         </Button>
                                         )}
                                      </div>

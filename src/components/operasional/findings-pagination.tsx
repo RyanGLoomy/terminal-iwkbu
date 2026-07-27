@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
+import { IconChevronLeft, IconChevronRight, IconChevronsLeft, IconChevronsRight } from "@tabler/icons-react";
 
 interface FindingsPaginationProps {
    page: number;
@@ -56,7 +56,7 @@ export function FindingsPagination({
                   disabled={page === 1}
                   aria-label="Halaman pertama"
                >
-                  <ChevronsLeft className="h-4 w-4" aria-hidden="true" />
+                  <IconChevronsLeft className="h-4 w-4" aria-hidden="true" />
                </Button>
                <Button
                   variant="outline"
@@ -66,7 +66,7 @@ export function FindingsPagination({
                   disabled={page === 1}
                   aria-label="Halaman sebelumnya"
                >
-                  <ChevronLeft className="h-4 w-4" aria-hidden="true" />
+                  <IconChevronLeft className="h-4 w-4" aria-hidden="true" />
                </Button>
                {pageItems.map((item, idx) =>
                   item === "..." ? (
@@ -98,7 +98,7 @@ export function FindingsPagination({
                   disabled={page === pageCount}
                   aria-label="Halaman berikutnya"
                >
-                  <ChevronRight className="h-4 w-4" aria-hidden="true" />
+                  <IconChevronRight className="h-4 w-4" aria-hidden="true" />
                </Button>
                <Button
                   variant="outline"
@@ -108,7 +108,7 @@ export function FindingsPagination({
                   disabled={page === pageCount}
                   aria-label="Halaman terakhir"
                >
-                  <ChevronsRight className="h-4 w-4" aria-hidden="true" />
+                  <IconChevronsRight className="h-4 w-4" aria-hidden="true" />
                </Button>
             </div>
          )}

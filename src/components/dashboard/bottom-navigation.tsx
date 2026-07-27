@@ -4,19 +4,20 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import {
-   Activity,
-   ClipboardList,
-   FileText,
-   LayoutDashboard,
-   MoreHorizontal,
-   RefreshCw,
-   Search,
-   Settings,
-   Shield,
-   Users,
-   CalendarClock,
-   type LucideIcon,
-} from "lucide-react";
+   IconActivity,
+   IconCalendarClock,
+   IconClipboardList,
+   IconDots,
+   IconFileText,
+   IconLayoutDashboard,
+   IconRefresh,
+   IconSearch,
+   IconSettings,
+   IconShield,
+   IconUsers,
+} from "@tabler/icons-react";
+import type { FC, SVGProps } from "react";
+type IconComponent = FC<SVGProps<SVGSVGElement> & { size?: string | number }>;
 import { cn } from "@/lib/utils";
 import { ROLES, DEFAULT_ROUTES, ROLE_DISPLAY_NAMES, type RoleType } from "@/config/roles";
 import {
@@ -28,17 +29,17 @@ import {
 } from "@/components/ui/sheet";
 import { bottomNavItems } from "@/components/dashboard/sidebar";
 
-const iconMap: Record<string, LucideIcon> = {
-   LayoutDashboard,
-   ClipboardList,
-   RefreshCw,
-   FileText,
-   Users,
-   Search,
-   Shield,
-   Activity,
-   CalendarClock,
-   Settings,
+const iconMap: Record<string, IconComponent> = {
+   LayoutDashboard: IconLayoutDashboard,
+   ClipboardList: IconClipboardList,
+   RefreshCw: IconRefresh,
+   FileText: IconFileText,
+   Users: IconUsers,
+   Search: IconSearch,
+   Shield: IconShield,
+   Activity: IconActivity,
+   CalendarClock: IconCalendarClock,
+   Settings: IconSettings,
 };
 
 interface BottomNavigationProps {
@@ -74,7 +75,7 @@ export function BottomNavigation({ userRole }: BottomNavigationProps) {
             aria-label="Navigasi utama"
          >
             {primaryItems.map((item) => {
-                const Icon = iconMap[item.icon] || LayoutDashboard;
+                 const Icon = iconMap[item.icon] || IconLayoutDashboard;
                 const active = isActive(item.href);
                 return (
                    <Link
@@ -117,7 +118,7 @@ export function BottomNavigation({ userRole }: BottomNavigationProps) {
                                : "text-base-content/70 hover:text-base-content",
                          )}
                       >
-                         <MoreHorizontal className="size-5" aria-hidden="true" />
+                         <IconDots className="size-5" aria-hidden="true" />
                          <span className="text-[10px] font-medium leading-none">
                             Lainnya
                          </span>
@@ -129,7 +130,7 @@ export function BottomNavigation({ userRole }: BottomNavigationProps) {
                       </SheetHeader>
                       <div className="grid grid-cols-3 gap-3 px-4 pb-8 pt-4">
                          {moreItems.map((item) => {
-                            const Icon = iconMap[item.icon] || LayoutDashboard;
+                            const Icon = iconMap[item.icon] || IconLayoutDashboard;
                             const active = isActive(item.href);
                             return (
                                <Link

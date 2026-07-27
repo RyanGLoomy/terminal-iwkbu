@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { createPortal } from "react-dom";
-import { Check, ChevronRight, Circle } from "lucide-react";
+import { IconCheck, IconChevronRight, IconCircle } from "@tabler/icons-react";
 
 import { cn } from "@/lib/utils";
 import { Slot } from "@/lib/slot";
@@ -333,7 +333,7 @@ function DropdownMenuCheckboxItem({
   return (
     <DropdownMenuItem className={cn("pl-8", className)} {...props}>
       <span className="absolute left-2 flex size-3.5 items-center justify-center">
-        {checked && <Check className="size-4" />}
+        {checked && <IconCheck className="size-4" />}
       </span>
       {children}
     </DropdownMenuItem>
@@ -348,7 +348,7 @@ function DropdownMenuRadioItem({
   return (
     <DropdownMenuItem className={cn("pl-8", className)} {...props}>
       <span className="absolute left-2 flex size-3.5 items-center justify-center">
-        <Circle className="size-2 fill-current" />
+        <IconCircle className="size-2 fill-current" />
       </span>
       {children}
     </DropdownMenuItem>

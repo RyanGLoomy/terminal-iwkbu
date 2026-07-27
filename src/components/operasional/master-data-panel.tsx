@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { toast } from "sonner";
-import { AlertCircle, Pencil, Plus, RefreshCw, Save, Trash2 } from "lucide-react";
+import { IconAlertCircle, IconPencil, IconPlus, IconRefresh, IconDeviceFloppy, IconTrash } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -295,7 +295,7 @@ export function MasterDataPanel({ initialTerminals, initialJenisKendaraan, initi
                       </CardDescription>
                   </div>
                   <Button variant="outline" size="sm" onClick={reloadTerminals} disabled={loading}>
-                     <RefreshCw className="h-4 w-4" aria-hidden="true" />
+                     <IconRefresh className="h-4 w-4" aria-hidden="true" />
                      Refresh
                   </Button>
                </div>
@@ -303,7 +303,7 @@ export function MasterDataPanel({ initialTerminals, initialJenisKendaraan, initi
             <CardContent className="space-y-4">
                {error && (
                   <div className="flex items-start gap-2 rounded-xl border border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950/50 px-3 py-2 text-sm text-error">
-                     <AlertCircle className="mt-0.5 h-4 w-4" aria-hidden="true" />
+                     <IconAlertCircle className="mt-0.5 h-4 w-4" aria-hidden="true" />
                      <span>{error}</span>
                   </div>
                )}
@@ -333,7 +333,7 @@ export function MasterDataPanel({ initialTerminals, initialJenisKendaraan, initi
                    </label>
                    <div className="flex items-end gap-2">
                       <Button onClick={saveTerminal} disabled={saving}>
-                         {isEditing ? <Pencil className="h-4 w-4" aria-hidden="true" /> : <Plus className="h-4 w-4" aria-hidden="true" />}
+                         {isEditing ? <IconPencil className="h-4 w-4" aria-hidden="true" /> : <IconPlus className="h-4 w-4" aria-hidden="true" />}
                          {saving ? "Menyimpan…" : isEditing ? "Simpan" : "Tambah"}
                       </Button>
                       {isEditing && (
@@ -369,7 +369,7 @@ export function MasterDataPanel({ initialTerminals, initialJenisKendaraan, initi
                                   <div className="flex flex-wrap gap-2">
                                      {canCreateDelete && (
                                         <Button variant="outline" size="sm" onClick={() => editTerminal(terminal)}>
-                                           <Pencil className="h-4 w-4" aria-hidden="true" />
+                                           <IconPencil className="h-4 w-4" aria-hidden="true" />
                                            Edit
                                         </Button>
                                      )}
@@ -380,7 +380,7 @@ export function MasterDataPanel({ initialTerminals, initialJenisKendaraan, initi
                                            onClick={() => deleteTerminal(terminal)}
                                            disabled={loading}
                                         >
-                                           <Trash2 className="h-4 w-4" aria-hidden="true" />
+                                           <IconTrash className="h-4 w-4" aria-hidden="true" />
                                            Hapus
                                         </Button>
                                      )}
@@ -449,9 +449,9 @@ export function MasterDataPanel({ initialTerminals, initialJenisKendaraan, initi
                            disabled={jenisSaving}
                         >
                            {isJenisEditing ? (
-                              <Pencil className="h-4 w-4" aria-hidden="true" />
+                              <IconPencil className="h-4 w-4" aria-hidden="true" />
                            ) : (
-                              <Plus className="h-4 w-4" aria-hidden="true" />
+                              <IconPlus className="h-4 w-4" aria-hidden="true" />
                            )}
                            {jenisSaving ? "..." : isJenisEditing ? "Simpan" : "Tambah"}
                         </Button>
@@ -505,14 +505,14 @@ export function MasterDataPanel({ initialTerminals, initialJenisKendaraan, initi
                                           size="sm"
                                           onClick={() => editJenis(item)}
                                        >
-                                          <Pencil className="h-4 w-4" />
+                                          <IconPencil className="h-4 w-4" />
                                        </Button>
                                        <Button
                                           variant="destructive"
                                           size="sm"
                                           onClick={() => deleteJenis(item)}
                                        >
-                                          <Trash2 className="h-4 w-4" />
+                                          <IconTrash className="h-4 w-4" />
                                        </Button>
                                     </div>
                                  </TableCell>
@@ -541,7 +541,7 @@ export function MasterDataPanel({ initialTerminals, initialJenisKendaraan, initi
                         onClick={saveSettings}
                         disabled={settingsSaving || Object.keys(settingsDraft).length === 0}
                      >
-                        <Save className="h-4 w-4" aria-hidden="true" />
+                        <IconDeviceFloppy className="h-4 w-4" aria-hidden="true" />
                         {settingsSaving ? "Menyimpan…" : "Simpan"}
                      </Button>
                   </div>

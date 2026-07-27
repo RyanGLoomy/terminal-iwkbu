@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { getAuthenticatedActor } from "@/lib/auth/server-actor";
 import { POArmadaManager } from "@/components/verification/po-armada-manager";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { AlertCircle } from "lucide-react";
+import { IconAlertCircle } from "@tabler/icons-react";
 import { DashboardCard } from "@/components/dashboard/dashboard-card";
 import { getPoIwkbuStatus } from "@/lib/supabase/queries/iwkbu-sync.server";
 import { PoComplianceChartClient } from "@/components/dashboard/po-compliance-chart-client";
@@ -30,7 +30,7 @@ export default async function PODashboard() {
                Dashboard PO
             </h1>
             <Alert variant="destructive">
-               <AlertCircle className="h-4 w-4" aria-hidden="true" />
+               <IconAlertCircle className="h-4 w-4" aria-hidden="true" />
                <AlertDescription>
                   <strong>Data PO tidak ditemukan</strong>
                   <br />
@@ -48,7 +48,7 @@ export default async function PODashboard() {
                Dashboard PO
             </h1>
             <Alert className="bg-accent/10 border-accent/30">
-               <AlertCircle className="h-4 w-4 text-accent" aria-hidden="true" />
+               <IconAlertCircle className="h-4 w-4 text-accent" aria-hidden="true" />
                <AlertDescription className="text-accent-foreground">
                   <strong>Menunggu Verifikasi</strong>
                   <br />
@@ -68,7 +68,7 @@ export default async function PODashboard() {
                Dashboard PO
             </h1>
             <Alert variant="destructive">
-               <AlertCircle className="h-4 w-4" aria-hidden="true" />
+               <IconAlertCircle className="h-4 w-4" aria-hidden="true" />
             <AlertDescription>
                    <strong>Registrasi Ditolak</strong>
                    <br />

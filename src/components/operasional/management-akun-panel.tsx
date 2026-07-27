@@ -30,14 +30,14 @@ import {
    TableRow,
 } from "@/components/ui/table";
 import {
-   Loader2,
-   Monitor,
-   UserPlus,
-   RefreshCw,
-   Power,
-   Pencil,
-   KeyRound,
-} from "lucide-react";
+   IconLoader2,
+   IconDeviceDesktop,
+   IconUserPlus,
+   IconRefresh,
+   IconPower,
+   IconPencil,
+   IconKey,
+} from "@tabler/icons-react";
 
 type DeviceRow = {
    id: string;
@@ -335,11 +335,11 @@ export function ManagementAkunPanel({
       <Tabs defaultValue="petugas" className="space-y-4">
          <TabsList>
             <TabsTrigger value="petugas" className="gap-1.5">
-               <UserPlus className="h-3.5 w-3.5" aria-hidden="true" />
+               <IconUserPlus className="h-3.5 w-3.5" aria-hidden="true" />
                Data Petugas
             </TabsTrigger>
             <TabsTrigger value="loket" className="gap-1.5">
-               <Monitor className="h-3.5 w-3.5" aria-hidden="true" />
+               <IconDeviceDesktop className="h-3.5 w-3.5" aria-hidden="true" />
                Akun Loket
             </TabsTrigger>
          </TabsList>
@@ -349,7 +349,7 @@ export function ManagementAkunPanel({
             <Card className="max-w-2xl border-base-300">
                <CardHeader className="pb-4">
                   <CardTitle className="text-base flex items-center gap-2">
-                     <UserPlus className="h-4 w-4 text-primary" aria-hidden="true" />
+                     <IconUserPlus className="h-4 w-4 text-primary" aria-hidden="true" />
                      {ptEditId ? "Edit Petugas" : "Tambah Petugas Baru"}
                   </CardTitle>
                </CardHeader>
@@ -419,7 +419,7 @@ export function ManagementAkunPanel({
                      <Button onClick={handleSavePetugas} disabled={ptSaving}>
                         {ptSaving ? (
                            <>
-                              <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
+                              <IconLoader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
                               Menyimpan…
                            </>
                         ) : ptEditId ? (
@@ -448,7 +448,7 @@ export function ManagementAkunPanel({
                         disabled={ptLoading}
                         className="h-8 gap-1.5 text-xs"
                      >
-                        <RefreshCw
+                        <IconRefresh
                            className={`h-3.5 w-3.5 ${ptLoading ? "animate-spin" : ""}`}
                          aria-hidden="true" />
                         Refresh
@@ -509,7 +509,7 @@ export function ManagementAkunPanel({
                                              aria-label="Edit petugas"
                                              onClick={() => handleEdit(row)}
                                           >
-                                             <Pencil className="h-3.5 w-3.5" />
+                                             <IconPencil className="h-3.5 w-3.5" />
                                           </Button>
                                           <Button
                                              variant="ghost"
@@ -532,7 +532,7 @@ export function ManagementAkunPanel({
                                                 )
                                              }
                                           >
-                                             <Power className="h-3.5 w-3.5" />
+                                             <IconPower className="h-3.5 w-3.5" />
                                           </Button>
                                        </div>
                                     </TableCell>
@@ -551,7 +551,7 @@ export function ManagementAkunPanel({
             <Card className="max-w-2xl border-base-300">
                <CardHeader className="pb-4">
                   <CardTitle className="text-base flex items-center gap-2">
-                     <Monitor className="h-4 w-4 text-primary" aria-hidden="true" />
+                     <IconDeviceDesktop className="h-4 w-4 text-primary" aria-hidden="true" />
                      Buat Akun Loket
                   </CardTitle>
                </CardHeader>
@@ -629,7 +629,7 @@ export function ManagementAkunPanel({
                   <Button onClick={handleCreateDevice} disabled={devSaving}>
                      {devSaving ? (
                         <>
-                           <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
+                           <IconLoader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
                            Membuat…
                         </>
                      ) : (
@@ -646,7 +646,7 @@ export function ManagementAkunPanel({
                <CardContent>
                   {devLoading ? (
                      <div className="flex items-center gap-2 text-sm text-base-content/70">
-                        <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+                        <IconLoader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
                         Memuat data…
                      </div>
                   ) : devices.length === 0 ? (
@@ -710,9 +710,9 @@ export function ManagementAkunPanel({
                                               disabled={devActionId === row.id}
                                            >
                                               {devActionId === row.id ? (
-                                                 <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                                                 <IconLoader2 className="h-3.5 w-3.5 animate-spin" />
                                               ) : (
-                                                 <KeyRound className="h-3.5 w-3.5" />
+                                                 <IconKey className="h-3.5 w-3.5" />
                                               )}
                                            </Button>
                                            <Button
@@ -734,7 +734,7 @@ export function ManagementAkunPanel({
                                               }
                                               disabled={devActionId === row.id}
                                            >
-                                              <Power className="h-3.5 w-3.5" />
+                                              <IconPower className="h-3.5 w-3.5" />
                                            </Button>
                                         </div>
                                      </TableCell>

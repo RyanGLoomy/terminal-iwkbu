@@ -11,16 +11,17 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import {
-   Pencil,
-   Power,
-   Paperclip,
-   Trash2,
-   ArrowUp,
-   ArrowDown,
-   ArrowUpDown,
-} from "lucide-react";
+   IconPencil,
+   IconPower,
+   IconPaperclip,
+   IconTrash,
+   IconArrowUp,
+   IconArrowDown,
+   IconArrowsUpDown,
+} from "@tabler/icons-react";
 import type { Armada } from "@/lib/supabase/queries/verification.types";
 import { EmptyState } from "@/components/shared/empty-state";
+import busLottie from "@/lib/lottie/bus.json";
 
 type SortKey =
    | "nomor_polisi"
@@ -99,11 +100,11 @@ export function ArmadaTable({
 
    const SortIcon = ({ col }: { col: SortKey }) => {
       if (sortKey !== col)
-         return <ArrowUpDown className="h-3 w-3 opacity-30" />;
+         return <IconArrowsUpDown className="h-3 w-3 opacity-30" />;
       return sortDir === "asc" ? (
-         <ArrowUp className="h-3 w-3" />
+         <IconArrowUp className="h-3 w-3" />
       ) : (
-         <ArrowDown className="h-3 w-3" />
+         <IconArrowDown className="h-3 w-3" />
       );
    };
 
@@ -141,10 +142,11 @@ export function ArmadaTable({
 
      if (data.length === 0) {
          return (
-            <EmptyState
-               title="Tidak ada armada"
-               description="Belum ada armada terdaftar. Klik 'Tambah Armada' atau 'Import CSV' di atas untuk menambahkan kendaraan."
-            />
+<EmptyState
+                title="Tidak ada armada"
+                description="Belum ada armada terdaftar. Klik 'Tambah Armada' atau 'Import CSV' di atas untuk menambahkan kendaraan."
+                lottieAnimation={busLottie}
+             />
         );
      }
 
@@ -199,7 +201,7 @@ export function ArmadaTable({
                             size="sm"
                             onClick={() => onDokumen(item)}
                          >
-                            <Paperclip className="h-4 w-4" />
+                            <IconPaperclip className="h-4 w-4" />
                          </Button>
                          <Button
                             variant="ghost"
@@ -207,14 +209,14 @@ export function ArmadaTable({
                             onClick={() => onEdit(item)}
                             disabled={item.status_verifikasi === "terverifikasi"}
                          >
-                           <Pencil className="h-4 w-4" />
+                           <IconPencil className="h-4 w-4" />
                         </Button>
                          <Button
                             variant="ghost"
                             size="sm"
                             onClick={() => onChangeStatus(item)}
                          >
-                            <Power className="h-4 w-4" />
+                            <IconPower className="h-4 w-4" />
                          </Button>
                          <Button
                             variant="ghost"
@@ -222,7 +224,7 @@ export function ArmadaTable({
                             onClick={() => onDelete(item)}
                             disabled={item.status_verifikasi === "terverifikasi"}
                          >
-                            <Trash2 className="h-4 w-4" />
+                            <IconTrash className="h-4 w-4" />
                          </Button>
                      </TableCell>
                   </TableRow>

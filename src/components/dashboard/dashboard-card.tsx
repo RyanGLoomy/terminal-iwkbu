@@ -1,27 +1,30 @@
 "use client";
 
 import {
-   type LucideIcon,
-   Bus,
-   LogIn,
-   LogOut,
-   Users,
-   ShieldCheck,
-   Activity,
-   TrendingUp,
-   Calendar,
-   FileText,
-   CreditCard,
-   CheckCircle,
-   XCircle,
-   Clock,
-   AlertTriangle,
-   Monitor,
-   UserCheck,
-} from "lucide-react";
+   IconBus,
+   IconLogin,
+   IconLogout,
+   IconUsers,
+   IconShieldCheck,
+   IconActivity,
+   IconTrendingUp,
+   IconCalendar,
+   IconFileText,
+   IconCreditCard,
+   IconCircleCheck,
+   IconCircleX,
+   IconClock,
+   IconAlertTriangle,
+   IconDeviceDesktop,
+   IconUserCheck,
+} from "@tabler/icons-react";
+import type { FC, SVGProps } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { LottieIcon } from "@/components/ui/lottie-icon";
 import { cn } from "@/lib/utils";
+import { useCountUp } from "@/hooks/use-count-up";
+
+type TablerIcon = FC<SVGProps<SVGSVGElement> & { size?: string | number }>;
 
 export type IconName =
    | "bus" | "log-in" | "log-out" | "users"
@@ -29,25 +32,25 @@ export type IconName =
    | "file-text" | "credit-card" | "check-circle" | "x-circle"
    | "clock" | "alert-triangle" | "monitor" | "user-check";
 
-const iconMap: Record<IconName, LucideIcon> = {
-   bus: Bus, "log-in": LogIn, "log-out": LogOut, users: Users,
-   "shield-check": ShieldCheck, activity: Activity, "trending-up": TrendingUp,
-   calendar: Calendar, "file-text": FileText, "credit-card": CreditCard,
-   "check-circle": CheckCircle, "x-circle": XCircle, clock: Clock,
-   "alert-triangle": AlertTriangle, monitor: Monitor, "user-check": UserCheck,
+const iconMap: Record<IconName, TablerIcon> = {
+   bus: IconBus, "log-in": IconLogin, "log-out": IconLogout, users: IconUsers,
+   "shield-check": IconShieldCheck, activity: IconActivity, "trending-up": IconTrendingUp,
+   calendar: IconCalendar, "file-text": IconFileText, "credit-card": IconCreditCard,
+   "check-circle": IconCircleCheck, "x-circle": IconCircleX, clock: IconClock,
+   "alert-triangle": IconAlertTriangle, monitor: IconDeviceDesktop, "user-check": IconUserCheck,
 };
 
 type DashboardCardProps = {
    title: string;
-   value: string;
+   value: string | number;
    description?: string;
-   icon?: LucideIcon | IconName;
+   icon?: TablerIcon | IconName;
    lottieAnimation?: object;
    accent?: "blue" | "green" | "amber" | "violet" | "red" | "default";
    index?: number;
+   animateCount?: boolean;
 };
 
-// Accent bersih lewat icon badge semantik (tanpa glow / gradient bar).
 const accentConfig: Record<NonNullable<DashboardCardProps["accent"]>, string> = {
    blue: "bg-primary/10 text-primary ring-primary/15",
    green: "bg-success/10 text-success ring-success/15",
@@ -57,15 +60,19 @@ const accentConfig: Record<NonNullable<DashboardCardProps["accent"]>, string> = 
    default: "bg-base-300/70 text-base-content/70 ring-base-300",
 };
 
-export function DashboardCard({
+function DashboardCardInner({
    title,
    value,
    description,
    icon,
    lottieAnimation,
    accent = "default",
+   animateCount,
 }: DashboardCardProps) {
    const Icon = typeof icon === "string" ? iconMap[icon] : icon;
+   const numericValue = typeof value === "number" ? value : parseInt(String(value), 10);
+   const counted = useCountUp(animateCount && !isNaN(numericValue) ? numericValue : 0);
+   const displayValue = animateCount && !isNaN(numericValue) ? counted : value;
 
    return (
       <Card>
@@ -76,7 +83,7 @@ export function DashboardCard({
                      {title}
                   </p>
                   <p className="text-3xl font-extrabold tracking-tight text-base-content tabular-nums">
-                      {value}
+                      {displayValue}
                    </p>
                   {description && (
                      <p className="pt-1 text-xs leading-5 text-base-content/55">
@@ -108,3 +115,5 @@ export function DashboardCard({
       </Card>
    );
 }
+
+export const DashboardCard = DashboardCardInner;

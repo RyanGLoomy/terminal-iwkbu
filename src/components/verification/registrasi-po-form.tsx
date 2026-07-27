@@ -17,7 +17,7 @@ import {
    CardTitle,
 } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Loader2, AlertCircle, CheckCircle, Building2, LockKeyhole } from "lucide-react";
+import { IconLoader2, IconAlertCircle, IconCircleCheck, IconBuilding, IconLock } from "@tabler/icons-react";
 import { registerPO } from "@/lib/supabase/queries/verification.client";
 import {
    passwordSchema,
@@ -108,7 +108,7 @@ export function RegistrasiPOForm() {
          <Card className="command-panel rounded-3xl">
             <CardContent className="pb-8 pt-8 text-center">
                <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-3xl bg-brand-green/15 ring-1 ring-brand-green/30">
-                   <CheckCircle className="h-7 w-7 text-brand-green dark:text-emerald-400" aria-hidden="true" />
+                   <IconCircleCheck className="h-7 w-7 text-brand-green dark:text-emerald-400" aria-hidden="true" />
                 </div>
                 <h3 className="mb-2 text-xl font800 tracking-tight text-base-content">
                    Registrasi Berhasil!
@@ -145,13 +145,13 @@ export function RegistrasiPOForm() {
              <CardContent className="space-y-5 pt-6">
                 {error && (
                    <Alert variant="destructive">
-                      <AlertCircle className="h-4 w-4" aria-hidden="true" />
+                      <IconAlertCircle className="h-4 w-4" aria-hidden="true" />
                       <AlertDescription>{error}</AlertDescription>
                    </Alert>
                 )}
 
                  <div className="flex items-center gap-3 rounded-2xl border border-secondary-content/20 bg-secondary px-4 py-3">
-                    <Building2 className="h-5 w-5 text-secondary-content/80" aria-hidden="true" />
+                    <IconBuilding className="h-5 w-5 text-secondary-content/80" aria-hidden="true" />
                     <div>
                        <p className="text-sm font800 text-secondary-content">Identitas perusahaan</p>
                        <p className="text-xs text-secondary-content/70">Data ini digunakan untuk proses verifikasi PO.</p>
@@ -196,7 +196,7 @@ export function RegistrasiPOForm() {
                  </div>
 
                  <div className="flex items-center gap-3 rounded-2xl border border-brand-green/25 bg-brand-green/10 px-4 py-3">
-                    <LockKeyhole className="h-5 w-5 text-brand-green" aria-hidden="true" />
+                    <IconLock className="h-5 w-5 text-brand-green" aria-hidden="true" />
                     <div>
                        <p className="text-sm font800 text-base-content">Akses akun</p>
                        <p className="text-xs text-base-content/70">Password akan dipakai setelah akun diverifikasi.</p>
@@ -243,7 +243,7 @@ export function RegistrasiPOForm() {
                                  ok ? "text-brand-green dark:text-emerald-400" : "text-base-content/70"
                               }`}
                            >
-                              <CheckCircle
+                              <IconCircleCheck
                                  className={`h-3.5 w-3.5 shrink-0 ${ok ? "opacity-100" : "opacity-30"}`}
                               />
                               {req.label}
@@ -291,12 +291,12 @@ export function RegistrasiPOForm() {
                 >
                   {loading ? (
                      <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
+                        <IconLoader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
                         Mengirim registrasi…
                      </>
                   ) : (
                      <>
-                        <CheckCircle className="mr-2 h-4 w-4" aria-hidden="true" />
+                        <IconCircleCheck className="mr-2 h-4 w-4" aria-hidden="true" />
                         Kirim registrasi
                      </>
                   )}

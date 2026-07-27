@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { AlertCircle, Loader2, MessageSquare, Paperclip } from "lucide-react";
+import { IconAlertCircle, IconLoader2, IconMessage, IconPaperclip } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -108,7 +108,7 @@ export function PoClarificationForm({ findingId }: { findingId: string }) {
          />
          <div className="flex items-center gap-2">
             <label className="inline-flex items-center gap-2 rounded-md bg-base-200 px-3 py-1 text-xs font-medium text-base-content hover:bg-base-300/70 cursor-pointer">
-               <Paperclip className="h-3.5 w-3.5" aria-hidden="true" />
+               <IconPaperclip className="h-3.5 w-3.5" aria-hidden="true" />
                Pilih file (maks {MAX_FILE_SIZE_MB} MB)
                <input
                   type="file"
@@ -126,15 +126,15 @@ export function PoClarificationForm({ findingId }: { findingId: string }) {
          </div>
          {error && (
             <div className="flex items-start gap-2 text-sm text-error" role="alert" aria-live="polite">
-               <AlertCircle className="mt-0.5 h-4 w-4" aria-hidden="true" />
+               <IconAlertCircle className="mt-0.5 h-4 w-4" aria-hidden="true" />
                <span>{error}</span>
             </div>
          )}
          <Button size="sm" onClick={submit} disabled={loading}>
             {loading ? (
-               <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
+               <IconLoader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
             ) : (
-               <MessageSquare className="mr-2 h-4 w-4" aria-hidden="true" />
+               <IconMessage className="mr-2 h-4 w-4" aria-hidden="true" />
             )}
             Kirim Klarifikasi
          </Button>

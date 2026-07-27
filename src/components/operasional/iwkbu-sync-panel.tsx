@@ -4,15 +4,15 @@ import { startTransition, useState, type FormEvent } from "react";
 import { formatDateTime } from "@/lib/utils/format-date";
 import { useRouter } from "next/navigation";
 import {
-   AlertCircle,
-   ArrowUpRight,
-   CheckCircle2,
-   Download,
-   FileSpreadsheet,
-   Loader2,
-   RefreshCw,
-   Upload,
-} from "lucide-react";
+   IconAlertCircle,
+   IconArrowUpRight,
+   IconCircleCheck,
+   IconDownload,
+   IconFileSpreadsheet,
+   IconLoader2,
+   IconRefresh,
+   IconUpload,
+} from "@tabler/icons-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -216,7 +216,7 @@ export function IwkbuSyncPanel({
              <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                 <div>
                    <CardTitle className="flex items-center gap-2">
-                      <FileSpreadsheet className="h-5 w-5" aria-hidden="true" />
+                      <IconFileSpreadsheet className="h-5 w-5" aria-hidden="true" />
                       Upload Source IWKBU
                    </CardTitle>
                    <p className="mt-1 text-sm text-base-content/70">
@@ -226,7 +226,7 @@ export function IwkbuSyncPanel({
                    </p>
                 </div>
                 <Button type="button" variant="outline" onClick={downloadTemplate}>
-                   <Download className="mr-2 h-4 w-4" aria-hidden="true" />
+                   <IconDownload className="mr-2 h-4 w-4" aria-hidden="true" />
                    Template CSV
                 </Button>
              </CardHeader>
@@ -249,9 +249,9 @@ export function IwkbuSyncPanel({
                    />
                    <Button type="submit" disabled={uploading || !uploadFile}>
                       {uploading ? (
-                         <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
+                         <IconLoader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
                       ) : (
-                         <Upload className="mr-2 h-4 w-4" aria-hidden="true" />
+                         <IconUpload className="mr-2 h-4 w-4" aria-hidden="true" />
                       )}
                       Upload Source
                    </Button>
@@ -270,14 +270,14 @@ export function IwkbuSyncPanel({
 
                 {uploadMessage && (
                    <Alert className="border-emerald-300 bg-emerald-50 text-emerald-800 dark:border-green-800 dark:bg-green-950/50 dark:text-green-300">
-                      <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
+                      <IconCircleCheck className="h-4 w-4" aria-hidden="true" />
                       <AlertDescription>{uploadMessage}</AlertDescription>
                    </Alert>
                 )}
 
                 {uploadError && (
                    <Alert variant="destructive">
-                      <AlertCircle className="h-4 w-4" aria-hidden="true" />
+                      <IconAlertCircle className="h-4 w-4" aria-hidden="true" />
                       <AlertDescription>{uploadError}</AlertDescription>
                    </Alert>
                 )}
@@ -289,9 +289,9 @@ export function IwkbuSyncPanel({
                <CardTitle>Status Sinkronisasi</CardTitle>
                <Button onClick={runSync} disabled={syncing}>
                   {syncing ? (
-                     <Loader2 className="h-4 w-4 animate-spin mr-2" aria-hidden="true" />
+                     <IconLoader2 className="h-4 w-4 animate-spin mr-2" aria-hidden="true" />
                   ) : (
-                     <RefreshCw className="h-4 w-4 mr-2" aria-hidden="true" />
+                     <IconRefresh className="h-4 w-4 mr-2" aria-hidden="true" />
                   )}
                   Jalankan Sinkronisasi
                </Button>
@@ -311,14 +311,14 @@ export function IwkbuSyncPanel({
 
                {message && (
                   <Alert className="border-emerald-300 bg-emerald-50 text-emerald-800 dark:border-green-800 dark:bg-green-950/50 dark:text-green-300">
-                     <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
+                     <IconCircleCheck className="h-4 w-4" aria-hidden="true" />
                      <AlertDescription>{message}</AlertDescription>
                   </Alert>
                )}
 
                {error && (
                   <Alert variant="destructive">
-                     <AlertCircle className="h-4 w-4" aria-hidden="true" />
+                     <IconAlertCircle className="h-4 w-4" aria-hidden="true" />
                      <AlertDescription>{error}</AlertDescription>
                   </Alert>
                )}
@@ -436,7 +436,7 @@ export function IwkbuSyncPanel({
                                               )
                                            }
                                         >
-                                           <ArrowUpRight className="h-3 w-3" />
+                                           <IconArrowUpRight className="h-3 w-3" />
                                            Buat Temuan
                                         </button>
                                      )}

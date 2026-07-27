@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { AlertCircle } from "lucide-react";
+import { IconAlertCircle } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -96,7 +96,7 @@ export function StafFindingCreateForm({
       <div className="space-y-4">
          {error && (
             <div className="flex items-start gap-2 rounded-md border border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950/50 px-3 py-2 text-sm text-error">
-               <AlertCircle className="mt-0.5 h-4 w-4" aria-hidden="true" />
+               <IconAlertCircle className="mt-0.5 h-4 w-4" aria-hidden="true" />
                <span>{error}</span>
             </div>
          )}

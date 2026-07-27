@@ -8,13 +8,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import {
-  Loader2,
-  AlertCircle,
-  KeyRound,
-  CheckCircle2,
-  Eye,
-  EyeOff,
-} from "lucide-react";
+  IconLoader2,
+  IconAlertCircle,
+  IconKey,
+  IconCircleCheck,
+  IconEye,
+  IconEyeOff,
+} from "@tabler/icons-react";
 
 export default function ResetPasswordPage() {
   const router = useRouter();
@@ -118,7 +118,7 @@ export default function ResetPasswordPage() {
         {sessionError ? (
           <div className="space-y-5">
             <div className="flex flex-col items-center gap-3 rounded-2xl border border-destructive/30 bg-error/5 px-5 py-8 text-center">
-              <AlertCircle className="h-10 w-10 text-error" aria-hidden="true" />
+              <IconAlertCircle className="h-10 w-10 text-error" aria-hidden="true" />
               <div className="space-y-1">
                 <p className="font800 text-base-content">Tautan tidak valid</p>
                 <p className="text-sm text-base-content/70">
@@ -138,7 +138,7 @@ export default function ResetPasswordPage() {
         ) : success ? (
           <div className="space-y-5">
             <div className="flex flex-col items-center gap-3 rounded-2xl border border-brand-green/30 bg-brand-green/5 px-5 py-8 text-center">
-              <CheckCircle2 className="h-10 w-10 text-brand-green" aria-hidden="true" />
+              <IconCircleCheck className="h-10 w-10 text-brand-green" aria-hidden="true" />
               <div className="space-y-1">
                 <p className="font800 text-base-content">
                   Password berhasil diubah
@@ -151,7 +151,7 @@ export default function ResetPasswordPage() {
           </div>
         ) : !sessionReady ? (
           <div className="flex items-center justify-center py-12">
-            <Loader2 className="h-6 w-6 animate-spin text-base-content/70" />
+            <IconLoader2 className="h-6 w-6 animate-spin text-base-content/70" />
           </div>
         ) : (
           <>
@@ -165,7 +165,7 @@ export default function ResetPasswordPage() {
             <form onSubmit={handleSubmit} className="space-y-5">
               {error && (
                 <Alert variant="destructive">
-                  <AlertCircle className="h-4 w-4" aria-hidden="true" />
+                  <IconAlertCircle className="h-4 w-4" aria-hidden="true" />
                   <AlertDescription>{error}</AlertDescription>
                 </Alert>
               )}
@@ -173,7 +173,7 @@ export default function ResetPasswordPage() {
               <div className="space-y-2.5">
                 <Label htmlFor="password">Password baru</Label>
                 <div className="relative">
-                  <KeyRound className="pointer-events-none absolute left-3.5 top-1/2 z-10 h-4 w-4 -translate-y-1/2 text-primary" aria-hidden="true" />
+                  <IconKey className="pointer-events-none absolute left-3.5 top-1/2 z-10 h-4 w-4 -translate-y-1/2 text-primary" aria-hidden="true" />
                   <Input
                     id="password"
                     type={showPassword ? "text" : "password"}
@@ -193,9 +193,9 @@ export default function ResetPasswordPage() {
                     className="absolute right-3.5 top-1/2 -translate-y-1/2 text-base-content/70 hover:text-base-content"
                   >
                     {showPassword ? (
-                      <EyeOff className="h-4 w-4" />
+                      <IconEyeOff className="h-4 w-4" />
                     ) : (
-                      <Eye className="h-4 w-4" />
+                      <IconEye className="h-4 w-4" />
                     )}
                   </button>
                 </div>
@@ -204,7 +204,7 @@ export default function ResetPasswordPage() {
               <div className="space-y-2.5">
                 <Label htmlFor="confirm-password">Konfirmasi password baru</Label>
                 <div className="relative">
-                  <KeyRound className="pointer-events-none absolute left-3.5 top-1/2 z-10 h-4 w-4 -translate-y-1/2 text-primary" aria-hidden="true" />
+                  <IconKey className="pointer-events-none absolute left-3.5 top-1/2 z-10 h-4 w-4 -translate-y-1/2 text-primary" aria-hidden="true" />
                   <Input
                     id="confirm-password"
                     type={showPassword ? "text" : "password"}
@@ -226,7 +226,7 @@ export default function ResetPasswordPage() {
               >
                 {loading ? (
                   <>
-                    <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+                    <IconLoader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
                     Mengubah password…
                   </>
                 ) : (

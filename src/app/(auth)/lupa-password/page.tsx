@@ -7,12 +7,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import {
-  Loader2,
-  AlertCircle,
-  Mail,
-  ArrowLeft,
-  CheckCircle2,
-} from "lucide-react";
+  IconLoader2,
+  IconAlertCircle,
+  IconMail,
+  IconArrowLeft,
+  IconCircleCheck,
+} from "@tabler/icons-react";
 
 export default function LupaPasswordPage() {
   const [email, setEmail] = useState("");
@@ -58,7 +58,7 @@ export default function LupaPasswordPage() {
             href="/login"
             className="mb-5 inline-flex items-center gap-1.5 text-xs font700 uppercase tracking-[0.12em] text-brand-navy hover:underline dark:text-brand-sky"
           >
-            <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
+            <IconArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
             Kembali ke masuk
           </Link>
           <h2 className="text-heading text-base-content">Lupa password</h2>
@@ -71,7 +71,7 @@ export default function LupaPasswordPage() {
         {sent ? (
           <div className="space-y-5">
             <div className="flex flex-col items-center gap-3 rounded-2xl border border-brand-green/30 bg-brand-green/5 px-5 py-8 text-center">
-              <CheckCircle2 className="h-10 w-10 text-brand-green" aria-hidden="true" />
+              <IconCircleCheck className="h-10 w-10 text-brand-green" aria-hidden="true" />
               <div className="space-y-1">
                 <p className="font800 text-base-content">Email terkirim</p>
                 <p className="text-sm text-base-content/70">
@@ -82,7 +82,7 @@ export default function LupaPasswordPage() {
             </div>
             <Link href="/login">
               <Button variant="outline" className="w-full gap-2 text-[15px]">
-                <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+                <IconArrowLeft className="h-4 w-4" aria-hidden="true" />
                 Kembali ke halaman masuk
               </Button>
             </Link>
@@ -91,7 +91,7 @@ export default function LupaPasswordPage() {
           <form onSubmit={handleSubmit} className="space-y-5">
             {error && (
               <Alert variant="destructive">
-                <AlertCircle className="h-4 w-4" aria-hidden="true" />
+                <IconAlertCircle className="h-4 w-4" aria-hidden="true" />
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
@@ -99,7 +99,7 @@ export default function LupaPasswordPage() {
             <div className="space-y-2.5">
               <Label htmlFor="email">Email pengguna</Label>
               <div className="relative">
-                <Mail className="pointer-events-none absolute left-3.5 top-1/2 z-10 h-4 w-4 -translate-y-1/2 text-primary" aria-hidden="true" />
+                <IconMail className="pointer-events-none absolute left-3.5 top-1/2 z-10 h-4 w-4 -translate-y-1/2 text-primary" aria-hidden="true" />
                 <Input
                   id="email"
                   type="email"
@@ -123,7 +123,7 @@ export default function LupaPasswordPage() {
             >
               {loading ? (
                 <>
-                  <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+                  <IconLoader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
                   Mengirim tautan…
                 </>
               ) : (

@@ -25,8 +25,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { editPO, verifikasiPO } from "@/lib/supabase/queries/verification.client";
 import type { PO } from "@/lib/supabase/queries/verification.types";
 import { toast } from "sonner";
-import { AlertCircle, CheckCircle, Pencil, Search, User, XCircle } from "lucide-react";
+import { IconAlertCircle, IconCircleCheck, IconPencil, IconSearch, IconUser, IconCircleX } from "@tabler/icons-react";
 import { EmptyState } from "@/components/shared/empty-state";
+import usersLottie from "@/lib/lottie/users.json";
 
 interface VerifikasiPOTableProps {
    data: PO[];
@@ -52,7 +53,7 @@ export function VerifikasiPOTable({
       npwp: "",
    });
    const [editLoading, setEditLoading] = useState(false);
-   const [search, setSearch] = useState("");
+   const [search, setIconSearch] = useState("");
    const [visibleCount, setVisibleCount] = useState(15);
    const router = useRouter();
 
@@ -141,11 +142,11 @@ export function VerifikasiPOTable({
          <div className="space-y-3">
             {error && (
                <div className="flex items-start gap-2 rounded-md border border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950/50 px-3 py-2 text-sm text-error">
-                  <AlertCircle className="mt-0.5 h-4 w-4" aria-hidden="true" />
+                  <IconAlertCircle className="mt-0.5 h-4 w-4" aria-hidden="true" />
                   <span>{error}</span>
                </div>
             )}
-            <EmptyState title="Tidak ada data PO" icon={User} />
+            <EmptyState title="Tidak ada data PO" lottieAnimation={usersLottie} />
          </div>
       );
    }
@@ -154,17 +155,17 @@ export function VerifikasiPOTable({
       <>
          {error && (
             <div className="mb-3 flex items-start gap-2 rounded-md border border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950/50 px-3 py-2 text-sm text-error">
-               <AlertCircle className="mt-0.5 h-4 w-4" aria-hidden="true" />
+               <IconAlertCircle className="mt-0.5 h-4 w-4" aria-hidden="true" />
                <span>{error}</span>
             </div>
          )}
           <div className="mb-3 flex justify-end">
             <div className="relative w-full sm:w-56">
-               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-base-content/70" aria-hidden="true" />
+               <IconSearch className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-base-content/70" aria-hidden="true" />
                <Input
                   placeholder="Cari kode PO, nama..."
                   value={search}
-                  onChange={(e) => setSearch(e.target.value)}
+                  onChange={(e) => setIconSearch(e.target.value)}
                   className="pl-9 h-8 text-sm"
                />
             </div>
@@ -222,7 +223,7 @@ export function VerifikasiPOTable({
                                   className="h-7 px-2"
                                   onClick={() => openEditDialog(po)}
                                >
-                                  <Pencil className="h-3.5 w-3.5" />
+                                  <IconPencil className="h-3.5 w-3.5" />
                                </Button>
                                <Button
                                  size="sm"
@@ -234,7 +235,7 @@ export function VerifikasiPOTable({
                                     setAction("aktif");
                                  }}
                               >
-                                 <CheckCircle className="h-4 w-4 mr-1" aria-hidden="true" />
+                                 <IconCircleCheck className="h-4 w-4 mr-1" aria-hidden="true" />
                                  Terima
                               </Button>
                               <Button
@@ -247,7 +248,7 @@ export function VerifikasiPOTable({
                                     setAction("ditolak");
                                  }}
                               >
-                                 <XCircle className="h-4 w-4 mr-1" aria-hidden="true" />
+                                 <IconCircleX className="h-4 w-4 mr-1" aria-hidden="true" />
                                  Tolak
                               </Button>
                            </TableCell>

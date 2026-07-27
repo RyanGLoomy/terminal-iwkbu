@@ -1,6 +1,6 @@
 "use client";
 
-import { Moon, Sun } from "lucide-react";
+import { IconMoon, IconSun } from "@tabler/icons-react";
 import { useTheme } from "@/components/theme-provider";
 
 export function ThemeToggle() {
@@ -14,9 +14,9 @@ export function ThemeToggle() {
       aria-label={theme === "dark" ? "Mode Terang" : "Mode Gelap"}
     >
       {theme === "dark" ? (
-        <Sun className="h-4 w-4" />
+        <IconSun className="h-4 w-4" />
       ) : (
-        <Moon className="h-4 w-4" />
+        <IconMoon className="h-4 w-4" />
       )}
     </button>
   );

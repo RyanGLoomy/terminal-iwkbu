@@ -5,7 +5,7 @@ import { StatusBadge } from "@/components/shared/status-badge";
 import { getDueDateBadge } from "./findings-shared";
 import { FindingTurnBadge } from "./finding-turn-badge";
 import type { FindingRecord } from "@/lib/supabase/queries/operasional.types";
-import { ChevronRight } from "lucide-react";
+import { IconChevronRight } from "@tabler/icons-react";
 
 function latestSnippet(finding: FindingRecord): string | null {
    const candidates: { ts: string; text: string }[] = [];
@@ -54,7 +54,7 @@ export function FindingListItem({
                <p className="line-clamp-1 font-medium text-base-content">
                   {finding.judul}
                </p>
-               <ChevronRight
+               <IconChevronRight
                   className="mt-0.5 h-4 w-4 shrink-0 text-base-content/40 transition-transform group-hover:translate-x-0.5"
                   aria-hidden="true"
                />

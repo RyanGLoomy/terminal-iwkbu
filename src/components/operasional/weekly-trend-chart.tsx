@@ -17,7 +17,7 @@ import { getWeeklyTrend } from "@/lib/supabase/queries/operasional.client";
 import type { DailyTrendRow } from "@/lib/supabase/queries/operasional.types";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { LoadingState } from "@/components/shared/loading-state";
-import { BarChart3, TrendingUp } from "lucide-react";
+import { IconChartBar, IconTrendingUp } from "@tabler/icons-react";
 
 export function WeeklyTrendChart({
    petugasId,
@@ -68,7 +68,7 @@ export function WeeklyTrendChart({
          <Card className="border-base-300">
             <CardHeader className="pb-2">
                <CardTitle className="text-sm font-medium flex items-center gap-2 text-base-content">
-                  <TrendingUp className="h-4 w-4 text-brand-sky" aria-hidden="true" />
+                  <IconTrendingUp className="h-4 w-4 text-brand-sky" aria-hidden="true" />
                   Tren Kendaraan (7 Hari)
                </CardTitle>
             </CardHeader>
@@ -183,7 +183,7 @@ export function WeeklyTrendChart({
          <Card className="border-base-300">
             <CardHeader className="pb-2">
                <CardTitle className="text-sm font-medium flex items-center gap-2 text-base-content">
-                  <BarChart3 className="h-4 w-4 text-brand-green" aria-hidden="true" />
+                  <IconChartBar className="h-4 w-4 text-brand-green" aria-hidden="true" />
                   Total Transaksi Harian
                </CardTitle>
             </CardHeader>

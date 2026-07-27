@@ -7,7 +7,7 @@ import type {
    FindingAction,
    FindingRecord,
 } from "@/lib/supabase/queries/operasional.types";
-import { CheckCircle2, MessageSquare, Flag } from "lucide-react";
+import { IconCircleCheck, IconMessage, IconFlag } from "@tabler/icons-react";
 
 type ThreadEvent =
    | { kind: "clarification"; ts: string; data: FindingClarification }
@@ -73,7 +73,7 @@ function ClarificationEvent({ c }: { c: FindingClarification }) {
       <div className="rounded-lg border border-base-300 bg-base-100 p-3">
          <div className="flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-2">
-               <MessageSquare className="h-3.5 w-3.5 text-base-content/50" aria-hidden="true" />
+               <IconMessage className="h-3.5 w-3.5 text-base-content/50" aria-hidden="true" />
                <ActorBadge role={c.responder_role} />
                <span className="text-sm font-medium text-base-content">
                   {formatDecisionLabel(c.decision)}
@@ -102,9 +102,9 @@ function ActionEvent({ a }: { a: FindingAction }) {
          <div className="flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-2">
                {done ? (
-                  <CheckCircle2 className="h-3.5 w-3.5 text-success" aria-hidden="true" />
+                  <IconCircleCheck className="h-3.5 w-3.5 text-success" aria-hidden="true" />
                ) : (
-                  <Flag className="h-3.5 w-3.5 text-base-content/50" aria-hidden="true" />
+                  <IconFlag className="h-3.5 w-3.5 text-base-content/50" aria-hidden="true" />
                )}
                <ActorBadge role="staf-iw" />
                <span className="text-sm font-medium text-base-content">

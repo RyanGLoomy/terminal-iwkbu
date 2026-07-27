@@ -28,7 +28,7 @@ import alertTriangleLottie from "@/lib/lottie/alert-triangle.json";
 import { STATUS_MAP } from "@/components/shared/status-badge";
 import { Card, CardContent } from "@/components/ui/card";
 import type { FindingRecord } from "@/lib/supabase/queries/operasional.types";
-import { Plus, Download } from "lucide-react";
+import { IconPlus, IconDownload } from "@tabler/icons-react";
 import {
    FINDINGS_PAGE_SIZE,
 } from "./findings-shared";
@@ -243,7 +243,7 @@ export function StafFindingsPanel({
                   {filteredFindings.length !== initialFindings.length && ` dari ${initialFindings.length}`})
                </span>
                <Button size="sm" onClick={() => setCreateOpen(true)}>
-                  <Plus className="mr-1.5 h-4 w-4" aria-hidden="true" />
+                  <IconPlus className="mr-1.5 h-4 w-4" aria-hidden="true" />
                   Buat Temuan
                </Button>
             </div>
@@ -298,11 +298,11 @@ export function StafFindingsPanel({
                </Select>
                <div className="flex gap-2">
                   <Button variant="outline" size="sm" onClick={exportCsv}>
-                     <Download className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" />
+                     <IconDownload className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" />
                      CSV
                   </Button>
                   <Button variant="outline" size="sm" onClick={exportPdf}>
-                     <Download className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" />
+                     <IconDownload className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" />
                      PDF
                   </Button>
                </div>

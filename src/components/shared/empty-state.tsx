@@ -1,12 +1,14 @@
 import * as React from "react";
-import { type LucideIcon, Inbox, SearchX } from "lucide-react";
+import { IconInbox, IconSearchOff } from "@tabler/icons-react";
+import type { FC, SVGProps } from "react";
+type IconComponent = FC<SVGProps<SVGSVGElement> & { size?: string | number }>;
 import { cn } from "@/lib/utils";
 import dynamic from "next/dynamic";
 
 const LottieIcon = dynamic(() => import("@/components/ui/lottie-icon").then(m => m.LottieIcon), { ssr: false });
 
 interface EmptyStateProps {
-   icon?: LucideIcon;
+   icon?: IconComponent;
    lottieAnimation?: object;
    title: string;
    description?: string;
@@ -24,7 +26,7 @@ function EmptyState({
    className,
    variant = "default",
 }: EmptyStateProps) {
-   const DefaultIcon = variant === "search" ? SearchX : Inbox;
+   const DefaultIcon = variant === "search" ? IconSearchOff : IconInbox;
 
    return (
       <div

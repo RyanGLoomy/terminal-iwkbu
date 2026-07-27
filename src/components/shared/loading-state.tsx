@@ -1,7 +1,14 @@
 import * as React from "react";
-import { Loader2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
+import dynamic from "next/dynamic";
+
+const LottieIcon = dynamic(
+   () => import("@/components/ui/lottie-icon").then((m) => m.LottieIcon),
+   { ssr: false },
+);
+
+import loadingDots from "@/lib/lottie/loading-dots.json";
 
 interface LoadingStateProps {
    variant?: "spinner" | "table" | "cards" | "inline";
@@ -24,7 +31,7 @@ function LoadingState({
                 className,
             )}
          >
-             <Loader2 className="size-5 animate-spin" aria-hidden="true" />
+             <LottieIcon animation={loadingDots} size={40} loop autoplay />
              <span className="text-sm">{text}</span>
          </div>
       );
@@ -33,7 +40,7 @@ function LoadingState({
    if (variant === "inline") {
       return (
          <div className={cn("flex items-center justify-center gap-2 py-4", className)}>
-            <Loader2 className="size-4 animate-spin text-base-content/70" aria-hidden="true" />
+            <LottieIcon animation={loadingDots} size={24} loop autoplay />
             <span className="text-sm text-base-content/70">{text}</span>
          </div>
       );
@@ -42,14 +49,14 @@ function LoadingState({
    if (variant === "table") {
       return (
          <div className={cn("space-y-3", className)}>
-            {Array.from({ length: count }).map((_, i) => (
-               <div key={i} className="flex items-center gap-4 px-4">
-                  <Skeleton className="h-4 flex-1" />
-                  <Skeleton className="h-4 w-24 tabular-nums" />
-                  <Skeleton className="h-4 w-20 tabular-nums" />
-                  <Skeleton className="h-8 w-16 tabular-nums" />
-               </div>
-            ))}
+             {Array.from({ length: count }).map((_, i) => (
+                 <div key={i} className="flex items-center gap-4 px-4">
+                    <Skeleton className="h-4 flex-1" />
+                    <Skeleton className="h-4 w-24 tabular-nums" />
+                    <Skeleton className="h-4 w-20 tabular-nums" />
+                    <Skeleton className="h-8 w-16 tabular-nums" />
+                 </div>
+             ))}
          </div>
       );
    }
@@ -62,13 +69,13 @@ function LoadingState({
                 className,
             )}
          >
-            {Array.from({ length: count }).map((_, i) => (
-               <div key={i} className="rounded-xl border border-base-300 p-6 space-y-3">
-                  <Skeleton className="h-4 w-20" />
-                  <Skeleton className="h-8 w-32" />
-                  <Skeleton className="h-3 w-24" />
-               </div>
-            ))}
+             {Array.from({ length: count }).map((_, i) => (
+                 <div key={i} className="rounded-xl border border-base-300 p-6 space-y-3">
+                    <Skeleton className="h-4 w-20" />
+                    <Skeleton className="h-8 w-32" />
+                    <Skeleton className="h-3 w-24" />
+                 </div>
+             ))}
          </div>
       );
    }

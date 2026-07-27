@@ -7,14 +7,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import {
-   Loader2,
-   AlertCircle,
-   LogIn,
-   Mail,
-   LockKeyhole,
-   Eye,
-   EyeOff,
-} from "lucide-react";
+   IconLoader2,
+   IconAlertCircle,
+   IconLogin,
+   IconMail,
+   IconLock,
+   IconEye,
+   IconEyeOff,
+} from "@tabler/icons-react";
 
 export function LoginForm() {
    const [email, setEmail] = useState("");
@@ -70,7 +70,7 @@ export function LoginForm() {
       <form onSubmit={handleLogin} className="space-y-5">
          {error && (
             <Alert variant="destructive">
-               <AlertCircle className="h-4 w-4" aria-hidden="true" />
+               <IconAlertCircle className="h-4 w-4" aria-hidden="true" />
                <AlertDescription>{error}</AlertDescription>
             </Alert>
          )}
@@ -78,7 +78,7 @@ export function LoginForm() {
          <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <div className="relative">
-                <Mail className="pointer-events-none absolute left-3 top-1/2 z-10 size-4 -translate-y-1/2 text-primary" aria-hidden="true" />
+                <IconMail className="pointer-events-none absolute left-3 top-1/2 z-10 size-4 -translate-y-1/2 text-primary" aria-hidden="true" />
                 <Input
                    id="email"
                    type="email"
@@ -101,7 +101,7 @@ export function LoginForm() {
          <div className="space-y-2">
             <Label htmlFor="password">Password</Label>
             <div className="relative">
-                <LockKeyhole className="pointer-events-none absolute left-3 top-1/2 z-10 size-4 -translate-y-1/2 text-primary" aria-hidden="true" />
+                <IconLock className="pointer-events-none absolute left-3 top-1/2 z-10 size-4 -translate-y-1/2 text-primary" aria-hidden="true" />
                 <Input
                    id="password"
                    name="password"
@@ -123,9 +123,9 @@ export function LoginForm() {
                   tabIndex={0}
                >
                   {showPassword ? (
-                     <EyeOff className="size-4" aria-hidden="true" />
+                     <IconEyeOff className="size-4" aria-hidden="true" />
                   ) : (
-                     <Eye className="size-4" aria-hidden="true" />
+                     <IconEye className="size-4" aria-hidden="true" />
                   )}
                </button>
             </div>
@@ -146,12 +146,12 @@ export function LoginForm() {
          >
             {loading ? (
                <>
-                  <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+                  <IconLoader2 className="size-4 animate-spin" aria-hidden="true" />
                   Memproses…
                </>
             ) : (
                <>
-                  <LogIn className="size-4" aria-hidden="true" />
+                  <IconLogin className="size-4" aria-hidden="true" />
                   Masuk
                </>
             )}

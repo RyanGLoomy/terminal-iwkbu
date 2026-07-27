@@ -1,7 +1,7 @@
 "use client";
 
 import { useOnlineStatus } from "@/lib/hooks/use-online-status";
-import { Wifi, WifiOff } from "lucide-react";
+import { IconWifi, IconWifiOff } from "@tabler/icons-react";
 
 export function ConnectionIndicator() {
    const { isOnline } = useOnlineStatus();
@@ -15,12 +15,12 @@ export function ConnectionIndicator() {
       >
          {isOnline ? (
             <>
-               <Wifi className="h-3.5 w-3.5 text-brand-green" aria-hidden="true" />
+                <IconWifi className="h-3.5 w-3.5 text-brand-green" aria-hidden="true" />
                <span className="hidden text-base-content/60 sm:inline">Online</span>
             </>
          ) : (
             <>
-               <WifiOff className="h-3.5 w-3.5 text-error" aria-hidden="true" />
+                <IconWifiOff className="h-3.5 w-3.5 text-error" aria-hidden="true" />
                <span className="text-error font-medium">Offline</span>
             </>
          )}

@@ -16,7 +16,7 @@ const nextConfig: NextConfig = {
    // reactCompiler: true,
    experimental: {
       // Tree-shake import per-ikon dari lucide-react (dipakai di banyak file).
-      optimizePackageImports: ["lucide-react"],
+      optimizePackageImports: ["lucide-react", "@tabler/icons-react"],
    },
 };
 

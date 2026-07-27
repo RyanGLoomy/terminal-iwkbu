@@ -9,7 +9,7 @@ import {
    Legend,
 } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { PieChartIcon, CheckCircle2 } from "lucide-react";
+import { IconChartPie, IconCircleCheck } from "@tabler/icons-react";
 
 interface StafIWStatsChartProps {
    poMenunggu: number;
@@ -64,7 +64,7 @@ export function StafIWStatsChart({
          <Card className="border-base-300">
             <CardHeader className="pb-2">
                <CardTitle className="text-sm font-medium flex items-center gap-2 text-base-content">
-                  <PieChartIcon className="h-4 w-4 text-brand-sky" aria-hidden="true" />
+                  <IconChartPie className="h-4 w-4 text-brand-sky" aria-hidden="true" />
                   Distribusi Status PO
                </CardTitle>
             </CardHeader>
@@ -110,7 +110,7 @@ export function StafIWStatsChart({
          <Card className="border-base-300">
             <CardHeader className="pb-2">
                <CardTitle className="text-sm font-medium flex items-center gap-2 text-base-content">
-                  <CheckCircle2 className="h-4 w-4 text-brand-green" aria-hidden="true" />
+                  <IconCircleCheck className="h-4 w-4 text-brand-green" aria-hidden="true" />
                   Status Verifikasi Armada
                   {totalArmada > 0 && (
                      <span className="ml-auto text-xs font-semibold text-brand-green">

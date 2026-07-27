@@ -29,7 +29,7 @@ import {
    DialogTitle,
 } from "@/components/ui/dialog";
 import { DatePicker } from "@/components/ui/date-picker";
-import { Activity, ChevronLeft, Eye, Loader2 } from "lucide-react";
+import { IconActivity, IconChevronLeft, IconEye, IconLoader2 } from "@tabler/icons-react";
 
 function toDateString(date: Date) {
    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
@@ -122,7 +122,7 @@ export function RekapSesiPanel({ terminalId }: RekapSesiPanelProps) {
                   </div>
                   <Button onClick={handleFilter} disabled={loading} size="sm">
                      {loading ? (
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
+                        <IconLoader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
                      ) : null}
                      Filter
                   </Button>
@@ -184,14 +184,14 @@ export function RekapSesiPanel({ terminalId }: RekapSesiPanelProps) {
          <Card className="border-base-300">
             <CardHeader className="pb-4">
                <CardTitle className="text-base flex items-center gap-2">
-                  <Activity className="h-4 w-4" aria-hidden="true" />
+                  <IconActivity className="h-4 w-4" aria-hidden="true" />
                   Daftar Sesi Kerja
                </CardTitle>
             </CardHeader>
             <CardContent>
                {loading ? (
                   <div className="flex items-center gap-2 text-sm text-base-content/70 py-8 justify-center">
-                     <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+                     <IconLoader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
                      Memuat data…
                   </div>
                ) : sesiList.length === 0 ? (
@@ -256,7 +256,7 @@ export function RekapSesiPanel({ terminalId }: RekapSesiPanelProps) {
                                        size="sm"
                                        onClick={() => handleOpenDetail(sesi)}
                                     >
-                                       <Eye className="h-4 w-4" />
+                                       <IconEye className="h-4 w-4" />
                                     </Button>
                                  </TableCell>
                               </TableRow>
@@ -272,7 +272,7 @@ export function RekapSesiPanel({ terminalId }: RekapSesiPanelProps) {
             <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
                <DialogHeader>
                   <DialogTitle className="flex items-center gap-2">
-                     <Activity className="h-5 w-5" aria-hidden="true" />
+                     <IconActivity className="h-5 w-5" aria-hidden="true" />
                      Detail Sesi Kerja
                   </DialogTitle>
                </DialogHeader>
@@ -346,7 +346,7 @@ export function RekapSesiPanel({ terminalId }: RekapSesiPanelProps) {
                         </h4>
                         {detailLoading ? (
                            <div className="flex items-center gap-2 text-sm text-base-content/70 py-4 justify-center">
-                              <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+                              <IconLoader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
                               Memuat transaksi…
                            </div>
                         ) : detailRows.length === 0 ? (

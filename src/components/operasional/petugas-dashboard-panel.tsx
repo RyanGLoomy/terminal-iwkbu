@@ -21,7 +21,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DashboardCard } from "@/components/dashboard/dashboard-card";
 import trendingUpLottie from "@/lib/lottie/trending-up.json";
 import { LoadingState } from "@/components/shared/loading-state";
-import { Activity, LogIn, LogOut, Loader2, TrendingUp } from "lucide-react";
+import { IconActivity, IconLogin, IconLogout, IconLoader2, IconTrendingUp } from "@tabler/icons-react";
 
 const WeeklyTrendChart = dynamic(
    () =>
@@ -129,7 +129,7 @@ export function PetugasDashboardPanel() {
             <CardHeader className="flex flex-row items-center justify-between pb-4">
                <div>
                   <CardTitle className="text-base flex items-center gap-2">
-                     <Activity className="h-4 w-4" aria-hidden="true" />
+                     <IconActivity className="h-4 w-4" aria-hidden="true" />
                      Sesi Kerja Hari Ini
                   </CardTitle>
                   <p className="text-sm text-base-content/70 mt-1">
@@ -161,9 +161,9 @@ export function PetugasDashboardPanel() {
                      size="sm"
                   >
                      {actionLoading && !session ? (
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
+                        <IconLoader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
                      ) : (
-                        <LogIn className="mr-2 h-4 w-4" aria-hidden="true" />
+                        <IconLogin className="mr-2 h-4 w-4" aria-hidden="true" />
                      )}
                      Buka Sesi
                   </Button>
@@ -174,9 +174,9 @@ export function PetugasDashboardPanel() {
                      size="sm"
                   >
                      {actionLoading && !!session ? (
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
+                        <IconLoader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
                      ) : (
-                        <LogOut className="mr-2 h-4 w-4" aria-hidden="true" />
+                        <IconLogout className="mr-2 h-4 w-4" aria-hidden="true" />
                      )}
                      Tutup Sesi
                   </Button>

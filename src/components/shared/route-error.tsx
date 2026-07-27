@@ -1,6 +1,6 @@
 "use client";
 
-import { AlertCircle, RefreshCw } from "lucide-react";
+import { IconAlertCircle, IconRefresh } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button";
 
 export function RouteError({
@@ -12,7 +12,7 @@ export function RouteError({
 }) {
    return (
       <div className="flex min-h-[50vh] flex-col items-center justify-center gap-4 p-8 bg-base-100">
-         <AlertCircle className="h-10 w-10 text-error" aria-hidden="true" />
+         <IconAlertCircle className="h-10 w-10 text-error" aria-hidden="true" />
          <div className="text-center">
             <h2 className="text-lg font-bold text-base-content">
                Terjadi Kesalahan
@@ -22,7 +22,7 @@ export function RouteError({
             </p>
          </div>
          <Button onClick={reset} variant="outline">
-            <RefreshCw className="h-4 w-4" aria-hidden="true" />
+            <IconRefresh className="h-4 w-4" aria-hidden="true" />
             Coba Lagi
          </Button>
       </div>

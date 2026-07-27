@@ -4,20 +4,20 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
-   Activity,
-   CalendarClock,
-   ClipboardList,
-   FileText,
-   LayoutDashboard,
-   PanelLeftClose,
-   PanelLeftOpen,
-   RefreshCw,
-   Search,
-   Settings,
-   Shield,
-   Users,
-   type LucideIcon,
-} from "lucide-react";
+   IconActivity,
+   IconCalendarClock,
+   IconClipboardList,
+   IconFileText,
+   IconLayoutDashboard,
+   IconRefresh,
+   IconSearch,
+   IconSettings,
+   IconShield,
+   IconUsers,
+} from "@tabler/icons-react";
+import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
+import type { FC, SVGProps } from "react";
+type IconComponent = FC<SVGProps<SVGSVGElement> & { size?: string | number }>;
 import { cn } from "@/lib/utils";
 import { ROLES, type RoleType } from "@/config/roles";
 import {
@@ -27,17 +27,17 @@ import {
    TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-const iconMap: Record<string, LucideIcon> = {
-   LayoutDashboard,
-   ClipboardList,
-   RefreshCw,
-   FileText,
-   Users,
-   Search,
-   Shield,
-   Activity,
-   CalendarClock,
-   Settings,
+const iconMap: Record<string, IconComponent> = {
+   LayoutDashboard: IconLayoutDashboard,
+   ClipboardList: IconClipboardList,
+   RefreshCw: IconRefresh,
+   FileText: IconFileText,
+   Users: IconUsers,
+   Search: IconSearch,
+   Shield: IconShield,
+   Activity: IconActivity,
+   CalendarClock: IconCalendarClock,
+   Settings: IconSettings,
 };
 
 const menuItems: Record<
@@ -173,7 +173,7 @@ export function Sidebar({ userRole, collapsed, onToggleCollapse }: SidebarProps)
                aria-label="Menu utama"
             >
                {items.map((item) => {
-                  const Icon = iconMap[item.icon] || LayoutDashboard;
+                  const Icon = iconMap[item.icon] || IconLayoutDashboard;
                   const active = isActive(item.href);
                   const linkContent = (
                      <Link

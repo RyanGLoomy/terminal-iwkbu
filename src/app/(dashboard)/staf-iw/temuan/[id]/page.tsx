@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { ChevronLeft } from "lucide-react";
+import { IconChevronLeft } from "@tabler/icons-react";
 import { getAuthenticatedActor } from "@/lib/auth/server-actor";
 import { getFindingById } from "@/lib/supabase/queries/findings.server";
 import { ROLES } from "@/config/roles";
@@ -27,7 +27,7 @@ export default async function StafFindingDetailPage({
             href="/staf-iw/temuan"
             className="inline-flex items-center gap-1 text-sm text-base-content/70 hover:text-base-content"
          >
-            <ChevronLeft className="h-4 w-4" aria-hidden="true" />
+            <IconChevronLeft className="h-4 w-4" aria-hidden="true" />
             Kembali ke daftar temuan
          </Link>
 

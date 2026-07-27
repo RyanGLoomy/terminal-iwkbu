@@ -6,7 +6,7 @@ import { getTerminalReport } from "@/lib/supabase/queries/operasional.client";
 import { DatePicker } from "@/components/ui/date-picker";
 import { DashboardCard } from "@/components/dashboard/dashboard-card";
 import trendingUpLottie from "@/lib/lottie/trending-up.json";
-import { Loader2 } from "lucide-react";
+import { IconLoader2 } from "@tabler/icons-react";
 
 export function AdminTerminalSummary({
    terminalId,
@@ -119,7 +119,7 @@ export function AdminTerminalSummary({
          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
             {loading ? (
                <div className="col-span-5 flex items-center gap-2 text-base-content/70">
-                  <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> Memuat…
+                  <IconLoader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> Memuat…
                </div>
             ) : (
                <>

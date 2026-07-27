@@ -25,7 +25,7 @@ import {
    TableHeader,
    TableRow,
 } from "@/components/ui/table";
-import { Bus, Download, Loader2, LogIn, LogOut, TrendingUp } from "lucide-react";
+import { IconBus, IconDownload, IconLoader2, IconLogin, IconLogout, IconTrendingUp } from "@tabler/icons-react";
 
 type ExportCell = string | number | null | undefined;
 
@@ -443,28 +443,28 @@ export function AdminLaporanPanel({ terminalId }: { terminalId: string }) {
             <DashboardCard
                title="Total Masuk"
                value={String(totalMasuk)}
-               icon={LogIn}
+               icon={IconLogin}
                accent="blue"
                index={0}
             />
             <DashboardCard
                title="Total Keluar"
                value={String(totalKeluar)}
-               icon={LogOut}
+               icon={IconLogout}
                accent="green"
                index={1}
             />
             <DashboardCard
                title="Masih di Terminal"
                value={String(masihDiTerminal)}
-               icon={TrendingUp}
+               icon={IconTrendingUp}
                accent="amber"
                index={2}
             />
             <DashboardCard
                title="Jumlah PO"
                value={String(report?.summary.jumlah_po ?? 0)}
-               icon={Bus}
+               icon={IconBus}
                accent="violet"
                index={3}
             />
@@ -496,7 +496,7 @@ export function AdminLaporanPanel({ terminalId }: { terminalId: string }) {
                      disabled={rows.length === 0 || loading}
                      className="shrink-0"
                   >
-                     <Download className="h-4 w-4 mr-1.5" aria-hidden="true" />
+                     <IconDownload className="h-4 w-4 mr-1.5" aria-hidden="true" />
                      CSV Detail
                   </Button>
                   <Button
@@ -543,7 +543,7 @@ export function AdminLaporanPanel({ terminalId }: { terminalId: string }) {
                            <TableRow>
                               <TableCell colSpan={5}>
                                  <div className="flex items-center gap-2 text-base-content/70">
-                                    <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+                                    <IconLoader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
                                     Memuat laporan…
                                  </div>
                               </TableCell>

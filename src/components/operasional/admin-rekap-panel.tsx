@@ -18,7 +18,7 @@ import {
    TableRow,
 } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, LogIn, LogOut, Search, TrendingUp } from "lucide-react";
+import { IconLoader2, IconLogin, IconLogout, IconSearch, IconTrendingUp } from "@tabler/icons-react";
 
 const statusBadge: Record<string, string> = {
    masuk: "bg-amber-50 text-accent border border-amber-200/60 dark:bg-amber-950/50 dark:text-amber-300 dark:border-amber-800",
@@ -133,21 +133,21 @@ export function AdminRekapPanel({ terminalId }: { terminalId: string }) {
             <DashboardCard
                title="Total Masuk"
                value={String(totalMasuk)}
-               icon={LogIn}
+               icon={IconLogin}
                accent="blue"
                index={0}
             />
             <DashboardCard
                title="Total Keluar"
                value={String(totalKeluar)}
-               icon={LogOut}
+               icon={IconLogout}
                accent="green"
                index={1}
             />
             <DashboardCard
                title="Masih di Terminal"
                value={String(masihDiTerminal)}
-               icon={TrendingUp}
+               icon={IconTrendingUp}
                accent="amber"
                index={2}
             />
@@ -182,7 +182,7 @@ export function AdminRekapPanel({ terminalId }: { terminalId: string }) {
                </div>
                <div className="flex items-center gap-2 mt-2 sm:mt-0">
                   <div className="relative w-full sm:w-48">
-                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-base-content/70" aria-hidden="true" />
+                     <IconSearch className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-base-content/70" aria-hidden="true" />
                      <Input
                         placeholder="Cari nopol, PO..."
                         value={search}
@@ -224,7 +224,7 @@ export function AdminRekapPanel({ terminalId }: { terminalId: string }) {
                            <TableRow>
                               <TableCell colSpan={7}>
                                  <div className="flex items-center gap-2 text-base-content/70">
-                                    <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+                                    <IconLoader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
                                     Memuat data…
                                  </div>
                               </TableCell>

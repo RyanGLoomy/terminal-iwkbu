@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Paperclip, ExternalLink, Image as ImageIcon, Loader2 } from "lucide-react";
+import { IconPaperclip, IconExternalLink, IconPhoto as ImageIcon, IconLoader2 } from "@tabler/icons-react";
 import { toast } from "sonner";
 
 interface EvidenceAttachmentProps {
@@ -80,18 +80,18 @@ export function EvidenceAttachment({ evidence }: EvidenceAttachmentProps) {
                   className="inline-flex items-center gap-1 text-primary hover:underline"
                >
                   {loading ? (
-                     <Loader2
+                     <IconLoader2
                         className="h-3 w-3 animate-spin"
                         aria-hidden="true"
                      />
                   ) : isImage ? (
                      <ImageIcon className="h-3 w-3" aria-hidden="true" />
                   ) : (
-                     <Paperclip className="h-3 w-3" aria-hidden="true" />
+                     <IconPaperclip className="h-3 w-3" aria-hidden="true" />
                   )}
                   {fileName}
                   {!isImage && (
-                     <ExternalLink
+                     <IconExternalLink
                         className="h-3 w-3 ml-0.5"
                         aria-hidden="true"
                      />

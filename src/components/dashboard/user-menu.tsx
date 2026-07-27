@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { KeyRound, LogOut, User, Loader2 } from "lucide-react";
+import { IconKey, IconLogout, IconUser, IconLoader2 } from "@tabler/icons-react";
 import {
    Avatar,
    AvatarFallback,
@@ -90,7 +90,7 @@ export function UserMenu({ userName, userRole }: UserMenuProps) {
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
                <Link href="/profile" className="cursor-pointer">
-                  <User className="mr-2 size-4" aria-hidden="true" />
+                  <IconUser className="mr-2 size-4" aria-hidden="true" />
                   Profil
                </Link>
             </DropdownMenuItem>
@@ -101,9 +101,9 @@ export function UserMenu({ userName, userRole }: UserMenuProps) {
                   className="cursor-pointer"
                >
                   {exitingPetugas ? (
-                     <Loader2 className="mr-2 size-4 animate-spin" aria-hidden="true" />
+                     <IconLoader2 className="mr-2 size-4 animate-spin" aria-hidden="true" />
                   ) : (
-                     <KeyRound className="mr-2 size-4" aria-hidden="true" />
+                     <IconKey className="mr-2 size-4" aria-hidden="true" />
                   )}
                   Keluar Sesi Petugas
                </DropdownMenuItem>
@@ -115,9 +115,9 @@ export function UserMenu({ userName, userRole }: UserMenuProps) {
                className="cursor-pointer text-error focus:text-error"
             >
                {loggingOut ? (
-                  <Loader2 className="mr-2 size-4 animate-spin" aria-hidden="true" />
+                  <IconLoader2 className="mr-2 size-4 animate-spin" aria-hidden="true" />
                ) : (
-                  <LogOut className="mr-2 size-4" aria-hidden="true" />
+                  <IconLogout className="mr-2 size-4" aria-hidden="true" />
                )}
                Keluar
             </DropdownMenuItem>

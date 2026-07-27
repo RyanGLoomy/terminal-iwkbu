@@ -12,16 +12,16 @@ import {
    CardTitle,
 } from "@/components/ui/card";
 import {
-   Loader2,
-   User,
-   Mail,
-   Lock,
-   KeyRound,
-   Eye,
-   EyeOff,
-   Check,
-   AlertCircle,
-} from "lucide-react";
+   IconLoader2,
+   IconUser,
+   IconMail,
+   IconLock,
+   IconKey,
+   IconEye,
+   IconEyeOff,
+   IconCheck,
+   IconAlertCircle,
+} from "@tabler/icons-react";
 import { cn } from "@/lib/utils";
 import { getPinSession } from "@/lib/supabase/queries/operasional.client";
 import { getErrorMessage } from "@/lib/db-error";
@@ -71,9 +71,9 @@ function MsgAlert({ msg }: { msg: Msg }) {
          )}
       >
          {isError ? (
-            <AlertCircle className="h-4 w-4 mt-0.5 shrink-0" aria-hidden="true" />
+            <IconAlertCircle className="h-4 w-4 mt-0.5 shrink-0" aria-hidden="true" />
          ) : (
-            <Check className="h-4 w-4 mt-0.5 shrink-0" aria-hidden="true" />
+            <IconCheck className="h-4 w-4 mt-0.5 shrink-0" aria-hidden="true" />
          )}
          <span>{msg.text}</span>
       </div>
@@ -319,7 +319,7 @@ export function ProfileForm({ initialProfile }: { initialProfile: ProfileData })
                   {/* email */}
                   <div className="space-y-1.5">
                      <Label className="text-[13px] flex items-center gap-1.5 text-base-content/70">
-                        <Mail className="h-3.5 w-3.5" aria-hidden="true" />
+                        <IconMail className="h-3.5 w-3.5" aria-hidden="true" />
                         Email
                      </Label>
                      <p className="text-sm text-base-content dark:text-base-content/70 pl-5">
@@ -336,7 +336,7 @@ export function ProfileForm({ initialProfile }: { initialProfile: ProfileData })
                         htmlFor="fullName"
                         className="text-[13px] flex items-center gap-1.5 text-base-content/70"
                      >
-                        <User className="h-3.5 w-3.5" aria-hidden="true" />
+                        <IconUser className="h-3.5 w-3.5" aria-hidden="true" />
                         {isPetugas ? "Nama Petugas" : "Nama Lengkap"}
                      </Label>
                      {canEditName ? (
@@ -365,7 +365,7 @@ export function ProfileForm({ initialProfile }: { initialProfile: ProfileData })
                            size="sm"
                         >
                            {savingProfile && (
-                              <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
+                              <IconLoader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
                            )}
                            Simpan Perubahan
                         </Button>
@@ -378,7 +378,7 @@ export function ProfileForm({ initialProfile }: { initialProfile: ProfileData })
             <Card className="border-base-300">
                <CardHeader className="pb-3">
                   <CardTitle className="text-base flex items-center gap-2">
-                     <Lock className="h-4 w-4 text-base-content/70" />
+                     <IconLock className="h-4 w-4 text-base-content/70" />
                      Ganti Password
                   </CardTitle>
                   <CardDescription>
@@ -414,9 +414,9 @@ export function ProfileForm({ initialProfile }: { initialProfile: ProfileData })
                            className="absolute right-3 top-1/2 -translate-y-1/2 text-base-content/70 hover:text-base-content transition-colors"
                         >
                            {showCurrentPw ? (
-                              <EyeOff className="h-4 w-4" />
+                              <IconEyeOff className="h-4 w-4" />
                            ) : (
-                              <Eye className="h-4 w-4" />
+                              <IconEye className="h-4 w-4" />
                            )}
                         </button>
                      </div>
@@ -446,9 +446,9 @@ export function ProfileForm({ initialProfile }: { initialProfile: ProfileData })
                            className="absolute right-3 top-1/2 -translate-y-1/2 text-base-content/70 hover:text-base-content transition-colors"
                         >
                            {showNewPw ? (
-                              <EyeOff className="h-4 w-4" />
+                              <IconEyeOff className="h-4 w-4" />
                            ) : (
-                              <Eye className="h-4 w-4" />
+                              <IconEye className="h-4 w-4" />
                            )}
                         </button>
                      </div>
@@ -481,7 +481,7 @@ export function ProfileForm({ initialProfile }: { initialProfile: ProfileData })
                         className="border-base-300"
                      >
                         {savingPassword && (
-                           <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
+                           <IconLoader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
                         )}
                         Perbarui Password
                      </Button>
@@ -494,7 +494,7 @@ export function ProfileForm({ initialProfile }: { initialProfile: ProfileData })
                <Card className="border-base-300">
                   <CardHeader className="pb-3">
                      <CardTitle className="text-base flex items-center gap-2">
-                        <KeyRound className="h-4 w-4 text-base-content/70" aria-hidden="true" />
+                        <IconKey className="h-4 w-4 text-base-content/70" aria-hidden="true" />
                         Ganti PIN
                      </CardTitle>
                      <CardDescription>
@@ -579,7 +579,7 @@ export function ProfileForm({ initialProfile }: { initialProfile: ProfileData })
                            className="border-base-300"
                         >
                            {savingPin && (
-                              <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
+                              <IconLoader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
                            )}
                            Perbarui PIN
                         </Button>

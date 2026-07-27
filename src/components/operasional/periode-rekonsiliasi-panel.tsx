@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Plus, Trash2, Play, CheckCircle2, Calendar, Loader2 } from "lucide-react";
+import { IconPlus, IconTrash, IconPlayerPlay, IconCircleCheck, IconCalendar, IconLoader2 } from "@tabler/icons-react";
 import { toast } from "sonner";
 import {
    Card,
@@ -35,22 +35,22 @@ interface PeriodeRekonsiliasi {
 
 const statusConfig: Record<
    string,
-   { label: string; color: string; icon: typeof Plus }
+   { label: string; color: string; icon: typeof IconPlus }
 > = {
    draft: {
       label: "Draft",
       color: "bg-base-200 text-base-content/70 border border-base-300",
-      icon: Plus,
+      icon: IconPlus,
    },
    aktif: {
       label: "Aktif",
       color: "bg-emerald-50 text-brand-green dark:bg-green-950/50 dark:text-green-300 dark:border-green-800",
-      icon: Play,
+      icon: IconPlayerPlay,
    },
    ditutup: {
       label: "Ditutup",
       color: "bg-primary/10 text-primary bg-primary/10 border border-primary/25 dark:bg-blue-950/50 dark:border-blue-800",
-      icon: CheckCircle2,
+      icon: IconCircleCheck,
    },
 };
 
@@ -165,14 +165,14 @@ export function PeriodeRekonsiliasiPanel() {
       <Card className="border-base-300">
          <CardHeader className="pb-4">
             <CardTitle className="text-base flex items-center gap-2">
-               <Calendar className="h-4 w-4 text-primary" aria-hidden="true" />
+               <IconCalendar className="h-4 w-4 text-primary" aria-hidden="true" />
                Periode Rekonsiliasi
                <Button
                   size="sm"
                   className="ml-auto"
                   onClick={() => setIsCreateOpen(true)}
                >
-                  <Plus className="h-3.5 w-3.5 mr-1" aria-hidden="true" />
+                  <IconPlus className="h-3.5 w-3.5 mr-1" aria-hidden="true" />
                   Buat Periode
                </Button>
             </CardTitle>
@@ -227,9 +227,9 @@ export function PeriodeRekonsiliasiPanel() {
                                         }
                                      >
                                         {activating ? (
-                                           <Loader2 className="h-3.5 w-3.5 mr-1 animate-spin" aria-hidden="true" />
+                                           <IconLoader2 className="h-3.5 w-3.5 mr-1 animate-spin" aria-hidden="true" />
                                         ) : (
-                                           <Play className="h-3.5 w-3.5 mr-1" aria-hidden="true" />
+                                           <IconPlayerPlay className="h-3.5 w-3.5 mr-1" aria-hidden="true" />
                                         )}
                                         {activating ? "Mengaktifkan..." : "Aktifkan"}
                                      </Button>
@@ -240,7 +240,7 @@ export function PeriodeRekonsiliasiPanel() {
                                           handleDelete(p.id, p.nama_periode)
                                        }
                                     >
-                                       <Trash2 className="h-3.5 w-3.5" />
+                                       <IconTrash className="h-3.5 w-3.5" />
                                     </Button>
                                  </>
                               )}
@@ -256,7 +256,7 @@ export function PeriodeRekonsiliasiPanel() {
                                        )
                                     }
                                  >
-                                    <CheckCircle2 className="h-3.5 w-3.5 mr-1" aria-hidden="true" />
+                                    <IconCircleCheck className="h-3.5 w-3.5 mr-1" aria-hidden="true" />
                                     Tutup
                                  </Button>
                               )}

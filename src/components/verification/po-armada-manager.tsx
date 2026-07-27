@@ -19,7 +19,7 @@ import {
    SelectTrigger,
    SelectValue,
 } from "@/components/ui/select";
-import { Plus, Bus, Search, Upload, FileDown } from "lucide-react";
+import { IconPlus, IconBus, IconSearch, IconUpload, IconFilterDown } from "@tabler/icons-react";
 import { toast } from "sonner";
 import { ArmadaTable } from "./armada-table";
 import dynamic from "next/dynamic";
@@ -48,7 +48,7 @@ export function POArmadaManager({ poId }: POArmadaManagerProps) {
    const [isFormOpen, setIsFormOpen] = useState(false);
    const [isStatusOpen, setIsStatusOpen] = useState(false);
    const [isDokumenOpen, setIsDokumenOpen] = useState(false);
-   const [search, setSearch] = useState("");
+   const [search, setIconSearch] = useState("");
    const [statusFilter, setStatusFilter] = useState<string>("semua");
    const [importing, setImporting] = useState(false);
    const fileInputRef = useRef<HTMLInputElement>(null);
@@ -60,7 +60,7 @@ export function POArmadaManager({ poId }: POArmadaManagerProps) {
     const filteredArmada = (() => {
        const q = search.trim().toLowerCase();
        return armada.filter((a) => {
-          const matchesSearch =
+          const matchesIconSearch =
              !q ||
              a.nomor_polisi.toLowerCase().includes(q) ||
              (a.merk ?? "").toLowerCase().includes(q) ||
@@ -70,7 +70,7 @@ export function POArmadaManager({ poId }: POArmadaManagerProps) {
              statusFilter === "semua" ||
              a.status_operasional === statusFilter ||
              a.status_verifikasi === statusFilter;
-          return matchesSearch && matchesStatus;
+          return matchesIconSearch && matchesStatus;
        });
     })();
 
@@ -184,7 +184,7 @@ export function POArmadaManager({ poId }: POArmadaManagerProps) {
                      setIsFormOpen(true);
                   }}
                >
-                  <Plus className="mr-2 h-4 w-4" aria-hidden="true" />
+                  <IconPlus className="mr-2 h-4 w-4" aria-hidden="true" />
                   Tambah Armada
                </Button>
                <Button
@@ -192,7 +192,7 @@ export function POArmadaManager({ poId }: POArmadaManagerProps) {
                   disabled={importing}
                   onClick={() => fileInputRef.current?.click()}
                >
-                  <Upload className="mr-2 h-4 w-4" aria-hidden="true" />
+                  <IconUpload className="mr-2 h-4 w-4" aria-hidden="true" />
                   {importing ? "Mengimpor..." : "Import CSV"}
                </Button>
                <input
@@ -205,11 +205,11 @@ export function POArmadaManager({ poId }: POArmadaManagerProps) {
             </div>
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-base-content/70" aria-hidden="true" />
+                  <IconSearch className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-base-content/70" aria-hidden="true" />
                   <Input
                      placeholder="Cari nopol, merk, lambung..."
                      value={search}
-                     onChange={(e) => setSearch(e.target.value)}
+                     onChange={(e) => setIconSearch(e.target.value)}
                      className="pl-9 h-9 w-full sm:w-56"
                   />
                </div>
@@ -243,7 +243,7 @@ export function POArmadaManager({ poId }: POArmadaManagerProps) {
          <Card className="border-base-300">
             <CardHeader className="pb-4">
                 <CardTitle className="text-base flex items-center gap-2">
-                   <Bus className="h-4 w-4 text-primary" aria-hidden="true" />
+                   <IconBus className="h-4 w-4 text-primary" aria-hidden="true" />
                    Daftar Armada ({filteredArmada.length}
                    {filteredArmada.length !== armada.length &&
                       ` dari ${armada.length}`})

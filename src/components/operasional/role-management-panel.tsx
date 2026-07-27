@@ -9,7 +9,7 @@ import {
    CardHeader,
    CardTitle,
 } from "@/components/ui/card";
-import { Users } from "lucide-react";
+import { IconUsers } from "@tabler/icons-react";
 import { toast } from "sonner";
 import { ROLES, ROLE_DISPLAY_NAMES } from "@/config/roles";
 import {
@@ -56,16 +56,16 @@ function getRoleName(user: UserProfile): string | null {
 const ROLE_OPTIONS = [ROLES.ADMIN_TERMINAL, ROLES.STAF_IW];
 
 export function RoleManagementPanel() {
-   const [users, setUsers] = useState<UserProfile[]>([]);
+   const [users, setIconUsers] = useState<UserProfile[]>([]);
    const [loading, setLoading] = useState(true);
    const [saving, setSaving] = useState<string | null>(null);
 
-   const loadUsers = async () => {
+   const loadIconUsers = async () => {
       try {
          const res = await fetch("/api/staf-iw/users");
          const payload = await res.json();
          if (res.ok) {
-            setUsers(payload.data ?? []);
+            setIconUsers(payload.data ?? []);
          }
       } catch {
          toast.error("Gagal memuat data user");
@@ -75,8 +75,8 @@ export function RoleManagementPanel() {
    };
 
    useEffect(() => {
-      loadUsers();
-   }, [loadUsers]);
+      loadIconUsers();
+   }, [loadIconUsers]);
 
    async function handleRoleChange(
       userId: string,
@@ -96,7 +96,7 @@ export function RoleManagementPanel() {
 
          if (res.ok) {
             toast.success(`Role ${email} diubah menjadi ${ROLE_DISPLAY_NAMES[newRole as keyof typeof ROLE_DISPLAY_NAMES] ?? newRole}`);
-            await loadUsers();
+            await loadIconUsers();
          } else {
             const payload = await res.json();
             toast.error(payload?.message ?? "Gagal mengubah role");
@@ -110,7 +110,7 @@ export function RoleManagementPanel() {
       <Card className="border-base-300">
          <CardHeader className="pb-4">
             <CardTitle className="text-base flex items-center gap-2">
-               <Users className="h-4 w-4 text-primary" aria-hidden="true" />
+               <IconUsers className="h-4 w-4 text-primary" aria-hidden="true" />
                Manajemen Role User
             </CardTitle>
          </CardHeader>

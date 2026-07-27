@@ -22,14 +22,14 @@ import { Textarea } from "@/components/ui/textarea";
 import type { FindingRecord } from "@/lib/supabase/queries/operasional.types";
 import { toast } from "sonner";
 import {
-   AlertCircle,
-   CheckCircle2,
-   Circle,
-   Loader2,
-   MessageSquare,
-   Paperclip,
-   Plus,
-} from "lucide-react";
+   IconAlertCircle,
+   IconCircleCheck,
+   IconCircle,
+   IconLoader2,
+   IconMessage,
+   IconPaperclip,
+   IconPlus,
+} from "@tabler/icons-react";
 import { getErrorMessage } from "@/lib/db-error";
 import { formatDecisionLabel, formatDateTime } from "./findings-shared";
 import { EvidenceAttachment } from "./evidence-attachment";
@@ -286,7 +286,7 @@ export function StafFindingsClarificationDialog({
                   />
                   <div className="flex items-center gap-2">
                      <label className="inline-flex items-center gap-2 rounded-md bg-base-200 px-3 py-1 text-xs font-medium text-base-content hover:bg-base-300/70 cursor-pointer">
-                        <Paperclip className="h-3.5 w-3.5" aria-hidden="true" />
+                        <IconPaperclip className="h-3.5 w-3.5" aria-hidden="true" />
                         Pilih file
                         <input
                            type="file"
@@ -312,12 +312,12 @@ export function StafFindingsClarificationDialog({
                      disabled={clarificationSaving}
                   >
                      {clarificationSaving ? (
-                        <Loader2
+                        <IconLoader2
                            className="mr-2 h-4 w-4 animate-spin"
                            aria-hidden="true"
                         />
                      ) : (
-                        <MessageSquare
+                        <IconMessage
                            className="mr-2 h-4 w-4"
                            aria-hidden="true"
                         />
@@ -346,9 +346,9 @@ export function StafFindingsClarificationDialog({
                               className="mt-0.5 shrink-0"
                            >
                               {action.status === "done" ? (
-                                 <CheckCircle2 className="h-4 w-4 text-brand-green" />
+                                 <IconCircleCheck className="h-4 w-4 text-brand-green" />
                               ) : (
-                                 <Circle className="h-4 w-4 text-base-content/70" />
+                                 <IconCircle className="h-4 w-4 text-base-content/70" />
                               )}
                            </button>
                            <div className="flex-1 min-w-0">
@@ -413,9 +413,9 @@ export function StafFindingsClarificationDialog({
                         disabled={actionSaving || !actionText.trim()}
                      >
                         {actionSaving ? (
-                           <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                           <IconLoader2 className="h-3.5 w-3.5 animate-spin" />
                         ) : (
-                           <Plus className="h-3.5 w-3.5" />
+                           <IconPlus className="h-3.5 w-3.5" />
                         )}
                      </Button>
                   </div>
@@ -428,7 +428,7 @@ export function StafFindingsClarificationDialog({
                   role="alert"
                   aria-live="polite"
                >
-                  <AlertCircle className="mt-0.5 h-4 w-4" aria-hidden="true" />
+                  <IconAlertCircle className="mt-0.5 h-4 w-4" aria-hidden="true" />
                   <span>{error}</span>
                </div>
             )}

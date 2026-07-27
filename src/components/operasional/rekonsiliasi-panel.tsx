@@ -17,7 +17,7 @@ import {
    TableRow,
 } from "@/components/ui/table";
 import type { Armada, PO } from "@/lib/supabase/queries/verification.types";
-import { Download } from "lucide-react";
+import { IconDownload } from "@tabler/icons-react";
 
 type ReconciliationRow = {
    po: PO;
@@ -217,7 +217,7 @@ export const RekonsiliasiPanel = memo(function RekonsiliasiPanelContent({
                    disabled={rows.length === 0}
                    className="shrink-0"
                 >
-                   <Download className="h-4 w-4 mr-1.5" aria-hidden="true" />
+                   <IconDownload className="h-4 w-4 mr-1.5" aria-hidden="true" />
                    CSV
                 </Button>
              </CardHeader>

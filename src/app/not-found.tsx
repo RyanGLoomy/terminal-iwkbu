@@ -1,12 +1,26 @@
+"use client";
+
 import Link from "next/link";
+import dynamic from "next/dynamic";
+
+const LottieIcon = dynamic(
+   () => import("@/components/ui/lottie-icon").then((m) => m.LottieIcon),
+   { ssr: false },
+);
+
+import notFoundAnimation from "@/lib/lottie/not-found.json";
 
 export default function NotFound() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-base-100 px-4">
       <div className="text-center max-w-md">
-        <h1 className="text-7xl font-bold tracking-tight text-base-content">
-          404
-        </h1>
+        <LottieIcon
+          animation={notFoundAnimation}
+          size={280}
+          loop
+          autoplay
+          className="mx-auto"
+        />
         <p className="mt-4 text-lg text-base-content/70">
           Halaman tidak ditemukan.
         </p>

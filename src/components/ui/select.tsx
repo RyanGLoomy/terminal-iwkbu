@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { createPortal } from "react-dom";
-import { Check, ChevronDown, ChevronUp } from "lucide-react";
+import { IconCheck, IconChevronDown, IconChevronUp } from "@tabler/icons-react";
 
 import { cn } from "@/lib/utils";
 
@@ -227,7 +227,7 @@ function SelectTrigger({
       {...props}
     >
       {children}
-      <ChevronDown className="size-4 shrink-0 opacity-50" aria-hidden="true" />
+      <IconChevronDown className="size-4 shrink-0 opacity-50" aria-hidden="true" />
     </button>
   );
 }
@@ -435,7 +435,7 @@ function SelectItem({
       {...props}
     >
       <span className="absolute left-2 flex size-3.5 items-center justify-center" aria-hidden="true">
-        {selected && <Check className="size-4 text-primary" />}
+        {selected && <IconCheck className="size-4 text-primary" />}
       </span>
       {children}
     </div>
@@ -454,14 +454,14 @@ function SelectSeparator({
 function SelectScrollUpButton() {
   return (
     <div className="flex cursor-default items-center justify-center py-0.5 text-base-content/40" aria-hidden="true">
-      <ChevronUp className="size-3.5" />
+      <IconChevronUp className="size-3.5" />
     </div>
   );
 }
 function SelectScrollDownButton() {
   return (
     <div className="flex cursor-default items-center justify-center py-0.5 text-base-content/40" aria-hidden="true">
-      <ChevronDown className="size-3.5" />
+      <IconChevronDown className="size-3.5" />
     </div>
   );
 }

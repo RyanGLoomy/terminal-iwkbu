@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { formatDateTimeCustom } from "@/lib/utils/format-date";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { CheckCheck, Check } from "lucide-react";
+import { IconChecks, IconCheck } from "@tabler/icons-react";
 import { EmptyState } from "@/components/shared/empty-state";
 import inboxEmptyLottie from "@/lib/lottie/inbox-empty.json";
 import notificationBellLottie from "@/lib/lottie/notification-bell.json";
@@ -237,7 +237,7 @@ export function NotificationBell() {
                             className="h-7 text-xs gap-1"
                             onClick={markAllRead}
                          >
-                            <CheckCheck className="h-3.5 w-3.5" aria-hidden="true" />
+                            <IconChecks className="h-3.5 w-3.5" aria-hidden="true" />
                             Tandai semua dibaca
                          </Button>
                       )}
@@ -284,7 +284,7 @@ export function NotificationBell() {
                                              onClick={(e) => { e.stopPropagation(); markSingleRead(n.id); }}
                                              aria-label="Tandai dibaca"
                                           >
-                                             <Check className="h-3.5 w-3.5" />
+                                              <IconCheck className="h-3.5 w-3.5" />
                                           </button>
                                        )}
                                     </div>
