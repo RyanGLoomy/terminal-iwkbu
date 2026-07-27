@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { formatDateTimeCustom } from "@/lib/utils/format-date";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -11,10 +11,7 @@ import notificationBellLottie from "@/lib/lottie/notification-bell.json";
 import { createClient } from "@/lib/supabase/client";
 import dynamic from "next/dynamic";
 
-const LottieIcon = dynamic(
-   () => import("@/components/ui/lottie-icon").then((m) => m.LottieIcon),
-   { ssr: false },
-);
+const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 import { useRouter } from "next/navigation";
 import { PushToggle } from "@/components/dashboard/push-toggle";
 
@@ -34,6 +31,7 @@ export function NotificationBell() {
    const [open, setOpen] = useState(false);
    const dropdownRef = useRef<HTMLDivElement>(null);
    const bellWrapRef = useRef<HTMLSpanElement>(null);
+   const bellRef = useRef<any>(null);
    const router = useRouter();
 
    const loadNotifications = async () => {
@@ -188,22 +186,19 @@ export function NotificationBell() {
                aria-expanded={open}
                onClick={() => setOpen((v) => !v)}
             >
-                   {unreadCount > 0 ? (
-                      <LottieIcon
-                         animation={notificationBellLottie}
-                         size={22}
-                         loop={true}
-                         autoplay={true}
-                         className="text-primary"
+                   <span
+                      className={`inline-flex items-center justify-center ${unreadCount > 0 ? "text-primary" : "text-base-content/70"} cursor-pointer hover:scale-110 transition-transform dark:hue-[-172deg] dark:brightness-[1.4]`}
+                      onMouseEnter={() => bellRef.current?.play()}
+                      onMouseLeave={() => { if (unreadCount === 0) bellRef.current?.stop(); }}
+                   >
+                      <Lottie
+                         lottieRef={bellRef}
+                         animationData={notificationBellLottie}
+                         loop={unreadCount > 0}
+                         autoplay={unreadCount > 0}
+                         style={{ width: 22, height: 22 }}
                       />
-                   ) : (
-                      <span className="inline-flex h-[22px] w-[22px] items-center justify-center text-base-content/70">
-                         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/>
-                            <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
-                         </svg>
-                      </span>
-                   )}
+                   </span>
                {unreadCount > 0 && (
                   <span
                      className="absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-error px-1 text-[10px] font-bold text-error-content"
