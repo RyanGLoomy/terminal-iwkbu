@@ -4,13 +4,9 @@ import { useState, useEffect, useRef } from "react";
 import { formatDateTimeCustom } from "@/lib/utils/format-date";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { CheckCheck, Check } from "lucide-react";
+import { Bell, CheckCheck, Check } from "lucide-react";
 import { EmptyState } from "@/components/shared/empty-state";
 import inboxEmptyLottie from "@/lib/lottie/inbox-empty.json";
-import notificationBellLottie from "@/lib/lottie/notification-bell.json";
-import dynamic from "next/dynamic";
-
-const LottieIcon = dynamic(() => import("@/components/ui/lottie-icon").then(m => m.LottieIcon), { ssr: false });
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { PushToggle } from "@/components/dashboard/push-toggle";
@@ -185,7 +181,7 @@ export function NotificationBell() {
                aria-expanded={open}
                onClick={() => setOpen((v) => !v)}
             >
-                 <LottieIcon animation={notificationBellLottie} size={24} loop={true} autoplay={true} />
+                  <Bell className={`h-5 w-5 ${unreadCount > 0 ? "animate-bell-shake text-primary" : "text-base-content/70"}`} />
                {unreadCount > 0 && (
                   <span
                      className="absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-error px-1 text-[10px] font-bold text-error-content"
