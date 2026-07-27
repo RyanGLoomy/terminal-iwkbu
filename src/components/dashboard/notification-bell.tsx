@@ -11,7 +11,9 @@ import notificationBellLottie from "@/lib/lottie/notification-bell.json";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { PushToggle } from "@/components/dashboard/push-toggle";
-import { LottieIcon } from "@/components/ui/lottie-icon";
+import dynamic from "next/dynamic";
+
+const Lottie = dynamic(() => import("lottie-react").then(m => m.default), { ssr: false });
 
 interface Notification {
    id: string;
@@ -184,12 +186,12 @@ export function NotificationBell() {
                aria-expanded={open}
                onClick={() => setOpen((v) => !v)}
             >
-                   <LottieIcon
-                      animation={notificationBellLottie}
-                      size={22}
+                   <Lottie
+                      animationData={notificationBellLottie}
                       loop={true}
                       autoplay={true}
-                      className={`${unreadCount > 0 ? "text-primary" : "text-base-content/70"}`}
+                      style={{ width: 22, height: 22 }}
+                      className={`${unreadCount > 0 ? "text-primary" : "text-base-content/70"} dark:hue-[-172deg] dark:brightness-[1.4]`}
                    />
                {unreadCount > 0 && (
                   <span
