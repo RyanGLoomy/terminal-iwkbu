@@ -126,8 +126,8 @@ export function Sidebar({ userRole, collapsed, onToggleCollapse }: SidebarProps)
                 collapsed ? "w-[72px]" : "w-[264px]",
              )}
          >
-             {/* Header: JR logo + toggle collapse */}
-             <div className="flex h-16 items-center gap-3 border-b border-sidebar-border px-4">
+              {/* Header: JR logo + toggle collapse */}
+              <div className="flex h-14 items-center gap-3 border-b border-sidebar-border px-4">
                 {collapsed ? (
                    <button
                       type="button"

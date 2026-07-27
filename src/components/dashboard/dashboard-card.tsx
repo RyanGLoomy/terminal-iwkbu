@@ -20,6 +20,7 @@ import {
    UserCheck,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { LottieIcon } from "@/components/ui/lottie-icon";
 import { cn } from "@/lib/utils";
 
 export type IconName =
@@ -41,6 +42,7 @@ type DashboardCardProps = {
    value: string;
    description?: string;
    icon?: LucideIcon | IconName;
+   lottieAnimation?: object;
    accent?: "blue" | "green" | "amber" | "violet" | "red" | "default";
    index?: number;
 };
@@ -60,6 +62,7 @@ export function DashboardCard({
    value,
    description,
    icon,
+   lottieAnimation,
    accent = "default",
 }: DashboardCardProps) {
    const Icon = typeof icon === "string" ? iconMap[icon] : icon;
@@ -81,14 +84,23 @@ export function DashboardCard({
                      </p>
                   )}
                </div>
-               {Icon && (
+               {(lottieAnimation || Icon) && (
                   <div
                      className={cn(
-                        "flex h-12 w-12 shrink-0 items-center justify-center rounded-xl ring-1",
+                        "flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ring-1",
+                        "mt-5",
                         accentConfig[accent],
                      )}
                   >
-                     <Icon className="h-6 w-6" aria-hidden="true" />
+                     {lottieAnimation ? (
+                        <LottieIcon
+                           animation={lottieAnimation}
+                           size={44}
+                           className="h-full w-full"
+                        />
+                     ) : Icon ? (
+                        <Icon className="h-6 w-6" aria-hidden="true" />
+                     ) : null}
                   </div>
                )}
             </div>

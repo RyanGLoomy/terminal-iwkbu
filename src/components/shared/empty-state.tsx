@@ -1,9 +1,13 @@
 import * as React from "react";
 import { type LucideIcon, Inbox, SearchX } from "lucide-react";
 import { cn } from "@/lib/utils";
+import dynamic from "next/dynamic";
+
+const LottieIcon = dynamic(() => import("@/components/ui/lottie-icon").then(m => m.LottieIcon), { ssr: false });
 
 interface EmptyStateProps {
    icon?: LucideIcon;
+   lottieAnimation?: object;
    title: string;
    description?: string;
    action?: React.ReactNode;
@@ -13,6 +17,7 @@ interface EmptyStateProps {
 
 function EmptyState({
    icon: Icon,
+   lottieAnimation,
    title,
    description,
    action,
@@ -29,7 +34,9 @@ function EmptyState({
          )}
       >
          <div className="flex size-12 items-center justify-center rounded-full bg-base-200">
-            {Icon ? (
+            {lottieAnimation ? (
+               <LottieIcon animation={lottieAnimation} size={32} loop autoplay />
+            ) : Icon ? (
                <Icon className="size-6 text-base-content/70" aria-hidden="true" />
             ) : (
                <DefaultIcon className="size-6 text-base-content/70" aria-hidden="true" />

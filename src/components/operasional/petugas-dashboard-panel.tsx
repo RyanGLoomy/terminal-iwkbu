@@ -19,6 +19,7 @@ import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DashboardCard } from "@/components/dashboard/dashboard-card";
+import trendingUpLottie from "@/lib/lottie/trending-up.json";
 import { LoadingState } from "@/components/shared/loading-state";
 import { Activity, LogIn, LogOut, Loader2, TrendingUp } from "lucide-react";
 
@@ -221,8 +222,9 @@ export function PetugasDashboardPanel() {
             <DashboardCard
                title="Total Transaksi"
                value={String(stats?.total_transaksi_hari_ini ?? 0)}
-               icon="trending-up"
-               accent="blue"
+                icon="trending-up"
+                lottieAnimation={trendingUpLottie}
+                accent="blue"
                index={2}
                description="Masuk + Keluar hari ini"
             />

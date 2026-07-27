@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import { getTerminalReport } from "@/lib/supabase/queries/operasional.client";
 import { DatePicker } from "@/components/ui/date-picker";
 import { DashboardCard } from "@/components/dashboard/dashboard-card";
+import trendingUpLottie from "@/lib/lottie/trending-up.json";
 import { Loader2 } from "lucide-react";
 
 export function AdminTerminalSummary({
@@ -139,8 +140,9 @@ export function AdminTerminalSummary({
                   <DashboardCard
                      title="Masih di Terminal"
                      value={String(masihDiTerminal)}
-                     icon="trending-up"
-                     accent="amber"
+                      icon="trending-up"
+                      lottieAnimation={trendingUpLottie}
+                      accent="amber"
                      index={2}
                   />
                   <DashboardCard

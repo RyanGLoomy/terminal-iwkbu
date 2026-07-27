@@ -10,6 +10,10 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { DashboardCard } from "@/components/dashboard/dashboard-card";
+import shieldCheckLottie from "@/lib/lottie/shield-check.json";
+import checkCircleLottie from "@/lib/lottie/check-circle.json";
+import alertTriangleLottie from "@/lib/lottie/alert-triangle.json";
+import usersLottie from "@/lib/lottie/users.json";
 import {
    Table,
    TableBody,
@@ -156,29 +160,33 @@ export function StafIwLaporanPanel({
                title="PO Aktif"
                value={String(stats.poAktif)}
                description={`${stats.poMenunggu} menunggu verifikasi`}
-               icon="users"
-               accent="blue"
+                icon="users"
+                lottieAnimation={usersLottie}
+                accent="blue"
             />
             <DashboardCard
                title="Armada Terverifikasi"
                value={String(stats.armadaTerverifikasi)}
                description={`${belumVerifikasi} menunggu/ditolak`}
                icon="shield-check"
+               lottieAnimation={shieldCheckLottie}
                accent="green"
             />
             <DashboardCard
                title="Temuan Terbuka"
                value={String(open + onProgress)}
                description={`${open} terbuka · ${onProgress} diproses`}
-               icon="alert-triangle"
-               accent="amber"
+                icon="alert-triangle"
+                lottieAnimation={alertTriangleLottie}
+                accent="amber"
             />
             <DashboardCard
                title="Temuan Selesai"
                value={String(closed)}
                description="Telah ditindak lanjuti"
-               icon="check-circle"
-               accent="green"
+                icon="check-circle"
+                lottieAnimation={checkCircleLottie}
+                accent="green"
             />
          </div>
 

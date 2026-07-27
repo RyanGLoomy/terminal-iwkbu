@@ -61,8 +61,8 @@ export function UserMenu({ userName, userRole }: UserMenuProps) {
 
    return (
       <DropdownMenu>
-         <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="sm" className="gap-2 px-2">
+          <DropdownMenuTrigger asChild>
+             <Button variant="ghost" size="sm" className="gap-2 px-3 py-1.5">
                <Avatar className="size-7">
                   <AvatarFallback className="bg-brand-sky/15 text-xs font-semibold text-brand-sky">
                      {getInitials(userName)}
@@ -73,7 +73,7 @@ export function UserMenu({ userName, userRole }: UserMenuProps) {
                </span>
             </Button>
          </DropdownMenuTrigger>
-         <DropdownMenuContent align="end" className="w-56">
+          <DropdownMenuContent align="end" sideOffset={8} className="w-56">
             <DropdownMenuLabel className="font-normal">
                <div className="flex flex-col space-y-1">
                   <p className="truncate text-sm font-medium leading-none">

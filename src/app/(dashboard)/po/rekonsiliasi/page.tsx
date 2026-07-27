@@ -5,6 +5,9 @@ import type { Armada } from "@/lib/supabase/queries/verification.types";
 import { getPoIwkbuStatus } from "@/lib/supabase/queries/iwkbu-sync.server";
 import { DashboardCard } from "@/components/dashboard/dashboard-card";
 import { RekonsiliasiArmadaTable, type IwkbuSyncData } from "@/components/operasional/rekonsiliasi-armada-table";
+import shieldCheckLottie from "@/lib/lottie/shield-check.json";
+import checkCircleLottie from "@/lib/lottie/check-circle.json";
+import alertTriangleLottie from "@/lib/lottie/alert-triangle.json";
 
 export default async function PoRekonsiliasiPage() {
   const actor = await getAuthenticatedActor();
@@ -53,6 +56,7 @@ export default async function PoRekonsiliasiPage() {
             value={String(terverifikasi)}
             description="Siap untuk rekonsiliasi"
             icon="check-circle"
+            lottieAnimation={checkCircleLottie}
             accent="green"
             index={1}
           />
@@ -61,6 +65,7 @@ export default async function PoRekonsiliasiPage() {
             value={String(iwkbuSummary.ready)}
             description={` dari ${iwkbuSummary.total} tersinkron`}
             icon="shield-check"
+            lottieAnimation={shieldCheckLottie}
             accent="green"
             index={2}
           />
@@ -68,8 +73,9 @@ export default async function PoRekonsiliasiPage() {
             title="Perlu Perhatian"
             value={String(iwkbuSummary.needs_review + iwkbuSummary.blocked)}
             description={`${iwkbuSummary.blocked} diblokir, ${iwkbuSummary.needs_review} perlu tinjauan`}
-            icon="alert-triangle"
-            accent="amber"
+             icon="alert-triangle"
+             lottieAnimation={alertTriangleLottie}
+             accent="amber"
             index={3}
           />
         </div>

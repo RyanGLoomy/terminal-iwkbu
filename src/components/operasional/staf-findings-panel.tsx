@@ -21,6 +21,10 @@ import {
    SelectValue,
 } from "@/components/ui/select";
 import { DashboardCard } from "@/components/dashboard/dashboard-card";
+import checkCircleLottie from "@/lib/lottie/check-circle.json";
+import clockLottie from "@/lib/lottie/clock.json";
+import activityLottie from "@/lib/lottie/activity.json";
+import alertTriangleLottie from "@/lib/lottie/alert-triangle.json";
 import { STATUS_MAP } from "@/components/shared/status-badge";
 import { Card, CardContent } from "@/components/ui/card";
 import type { FindingRecord } from "@/lib/supabase/queries/operasional.types";
@@ -225,10 +229,10 @@ export function StafFindingsPanel({
    return (
       <div className="space-y-5">
          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <DashboardCard title="Total Temuan" value={String(stats.total)} description="Catatan yang tersimpan" icon="alert-triangle" accent="blue" index={0} />
-            <DashboardCard title="Open" value={String(stats.open)} description="Menunggu tindak lanjut" icon="clock" accent="amber" index={1} />
-            <DashboardCard title="On Progress" value={String(stats.progress)} description="Sedang diklarifikasi" icon="activity" accent="violet" index={2} />
-            <DashboardCard title="Closed" value={String(stats.closed)} description="Sudah diselesaikan" icon="check-circle" accent="green" index={3} />
+             <DashboardCard title="Total Temuan" value={String(stats.total)} description="Catatan yang tersimpan" icon="alert-triangle" lottieAnimation={alertTriangleLottie} accent="blue" index={0} />
+             <DashboardCard title="Open" value={String(stats.open)} description="Menunggu tindak lanjut" icon="clock" lottieAnimation={clockLottie} accent="amber" index={1} />
+             <DashboardCard title="On Progress" value={String(stats.progress)} description="Sedang diklarifikasi" icon="activity" lottieAnimation={activityLottie} accent="violet" index={2} />
+             <DashboardCard title="Closed" value={String(stats.closed)} description="Sudah diselesaikan" icon="check-circle" lottieAnimation={checkCircleLottie} accent="green" index={3} />
          </div>
 
          {/* Toolbar */}

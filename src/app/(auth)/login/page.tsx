@@ -1,6 +1,7 @@
 import { LoginForm } from "@/components/auth/login-form";
 import Image from "next/image";
 import { MapPin, ShieldCheck, Bus, FileCheck2, TrendingUp } from "lucide-react";
+import { LoginHeroLottie } from "@/components/auth/login-hero-lottie";
 
 export default function LoginPage() {
    return (
@@ -68,6 +69,11 @@ export default function LoginPage() {
                      Kanwil Banten
                   </span>
                </div>
+            </div>
+
+            {/* Hero Animation */}
+            <div className="relative z-10 flex justify-center py-4">
+               <LoginHeroLottie />
             </div>
 
             {/* Bottom: Feature highlights */}

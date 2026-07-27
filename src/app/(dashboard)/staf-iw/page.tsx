@@ -11,6 +11,10 @@ import { FindingResolutionTrend } from "@/components/analytics/finding-resolutio
 import { SyncSuccessChart } from "@/components/analytics/sync-success-chart";
 import { PoComplianceOverview } from "@/components/analytics/po-compliance-overview";
 import Link from "next/link";
+import busLottie from "@/lib/lottie/bus.json";
+import shieldCheckLottie from "@/lib/lottie/shield-check.json";
+import checkCircleLottie from "@/lib/lottie/check-circle.json";
+import usersLottie from "@/lib/lottie/users.json";
 import {
    getAllPO,
    getAllArmada,
@@ -176,32 +180,36 @@ export default async function StafIWDashboard() {
                title="PO Menunggu"
                value={String(poMenunggu.length)}
                description="Perlu verifikasi awal"
-               icon="users"
-               accent="amber"
+                icon="users"
+                lottieAnimation={usersLottie}
+                accent="amber"
                index={0}
             />
             <DashboardCard
                title="PO Aktif"
                value={String(poAktif.length)}
                description="Siap digunakan sebagai pembanding"
-               icon="shield-check"
-               accent="green"
+                icon="shield-check"
+                lottieAnimation={shieldCheckLottie}
+                accent="green"
                index={1}
             />
-            <DashboardCard
-               title="Armada Menunggu"
-               value={String(armadaMenunggu.length)}
-               description="Belum siap dipadankan"
-               icon="bus"
-               accent="amber"
-               index={2}
-            />
+             <DashboardCard
+                title="Armada Menunggu"
+                value={String(armadaMenunggu.length)}
+                description="Belum siap dipadankan"
+                icon="bus"
+                lottieAnimation={busLottie}
+                accent="amber"
+                index={2}
+             />
             <DashboardCard
                title="Armada Terverifikasi"
                value={String(armadaTerverifikasi.length)}
                description="Data siap untuk rekonsiliasi"
-               icon="check-circle"
-               accent="blue"
+                icon="check-circle"
+                lottieAnimation={checkCircleLottie}
+                accent="blue"
                index={3}
             />
          </div>

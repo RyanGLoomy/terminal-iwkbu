@@ -4,8 +4,13 @@ import { useState, useEffect, useRef } from "react";
 import { formatDateTimeCustom } from "@/lib/utils/format-date";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Bell, CheckCheck, Check } from "lucide-react";
+import { CheckCheck, Check } from "lucide-react";
 import { EmptyState } from "@/components/shared/empty-state";
+import inboxEmptyLottie from "@/lib/lottie/inbox-empty.json";
+import notificationBellLottie from "@/lib/lottie/notification-bell.json";
+import dynamic from "next/dynamic";
+
+const LottieIcon = dynamic(() => import("@/components/ui/lottie-icon").then(m => m.LottieIcon), { ssr: false });
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { PushToggle } from "@/components/dashboard/push-toggle";
@@ -180,7 +185,7 @@ export function NotificationBell() {
                aria-expanded={open}
                onClick={() => setOpen((v) => !v)}
             >
-               <Bell className="h-4 w-4" aria-hidden="true" />
+                 <LottieIcon animation={notificationBellLottie} size={24} loop={true} autoplay={true} />
                {unreadCount > 0 && (
                   <span
                      className="absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-error px-1 text-[10px] font-bold text-error-content"
@@ -221,7 +226,7 @@ export function NotificationBell() {
                    </div>
                 </div>
                  {notifications.length === 0 ? (
-                    <EmptyState title="Tidak ada notifikasi" icon={Bell} className="border-0 py-6" />
+                     <EmptyState title="Tidak ada notifikasi" lottieAnimation={inboxEmptyLottie} className="border-0 py-6" />
                  ) : (
                    <div className="divide-y divide-base-300" role="list">
                       {notifications.map((n) => {

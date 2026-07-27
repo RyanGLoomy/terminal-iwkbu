@@ -7,6 +7,9 @@ import { AlertCircle } from "lucide-react";
 import { DashboardCard } from "@/components/dashboard/dashboard-card";
 import { getPoIwkbuStatus } from "@/lib/supabase/queries/iwkbu-sync.server";
 import { PoComplianceChartClient } from "@/components/dashboard/po-compliance-chart-client";
+import shieldCheckLottie from "@/lib/lottie/shield-check.json";
+import clockLottie from "@/lib/lottie/clock.json";
+import alertTriangleLottie from "@/lib/lottie/alert-triangle.json";
 
 export default async function PODashboard() {
    const supabase = await createClient();
@@ -135,22 +138,25 @@ export default async function PODashboard() {
                title="IWKBU Patuh"
                value={String(iwkbuSummary.ready)}
                description={`${iwkbuSummary.needs_review} perlu tinjauan, ${iwkbuSummary.blocked} diblokir`}
-               icon="shield-check"
-               accent="green"
+                icon="shield-check"
+                lottieAnimation={shieldCheckLottie}
+                accent="green"
             />
             <DashboardCard
                title="Temuan Aktif"
                value={String(temuanAktif)}
                description="Open / On Progress"
-               icon="alert-triangle"
-               accent={temuanAktif > 0 ? "amber" : "default"}
+                icon="alert-triangle"
+                lottieAnimation={alertTriangleLottie}
+                accent={temuanAktif > 0 ? "amber" : "default"}
             />
             <DashboardCard
                title="Armada Menunggu"
                value={String(armadaMenunggu)}
                description="Menunggu verifikasi staf IW"
-               icon="clock"
-               accent={armadaMenunggu > 0 ? "violet" : "default"}
+                icon="clock"
+                lottieAnimation={clockLottie}
+                accent={armadaMenunggu > 0 ? "violet" : "default"}
             />
           </div>
 

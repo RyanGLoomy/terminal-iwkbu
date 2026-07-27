@@ -22,6 +22,10 @@ import {
    TableRow,
 } from "@/components/ui/table";
 import { DashboardCard } from "@/components/dashboard/dashboard-card";
+import activityLottie from "@/lib/lottie/activity.json";
+import fileTextLottie from "@/lib/lottie/file-text.json";
+import usersLottie from "@/lib/lottie/users.json";
+import calendarLottie from "@/lib/lottie/calendar.json";
 import { LoadingState } from "@/components/shared/loading-state";
 import type {
    ActivityLog,
@@ -358,23 +362,26 @@ export function AuditTrailPanel() {
                title="Total Log"
                value={String(rows.length)}
                description="Aktivitas pada rentang terpilih"
-               icon="activity"
-               accent="blue"
+                icon="activity"
+                lottieAnimation={activityLottie}
+                accent="blue"
                index={0}
             />
             <DashboardCard
                title="Pengguna Unik"
                value={String(uniqueUsers)}
                description="Akun yang terekam"
-               icon="users"
-               accent="violet"
+                icon="users"
+                lottieAnimation={usersLottie}
+                accent="violet"
                index={1}
             />
             <DashboardCard
                title="Log Hari Ini"
                value={String(todayLogs)}
                description="Aktivitas tanggal berjalan"
-               icon="calendar"
+                icon="calendar"
+                lottieAnimation={calendarLottie}
                accent="green"
                index={2}
             />
@@ -382,7 +389,8 @@ export function AuditTrailPanel() {
                title="Temuan & Klarifikasi"
                value={String(findingLogs)}
                description="Aktivitas tindak lanjut temuan"
-               icon="file-text"
+                icon="file-text"
+                lottieAnimation={fileTextLottie}
                accent="amber"
                index={3}
             />

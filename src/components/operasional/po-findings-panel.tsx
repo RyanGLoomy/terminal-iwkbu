@@ -13,6 +13,10 @@ import {
    SelectValue,
 } from "@/components/ui/select";
 import { DashboardCard } from "@/components/dashboard/dashboard-card";
+import checkCircleLottie from "@/lib/lottie/check-circle.json";
+import clockLottie from "@/lib/lottie/clock.json";
+import activityLottie from "@/lib/lottie/activity.json";
+import alertTriangleLottie from "@/lib/lottie/alert-triangle.json";
 import type { FindingRecord } from "@/lib/supabase/queries/operasional.types";
 import { FINDINGS_PAGE_SIZE } from "./findings-shared";
 import { FindingsPagination } from "./findings-pagination";
@@ -96,10 +100,10 @@ export function PoFindingsPanel({ findings }: { findings: FindingRecord[] }) {
    return (
       <div className="space-y-5">
          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <DashboardCard title="Total Temuan" value={String(findings.length)} description="Untuk armada PO ini" icon="alert-triangle" accent="blue" index={0} />
-            <DashboardCard title="Open" value={String(openCount)} description="Menunggu jawaban" icon="clock" accent="amber" index={1} />
-            <DashboardCard title="On Progress" value={String(progressCount)} description="Sudah ada tindak lanjut" icon="activity" accent="violet" index={2} />
-            <DashboardCard title="Closed" value={String(closedCount)} description="Sudah diselesaikan" icon="check-circle" accent="green" index={3} />
+             <DashboardCard title="Total Temuan" value={String(findings.length)} description="Untuk armada PO ini" icon="alert-triangle" lottieAnimation={alertTriangleLottie} accent="blue" index={0} />
+             <DashboardCard title="Open" value={String(openCount)} description="Menunggu jawaban" icon="clock" lottieAnimation={clockLottie} accent="amber" index={1} />
+             <DashboardCard title="On Progress" value={String(progressCount)} description="Sudah ada tindak lanjut" icon="activity" lottieAnimation={activityLottie} accent="violet" index={2} />
+             <DashboardCard title="Closed" value={String(closedCount)} description="Sudah diselesaikan" icon="check-circle" lottieAnimation={checkCircleLottie} accent="green" index={3} />
          </div>
 
          {/* Toolbar */}
