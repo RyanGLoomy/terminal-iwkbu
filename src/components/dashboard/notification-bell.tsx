@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import { formatDateTimeCustom } from "@/lib/utils/format-date";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -9,11 +9,9 @@ import { EmptyState } from "@/components/shared/empty-state";
 import inboxEmptyLottie from "@/lib/lottie/inbox-empty.json";
 import notificationBellLottie from "@/lib/lottie/notification-bell.json";
 import { createClient } from "@/lib/supabase/client";
-import dynamic from "next/dynamic";
-
-const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 import { useRouter } from "next/navigation";
 import { PushToggle } from "@/components/dashboard/push-toggle";
+import { LottieIcon } from "@/components/ui/lottie-icon";
 
 interface Notification {
    id: string;
@@ -186,19 +184,13 @@ export function NotificationBell() {
                aria-expanded={open}
                onClick={() => setOpen((v) => !v)}
             >
-                   <span
-                      className={`inline-flex items-center justify-center ${unreadCount > 0 ? "text-primary" : "text-base-content/70"} cursor-pointer hover:scale-110 transition-transform dark:hue-[-172deg] dark:brightness-[1.4]`}
-                      onMouseEnter={() => bellRef.current?.play()}
-                      onMouseLeave={() => { if (unreadCount === 0) bellRef.current?.stop(); }}
-                   >
-                      <Lottie
-                         lottieRef={bellRef}
-                         animationData={notificationBellLottie}
-                         loop={unreadCount > 0}
-                         autoplay={unreadCount > 0}
-                         style={{ width: 22, height: 22 }}
-                      />
-                   </span>
+                   <LottieIcon
+                      animation={notificationBellLottie}
+                      size={22}
+                      loop={true}
+                      autoplay={true}
+                      className={`${unreadCount > 0 ? "text-primary" : "text-base-content/70"}`}
+                   />
                {unreadCount > 0 && (
                   <span
                      className="absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-error px-1 text-[10px] font-bold text-error-content"
