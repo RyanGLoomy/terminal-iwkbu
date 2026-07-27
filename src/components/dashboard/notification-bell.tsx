@@ -177,10 +177,8 @@ export function NotificationBell() {
    return (
       <div className="relative" ref={dropdownRef}>
          <span ref={bellWrapRef} className="contents">
-            <Button
-               variant="ghost"
-               size="sm"
-               className="relative h-9 w-9 p-0"
+            <button
+               className="relative inline-flex h-9 w-9 items-center justify-center rounded-lg p-0 text-base-content/70 transition-colors hover:bg-base-200"
                aria-label="Notifikasi"
                aria-haspopup="dialog"
                aria-expanded={open}
@@ -202,7 +200,7 @@ export function NotificationBell() {
                      {unreadCount > 9 ? "9+" : unreadCount}
                   </span>
                )}
-            </Button>
+            </button>
          </span>
          <span className="sr-only" aria-live="polite">
             {unreadCount > 0 ? `${unreadCount} notifikasi belum dibaca` : "Tidak ada notifikasi belum dibaca"}
