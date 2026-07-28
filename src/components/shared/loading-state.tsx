@@ -3,8 +3,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import dynamic from "next/dynamic";
 
-const LottieIcon = dynamic(
-   () => import("@/components/ui/lottie-icon").then((m) => m.LottieIcon),
+const Lottie = dynamic(
+   () => import("lottie-react"),
    { ssr: false },
 );
 
@@ -31,7 +31,14 @@ function LoadingState({
                 className,
             )}
          >
-             <LottieIcon animation={loadingDots} size={40} loop autoplay />
+             <div className="dark:hue-[-172deg] dark:brightness-[1.4]">
+               <Lottie
+                  animationData={loadingDots}
+                  loop
+                  autoplay
+                  style={{ width: 40, height: 40 }}
+               />
+            </div>
              <span className="text-sm">{text}</span>
          </div>
       );
@@ -40,7 +47,14 @@ function LoadingState({
    if (variant === "inline") {
       return (
          <div className={cn("flex items-center justify-center gap-2 py-4", className)}>
-            <LottieIcon animation={loadingDots} size={24} loop autoplay />
+            <div className="dark:hue-[-172deg] dark:brightness-[1.4]">
+               <Lottie
+                  animationData={loadingDots}
+                  loop
+                  autoplay
+                  style={{ width: 24, height: 24 }}
+               />
+            </div>
             <span className="text-sm text-base-content/70">{text}</span>
          </div>
       );

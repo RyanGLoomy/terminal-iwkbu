@@ -1,5 +1,4 @@
 import dynamic from "next/dynamic";
-import { memo } from "react";
 import { cn } from "@/lib/utils";
 
 const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
@@ -12,7 +11,7 @@ interface LottieIconProps {
   autoplay?: boolean;
 }
 
-function LottieIconInner({
+export function LottieIcon({
   animation,
   className,
   size = 48,
@@ -25,10 +24,9 @@ function LottieIconInner({
         animationData={animation}
         loop={loop}
         autoplay={autoplay}
+        renderer="svg"
         style={{ width: size, height: size }}
       />
     </div>
   );
 }
-
-export const LottieIcon = memo(LottieIconInner);

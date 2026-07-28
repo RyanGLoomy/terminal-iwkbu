@@ -5,7 +5,7 @@ type IconComponent = FC<SVGProps<SVGSVGElement> & { size?: string | number }>;
 import { cn } from "@/lib/utils";
 import dynamic from "next/dynamic";
 
-const LottieIcon = dynamic(() => import("@/components/ui/lottie-icon").then(m => m.LottieIcon), { ssr: false });
+const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 
 interface EmptyStateProps {
    icon?: IconComponent;
@@ -37,7 +37,14 @@ function EmptyState({
       >
          <div className="flex size-12 items-center justify-center rounded-full bg-base-200">
             {lottieAnimation ? (
-               <LottieIcon animation={lottieAnimation} size={32} loop autoplay />
+               <div className="dark:hue-[-172deg] dark:brightness-[1.4]">
+                  <Lottie
+                     animationData={lottieAnimation}
+                     loop
+                     autoplay
+                     style={{ width: 32, height: 32 }}
+                  />
+               </div>
             ) : Icon ? (
                <Icon className="size-6 text-base-content/70" aria-hidden="true" />
             ) : (
