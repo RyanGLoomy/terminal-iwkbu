@@ -94,7 +94,10 @@ function DashboardCardInner({
    animateCount,
 }: DashboardCardProps) {
    const Icon = typeof icon === "string" ? iconMap[icon] : icon;
-   const resolvedLottie = lottieAnimation ?? (typeof icon === "string" ? lottieMap[icon] : undefined);
+   // Always use lottieMap (direct JSON import) — the lottieAnimation prop
+   // arrives corrupted after RSC serialization (truthy but with broken nested
+   // keyframe data), so we must not rely on it via ??.
+   const resolvedLottie = typeof icon === "string" ? lottieMap[icon] : lottieAnimation;
    const numericValue = typeof value === "number" ? value : parseInt(String(value), 10);
    const counted = useCountUp(animateCount && !isNaN(numericValue) ? numericValue : 0);
    const displayValue = animateCount && !isNaN(numericValue) ? counted : value;
