@@ -20,7 +20,7 @@ export function useLottieWeb({ animationData, loop = true, autoplay = true }: Us
 
          animRef.current = lottie.loadAnimation({
             container: containerRef.current,
-            renderer: "svg",
+            renderer: "canvas",
             loop,
             autoplay,
             animationData,
