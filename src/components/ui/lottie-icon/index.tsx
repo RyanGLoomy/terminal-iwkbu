@@ -1,7 +1,5 @@
-import dynamic from "next/dynamic";
+import { useLottieWeb } from "@/hooks/use-lottie-web";
 import { cn } from "@/lib/utils";
-
-const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 
 interface LottieIconProps {
   animation: object;
@@ -18,15 +16,15 @@ export function LottieIcon({
   loop = true,
   autoplay = true,
 }: LottieIconProps) {
+  const { containerRef } = useLottieWeb({
+    animationData: animation,
+    loop,
+    autoplay,
+  });
+
   return (
     <div className={cn("flex items-center justify-center dark:hue-[-172deg] dark:brightness-[1.4]", className)}>
-      <Lottie
-        animationData={animation}
-        loop={loop}
-        autoplay={autoplay}
-        renderer="svg"
-        style={{ width: size, height: size }}
-      />
+      <div ref={containerRef} style={{ width: size, height: size }} />
     </div>
   );
 }

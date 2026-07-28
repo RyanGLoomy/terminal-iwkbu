@@ -1,13 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import dynamic from "next/dynamic";
-
-const LottieIcon = dynamic(
-   () => import("@/components/ui/lottie-icon").then((m) => m.LottieIcon),
-   { ssr: false },
-);
-
+import { LottieIcon } from "@/components/ui/lottie-icon";
 import notFoundAnimation from "@/lib/lottie/not-found.json";
 
 export default function NotFound() {

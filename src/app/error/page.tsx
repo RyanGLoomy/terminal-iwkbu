@@ -2,13 +2,7 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import dynamic from "next/dynamic";
-
-const LottieIcon = dynamic(
-   () => import("@/components/ui/lottie-icon").then((m) => m.LottieIcon),
-   { ssr: false },
-);
-
+import { LottieIcon } from "@/components/ui/lottie-icon";
 import alertTriangleAnimation from "@/lib/lottie/alert-triangle.json";
 
 export default function ErrorPage() {

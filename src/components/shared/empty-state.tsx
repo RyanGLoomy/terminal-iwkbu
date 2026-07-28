@@ -3,9 +3,21 @@ import { IconInbox, IconSearchOff } from "@tabler/icons-react";
 import type { FC, SVGProps } from "react";
 type IconComponent = FC<SVGProps<SVGSVGElement> & { size?: string | number }>;
 import { cn } from "@/lib/utils";
-import dynamic from "next/dynamic";
+import { useLottieWeb } from "@/hooks/use-lottie-web";
 
-const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
+function LottieAnimation({ animationData, size }: { animationData: object; size: number }) {
+   const { containerRef } = useLottieWeb({
+      animationData,
+      loop: true,
+      autoplay: true,
+   });
+
+   return (
+      <div className="dark:hue-[-172deg] dark:brightness-[1.4]">
+         <div ref={containerRef} style={{ width: size, height: size }} />
+      </div>
+   );
+}
 
 interface EmptyStateProps {
    icon?: IconComponent;
@@ -37,14 +49,7 @@ function EmptyState({
       >
          <div className="flex size-12 items-center justify-center rounded-full bg-base-200">
             {lottieAnimation ? (
-               <div className="dark:hue-[-172deg] dark:brightness-[1.4]">
-                  <Lottie
-                     animationData={lottieAnimation}
-                     loop
-                     autoplay
-                     style={{ width: 32, height: 32 }}
-                  />
-               </div>
+               <LottieAnimation animationData={lottieAnimation} size={32} />
             ) : Icon ? (
                <Icon className="size-6 text-base-content/70" aria-hidden="true" />
             ) : (
