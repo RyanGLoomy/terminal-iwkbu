@@ -70,8 +70,7 @@
               "s": [0]
             }
           ],
-          "x": "var($bm-progress)",
-          "l": 2
+          "x": "var($bm-progress)"
         },
         "p": {
           "a": 1,
@@ -113,8 +112,7 @@
               "s": [109, 310, 0]
             }
           ],
-          "x": "var($bm-progress)",
-          "l": 2
+          "x": "var($bm-progress)"
         },
         "a": {
           "a": 0,
@@ -170,8 +168,7 @@
               "s": [100, 100, 100]
             }
           ],
-          "x": "var($bm-progress)",
-          "l": 2
+          "x": "var($bm-progress)"
         }
       },
       "ao": 0,
@@ -277,8 +274,7 @@
               "s": [0]
             }
           ],
-          "x": "var($bm-progress)",
-          "l": 2
+          "x": "var($bm-progress)"
         },
         "p": {
           "a": 1,
@@ -320,8 +316,7 @@
               "s": [300, 300, 0]
             }
           ],
-          "x": "var($bm-progress)",
-          "l": 2
+          "x": "var($bm-progress)"
         },
         "a": {
           "a": 0,
@@ -377,8 +372,7 @@
               "s": [100, 100, 100]
             }
           ],
-          "x": "var($bm-progress)",
-          "l": 2
+          "x": "var($bm-progress)"
         }
       },
       "ao": 0,
@@ -484,8 +478,7 @@
               "s": [0]
             }
           ],
-          "x": "var($bm-progress)",
-          "l": 2
+          "x": "var($bm-progress)"
         },
         "p": {
           "a": 1,
@@ -527,8 +520,7 @@
               "s": [455, 310, 0]
             }
           ],
-          "x": "var($bm-progress)",
-          "l": 2
+          "x": "var($bm-progress)"
         },
         "a": {
           "a": 0,
@@ -584,8 +576,7 @@
               "s": [100, 100, 100]
             }
           ],
-          "x": "var($bm-progress)",
-          "l": 2
+          "x": "var($bm-progress)"
         }
       },
       "ao": 0,
