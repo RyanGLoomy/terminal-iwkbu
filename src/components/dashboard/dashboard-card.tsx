@@ -24,6 +24,17 @@ import { LottieIcon } from "@/components/ui/lottie-icon";
 import { cn } from "@/lib/utils";
 import { useCountUp } from "@/hooks/use-count-up";
 
+import lottieBus from "@/lib/lottie/bus.json";
+import lottieShieldCheck from "@/lib/lottie/shield-check.json";
+import lottieCheckCircle from "@/lib/lottie/check-circle.json";
+import lottieUsers from "@/lib/lottie/users.json";
+import lottieTrendingUp from "@/lib/lottie/trending-up.json";
+import lottieAlertTriangle from "@/lib/lottie/alert-triangle.json";
+import lottieClock from "@/lib/lottie/clock.json";
+import lottieCalendar from "@/lib/lottie/calendar.json";
+import lottieFileText from "@/lib/lottie/file-text.json";
+import lottieActivity from "@/lib/lottie/activity.json";
+
 type TablerIcon = FC<SVGProps<SVGSVGElement> & { size?: string | number }>;
 
 export type IconName =
@@ -38,6 +49,19 @@ const iconMap: Record<IconName, TablerIcon> = {
    calendar: IconCalendar, "file-text": IconFileText, "credit-card": IconCreditCard,
    "check-circle": IconCircleCheck, "x-circle": IconCircleX, clock: IconClock,
    "alert-triangle": IconAlertTriangle, monitor: IconDeviceDesktop, "user-check": IconUserCheck,
+};
+
+const lottieMap: Partial<Record<IconName, object>> = {
+   bus: lottieBus,
+   "shield-check": lottieShieldCheck,
+   "check-circle": lottieCheckCircle,
+   users: lottieUsers,
+   "trending-up": lottieTrendingUp,
+   "alert-triangle": lottieAlertTriangle,
+   clock: lottieClock,
+   calendar: lottieCalendar,
+   "file-text": lottieFileText,
+   activity: lottieActivity,
 };
 
 type DashboardCardProps = {
@@ -70,6 +94,7 @@ function DashboardCardInner({
    animateCount,
 }: DashboardCardProps) {
    const Icon = typeof icon === "string" ? iconMap[icon] : icon;
+   const resolvedLottie = lottieAnimation ?? (typeof icon === "string" ? lottieMap[icon] : undefined);
    const numericValue = typeof value === "number" ? value : parseInt(String(value), 10);
    const counted = useCountUp(animateCount && !isNaN(numericValue) ? numericValue : 0);
    const displayValue = animateCount && !isNaN(numericValue) ? counted : value;
@@ -91,7 +116,7 @@ function DashboardCardInner({
                      </p>
                   )}
                </div>
-               {(lottieAnimation || Icon) && (
+               {(resolvedLottie || Icon) && (
                   <div
                      className={cn(
                         "flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ring-1",
@@ -99,9 +124,9 @@ function DashboardCardInner({
                         accentConfig[accent],
                      )}
                   >
-                     {lottieAnimation ? (
+                     {resolvedLottie ? (
                         <LottieIcon
-                           animation={lottieAnimation}
+                           animation={resolvedLottie}
                            size={44}
                            className="h-full w-full"
                         />
