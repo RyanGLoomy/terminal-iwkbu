@@ -3,18 +3,19 @@ import { IconInbox, IconSearchOff } from "@tabler/icons-react";
 import type { FC, SVGProps } from "react";
 type IconComponent = FC<SVGProps<SVGSVGElement> & { size?: string | number }>;
 import { cn } from "@/lib/utils";
-import { useLottieWeb } from "@/hooks/use-lottie-web";
+import dynamic from "next/dynamic";
+
+const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 
 function LottieAnimation({ animationData, size }: { animationData: object; size: number }) {
-   const { containerRef } = useLottieWeb({
-      animationData,
-      loop: true,
-      autoplay: true,
-   });
-
    return (
       <div className="dark:hue-[-172deg] dark:brightness-[1.4]">
-         <div ref={containerRef} style={{ width: size, height: size }} />
+         <Lottie
+            animationData={animationData}
+            loop
+            autoplay
+            style={{ width: size, height: size }}
+         />
       </div>
    );
 }

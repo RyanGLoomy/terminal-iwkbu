@@ -1,19 +1,24 @@
 import * as React from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
-import { useLottieWeb } from "@/hooks/use-lottie-web";
+import dynamic from "next/dynamic";
+
+const Lottie = dynamic(
+   () => import("lottie-react"),
+   { ssr: false },
+);
+
 import loadingDots from "@/lib/lottie/loading-dots.json";
 
 function LottieDot({ size }: { size: number }) {
-   const { containerRef } = useLottieWeb({
-      animationData: loadingDots,
-      loop: true,
-      autoplay: true,
-   });
-
    return (
       <div className="dark:hue-[-172deg] dark:brightness-[1.4]">
-         <div ref={containerRef} style={{ width: size, height: size }} />
+         <Lottie
+            animationData={loadingDots}
+            loop
+            autoplay
+            style={{ width: size, height: size }}
+         />
       </div>
    );
 }
