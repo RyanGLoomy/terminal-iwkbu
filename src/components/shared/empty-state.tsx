@@ -1,3 +1,5 @@
+"use client";
+
 import * as React from "react";
 import { IconInbox, IconSearchOff } from "@tabler/icons-react";
 import type { FC, SVGProps } from "react";
