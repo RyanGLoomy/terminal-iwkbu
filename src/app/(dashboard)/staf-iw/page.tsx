@@ -11,9 +11,9 @@ import { FindingResolutionTrend } from "@/components/analytics/finding-resolutio
 import { SyncSuccessChart } from "@/components/analytics/sync-success-chart";
 import { PoComplianceOverview } from "@/components/analytics/po-compliance-overview";
 import Link from "next/link";
-import busLottie from "@/lib/lottie/bus.json";
-import shieldCheckLottie from "@/lib/lottie/shield-check.json";
-import checkCircleLottie from "@/lib/lottie/check-circle.json";
+import busLottie from "@/lib/lottie/bus";
+import shieldCheckLottie from "@/lib/lottie/shield-check";
+import checkCircleLottie from "@/lib/lottie/check-circle";
 import usersLottie from "@/lib/lottie/users.json";
 import {
    getAllPO,

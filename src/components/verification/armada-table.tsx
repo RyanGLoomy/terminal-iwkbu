@@ -21,7 +21,7 @@ import {
 } from "@tabler/icons-react";
 import type { Armada } from "@/lib/supabase/queries/verification.types";
 import { EmptyState } from "@/components/shared/empty-state";
-import busLottie from "@/lib/lottie/bus.json";
+import busLottie from "@/lib/lottie/bus";
 
 type SortKey =
    | "nomor_polisi"

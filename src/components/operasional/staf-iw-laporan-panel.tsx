@@ -10,8 +10,8 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { DashboardCard } from "@/components/dashboard/dashboard-card";
-import shieldCheckLottie from "@/lib/lottie/shield-check.json";
-import checkCircleLottie from "@/lib/lottie/check-circle.json";
+import shieldCheckLottie from "@/lib/lottie/shield-check";
+import checkCircleLottie from "@/lib/lottie/check-circle";
 import alertTriangleLottie from "@/lib/lottie/alert-triangle.json";
 import usersLottie from "@/lib/lottie/users.json";
 import fileTextLottie from "@/lib/lottie/file-text.json";

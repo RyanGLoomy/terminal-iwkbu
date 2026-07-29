@@ -5,8 +5,8 @@ import type { Armada } from "@/lib/supabase/queries/verification.types";
 import { getPoIwkbuStatus } from "@/lib/supabase/queries/iwkbu-sync.server";
 import { DashboardCard } from "@/components/dashboard/dashboard-card";
 import { RekonsiliasiArmadaTable, type IwkbuSyncData } from "@/components/operasional/rekonsiliasi-armada-table";
-import shieldCheckLottie from "@/lib/lottie/shield-check.json";
-import checkCircleLottie from "@/lib/lottie/check-circle.json";
+import shieldCheckLottie from "@/lib/lottie/shield-check";
+import checkCircleLottie from "@/lib/lottie/check-circle";
 import alertTriangleLottie from "@/lib/lottie/alert-triangle.json";
 
 export default async function PoRekonsiliasiPage() {

@@ -13,7 +13,7 @@ import {
    SelectValue,
 } from "@/components/ui/select";
 import { DashboardCard } from "@/components/dashboard/dashboard-card";
-import checkCircleLottie from "@/lib/lottie/check-circle.json";
+import checkCircleLottie from "@/lib/lottie/check-circle";
 import clockLottie from "@/lib/lottie/clock.json";
 import activityLottie from "@/lib/lottie/activity.json";
 import alertTriangleLottie from "@/lib/lottie/alert-triangle.json";

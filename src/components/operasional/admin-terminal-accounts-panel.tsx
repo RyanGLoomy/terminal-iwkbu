@@ -28,7 +28,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { EmptyState } from "@/components/shared/empty-state";
 import { IconShieldCheck, IconUserPlus, IconKey, IconPower, IconCopy, IconCheck } from "@tabler/icons-react";
-import shieldCheckLottie from "@/lib/lottie/shield-check.json";
+import shieldCheckLottie from "@/lib/lottie/shield-check";
 import { toast } from "sonner";
 import {
    listAdminTerminalAccounts,

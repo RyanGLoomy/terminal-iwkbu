@@ -7,7 +7,7 @@ import { IconAlertCircle } from "@tabler/icons-react";
 import { DashboardCard } from "@/components/dashboard/dashboard-card";
 import { getPoIwkbuStatus } from "@/lib/supabase/queries/iwkbu-sync.server";
 import { PoComplianceChartClient } from "@/components/dashboard/po-compliance-chart-client";
-import shieldCheckLottie from "@/lib/lottie/shield-check.json";
+import shieldCheckLottie from "@/lib/lottie/shield-check";
 import clockLottie from "@/lib/lottie/clock.json";
 import alertTriangleLottie from "@/lib/lottie/alert-triangle.json";
 
