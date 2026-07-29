@@ -28,7 +28,6 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { EmptyState } from "@/components/shared/empty-state";
 import { IconShieldCheck, IconUserPlus, IconKey, IconPower, IconCopy, IconCheck } from "@tabler/icons-react";
-import shieldCheckLottie from "@/lib/lottie/shield-check";
 import { toast } from "sonner";
 import {
    listAdminTerminalAccounts,
@@ -313,7 +312,7 @@ export function AdminTerminalAccountsPanel({
                ) : accounts.length === 0 ? (
 <EmptyState
                       title="Belum ada akun admin terminal"
-                      lottieAnimation={shieldCheckLottie}
+                     
                       className="border-0 py-6"
                    />
                ) : (

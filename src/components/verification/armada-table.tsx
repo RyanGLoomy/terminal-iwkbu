@@ -21,7 +21,6 @@ import {
 } from "@tabler/icons-react";
 import type { Armada } from "@/lib/supabase/queries/verification.types";
 import { EmptyState } from "@/components/shared/empty-state";
-import busLottie from "@/lib/lottie/bus";
 
 type SortKey =
    | "nomor_polisi"
@@ -145,7 +144,7 @@ export function ArmadaTable({
 <EmptyState
                 title="Tidak ada armada"
                 description="Belum ada armada terdaftar. Klik 'Tambah Armada' atau 'Import CSV' di atas untuk menambahkan kendaraan."
-                lottieAnimation={busLottie}
+               
              />
         );
      }

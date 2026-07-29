@@ -21,7 +21,6 @@ import {
    SelectValue,
 } from "@/components/ui/select";
 import { DashboardCard } from "@/components/dashboard/dashboard-card";
-import checkCircleLottie from "@/lib/lottie/check-circle";
 import clockLottie from "@/lib/lottie/clock.json";
 import activityLottie from "@/lib/lottie/activity.json";
 import alertTriangleLottie from "@/lib/lottie/alert-triangle.json";
@@ -232,7 +231,7 @@ export function StafFindingsPanel({
              <DashboardCard title="Total Temuan" value={String(stats.total)} description="Catatan yang tersimpan" icon="alert-triangle" lottieAnimation={alertTriangleLottie} accent="blue" index={0} />
              <DashboardCard title="Open" value={String(stats.open)} description="Menunggu tindak lanjut" icon="clock" lottieAnimation={clockLottie} accent="amber" index={1} />
              <DashboardCard title="On Progress" value={String(stats.progress)} description="Sedang diklarifikasi" icon="activity" lottieAnimation={activityLottie} accent="violet" index={2} />
-             <DashboardCard title="Closed" value={String(stats.closed)} description="Sudah diselesaikan" icon="check-circle" lottieAnimation={checkCircleLottie} accent="green" index={3} />
+             <DashboardCard title="Closed" value={String(stats.closed)} description="Sudah diselesaikan" icon="check-circle" accent="green" index={3} />
          </div>
 
          {/* Toolbar */}

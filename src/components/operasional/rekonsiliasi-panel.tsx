@@ -5,7 +5,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DashboardCard } from "@/components/dashboard/dashboard-card";
-import checkCircleLottie from "@/lib/lottie/check-circle";
 import alertTriangleLottie from "@/lib/lottie/alert-triangle.json";
 import usersLottie from "@/lib/lottie/users.json";
 import {
@@ -184,7 +183,7 @@ export const RekonsiliasiPanel = memo(function RekonsiliasiPanelContent({
                value={String(stats.armadaTerverifikasi)}
                description="Data armada terverifikasi"
                icon="check-circle"
-               lottieAnimation={checkCircleLottie}
+              
                accent="green"
                index={2}
             />

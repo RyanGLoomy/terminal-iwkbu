@@ -24,9 +24,6 @@ import { LottieIcon } from "@/components/ui/lottie-icon";
 import { cn } from "@/lib/utils";
 import { useCountUp } from "@/hooks/use-count-up";
 
-import lottieBus from "@/lib/lottie/bus";
-import lottieShieldCheck from "@/lib/lottie/shield-check";
-import lottieCheckCircle from "@/lib/lottie/check-circle";
 import lottieUsers from "@/lib/lottie/users.json";
 import lottieTrendingUp from "@/lib/lottie/trending-up.json";
 import lottieAlertTriangle from "@/lib/lottie/alert-triangle.json";
@@ -52,9 +49,6 @@ const iconMap: Record<IconName, TablerIcon> = {
 };
 
 const lottieMap: Partial<Record<IconName, object>> = {
-   bus: lottieBus,
-   "shield-check": lottieShieldCheck,
-   "check-circle": lottieCheckCircle,
    users: lottieUsers,
    "trending-up": lottieTrendingUp,
    "alert-triangle": lottieAlertTriangle,

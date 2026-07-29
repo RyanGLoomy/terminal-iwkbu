@@ -26,7 +26,6 @@ import type { Armada } from "@/lib/supabase/queries/verification.types";
 import { toast } from "sonner";
 import { IconAlertCircle, IconCircleCheck, IconCircleX, IconBus, IconFolderOpen } from "@tabler/icons-react";
 import { EmptyState } from "@/components/shared/empty-state";
-import busLottie from "@/lib/lottie/bus";
 import dynamic from "next/dynamic";
 
 const ArmadaDokumenDialog = dynamic(() =>
@@ -120,7 +119,7 @@ export const VerifikasiArmadaTable = memo(
                      <span>{error}</span>
                   </div>
                )}
-               <EmptyState title="Tidak ada data armada" lottieAnimation={busLottie} />
+               <EmptyState title="Tidak ada data armada" />
             </div>
          );
       }

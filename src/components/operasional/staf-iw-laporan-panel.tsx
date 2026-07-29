@@ -10,8 +10,6 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { DashboardCard } from "@/components/dashboard/dashboard-card";
-import shieldCheckLottie from "@/lib/lottie/shield-check";
-import checkCircleLottie from "@/lib/lottie/check-circle";
 import alertTriangleLottie from "@/lib/lottie/alert-triangle.json";
 import usersLottie from "@/lib/lottie/users.json";
 import fileTextLottie from "@/lib/lottie/file-text.json";
@@ -170,7 +168,7 @@ export function StafIwLaporanPanel({
                value={String(stats.armadaTerverifikasi)}
                description={`${belumVerifikasi} menunggu/ditolak`}
                icon="shield-check"
-               lottieAnimation={shieldCheckLottie}
+              
                accent="green"
             />
             <DashboardCard
@@ -186,7 +184,7 @@ export function StafIwLaporanPanel({
                value={String(closed)}
                description="Telah ditindak lanjuti"
                 icon="check-circle"
-                lottieAnimation={checkCircleLottie}
+               
                 accent="green"
             />
          </div>
