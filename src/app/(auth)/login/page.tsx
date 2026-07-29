@@ -1,7 +1,6 @@
 import { LoginForm } from "@/components/auth/login-form";
 import Image from "next/image";
 import { IconMapPin, IconShieldCheck, IconBus, IconFileCheck, IconTrendingUp } from "@tabler/icons-react";
-import { LoginHeroLottie } from "@/components/auth/login-hero-lottie";
 
 export default function LoginPage() {
    return (
@@ -71,12 +70,7 @@ export default function LoginPage() {
                </div>
             </div>
 
-            {/* Hero Animation */}
-            <div className="relative z-10 flex justify-center py-4">
-               <LoginHeroLottie />
-            </div>
-
-            {/* Bottom: Feature highlights */}
+         {/* Bottom: Feature highlights */}
             <div className="relative z-10 grid grid-cols-1 gap-3">
                {[
                   { icon: IconShieldCheck, label: "Verifikasi & Validasi Terjamin" },

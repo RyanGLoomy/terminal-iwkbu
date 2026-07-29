@@ -1,27 +1,7 @@
 import * as React from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { IconLoader2 } from "@tabler/icons-react";
 import { cn } from "@/lib/utils";
-import dynamic from "next/dynamic";
-
-const Lottie = dynamic(
-   () => import("lottie-react"),
-   { ssr: false },
-);
-
-import loadingDots from "@/lib/lottie/loading-dots.json";
-
-function LottieDot({ size }: { size: number }) {
-   return (
-      <div className="dark:hue-[-172deg] dark:brightness-[1.4]">
-         <Lottie
-            animationData={loadingDots}
-            loop
-            autoplay
-            style={{ width: size, height: size }}
-         />
-      </div>
-   );
-}
 
 interface LoadingStateProps {
    variant?: "spinner" | "table" | "cards" | "inline";
@@ -44,7 +24,7 @@ function LoadingState({
                 className,
             )}
          >
-             <LottieDot size={40} />
+             <IconLoader2 className="size-10 animate-spin" aria-hidden="true" />
              <span className="text-sm">{text}</span>
          </div>
       );
@@ -53,7 +33,7 @@ function LoadingState({
    if (variant === "inline") {
       return (
          <div className={cn("flex items-center justify-center gap-2 py-4", className)}>
-            <LottieDot size={24} />
+            <IconLoader2 className="size-5 animate-spin" aria-hidden="true" />
             <span className="text-sm text-base-content/70">{text}</span>
          </div>
       );

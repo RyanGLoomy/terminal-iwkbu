@@ -31,6 +31,7 @@ import lottieClock from "@/lib/lottie/clock.json";
 import lottieCalendar from "@/lib/lottie/calendar.json";
 import lottieFileText from "@/lib/lottie/file-text.json";
 import lottieActivity from "@/lib/lottie/activity.json";
+import lottieBus from "@/lib/lottie/loading-dots.json";
 
 type TablerIcon = FC<SVGProps<SVGSVGElement> & { size?: string | number }>;
 
@@ -49,8 +50,9 @@ const iconMap: Record<IconName, TablerIcon> = {
 };
 
 const lottieMap: Partial<Record<IconName, object>> = {
-   users: lottieUsers,
-   "trending-up": lottieTrendingUp,
+    bus: lottieBus,
+    users: lottieUsers,
+    "trending-up": lottieTrendingUp,
    "alert-triangle": lottieAlertTriangle,
    clock: lottieClock,
    calendar: lottieCalendar,
