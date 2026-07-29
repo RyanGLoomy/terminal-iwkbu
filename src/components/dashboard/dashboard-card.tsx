@@ -31,7 +31,6 @@ import lottieClock from "@/lib/lottie/clock.json";
 import lottieCalendar from "@/lib/lottie/calendar.json";
 import lottieFileText from "@/lib/lottie/file-text.json";
 import lottieActivity from "@/lib/lottie/activity.json";
-import lottieBus from "@/lib/lottie/bus.json";
 
 type TablerIcon = FC<SVGProps<SVGSVGElement> & { size?: string | number }>;
 
@@ -50,7 +49,6 @@ const iconMap: Record<IconName, TablerIcon> = {
 };
 
 const lottieMap: Partial<Record<IconName, object>> = {
-    bus: lottieBus,
     users: lottieUsers,
     "trending-up": lottieTrendingUp,
    "alert-triangle": lottieAlertTriangle,
@@ -116,20 +114,20 @@ function DashboardCardInner({
                   )}
                </div>
                {(resolvedLottie || Icon) && (
-                  <div
-                     className={cn(
-                        "flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ring-1",
-                        "mt-5",
-                        accentConfig[accent],
-                     )}
-                  >
-                     {resolvedLottie ? (
-                        <LottieIcon
-                           animation={resolvedLottie}
-                           size={44}
-                           className="h-full w-full"
-                        />
-                     ) : Icon ? (
+                   <div
+                      className={cn(
+                         "flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ring-1",
+                         "mt-5",
+                         accentConfig[accent],
+                      )}
+                   >
+                      {resolvedLottie ? (
+                          <LottieIcon
+                             animation={resolvedLottie}
+                             size={44}
+                             className="h-full w-full"
+                          />
+                      ) : Icon ? (
                         <Icon className="h-6 w-6" aria-hidden="true" />
                      ) : null}
                   </div>
