@@ -31,7 +31,7 @@ import lottieClock from "@/lib/lottie/clock.json";
 import lottieCalendar from "@/lib/lottie/calendar.json";
 import lottieFileText from "@/lib/lottie/file-text.json";
 import lottieActivity from "@/lib/lottie/activity.json";
-import lottieBus from "@/lib/lottie/loading-dots.json";
+import lottieBus from "@/lib/lottie/bus.json";
 
 type TablerIcon = FC<SVGProps<SVGSVGElement> & { size?: string | number }>;
 
