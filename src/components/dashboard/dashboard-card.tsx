@@ -10,9 +10,7 @@ import {
    IconTrendingUp,
    IconCalendar,
    IconFileText,
-   IconCreditCard,
    IconCircleCheck,
-   IconCircleX,
    IconClock,
    IconAlertTriangle,
    IconDeviceDesktop,
@@ -44,14 +42,14 @@ type TablerIcon = FC<SVGProps<SVGSVGElement> & { size?: string | number }>;
 export type IconName =
    | "bus" | "log-in" | "log-out" | "users"
    | "shield-check" | "activity" | "trending-up" | "calendar"
-   | "file-text" | "credit-card" | "check-circle" | "x-circle"
+   | "file-text" | "check-circle"
    | "clock" | "alert-triangle" | "monitor" | "user-check";
 
 const iconMap: Record<IconName, TablerIcon> = {
    bus: IconBus, "log-in": IconLogin, "log-out": IconLogout, users: IconUsers,
    "shield-check": IconShieldCheck, activity: IconActivity, "trending-up": IconTrendingUp,
-   calendar: IconCalendar, "file-text": IconFileText, "credit-card": IconCreditCard,
-   "check-circle": IconCircleCheck, "x-circle": IconCircleX, clock: IconClock,
+   calendar: IconCalendar, "file-text": IconFileText,
+   "check-circle": IconCircleCheck, clock: IconClock,
    "alert-triangle": IconAlertTriangle, monitor: IconDeviceDesktop, "user-check": IconUserCheck,
 };
 
@@ -104,13 +102,11 @@ const accentConfig: Record<NonNullable<DashboardCardProps["accent"]>, string> = 
 /* Icon yang punya asosiasi warna semantik universal.
    Override accent card agar icon + badge selalu konsisten:
    - alert-triangle → amber (warning)
-   - check-circle, shield-check → green (success/verified)
-   - x-circle → red (error) */
+   - check-circle, shield-check → green (success/verified) */
 const semanticAccent: Partial<Record<IconName, NonNullable<DashboardCardProps["accent"]>>> = {
    "alert-triangle": "amber",
    "check-circle": "green",
    "shield-check": "green",
-   "x-circle": "red",
 };
 
 function DashboardCardInner({
