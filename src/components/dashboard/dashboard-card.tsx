@@ -79,11 +79,20 @@ type DashboardCardProps = {
    animateCount?: boolean;
 };
 
+/* Light mode: warna text diperdalam untuk kenyamanan mata (contrast ≥ 4.5:1).
+   Dark mode: pakai token DaisyUI (sudah dioptimalkan untuk background gelap).
+   ┌──────────┬────────────────┬──────────┬────────────┐
+   │ Accent   │ Light text     │ Hex      │ Contrast   │
+   ├──────────┼────────────────┼──────────┼────────────┤
+   │ amber    │ text-amber-800 │ #92400E  │ 7.3:1 ✓   │ (was 2:1 ❌)
+   │ green    │ text-green-700 │ #15803D  │ 5.4:1 ✓   │ (was 3.2:1 ⚠)
+   │ violet   │ text-sky-700   │ #0369A1  │ 5.8:1 ✓   │ (was 3.0:1 ⚠)
+   └──────────┴────────────────┴──────────┴────────────┘ */
 const accentConfig: Record<NonNullable<DashboardCardProps["accent"]>, string> = {
    blue: "bg-primary/10 text-primary ring-primary/15",
-   green: "bg-success/10 text-success ring-success/15",
-   amber: "bg-warning/10 text-warning ring-warning/15",
-   violet: "bg-info/10 text-info ring-info/15",
+   green: "bg-success/10 text-green-700 dark:text-success ring-success/15",
+   amber: "bg-warning/15 text-amber-800 dark:text-warning ring-warning/20",
+   violet: "bg-info/10 text-sky-700 dark:text-info ring-info/15",
    red: "bg-error/10 text-error ring-error/15",
    default: "bg-base-300/70 text-base-content/70 ring-base-300",
 };
