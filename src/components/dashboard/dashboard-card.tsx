@@ -84,6 +84,18 @@ const accentConfig: Record<NonNullable<DashboardCardProps["accent"]>, string> = 
    default: "bg-base-300/70 text-base-content/70 ring-base-300",
 };
 
+/* Icon yang punya asosiasi warna semantik universal.
+   Override accent card agar icon + badge selalu konsisten:
+   - alert-triangle → amber (warning)
+   - check-circle, shield-check → green (success/verified)
+   - x-circle → red (error) */
+const semanticAccent: Partial<Record<IconName, NonNullable<DashboardCardProps["accent"]>>> = {
+   "alert-triangle": "amber",
+   "check-circle": "green",
+   "shield-check": "green",
+   "x-circle": "red",
+};
+
 function DashboardCardInner({
    title,
    value,
@@ -98,6 +110,8 @@ function DashboardCardInner({
    // arrives corrupted after RSC serialization (truthy but with broken nested
    // keyframe data), so we must not rely on it via ??.
    const resolvedLottie = typeof icon === "string" ? lottieMap[icon] : lottieAnimation;
+   const iconName = typeof icon === "string" ? icon : undefined;
+   const effectiveAccent = (iconName && semanticAccent[iconName]) || accent;
    const numericValue = typeof value === "number" ? value : parseInt(String(value), 10);
    const counted = useCountUp(animateCount && !isNaN(numericValue) ? numericValue : 0);
    const displayValue = animateCount && !isNaN(numericValue) ? counted : value;
@@ -121,11 +135,11 @@ function DashboardCardInner({
                </div>
                {(resolvedLottie || Icon) && (
                   <div
-                     className={cn(
-                        "flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ring-1",
-                        "mt-5",
-                        accentConfig[accent],
-                     )}
+                      className={cn(
+                         "flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ring-1",
+                         "mt-5",
+                         accentConfig[effectiveAccent],
+                      )}
                   >
                       {resolvedLottie ? (
                          <LottieIcon
