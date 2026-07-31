@@ -32,6 +32,8 @@ import lottieCalendar from "@/lib/lottie/calendar.json";
 import lottieFileText from "@/lib/lottie/file-text.json";
 import lottieActivity from "@/lib/lottie/activity.json";
 import lottieBus from "@/lib/lottie/bus.json";
+import lottieShieldCheck from "@/lib/lottie/shield-check.json";
+import lottieCheckCircle from "@/lib/lottie/check-circle.json";
 
 type TablerIcon = FC<SVGProps<SVGSVGElement> & { size?: string | number }>;
 
@@ -58,6 +60,8 @@ const lottieMap: Partial<Record<IconName, object>> = {
    calendar: lottieCalendar,
    "file-text": lottieFileText,
    activity: lottieActivity,
+   "shield-check": lottieShieldCheck,
+   "check-circle": lottieCheckCircle,
 };
 
 type DashboardCardProps = {
