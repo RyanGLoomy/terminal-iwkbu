@@ -21,7 +21,7 @@ export function LottieIcon({
   autoplay = true,
 }: LottieIconProps) {
   return (
-    <div className={cn("flex items-center justify-center dark:hue-[-172deg] dark:brightness-[1.4]", className)}>
+    <div className={cn("flex items-center justify-center lottie-tint", className)}>
       <Lottie
         animationData={animation}
         loop={loop}

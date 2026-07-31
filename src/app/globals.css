@@ -286,6 +286,17 @@ html { overflow-y: hidden; scroll-behavior: auto; }
   }
   .font700 { font-weight: 700; }
   .font800 { font-weight: 800; }
+
+  /* Recolor Lottie SVG stroke/fill to currentColor.
+     SVG presentation attributes have lowest CSS specificity,
+     so no !important needed. Parent's text-* class controls the hue,
+     adapting to light/dark themes automatically. */
+  .lottie-tint svg [stroke]:not([stroke="none"]) {
+    stroke: currentColor;
+  }
+  .lottie-tint svg [fill]:not([fill="none"]) {
+    fill: currentColor;
+  }
   .transition-smooth {
     transition-property: color, background-color, border-color, box-shadow, transform, opacity, fill, stroke;
     transition-duration: 0.18s;

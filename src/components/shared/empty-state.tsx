@@ -11,7 +11,7 @@ const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 
 function LottieAnimation({ animationData, size }: { animationData: object; size: number }) {
    return (
-      <div className="dark:hue-[-172deg] dark:brightness-[1.4]">
+      <div className="lottie-tint text-base-content/60">
          <Lottie
             animationData={animationData}
             loop

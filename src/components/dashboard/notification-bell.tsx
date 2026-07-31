@@ -195,7 +195,7 @@ export function NotificationBell() {
                aria-expanded={open}
                onClick={() => setOpen((v) => !v)}
             >
-                   <span className="inline-flex items-center justify-center dark:hue-[-172deg] dark:brightness-[1.4]">
+                    <span className="inline-flex items-center justify-center lottie-tint text-base-content/70">
                       <Lottie
                          lottieRef={bellLottieRef}
                          animationData={notificationBellLottie}
