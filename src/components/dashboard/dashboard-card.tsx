@@ -36,6 +36,8 @@ import lottieShieldCheck from "@/lib/lottie/shield-check.json";
 import lottieCheckCircle from "@/lib/lottie/check-circle.json";
 import lottieLogIn from "@/lib/lottie/log-in.json";
 import lottieLogOut from "@/lib/lottie/log-out.json";
+import lottieUserCheck from "@/lib/lottie/user-check.json";
+import lottieMonitor from "@/lib/lottie/monitor.json";
 
 type TablerIcon = FC<SVGProps<SVGSVGElement> & { size?: string | number }>;
 
@@ -66,6 +68,8 @@ const lottieMap: Partial<Record<IconName, object>> = {
    "check-circle": lottieCheckCircle,
    "log-in": lottieLogIn,
    "log-out": lottieLogOut,
+   "user-check": lottieUserCheck,
+   "monitor": lottieMonitor,
 };
 
 type DashboardCardProps = {
