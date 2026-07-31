@@ -127,7 +127,10 @@ function DashboardCardInner({
                          <LottieIcon
                             animation={resolvedLottie}
                             size={44}
-                            className="h-full w-full"
+                            className={cn(
+                               "h-full w-full",
+                               typeof icon === "string" && icon === "bus" && "scale-[1.65]",
+                            )}
                          />
                       ) : Icon ? (
                         <Icon className="h-6 w-6" aria-hidden="true" />
