@@ -17,10 +17,11 @@ import {
 import { getErrorMessage } from "@/lib/db-error";
 
 type Option = { id: string; label: string };
+type ArmadaOption = Option & { poId?: string };
 
 interface StafFindingCreateFormProps {
    poOptions: Option[];
-   armadaOptions: Option[];
+   armadaOptions: ArmadaOption[];
    prefill?: {
       poId?: string;
       armadaId?: string;
@@ -41,16 +42,20 @@ export function StafFindingCreateForm({
    const [loading, setLoading] = useState(false);
    const [error, setError] = useState<string | null>(null);
    const [form, setForm] = useState({
-      poId: prefill?.poId ?? poOptions[0]?.id ?? "",
-      armadaId: prefill?.armadaId ?? armadaOptions[0]?.id ?? "",
+      poId: prefill?.poId ?? "",
+      armadaId: prefill?.armadaId ?? "",
       nomorPolisi: prefill?.nomorPolisi ?? "",
-      sourceType: "rekonsiliasi",
+      sourceType: "manual",
       judul: prefill?.judul ?? "",
       deskripsi: prefill?.deskripsi ?? "",
       severity: "medium",
       sourceDate: "",
       dueDate: "",
    });
+
+   const filteredArmada = form.poId
+      ? armadaOptions.filter((a) => a.poId === form.poId)
+      : armadaOptions;
 
    useEffect(() => {
       setForm((prev) => ({
@@ -72,11 +77,11 @@ export function StafFindingCreateForm({
          if (!res.ok) throw new Error(payload.message ?? "Gagal membuat temuan");
 
          toast.success("Temuan berhasil dibuat");
-         setForm({
-            poId: poOptions[0]?.id ?? "",
-            armadaId: armadaOptions[0]?.id ?? "",
+          setForm({
+            poId: "",
+            armadaId: "",
             nomorPolisi: "",
-            sourceType: "rekonsiliasi",
+            sourceType: "manual",
             judul: "",
             deskripsi: "",
             severity: "medium",
@@ -104,40 +109,41 @@ export function StafFindingCreateForm({
          <div className="grid gap-4 lg:grid-cols-2">
             <label className="space-y-2 text-sm">
                <span className="font-medium text-base-content">PO</span>
-               <Select
-                  value={form.poId}
-                  onValueChange={(v) => setForm((c) => ({ ...c, poId: v }))}
-               >
-                  <SelectTrigger className="h-10 w-full rounded-md border border-base-300 bg-base-100 px-3">
-                     <SelectValue placeholder="Pilih PO" />
-                  </SelectTrigger>
-                  <SelectContent>
-                     {poOptions.map((option) => (
-                        <SelectItem key={option.id} value={option.id}>
-                           {option.label}
-                        </SelectItem>
-                     ))}
-                  </SelectContent>
-               </Select>
-            </label>
+                <Select
+                   value={form.poId}
+                   onValueChange={(v) => setForm((c) => ({ ...c, poId: v, armadaId: "" }))}
+                >
+                   <SelectTrigger className="h-10 w-full rounded-md border border-base-300 bg-base-100 px-3">
+                      <SelectValue placeholder="Pilih PO" />
+                   </SelectTrigger>
+                   <SelectContent>
+                      {poOptions.map((option) => (
+                         <SelectItem key={option.id} value={option.id}>
+                            {option.label}
+                         </SelectItem>
+                      ))}
+                   </SelectContent>
+                </Select>
+             </label>
 
-            <label className="space-y-2 text-sm">
-               <span className="font-medium text-base-content">Armada</span>
-               <Select
-                  value={form.armadaId}
-                  onValueChange={(v) => setForm((c) => ({ ...c, armadaId: v }))}
-               >
-                  <SelectTrigger className="h-10 w-full rounded-md border border-base-300 bg-base-100 px-3">
-                     <SelectValue placeholder="Pilih Armada" />
-                  </SelectTrigger>
-                  <SelectContent>
-                     {armadaOptions.map((option) => (
-                        <SelectItem key={option.id} value={option.id}>
-                           {option.label}
-                        </SelectItem>
-                     ))}
-                  </SelectContent>
-               </Select>
+             <label className="space-y-2 text-sm">
+                <span className="font-medium text-base-content">Armada</span>
+                <Select
+                   value={form.armadaId}
+                   onValueChange={(v) => setForm((c) => ({ ...c, armadaId: v }))}
+                   disabled={!form.poId}
+                >
+                   <SelectTrigger className="h-10 w-full rounded-md border border-base-300 bg-base-100 px-3">
+                      <SelectValue placeholder={form.poId ? "Pilih Armada" : "Pilih PO dahulu"} />
+                   </SelectTrigger>
+                   <SelectContent>
+                      {filteredArmada.map((option) => (
+                         <SelectItem key={option.id} value={option.id}>
+                            {option.label}
+                         </SelectItem>
+                      ))}
+                   </SelectContent>
+                </Select>
             </label>
 
             <label className="space-y-2 text-sm">
@@ -204,7 +210,7 @@ export function StafFindingCreateForm({
             </label>
 
             <div className="lg:col-span-2 flex items-end justify-end">
-               <Button onClick={submit} disabled={loading}>
+                <Button onClick={submit} disabled={loading || !form.poId}>
                   {loading ? "Membuat…" : "Buat Temuan"}
                </Button>
             </div>

@@ -69,7 +69,7 @@ export function StafFindingsPanel({
 }: {
    initialFindings: FindingRecord[];
    poOptions: Option[];
-   armadaOptions: Option[];
+    armadaOptions: (Option & { poId?: string })[];
    prefill?: {
       poId?: string;
       armadaId?: string;

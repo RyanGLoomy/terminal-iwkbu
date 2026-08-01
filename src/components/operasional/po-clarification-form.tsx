@@ -26,6 +26,7 @@ export function PoClarificationForm({ findingId }: { findingId: string }) {
    const [evidenceFile, setEvidenceFile] = useState<File | null>(null);
    const [loading, setLoading] = useState(false);
    const [error, setError] = useState<string | null>(null);
+   const [pendingMenolak, setPendingMenolak] = useState(false);
 
    const handleFileChange = (file: File | null) => {
       if (file && file.size > MAX_FILE_SIZE_BYTES) {
@@ -38,6 +39,11 @@ export function PoClarificationForm({ findingId }: { findingId: string }) {
    };
 
    const submit = async () => {
+      if (decision === "menolak" && !pendingMenolak) {
+         setPendingMenolak(true);
+         return;
+      }
+      setPendingMenolak(false);
       setLoading(true);
       setError(null);
 
@@ -124,6 +130,18 @@ export function PoClarificationForm({ findingId }: { findingId: string }) {
                </span>
             )}
          </div>
+         {pendingMenolak && (
+            <div className="rounded-md border border-amber-300 bg-amber-50 dark:border-amber-700 dark:bg-amber-950/50 px-3 py-2 text-sm text-amber-800 dark:text-amber-300">
+               <p className="font-medium">Menolak akan mengembalikan status temuan ke "Open".</p>
+               <p className="mt-0.5 text-xs">Staf IW akan diminta untuk meninjau kembali temuan ini.</p>
+               <div className="flex gap-2 mt-2">
+                  <Button size="sm" variant="outline" onClick={() => setPendingMenolak(false)}>Batal</Button>
+                  <Button size="sm" variant="destructive" onClick={submit} disabled={loading}>
+                     {loading ? "Mengirim…" : "Ya, Menolak"}
+                  </Button>
+               </div>
+            </div>
+         )}
          {error && (
             <div className="flex items-start gap-2 text-sm text-error" role="alert" aria-live="polite">
                <IconAlertCircle className="mt-0.5 h-4 w-4" aria-hidden="true" />

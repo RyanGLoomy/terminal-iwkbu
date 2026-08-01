@@ -23,8 +23,8 @@ export function getDueDateBadge(
    if (diffDays < 0) return { label: `Terlambat ${Math.abs(diffDays)} hari`, color: "bg-red-100 text-error border-red-200 dark:bg-red-950/50 dark:text-red-300 dark:border-red-800" };
    if (diffDays === 0) return { label: "Jatuh tempo hari ini", color: "bg-red-100 text-error border-red-200 dark:bg-red-950/50 dark:text-red-300 dark:border-red-800" };
    if (diffDays === 1) return { label: "Jatuh tempo besok", color: "bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-950/50 dark:text-amber-300 dark:border-amber-800" };
-   if (diffDays <= 3) return { label: `${diffDays} hari lagi`, color: "bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-950/50 dark:text-amber-300 dark:border-amber-800" };
-   return null;
+    if (diffDays <= 3) return { label: `${diffDays} hari lagi`, color: "bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-950/50 dark:text-amber-300 dark:border-amber-800" };
+    return { label: `${diffDays} hari lagi`, color: "bg-base-200 text-base-content/60 border-base-300" };
 }
 
 export { formatDateTime } from "@/lib/utils/format-date";

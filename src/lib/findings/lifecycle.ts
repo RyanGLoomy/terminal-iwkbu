@@ -192,7 +192,7 @@ export async function submitClarification(params: {
 
    if (evidenceFile && evidenceFile.size > 0) {
       if (evidenceFile.size > MAX_EVIDENCE_FILE_SIZE) {
-         throw new InvalidClarificationError("Ukuran file melebihi batas 5 MB");
+         throw new InvalidClarificationError("Ukuran file melebihi batas 4 MB");
       }
       // APP-04: validate actual file bytes (magic numbers), not the client-
       // supplied file.type which is trivially spoofable. Detect once, then use
@@ -255,9 +255,8 @@ export async function submitClarification(params: {
       .eq(responder === "po" ? "po_id" : "id", responder === "po" ? finding.po_id : finding.id);
 
    if (statusError) {
-      console.error(
-         "Failed to auto-update finding status after clarification:",
-         statusError.message,
+      throw new Error(
+         "Gagal memperbarui status temuan setelah klarifikasi: " + statusError.message,
       );
    }
 

@@ -32,8 +32,8 @@ export function deriveTurn(finding: FindingRecord): Turn {
       }
    }
 
-   if (events.length === 0) {
-      return { label: "Menunggu respons PO", className: "bg-primary/10 text-primary border-primary/30" };
+    if (events.length === 0) {
+      return { label: "Menunggu respons PO pertama", className: "bg-primary/10 text-primary border-primary/30" };
    }
 
    const latest = events.reduce((acc, e) => (e.ts > acc.ts ? e : acc), events[0]);

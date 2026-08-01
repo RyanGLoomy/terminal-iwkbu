@@ -82,9 +82,6 @@ export async function PATCH(
          } else {
             updatePayload.resolved_by = null;
             updatePayload.resolved_at = null;
-            if (!resolutionNote) {
-               updatePayload.resolution_note = null;
-            }
          }
       }
 

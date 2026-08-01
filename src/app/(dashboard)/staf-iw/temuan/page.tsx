@@ -64,10 +64,11 @@ export default async function StafIwTemuanPage({
                 id: item.id,
                 label: `${item.kode_po} - ${item.nama_perusahaan}`,
              }))}
-             armadaOptions={armadaList.map((item) => ({
-                id: item.id,
-                label: `${item.nomor_polisi}${item.nomor_lambung ? ` · ${item.nomor_lambung}` : ""}`,
-             }))}
+              armadaOptions={armadaList.map((item) => ({
+                 id: item.id,
+                 label: `${item.nomor_polisi}${item.nomor_lambung ? ` · ${item.nomor_lambung}` : ""}`,
+                 poId: item.po_id,
+              }))}
              prefill={Object.keys(prefill).length > 0 ? prefill : undefined}
              periodeOptions={(periodeList.data ?? []).map((p: { id: string; nama_periode: string }) => ({
                 id: p.id,

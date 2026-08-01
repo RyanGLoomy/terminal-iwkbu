@@ -46,13 +46,28 @@ export default async function PoFindingDetailPage({
             <h2 className="mb-3 text-xs font-semibold uppercase tracking-wide text-base-content/60">
                Kirim Klarifikasi
             </h2>
-            {closed ? (
-               <div className="rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-medium text-emerald-700 dark:border-green-800 dark:bg-green-950/50 dark:text-green-300">
-                  Temuan ini sudah ditutup oleh Staf IW.
-               </div>
-            ) : (
-               <PoClarificationForm findingId={finding.id} />
-            )}
+             {closed ? (
+                <div className="rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-medium text-emerald-700 dark:border-green-800 dark:bg-green-950/50 dark:text-green-300">
+                   Temuan ini sudah ditutup oleh Staf IW.
+                   {finding.resolution_note && (
+                      <p className="mt-1 text-xs font-normal text-emerald-600 dark:text-green-400">
+                         Catatan: {finding.resolution_note}
+                      </p>
+                   )}
+                </div>
+             ) : (
+                <>
+                   {(finding.finding_clarifications?.length ?? 0) === 0 && (
+                      <div className="mb-3 rounded-md border border-primary/30 bg-primary/5 px-3 py-2 text-sm text-base-content/80">
+                         Berikan respons Anda untuk temuan ini menggunakan form di bawah.
+                         Pilih <strong>Melengkapi Bukti</strong> untuk menambah informasi,
+                         <strong> Menerima</strong> jika setuju, atau
+                         <strong> Menolak</strong> jika tidak sepakat.
+                      </div>
+                   )}
+                   <PoClarificationForm findingId={finding.id} />
+                </>
+             )}
          </div>
       </section>
    );
