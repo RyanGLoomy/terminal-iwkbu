@@ -105,35 +105,35 @@ export function PoFindingsPanel({ findings }: { findings: FindingRecord[] }) {
              <DashboardCard title="Closed" value={String(closedCount)} description="Sudah diselesaikan" icon="check-circle" accent="green" index={3} />
          </div>
 
-         {/* Toolbar */}
-         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-            <span className="text-sm text-base-content/70">
-               {filteredFindings.length}
-               {filteredFindings.length !== findings.length && ` dari ${findings.length}`} temuan
-            </span>
-            <div className="flex flex-col gap-2 sm:flex-row">
-               <Input
-                  placeholder="Cari temuan..."
-                  value={search}
-                  onChange={(e) => {
-                     setSearch(e.target.value);
-                     setPage(1);
-                  }}
-                  className="h-8 w-full text-sm sm:w-56"
-               />
-               <Select value={statusFilter} onValueChange={(v) => { setStatusFilter(v); setPage(1); }}>
-                  <SelectTrigger className="h-8 w-full text-sm sm:w-32">
-                     <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                     <SelectItem value="semua">Semua</SelectItem>
-                     <SelectItem value="open">Open</SelectItem>
-                     <SelectItem value="on_progress">On Progress</SelectItem>
-                     <SelectItem value="closed">Closed</SelectItem>
-                  </SelectContent>
-               </Select>
-            </div>
-         </div>
+          {/* Toolbar */}
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+             <span className="text-sm font-medium text-base-content">
+                {filteredFindings.length}
+                {filteredFindings.length !== findings.length && ` dari ${findings.length}`} temuan
+             </span>
+             <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
+                <Input
+                   placeholder="Cari temuan..."
+                   value={search}
+                   onChange={(e) => {
+                      setSearch(e.target.value);
+                      setPage(1);
+                   }}
+                   className="h-9 w-full text-sm sm:w-60"
+                />
+                <Select value={statusFilter} onValueChange={(v) => { setStatusFilter(v); setPage(1); }}>
+                   <SelectTrigger className="h-9 w-full text-sm sm:w-40">
+                      <SelectValue />
+                   </SelectTrigger>
+                   <SelectContent>
+                      <SelectItem value="semua">Semua Status</SelectItem>
+                      <SelectItem value="open">Open</SelectItem>
+                      <SelectItem value="on_progress">On Progress</SelectItem>
+                      <SelectItem value="closed">Closed</SelectItem>
+                   </SelectContent>
+                </Select>
+             </div>
+          </div>
 
          {/* List */}
          {filteredFindings.length === 0 ? (

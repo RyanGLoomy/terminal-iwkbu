@@ -236,7 +236,7 @@ export function StafFindingsPanel({
 
          {/* Toolbar */}
          <div className="space-y-3">
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                <span className="text-sm font-medium text-base-content">
                   Daftar Temuan ({filteredFindings.length}
                   {filteredFindings.length !== initialFindings.length && ` dari ${initialFindings.length}`})
@@ -247,7 +247,7 @@ export function StafFindingsPanel({
                </Button>
             </div>
 
-            <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+            <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
                <Input
                   placeholder="Cari temuan..."
                   value={search}
@@ -255,10 +255,10 @@ export function StafFindingsPanel({
                      setSearch(e.target.value);
                      setPage(1);
                   }}
-                  className="h-8 w-full text-sm sm:w-56"
+                  className="h-9 w-full text-sm sm:w-60"
                />
                <Select value={statusFilter} onValueChange={(v) => { setStatusFilter(v); setPage(1); }}>
-                  <SelectTrigger className="h-8 w-full text-sm sm:w-36">
+                  <SelectTrigger className="h-9 w-full text-sm sm:w-40">
                      <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -270,7 +270,7 @@ export function StafFindingsPanel({
                </Select>
                {periodeOptions && periodeOptions.length > 0 && (
                   <Select value={periodeFilter} onValueChange={(v) => { setPeriodeFilter(v); setPage(1); }}>
-                     <SelectTrigger className="h-8 w-full text-sm sm:w-40">
+                     <SelectTrigger className="h-9 w-full text-sm sm:w-44">
                         <SelectValue />
                      </SelectTrigger>
                      <SelectContent>
@@ -283,7 +283,7 @@ export function StafFindingsPanel({
                   </Select>
                )}
                <Select value={sort} onValueChange={(v) => { setSort(v as SortKey); setPage(1); }}>
-                  <SelectTrigger className="h-8 w-full text-sm sm:w-44">
+                  <SelectTrigger className="h-9 w-full text-sm sm:w-48">
                      <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
