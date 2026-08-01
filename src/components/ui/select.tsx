@@ -297,8 +297,6 @@ function SelectContent({
 
   if (!mounted || typeof document === "undefined") return null;
 
-  const portalTarget = document.getElementById(ctx.rootId)?.closest("dialog") || document.body;
-
   function handleListKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
     const count = menuRef.current
       ? menuRef.current.querySelectorAll('[role="option"]:not([data-disabled])').length
@@ -368,7 +366,7 @@ function SelectContent({
       <div className="p-0">{children}</div>
       <SelectScrollDownButton />
     </div>,
-    portalTarget,
+    document.body,
   );
 }
 

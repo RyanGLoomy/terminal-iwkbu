@@ -215,8 +215,6 @@ function DropdownMenuContent({
 
   if (!mounted || typeof document === "undefined" || !ctx.open) return null;
 
-  const portalTarget = document.getElementById(ctx.rootId)?.closest("dialog") || document.body;
-
   function handleMenuKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
     if (!menuRef.current) return;
     switch (e.key) {
@@ -262,7 +260,7 @@ function DropdownMenuContent({
     >
       {children}
     </div>,
-    portalTarget,
+    document.body,
   );
 }
 

@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { createPortal } from "react-dom";
 import { IconX } from "@tabler/icons-react";
 
 import { cn } from "@/lib/utils";
@@ -71,38 +72,47 @@ function DialogContent({
   children?: React.ReactNode;
 }) {
   const ctx = useDialog("DialogContent");
-  const ref = React.useRef<HTMLDialogElement | null>(null);
+  const [mounted, setMounted] = React.useState(false);
 
-  const previouslyFocused = React.useRef<HTMLElement | null>(null);
+  React.useEffect(() => setMounted(true), []);
 
+  // Escape to close + body scroll lock
   React.useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    if (ctx.open && !el.open) {
-      // Save focus to restore on close (a11y)
-      previouslyFocused.current = document.activeElement as HTMLElement;
-      try {
-        el.showModal();
-      } catch {
-        /* already open */
-      }
-    } else if (!ctx.open && el.open) {
-      el.close();
-      // Restore focus to the element that opened the dialog
-      previouslyFocused.current?.focus();
-    }
-  }, [ctx.open]);
-
-  return (
-    <dialog
-      ref={ref}
-      className="modal"
-      onCancel={(e) => {
+    if (!ctx.open) return;
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") {
         e.preventDefault();
         ctx.onOpenChange(false);
-      }}
-    >
-      <div className={cn("modal-box rounded-xl border border-base-300 bg-base-100 p-6 shadow-xl", className)}>
+      }
+    }
+    document.addEventListener("keydown", onKey);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prev;
+    };
+  }, [ctx.open, ctx.onOpenChange]);
+
+  if (!mounted || !ctx.open) return null;
+
+  return createPortal(
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+      {/* Backdrop */}
+      <div
+        className="absolute inset-0 bg-black/40 backdrop-blur-[1px]"
+        onClick={() => ctx.onOpenChange(false)}
+        aria-hidden="true"
+      />
+      {/* Modal box */}
+      <div
+        role="dialog"
+        aria-modal="true"
+        className={cn(
+          "relative z-10 max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-xl border border-base-300 bg-base-100 p-6 shadow-xl",
+          className,
+        )}
+      >
         {children}
         <button
           type="button"
@@ -113,16 +123,8 @@ function DialogContent({
           <IconX className="size-4" />
         </button>
       </div>
-      <form
-        method="dialog"
-        className="modal-backdrop"
-        onClick={() => ctx.onOpenChange(false)}
-      >
-        <button type="submit" className="sr-only">
-          close
-        </button>
-      </form>
-    </dialog>
+    </div>,
+    document.body,
   );
 }
 

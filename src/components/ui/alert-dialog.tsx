@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { createPortal } from "react-dom";
 
 import { cn } from "@/lib/utils";
 import { Slot } from "@/lib/slot";
@@ -66,36 +67,48 @@ function AlertDialogContent({
   children?: React.ReactNode;
 }) {
   const ctx = useAlertDialog("AlertDialogContent");
-  const ref = React.useRef<HTMLDialogElement | null>(null);
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => setMounted(true), []);
 
   React.useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    if (ctx.open && !el.open) {
-      try {
-        el.showModal();
-      } catch {
-        /* already open */
-      }
-    } else if (!ctx.open && el.open) {
-      el.close();
-    }
-  }, [ctx.open]);
-
-  return (
-    <dialog
-      ref={ref}
-      className="modal"
-      onCancel={(e) => {
+    if (!ctx.open) return;
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") {
         e.preventDefault();
         ctx.onOpenChange(false);
-      }}
-    >
-      <div className={cn("modal-box rounded-xl border border-base-300 bg-base-100 p-6 shadow-xl", className)}>
+      }
+    }
+    document.addEventListener("keydown", onKey);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prev;
+    };
+  }, [ctx.open, ctx.onOpenChange]);
+
+  if (!mounted || !ctx.open) return null;
+
+  return createPortal(
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+      <div
+        className="absolute inset-0 bg-black/40 backdrop-blur-[1px]"
+        onClick={() => ctx.onOpenChange(false)}
+        aria-hidden="true"
+      />
+      <div
+        role="alertdialog"
+        aria-modal="true"
+        className={cn(
+          "relative z-10 max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-xl border border-base-300 bg-base-100 p-6 shadow-xl",
+          className,
+        )}
+      >
         {children}
       </div>
-      <div className="modal-backdrop" aria-hidden="true" />
-    </dialog>
+    </div>,
+    document.body,
   );
 }
 
