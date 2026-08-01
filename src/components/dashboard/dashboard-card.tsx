@@ -109,6 +109,26 @@ const semanticAccent: Partial<Record<IconName, NonNullable<DashboardCardProps["a
    "shield-check": "green",
 };
 
+/* Per-icon CSS scale untuk menormalisasi ukuran visual.
+   Target: ~36px max dimension di box 44px.
+   Dihitung dari pengukuran actual render di browser. */
+const lottieScaleMap: Partial<Record<IconName, string>> = {
+   activity: "scale-[0.86]",
+   users: "scale-[0.88]",
+   monitor: "scale-[0.95]",
+   calendar: "scale-[0.97]",
+   "shield-check": "scale-[0.97]",
+   "alert-triangle": "scale-[1]",
+   "check-circle": "scale-[1]",
+   clock: "scale-[1.13]",
+   "file-text": "scale-[1.13]",
+   "log-in": "scale-[1.16]",
+   "log-out": "scale-[1.2]",
+   bus: "scale-[1.44]",
+   "trending-up": "scale-[1.57]",
+   "user-check": "scale-[1.89]",
+};
+
 function DashboardCardInner({
    title,
    value,
@@ -160,7 +180,7 @@ function DashboardCardInner({
                             size={44}
                             className={cn(
                                "h-full w-full",
-                               typeof icon === "string" && icon === "bus" && "scale-[1.65]",
+                               iconName && lottieScaleMap[iconName],
                             )}
                          />
                       ) : Icon ? (
