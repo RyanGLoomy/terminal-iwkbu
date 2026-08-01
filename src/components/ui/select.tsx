@@ -283,7 +283,7 @@ function SelectContent({
         left,
         transform: align === "end" ? "translateX(-100%)" : align === "center" ? "translateX(-50%)" : undefined,
         minWidth: r.width,
-        zIndex: 60,
+        zIndex: 10000,
       });
     };
     place();

@@ -184,7 +184,7 @@ function DropdownMenuContent({
             : ctx.align === "center"
               ? "translateX(-50%)"
               : undefined,
-        zIndex: 60,
+        zIndex: 10000,
       });
     };
     place();
