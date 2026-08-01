@@ -397,17 +397,24 @@ export function AuditTrailPanel() {
          </div>
 
          <Card className="border-base-300">
-            <CardHeader className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-               <div className="shrink-0">
+            <CardHeader className="space-y-3">
+               <div className="flex items-center justify-between gap-3">
                   <CardTitle className="text-base">
                      Audit Trail Aktivitas Sistem
                   </CardTitle>
-                  <p className="text-sm text-base-content/70 mt-1">
-                     Pantau jejak aktivitas penting untuk monitoring dan tindak
-                     lanjut.
-                  </p>
+                  <div className="flex gap-2">
+                     <Button type="button" variant="outline" size="sm" onClick={() => exportCsv(rows)} disabled={rows.length === 0}>
+                        <IconDownload className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" />
+                        CSV
+                     </Button>
+                     <Button type="button" variant="outline" size="sm" onClick={() => window.print()} disabled={rows.length === 0}>
+                        <IconPrinter className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" />
+                        Cetak
+                     </Button>
+                  </div>
                </div>
-               <div className="flex flex-col gap-2 sm:flex-wrap sm:flex-row sm:items-center">
+               <div className="border-t border-base-200" />
+               <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
                   <div className="relative w-full sm:w-[220px]">
                      <IconSearch className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-base-content/70" aria-hidden="true" />
                      <input
@@ -425,46 +432,18 @@ export function AuditTrailPanel() {
                   <div className="w-full sm:w-[150px]">
                      <DatePicker value={endDate} onChange={setEndDate} />
                   </div>
-                   <Select
-                      value={aksi}
-                      onValueChange={(v) => setAksi(v as AksiLog | "SEMUA")}
-                   >
-                      <SelectTrigger className="h-9 w-full sm:w-[180px]">
-                         <SelectValue placeholder="Semua Aksi" />
-                      </SelectTrigger>
-                      <SelectContent>
-                         {ACTION_OPTIONS.map((option) => (
-                            <SelectItem
-                               key={option.value}
-                               value={option.value}
-                            >
-                               {option.label}
-                            </SelectItem>
-                         ))}
-                      </SelectContent>
-                   </Select>
-                  <div className="flex gap-2">
-                     <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={() => exportCsv(rows)}
-                        disabled={rows.length === 0}
-                     >
-                        <IconDownload className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" />
-                        CSV
-                     </Button>
-                     <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={() => window.print()}
-                        disabled={rows.length === 0}
-                     >
-                        <IconPrinter className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" />
-                        Cetak
-                     </Button>
-                  </div>
+                  <Select value={aksi} onValueChange={(v) => setAksi(v as AksiLog | "SEMUA")}>
+                     <SelectTrigger className="h-9 w-full sm:w-[180px]">
+                        <SelectValue placeholder="Semua Aksi" />
+                     </SelectTrigger>
+                     <SelectContent>
+                        {ACTION_OPTIONS.map((option) => (
+                           <SelectItem key={option.value} value={option.value}>
+                              {option.label}
+                           </SelectItem>
+                        ))}
+                     </SelectContent>
+                  </Select>
                </div>
             </CardHeader>
             <CardContent data-printable>

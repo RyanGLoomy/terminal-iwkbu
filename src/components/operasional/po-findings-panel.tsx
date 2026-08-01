@@ -106,11 +106,12 @@ export function PoFindingsPanel({ findings }: { findings: FindingRecord[] }) {
          </div>
 
           {/* Toolbar */}
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-             <span className="text-sm font-medium text-base-content">
+          <div className="rounded-xl border border-base-300 bg-base-100 p-4 space-y-3">
+             <span className="text-sm font-semibold text-base-content">
                 {filteredFindings.length}
                 {filteredFindings.length !== findings.length && ` dari ${findings.length}`} temuan
              </span>
+             <div className="border-t border-base-200" />
              <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
                 <Input
                    placeholder="Cari temuan..."

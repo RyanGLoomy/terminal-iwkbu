@@ -235,9 +235,9 @@ export function StafFindingsPanel({
          </div>
 
          {/* Toolbar */}
-         <div className="space-y-3">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-               <span className="text-sm font-medium text-base-content">
+         <div className="rounded-xl border border-base-300 bg-base-100 p-4 space-y-3">
+            <div className="flex items-center justify-between gap-3">
+               <span className="text-sm font-semibold text-base-content">
                   Daftar Temuan ({filteredFindings.length}
                   {filteredFindings.length !== initialFindings.length && ` dari ${initialFindings.length}`})
                </span>
@@ -246,6 +246,8 @@ export function StafFindingsPanel({
                   Buat Temuan
                </Button>
             </div>
+
+            <div className="border-t border-base-200" />
 
             <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
                <Input
@@ -295,7 +297,8 @@ export function StafFindingsPanel({
                      <SelectItem value="status_desc">Status Z→A</SelectItem>
                   </SelectContent>
                </Select>
-               <div className="flex gap-2">
+
+               <div className="ml-auto flex gap-2">
                   <Button variant="outline" size="sm" onClick={exportCsv}>
                      <IconDownload className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" />
                      CSV
