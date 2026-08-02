@@ -31,7 +31,7 @@ export function DashboardShell({
    const pathname = usePathname();
    const mainRef = useRef<HTMLElement>(null);
 
-   useEffect(() => {
+   useLayoutEffect(() => {
       const stored = localStorage.getItem(COLLAPSE_KEY);
       setCollapsed(stored === "true");
       setMounted(true);
