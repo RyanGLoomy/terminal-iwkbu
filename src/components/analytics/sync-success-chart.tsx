@@ -29,7 +29,7 @@ export function SyncSuccessChart({ data }: { data: SyncData[] }) {
    const successRate = totalCount > 0 ? Math.round((successCount / totalCount) * 100) : 0;
 
    return (
-      <div className="rounded-xl border border-base-300 bg-base-100 p-5">
+       <div className="overflow-hidden rounded-xl border border-base-300 bg-base-100 p-5">
          <div className="flex items-center justify-between mb-4">
             <h3 className="text-sm font-semibold text-base-content">
                Tingkat Keberhasilan Sync IWKBU

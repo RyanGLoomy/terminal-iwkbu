@@ -27,7 +27,7 @@ export function ActivityHeatmap({ data }: { data: { day_of_week: number; hour: n
    };
 
    return (
-      <div className="rounded-xl border border-base-300 bg-base-100 p-5">
+       <div className="overflow-hidden rounded-xl border border-base-300 bg-base-100 p-5">
          <h3 className="text-sm font-semibold text-base-content mb-4">
             Aktivitas per Jam & Hari
          </h3>

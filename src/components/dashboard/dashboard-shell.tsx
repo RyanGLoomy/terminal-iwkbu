@@ -115,11 +115,11 @@ export function DashboardShell({
              <main
                ref={mainRef}
                id="main-content"
-               className="flex-1 overflow-auto p-4 pb-20 sm:p-6 lg:p-8 lg:pb-8"
+               className="flex-1 overflow-y-auto overflow-x-hidden p-4 pb-20 sm:p-6 lg:p-8 lg:pb-8"
                style={{ scrollbarGutter: "stable" }}
              >
                <div className="mx-auto w-full max-w-[1500px]">{children}</div>
-            </main>
+             </main>
          </div>
 
          {/* Mobile bottom navigation */}

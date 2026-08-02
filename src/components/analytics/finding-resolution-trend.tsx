@@ -19,7 +19,7 @@ export function FindingResolutionTrend({ data }: { data: TrendData[] }) {
    }
 
    return (
-      <div className="rounded-xl border border-base-300 bg-base-100 p-5">
+       <div className="overflow-hidden rounded-xl border border-base-300 bg-base-100 p-5">
          <h3 className="text-sm font-semibold text-base-content mb-4">
             Tren Resolusi Temuan (Rata-rata Hari)
          </h3>

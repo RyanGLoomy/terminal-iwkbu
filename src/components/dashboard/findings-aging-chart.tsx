@@ -24,7 +24,7 @@ export function FindingsAgingChart({ data }: { data: AgingData[] }) {
    }
 
    return (
-      <div className="rounded-xl border border-base-300 bg-base-100 p-5">
+       <div className="overflow-hidden rounded-xl border border-base-300 bg-base-100 p-5">
          <h3 className="text-sm font-semibold text-base-content mb-4">
             Distribusi Umur Temuan Aktif
          </h3>
