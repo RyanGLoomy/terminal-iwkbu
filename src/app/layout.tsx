@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import { headers } from "next/headers";
 import { Plus_Jakarta_Sans, Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -67,12 +68,13 @@ export default async function RootLayout({
 
     return (
       <html lang="id" suppressHydrationWarning>
-         {/* Anti-flash: set data-theme sebelum React hydrate agar tidak ada
-             flicker light→dark pada refresh. Script ini berjalan segera
-             setelah DOM parsed, sebelum browser paint. Harus pakai nonce
-             karena CSP tidak mengizinkan unsafe-inline. */}
-         <script
+         {/* Anti-flash: set data-theme + data-sidebar sebelum React hydrate
+             agar tidak ada flicker pada refresh. Script berjalan segera
+             setelah DOM parsed, sebelum browser paint. */}
+         <Script
+            id="anti-flash"
             nonce={nonce}
+            strategy="beforeInteractive"
             dangerouslySetInnerHTML={{
                __html: `(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light'){document.documentElement.setAttribute('data-theme',t==='dark'?'jr-dark':'jr')}else if(window.matchMedia&&window.matchMedia('(prefers-color-scheme:dark)').matches){document.documentElement.setAttribute('data-theme','jr-dark')}}if(localStorage.getItem('sidebar-collapsed')==='true')document.documentElement.setAttribute('data-sidebar-collapsed','true')}catch(e){}})()`,
             }}
