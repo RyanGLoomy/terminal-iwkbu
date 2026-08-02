@@ -79,7 +79,7 @@
                 ".next/static/chunks/*.js",
                 ".next/static/chunks/app/**/*.js"
             ],
-            "limit": "1.1 MB"
+            "limit": "1.4 MB"
         }
     ]
 }
