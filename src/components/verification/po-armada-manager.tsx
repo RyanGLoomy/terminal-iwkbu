@@ -38,12 +38,13 @@ import { getErrorMessage } from "@/lib/db-error";
 
 interface POArmadaManagerProps {
    poId: string;
+   initialArmada?: Armada[];
 }
 
-export function POArmadaManager({ poId }: POArmadaManagerProps) {
+export function POArmadaManager({ poId, initialArmada }: POArmadaManagerProps) {
    type ArmadaStatusOperasional = Armada["status_operasional"];
-   const [armada, setArmada] = useState<Armada[]>([]);
-   const [loading, setLoading] = useState(true);
+   const [armada, setArmada] = useState<Armada[]>(initialArmada ?? []);
+   const [loading, setLoading] = useState(!initialArmada);
    const [selectedArmada, setSelectedArmada] = useState<Armada | null>(null);
    const [isFormOpen, setIsFormOpen] = useState(false);
    const [isStatusOpen, setIsStatusOpen] = useState(false);
@@ -54,7 +55,9 @@ export function POArmadaManager({ poId }: POArmadaManagerProps) {
    const fileInputRef = useRef<HTMLInputElement>(null);
 
    useEffect(() => {
-      loadArmada();
+      if (!initialArmada) {
+         loadArmada();
+      }
    }, [poId]);
 
     const filteredArmada = (() => {

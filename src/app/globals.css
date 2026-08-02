@@ -12,7 +12,7 @@
    React #418 recovery tears down + re-renders the page. During the
    gap, content briefly disappears and the browser scrolls. Locking
    overflow prevents ANY scroll until React is ready. */
-html { overflow-y: hidden; scroll-behavior: auto; }
+html { overflow: hidden; scroll-behavior: auto; }
 
 /* ---------------------------------------------------------------------------
  * Tema DaisyUI — "jr" (terang) & "jr-dark" (gelap)
@@ -177,6 +177,7 @@ html { overflow-y: hidden; scroll-behavior: auto; }
   body {
     @apply bg-base-200 text-base-content antialiased;
     min-height: 100vh;
+    overflow: hidden;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
     text-rendering: geometricPrecision;
   }

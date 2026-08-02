@@ -126,58 +126,46 @@ export function Sidebar({ userRole, collapsed, onToggleCollapse }: SidebarProps)
                 collapsed ? "w-[72px]" : "w-[264px]",
              )}
          >
-              {/* Header: JR logo + toggle collapse */}
-              <div className="relative flex h-14 items-center border-b border-sidebar-border px-4">
-                {/* Collapsed state: centered expand button */}
-                <div
-                   className={cn(
-                      "absolute inset-0 flex items-center justify-center transition-opacity duration-150",
-                      collapsed ? "opacity-100" : "opacity-0 pointer-events-none",
-                   )}
-                >
-                   <button
-                      type="button"
-                      onClick={onToggleCollapse}
-                      className="btn btn-ghost btn-square btn-sm"
-                      aria-label="Lebarkan sidebar"
-                   >
-                      <PanelLeftOpen className="size-5" />
-                   </button>
-                </div>
-
-                {/* Expanded state: logo + text + collapse button */}
-                <div
-                   className={cn(
-                      "flex w-full items-center gap-3 transition-opacity duration-150 delay-75",
-                      collapsed ? "opacity-0 pointer-events-none" : "opacity-100",
-                   )}
-                >
-                   <Image
-                      src="/jr-mark.png"
-                      alt="Logo Jasa Raharja Banten"
-                      width={32}
-                      height={32}
-                      priority
-                      className="shrink-0 object-contain"
-                   />
-                   <div className="min-w-0 flex-1">
-                      <span className="block truncate text-sm font-bold leading-tight text-sidebar-foreground">
-                         IWKBU Terminal
-                      </span>
-                      <span className="text-[11px] font-medium uppercase tracking-wider text-sidebar-foreground/50">
-                         Jasa Raharja Banten
-                      </span>
-                   </div>
-                   <button
-                      type="button"
-                      onClick={onToggleCollapse}
-                      className="btn btn-ghost btn-square btn-sm text-sidebar-foreground/70 hover:text-sidebar-foreground"
-                      aria-label="Persempit sidebar"
-                   >
-                      <PanelLeftClose className="size-4" />
-                   </button>
-                </div>
-             </div>
+              {/* Header: JR logo + toggle collapse — single flex, mirrors nav item structure */}
+              <div
+                 className={cn(
+                    "flex h-14 items-center border-b border-sidebar-border px-4",
+                    collapsed ? "justify-center" : "gap-3",
+                 )}
+              >
+                 {!collapsed && (
+                    <Image
+                       src="/jr-mark.png"
+                       alt="Logo Jasa Raharja Banten"
+                       width={32}
+                       height={32}
+                       priority
+                       className="shrink-0 object-contain"
+                    />
+                 )}
+                 {!collapsed && (
+                    <div className="min-w-0 flex-1">
+                       <span className="block truncate text-sm font-bold leading-tight text-sidebar-foreground">
+                          IWKBU Terminal
+                       </span>
+                       <span className="text-[11px] font-medium uppercase tracking-wider text-sidebar-foreground/50">
+                          Jasa Raharja Banten
+                       </span>
+                    </div>
+                 )}
+                 <button
+                    type="button"
+                    onClick={onToggleCollapse}
+                    className="btn btn-ghost btn-square btn-sm shrink-0"
+                    aria-label={collapsed ? "Lebarkan sidebar" : "Persempit sidebar"}
+                 >
+                    {collapsed ? (
+                       <PanelLeftOpen className="size-5" />
+                    ) : (
+                       <PanelLeftClose className="size-4" />
+                    )}
+                 </button>
+              </div>
 
             {/* Nav */}
             <nav

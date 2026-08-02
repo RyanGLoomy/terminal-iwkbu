@@ -90,8 +90,9 @@ export default async function PODashboard() {
    const [armadaRes, findingsRes, iwkbuData] = await Promise.all([
       supabase
          .from("armada")
-         .select("id, status_verifikasi, status_operasional")
-         .eq("po_id", user.id),
+         .select("*")
+         .eq("po_id", user.id)
+         .order("created_at", { ascending: false }),
       supabase
          .from("findings")
          .select("id")
@@ -194,7 +195,7 @@ export default async function PODashboard() {
              </div>
           </div>
 
-          <POArmadaManager poId={user.id} />
+          <POArmadaManager poId={user.id} initialArmada={(armadaRes.data ?? []) as any} />
       </section>
    );
 }
