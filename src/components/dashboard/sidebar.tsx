@@ -126,7 +126,7 @@ export function Sidebar({ userRole, collapsed, onToggleCollapse }: SidebarProps)
                 collapsed ? "w-[72px]" : "w-[264px]",
              )}
          >
-              {/* Header: JR logo + toggle collapse — single flex, mirrors nav item structure */}
+              {/* Header: JR logo + toggle collapse — button anchored right */}
               <div
                  className={cn(
                     "flex h-14 items-center border-b border-sidebar-border px-4",
@@ -156,7 +156,10 @@ export function Sidebar({ userRole, collapsed, onToggleCollapse }: SidebarProps)
                  <button
                     type="button"
                     onClick={onToggleCollapse}
-                    className="btn btn-ghost btn-square btn-sm shrink-0"
+                    className={cn(
+                       "btn btn-ghost btn-square btn-sm shrink-0",
+                       !collapsed && "ml-auto",
+                    )}
                     aria-label={collapsed ? "Lebarkan sidebar" : "Persempit sidebar"}
                  >
                     {collapsed ? (
