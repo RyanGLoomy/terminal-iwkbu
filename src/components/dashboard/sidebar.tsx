@@ -154,13 +154,13 @@ export function Sidebar({ userRole, collapsed, onToggleCollapse }: SidebarProps)
                  <button
                     type="button"
                     onClick={onToggleCollapse}
-                    className="btn btn-ghost btn-square btn-sm shrink-0 z-10"
+                    className="flex items-center justify-center rounded-xl px-3 py-2.5 text-sm font-medium text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground shrink-0 z-10"
                     aria-label={collapsed ? "Lebarkan sidebar" : "Persempit sidebar"}
                  >
                     {collapsed ? (
-                       <PanelLeftOpen className="size-5" />
+                       <PanelLeftOpen className="size-5 shrink-0" />
                     ) : (
-                       <PanelLeftClose className="size-4" />
+                       <PanelLeftClose className="size-5 shrink-0" />
                     )}
                  </button>
               </div>
