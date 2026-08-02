@@ -227,7 +227,7 @@ export default async function StafIWDashboard() {
                <SyncSuccessChart data={syncRuns} />
             </div>
             <div className="mt-4 grid gap-4 lg:grid-cols-3">
-               <div className="lg:col-span-2">
+               <div className="lg:col-span-2 min-w-0">
                   <ActivityHeatmap data={heatmapData} />
                </div>
                <FindingsAgingChart data={agingData} />
