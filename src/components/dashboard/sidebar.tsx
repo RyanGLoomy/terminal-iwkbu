@@ -127,11 +127,11 @@ export function Sidebar({ userRole, collapsed, onToggleCollapse }: SidebarProps)
              )}
          >
               {/* Header: JR logo + toggle collapse */}
-              <div className="flex h-14 items-center border-b border-sidebar-border px-3">
+              <div className={cn("flex h-14 items-center border-b border-sidebar-border px-3", collapsed && "justify-center")}>
                  <div
                     className={cn(
-                       "flex items-center gap-3 min-w-0 flex-1 transition-opacity duration-150",
-                       collapsed ? "opacity-0 pointer-events-none" : "opacity-100 delay-200",
+                       "flex items-center gap-3 min-w-0 transition-opacity duration-150",
+                       collapsed ? "opacity-0 pointer-events-none absolute inset-0 px-3" : "flex-1 opacity-100 delay-200",
                     )}
                  >
                     <Image
