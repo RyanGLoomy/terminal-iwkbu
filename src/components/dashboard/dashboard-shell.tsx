@@ -15,6 +15,15 @@ import type { RoleType } from "@/config/roles";
 
 const COLLAPSE_KEY = "sidebar-collapsed";
 
+function getInitialCollapsed(): boolean {
+   if (typeof window === "undefined") return false;
+   // Baca dari data attribute yang sudah di-set oleh inline script di layout.tsx
+   // sebelum React hydrate — menghindari flash expanded→collapsed.
+   const attr = document.documentElement.getAttribute("data-sidebar-collapsed");
+   if (attr !== null) return attr === "true";
+   return localStorage.getItem(COLLAPSE_KEY) === "true";
+}
+
 interface DashboardShellProps {
    userName: string;
    userRole: RoleType;
@@ -26,16 +35,10 @@ export function DashboardShell({
    userRole,
    children,
 }: DashboardShellProps) {
-   const [collapsed, setCollapsed] = useState(false);
-   const [mounted, setMounted] = useState(false);
+   const [collapsed, setCollapsed] = useState(getInitialCollapsed);
+   const [mounted, setMounted] = useState(true);
    const pathname = usePathname();
    const mainRef = useRef<HTMLElement>(null);
-
-   useLayoutEffect(() => {
-      const stored = localStorage.getItem(COLLAPSE_KEY);
-      setCollapsed(stored === "true");
-      setMounted(true);
-   }, []);
 
    // Reset the scroll position of the main content container whenever the
    // route changes (client-side navigation) AND on initial mount (hard

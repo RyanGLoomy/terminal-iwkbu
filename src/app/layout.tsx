@@ -74,7 +74,7 @@ export default async function RootLayout({
          <script
             nonce={nonce}
             dangerouslySetInnerHTML={{
-               __html: `(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light'){document.documentElement.setAttribute('data-theme',t==='dark'?'jr-dark':'jr')}else if(window.matchMedia&&window.matchMedia('(prefers-color-scheme:dark)').matches){document.documentElement.setAttribute('data-theme','jr-dark')}}catch(e){}})()`,
+               __html: `(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light'){document.documentElement.setAttribute('data-theme',t==='dark'?'jr-dark':'jr')}else if(window.matchMedia&&window.matchMedia('(prefers-color-scheme:dark)').matches){document.documentElement.setAttribute('data-theme','jr-dark')}}if(localStorage.getItem('sidebar-collapsed')==='true')document.documentElement.setAttribute('data-sidebar-collapsed','true')}catch(e){}})()`,
             }}
          />
          <body
