@@ -15,25 +15,20 @@ import type { RoleType } from "@/config/roles";
 
 const COLLAPSE_KEY = "sidebar-collapsed";
 
-function getInitialCollapsed(): boolean {
-   if (typeof window === "undefined") return false;
-   // Baca dari data attribute yang sudah di-set oleh server (layout.tsx) via cookie.
-   // Tidak ada flash karena attribute sudah ada di HTML sebelum React hydrate.
-   return document.documentElement.hasAttribute("data-sidebar-collapsed");
-}
-
 interface DashboardShellProps {
    userName: string;
    userRole: RoleType;
+   initialCollapsed: boolean;
    children: React.ReactNode;
 }
 
 export function DashboardShell({
    userName,
    userRole,
+   initialCollapsed,
    children,
 }: DashboardShellProps) {
-   const [collapsed, setCollapsed] = useState(getInitialCollapsed);
+   const [collapsed, setCollapsed] = useState(initialCollapsed);
    const [mounted, setMounted] = useState(true);
    const pathname = usePathname();
    const mainRef = useRef<HTMLElement>(null);
