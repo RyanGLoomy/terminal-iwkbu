@@ -126,12 +126,12 @@ export function Sidebar({ userRole, collapsed, onToggleCollapse }: SidebarProps)
                 collapsed ? "w-[72px]" : "w-[264px]",
              )}
          >
-              {/* Header: JR logo + toggle collapse — text opacity fades after sidebar width transition */}
-              <div className="relative flex h-14 items-center border-b border-sidebar-border px-4">
+              {/* Header: JR logo + toggle collapse */}
+              <div className="relative flex h-14 items-center border-b border-sidebar-border px-3">
                  <div
                     className={cn(
-                       "flex items-center gap-3 min-w-0 flex-1 transition-opacity duration-150",
-                       collapsed ? "opacity-0 delay-0 pointer-events-none" : "opacity-100 delay-200",
+                       "flex items-center gap-3 min-w-0 transition-opacity duration-150",
+                       collapsed ? "opacity-0 pointer-events-none absolute inset-0 px-3" : "flex-1 opacity-100 delay-200",
                     )}
                  >
                     <Image
@@ -154,7 +154,10 @@ export function Sidebar({ userRole, collapsed, onToggleCollapse }: SidebarProps)
                  <button
                     type="button"
                     onClick={onToggleCollapse}
-                    className="btn btn-ghost btn-square btn-sm absolute right-3 top-1/2 -translate-y-1/2"
+                    className={cn(
+                       "btn btn-ghost btn-square btn-sm shrink-0 z-10",
+                       collapsed ? "mx-auto" : "ml-auto",
+                    )}
                     aria-label={collapsed ? "Lebarkan sidebar" : "Persempit sidebar"}
                  >
                     {collapsed ? (
