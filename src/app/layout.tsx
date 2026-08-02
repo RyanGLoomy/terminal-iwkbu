@@ -66,8 +66,16 @@ export default async function RootLayout({
     const nonce = (await headers()).get("x-nonce") ?? undefined;
 
     return (
-       <html lang="id">
-          <body
+      <html lang="id" suppressHydrationWarning>
+         {/* Anti-flash: set data-theme sebelum React hydrate agar tidak ada
+             flicker light→dark pada refresh. Script ini berjalan segera
+             setelah DOM parsed, sebelum browser paint. */}
+         <script
+            dangerouslySetInnerHTML={{
+               __html: `(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light'){document.documentElement.setAttribute('data-theme',t==='dark'?'jr-dark':'jr')}else if(window.matchMedia&&window.matchMedia('(prefers-color-scheme:dark)').matches){document.documentElement.setAttribute('data-theme','jr-dark')}}catch(e){}})()`,
+            }}
+         />
+         <body
              className={`${jakartaSans.variable} ${geistMono.variable} font-sans antialiased`}
           >
              <ThemeProvider>
