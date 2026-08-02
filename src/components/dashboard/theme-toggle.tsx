@@ -2,14 +2,22 @@
 
 import { IconMoon, IconSun } from "@tabler/icons-react";
 import { useTheme } from "@/components/theme-provider";
+import { useState } from "react";
 
 export function ThemeToggle() {
   const { theme, toggle } = useTheme();
+  const [spinning, setSpinning] = useState(false);
+
+  const handleToggle = () => {
+    setSpinning(true);
+    toggle();
+    setTimeout(() => setSpinning(false), 400);
+  };
 
   return (
     <button
-      onClick={toggle}
-      className="flex h-11 w-11 items-center justify-center rounded-lg border border-base-300/70 bg-base-100/80 text-base-content shadow-sm transition-colors hover:bg-base-200"
+      onClick={handleToggle}
+      className={`navbar-icon-btn ${spinning ? "theme-spinning" : ""}`}
       title={theme === "dark" ? "Mode Terang" : "Mode Gelap"}
       aria-label={theme === "dark" ? "Mode Terang" : "Mode Gelap"}
     >

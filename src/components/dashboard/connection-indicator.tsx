@@ -8,21 +8,15 @@ export function ConnectionIndicator() {
 
    return (
       <span
-         className="flex items-center gap-1.5 text-xs"
+         className={`navbar-icon-btn ${!isOnline ? "status-offline" : ""}`}
          title={isOnline ? "Terhubung" : "Koneksi terputus"}
          role="status"
          aria-label={isOnline ? "Online" : "Offline"}
       >
          {isOnline ? (
-            <>
-                <IconWifi className="h-3.5 w-3.5 text-brand-green" aria-hidden="true" />
-               <span className="hidden text-base-content/60 sm:inline">Online</span>
-            </>
+            <IconWifi className="h-4 w-4 text-brand-green" aria-hidden="true" />
          ) : (
-            <>
-                <IconWifiOff className="h-3.5 w-3.5 text-error" aria-hidden="true" />
-               <span className="text-error font-medium">Offline</span>
-            </>
+            <IconWifiOff className="h-4 w-4 text-error" aria-hidden="true" />
          )}
       </span>
    );

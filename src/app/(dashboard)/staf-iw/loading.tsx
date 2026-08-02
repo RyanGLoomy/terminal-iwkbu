@@ -8,15 +8,15 @@ export default function StafIWDashboardLoading() {
          <div className="space-y-5">
             {/* Header */}
             <div>
-               <div className="h-7 w-96 bg-base-200 rounded animate-pulse mb-2" />
-               <div className="h-4 w-full max-w-2xl bg-base-200 rounded animate-pulse" />
+               <div className="h-7 w-96 bg-base-200 rounded skeleton-shimmer mb-2" />
+               <div className="h-4 w-full max-w-2xl bg-base-200 rounded skeleton-shimmer" />
             </div>
 
             {/* Dashboard Cards */}
             <DashboardCardsSkeletonGrid />
 
             {/* Workflow Card */}
-            <Card className="border-base-300 animate-pulse">
+            <Card className="border-base-300 skeleton-shimmer">
                <CardContent className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between pt-5">
                   <div className="flex-1">
                      <div className="h-5 w-32 bg-base-200 rounded mb-2" />
@@ -32,7 +32,7 @@ export default function StafIWDashboardLoading() {
 
          {/* Tabs Skeleton */}
          <div className="space-y-4">
-            <div className="h-10 w-full max-w-[640px] bg-base-200 rounded animate-pulse" />
+            <div className="h-10 w-full max-w-[640px] bg-base-200 rounded skeleton-shimmer" />
             <TableSkeleton rows={6} />
          </div>
       </section>

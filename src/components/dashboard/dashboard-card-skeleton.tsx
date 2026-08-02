@@ -1,15 +1,15 @@
 import {
-  Card,
-  CardContent,
+   Card,
+   CardContent,
 } from "@/components/ui/card";
 
 export function DashboardCardSkeleton() {
   return (
-    <Card className="animate-pulse">
+    <Card className="skeleton-shimmer">
       <CardContent className="pt-5 pb-5">
         <div className="space-y-3">
-          <div className="h-3.5 w-24 rounded bg-base-200" />
-          <div className="h-7 w-16 rounded bg-base-200" />
+          <div className="h-3.5 w-24 rounded bg-base-300/50" />
+          <div className="h-7 w-16 rounded bg-base-300/50" />
         </div>
       </CardContent>
     </Card>

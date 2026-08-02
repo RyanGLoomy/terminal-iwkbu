@@ -5,14 +5,14 @@ export default function PinPageLoading() {
       <div className="flex items-center justify-center py-20">
         <div className="w-full max-w-sm space-y-5">
           <div className="space-y-2 text-center">
-            <div className="h-7 w-48 bg-base-200 rounded animate-pulse mx-auto" />
-            <div className="h-4 w-64 bg-base-200 rounded animate-pulse mx-auto" />
+            <div className="h-7 w-48 bg-base-200 rounded skeleton-shimmer mx-auto" />
+            <div className="h-4 w-64 bg-base-200 rounded skeleton-shimmer mx-auto" />
           </div>
           <div className="space-y-3">
-            <div className="h-4 w-20 bg-base-200 rounded animate-pulse" />
-            <div className="h-10 w-full bg-base-200 rounded animate-pulse" />
+            <div className="h-4 w-20 bg-base-200 rounded skeleton-shimmer" />
+            <div className="h-10 w-full bg-base-200 rounded skeleton-shimmer" />
           </div>
-          <div className="h-10 w-full bg-base-200 rounded animate-pulse" />
+          <div className="h-10 w-full bg-base-200 rounded skeleton-shimmer" />
         </div>
       </div>
     </section>

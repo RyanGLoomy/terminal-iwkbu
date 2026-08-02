@@ -6,8 +6,8 @@ export default function AdminTerminalLoading() {
     <section className="space-y-6">
       <div className="space-y-5">
         <div>
-          <div className="h-7 w-72 bg-base-200 rounded animate-pulse mb-2" />
-          <div className="h-4 w-96 bg-base-200 rounded animate-pulse" />
+          <div className="h-7 w-72 bg-base-200 rounded skeleton-shimmer mb-2" />
+          <div className="h-4 w-96 bg-base-200 rounded skeleton-shimmer" />
         </div>
         <DashboardCardsSkeletonGrid />
         <TableSkeleton rows={5} />

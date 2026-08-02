@@ -189,7 +189,7 @@ export function NotificationBell() {
       <div className="relative" ref={dropdownRef}>
          <span ref={bellWrapRef} className="contents">
             <button
-               className="relative inline-flex h-9 w-9 items-center justify-center rounded-lg p-0 text-base-content/70 transition-colors hover:bg-base-200"
+               className="navbar-icon-btn relative"
                aria-label="Notifikasi"
                aria-haspopup="dialog"
                aria-expanded={open}

@@ -416,6 +416,27 @@ select:focus-visible {
    transform-origin: top center;
 }
 
+/* ─── Shimmer skeleton loading ─── */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--color-base-200) 25%,
+    var(--color-base-300) 50%,
+    var(--color-base-200) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
 /* ─── Staged fade-in-up for dashboard entry animations ─── */
 @keyframes fade-in-up {
   from {
@@ -430,4 +451,59 @@ select:focus-visible {
 
 .animate-fade-in-up {
   animation: fade-in-up 0.4s ease-out both;
+}
+
+/* ─── Navbar icon hover animations ─── */
+@keyframes icon-bounce {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+
+@keyframes icon-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes icon-wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-8deg); }
+  75% { transform: rotate(8deg); }
+}
+
+.navbar-icon-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 0.5rem;
+  color: var(--color-base-content);
+  opacity: 0.7;
+  transition: all 0.2s ease;
+}
+
+.navbar-icon-btn:hover {
+  opacity: 1;
+  background-color: var(--color-base-200);
+  transform: translateY(-1px);
+}
+
+.navbar-icon-btn:active {
+  transform: translateY(0) scale(0.95);
+}
+
+/* Theme toggle: add spin animation on switch */
+.navbar-icon-btn.theme-spinning svg {
+  animation: icon-spin 0.4s ease-in-out;
+}
+
+/* Connection indicator: pulse when offline */
+@keyframes status-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.status-offline {
+  animation: status-pulse 1.5s ease-in-out infinite;
 }

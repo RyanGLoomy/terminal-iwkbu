@@ -5,11 +5,11 @@ export default function PODashboardLoading() {
          <div className="space-y-5">
             {/* Heading */}
             <div>
-               <div className="h-7 w-56 bg-base-200 rounded animate-pulse" />
+               <div className="h-7 w-56 bg-base-200 rounded skeleton-shimmer" />
             </div>
 
             {/* Alert Skeleton */}
-            <div className="rounded-lg border border-base-300 bg-base-200/50 p-4 animate-pulse">
+            <div className="rounded-lg border border-base-300 bg-base-200/50 p-4 skeleton-shimmer">
                <div className="flex gap-3">
                   <div className="h-5 w-5 bg-base-200 rounded" />
                   <div className="flex-1">

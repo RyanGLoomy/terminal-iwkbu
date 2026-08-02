@@ -128,11 +128,11 @@ export function ArmadaTable({
           <div className="space-y-2">
              {[1, 2, 3, 4, 5].map((i) => (
                 <div key={i} className="flex items-center gap-4 rounded-lg border border-base-300 px-4 py-3">
-                   <div className="h-4 w-24 rounded bg-base-300 animate-pulse" />
-                   <div className="h-4 w-20 rounded bg-base-300 animate-pulse" />
-                   <div className="h-4 w-32 rounded bg-base-300 animate-pulse" />
-                   <div className="h-4 w-12 rounded bg-base-300 animate-pulse" />
-                   <div className="ml-auto h-6 w-20 rounded-full bg-base-300 animate-pulse" />
+                   <div className="h-4 w-24 rounded bg-base-300 skeleton-shimmer" />
+                   <div className="h-4 w-20 rounded bg-base-300 skeleton-shimmer" />
+                   <div className="h-4 w-32 rounded bg-base-300 skeleton-shimmer" />
+                   <div className="h-4 w-12 rounded bg-base-300 skeleton-shimmer" />
+                   <div className="ml-auto h-6 w-20 rounded-full bg-base-300 skeleton-shimmer" />
                 </div>
              ))}
           </div>
