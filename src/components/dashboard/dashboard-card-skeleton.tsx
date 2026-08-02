@@ -16,13 +16,13 @@ export function DashboardCardSkeleton() {
   );
 }
 
-export function DashboardCardsSkeletonGrid() {
+export function DashboardCardsSkeletonGrid({ count = 4, columns }: { count?: number; columns?: string }) {
+  const gridClass = columns ?? "sm:grid-cols-2 lg:grid-cols-4";
   return (
-    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-      <DashboardCardSkeleton />
-      <DashboardCardSkeleton />
-      <DashboardCardSkeleton />
-      <DashboardCardSkeleton />
+    <div className={`grid gap-4 ${gridClass}`}>
+      {Array.from({ length: count }, (_, i) => (
+        <DashboardCardSkeleton key={i} />
+      ))}
     </div>
   );
 }

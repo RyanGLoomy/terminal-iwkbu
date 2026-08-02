@@ -4,15 +4,14 @@ import { VerifikasiPOTable } from "@/components/verification/verifikasi-po-table
 import { VerifikasiArmadaTable } from "@/components/verification/verifikasi-armada-table";
 import { DashboardCard } from "@/components/dashboard/dashboard-card";
 import { FadeIn } from "@/components/ui/fade-in";
-import { Card, CardContent } from "@/components/ui/card";
 import { StafIWStatsChartClient } from "@/components/dashboard/staf-iw-stats-chart-client";
 import { FindingsAgingChart } from "@/components/dashboard/findings-aging-chart";
 import { ActivityHeatmap } from "@/components/analytics/activity-heatmap";
 import { FindingResolutionTrend } from "@/components/analytics/finding-resolution-trend";
 import { SyncSuccessChart } from "@/components/analytics/sync-success-chart";
 import { PoComplianceOverview } from "@/components/analytics/po-compliance-overview";
-import Link from "next/link";
 import usersLottie from "@/lib/lottie/users.json";
+import { NotificationPanel } from "@/components/dashboard/notification-panel";
 import {
    getAllPO,
    getAllArmada,
@@ -239,44 +238,19 @@ export default async function StafIWDashboard() {
             )}
          </div>
 
-         {/* ─── Quick stats chart + workflow ─── */}
-         <div className="grid gap-4 lg:grid-cols-3">
-            <div className="lg:col-span-2">
-               <StafIWStatsChartClient
-                  poMenunggu={poMenunggu.length}
-                  poAktif={poAktif.length}
-                  armadaMenunggu={armadaMenunggu.length}
-                  armadaTerverifikasi={armadaTerverifikasi.length}
-                  armadaDitolak={armadaDitolak.length}
-               />
-            </div>
-            <Card className="border-base-300">
-               <CardContent className="flex h-full flex-col justify-center gap-3 pt-5">
-                  <div>
-                     <p className="text-sm font-medium text-base-content">
-                        Alur Kerja
-                     </p>
-                     <p className="text-sm text-base-content/70">
-                        Verifikasi data sumber, lanjutkan ke rekonsiliasi.
-                     </p>
-                  </div>
-                  <div className="flex flex-col gap-2">
-                     <Link
-                        href="/staf-iw/rekonsiliasi"
-                        className="inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-                     >
-                        Buka Rekonsiliasi
-                     </Link>
-                     <Link
-                        href="/staf-iw/audit-trail"
-                        className="inline-flex h-9 items-center justify-center rounded-md border border-base-300 bg-base-100 px-4 text-sm font-medium text-base-content transition-colors hover:bg-base-200/50"
-                     >
-                        Lihat Audit Trail
-                     </Link>
-                  </div>
-               </CardContent>
-            </Card>
-         </div>
+          {/* ─── Quick stats chart + notifications ─── */}
+          <div className="grid gap-4 lg:grid-cols-3">
+             <div className="lg:col-span-2">
+                <StafIWStatsChartClient
+                   poMenunggu={poMenunggu.length}
+                   poAktif={poAktif.length}
+                   armadaMenunggu={armadaMenunggu.length}
+                   armadaTerverifikasi={armadaTerverifikasi.length}
+                   armadaDitolak={armadaDitolak.length}
+                />
+             </div>
+             <NotificationPanel />
+          </div>
 
          {/* ─── Verification tabs ─── */}
          <Tabs defaultValue="po-menunggu" className="space-y-4">
