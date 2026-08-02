@@ -127,11 +127,11 @@ export function Sidebar({ userRole, collapsed, onToggleCollapse }: SidebarProps)
              )}
          >
               {/* Header: JR logo + toggle collapse */}
-              <div className="relative flex h-14 items-center border-b border-sidebar-border px-3">
+              <div className="flex h-14 items-center border-b border-sidebar-border px-3">
                  <div
                     className={cn(
-                       "flex items-center gap-3 min-w-0 transition-opacity duration-150",
-                       collapsed ? "opacity-0 pointer-events-none absolute inset-0 px-3" : "flex-1 opacity-100 delay-200",
+                       "flex items-center gap-3 min-w-0 flex-1 transition-opacity duration-150",
+                       collapsed ? "opacity-0 pointer-events-none" : "opacity-100 delay-200",
                     )}
                  >
                     <Image
@@ -154,10 +154,7 @@ export function Sidebar({ userRole, collapsed, onToggleCollapse }: SidebarProps)
                  <button
                     type="button"
                     onClick={onToggleCollapse}
-                    className={cn(
-                       "btn btn-ghost btn-square btn-sm shrink-0 z-10",
-                       collapsed ? "mx-auto" : "ml-auto",
-                    )}
+                    className="btn btn-ghost btn-square btn-sm shrink-0 z-10"
                     aria-label={collapsed ? "Lebarkan sidebar" : "Persempit sidebar"}
                  >
                     {collapsed ? (
@@ -184,7 +181,6 @@ export function Sidebar({ userRole, collapsed, onToggleCollapse }: SidebarProps)
                         aria-label={collapsed ? item.label : undefined}
                         className={cn(
                            "sidebar-link group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors",
-                           collapsed && "justify-center w-12 px-0",
                            active
                               ? "is-active bg-sidebar-primary/15 text-sidebar-primary"
                               : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
