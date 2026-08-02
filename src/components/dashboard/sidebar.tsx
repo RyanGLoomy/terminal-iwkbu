@@ -126,14 +126,9 @@ export function Sidebar({ userRole, collapsed, onToggleCollapse }: SidebarProps)
                 collapsed ? "w-[72px]" : "w-[264px]",
              )}
          >
-              {/* Header: JR logo + toggle collapse — button anchored right */}
-              <div
-                 className={cn(
-                    "flex h-14 items-center border-b border-sidebar-border px-4",
-                    collapsed ? "justify-center" : "gap-3",
-                 )}
-              >
-                 {!collapsed && (
+              {/* Header: JR logo + toggle collapse — text always in DOM, opacity fades after width transition */}
+              <div className="relative flex h-14 items-center border-b border-sidebar-border px-4">
+                 <div className={cn("flex items-center gap-3", collapsed ? "w-0 overflow-hidden" : "flex-1 min-w-0")}>
                     <Image
                        src="/jr-mark.png"
                        alt="Logo Jasa Raharja Banten"
@@ -142,8 +137,6 @@ export function Sidebar({ userRole, collapsed, onToggleCollapse }: SidebarProps)
                        priority
                        className="shrink-0 object-contain"
                     />
-                 )}
-                 {!collapsed && (
                     <div className="min-w-0 flex-1">
                        <span className="block truncate text-sm font-bold leading-tight text-sidebar-foreground">
                           IWKBU Terminal
@@ -152,14 +145,11 @@ export function Sidebar({ userRole, collapsed, onToggleCollapse }: SidebarProps)
                           Jasa Raharja Banten
                        </span>
                     </div>
-                 )}
+                 </div>
                  <button
                     type="button"
                     onClick={onToggleCollapse}
-                    className={cn(
-                       "btn btn-ghost btn-square btn-sm shrink-0",
-                       !collapsed && "ml-auto",
-                    )}
+                    className="btn btn-ghost btn-square btn-sm absolute right-3 top-1/2 -translate-y-1/2"
                     aria-label={collapsed ? "Lebarkan sidebar" : "Persempit sidebar"}
                  >
                     {collapsed ? (
