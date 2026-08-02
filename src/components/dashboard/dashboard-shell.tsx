@@ -56,74 +56,74 @@ export function DashboardShell({
       document.cookie = `sidebar-collapsed=${next};path=/;max-age=31536000;SameSite=Lax`;
    };
 
-   return (
-      <div className="min-h-screen bg-base-100">
-         <a
-            href="#main-content"
-            className="sr-only z-50 rounded-md bg-base-100 px-4 py-2 text-sm font-medium shadow-lg focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
-         >
-            Lewati ke konten utama
-         </a>
+    return (
+       <div className="h-screen overflow-hidden bg-base-100">
+          <a
+             href="#main-content"
+             className="sr-only z-50 rounded-md bg-base-100 px-4 py-2 text-sm font-medium shadow-lg focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
+          >
+             Lewati ke konten utama
+          </a>
 
-         {/* Desktop sidebar */}
-         <Sidebar
-            userRole={userRole}
-            collapsed={collapsed}
-            onToggleCollapse={toggleCollapse}
-         />
+          {/* Desktop sidebar */}
+          <Sidebar
+             userRole={userRole}
+             collapsed={collapsed}
+             onToggleCollapse={toggleCollapse}
+          />
 
-         {/* Main area */}
-         <div
-            className={cn(
-               "flex min-h-screen flex-col transition-[padding] duration-200",
-               mounted && (collapsed ? "lg:pl-[72px]" : "lg:pl-[264px]"),
-            )}
-         >
-             {/* Desktop topbar */}
-             <DashboardTopbar userName={userName} userRole={userRole} />
+          {/* Main area — h-full so it never exceeds viewport height */}
+          <div
+             className={cn(
+                "flex h-full flex-col transition-[padding] duration-200",
+                mounted && (collapsed ? "lg:pl-[72px]" : "lg:pl-[264px]"),
+             )}
+          >
+              {/* Desktop topbar */}
+              <DashboardTopbar userName={userName} userRole={userRole} />
 
-             {/* Mobile topbar */}
-             <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-base-300 bg-base-100/95 px-4 lg:hidden">
-                <div className="flex items-center gap-2">
-                   <Image
-                      src="/jr-mark.png"
-                      alt="Logo Jasa Raharja Banten"
-                      width={24}
-                      height={24}
-                      priority
-                      className="object-contain"
-                   />
-                   <div className="flex flex-col leading-tight">
-                      <span className="text-sm font-bold text-base-content">
-                         IWKBU Terminal
-                      </span>
-                      <span className="text-[10px] font-medium text-base-content/50">
-                         Banten
-                      </span>
-                   </div>
+              {/* Mobile topbar */}
+              <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-base-300 bg-base-100/95 px-4 lg:hidden">
+                 <div className="flex items-center gap-2">
+                    <Image
+                       src="/jr-mark.png"
+                       alt="Logo Jasa Raharja Banten"
+                       width={24}
+                       height={24}
+                       priority
+                       className="object-contain"
+                    />
+                    <div className="flex flex-col leading-tight">
+                       <span className="text-sm font-bold text-base-content">
+                          IWKBU Terminal
+                       </span>
+                       <span className="text-[10px] font-medium text-base-content/50">
+                          Banten
+                       </span>
+                    </div>
+                 </div>
+                 <div className="flex items-center gap-1">
+                    <ConnectionIndicator />
+                    <NotificationBell />
+                   <ThemeToggle />
+                   <div className="mx-0.5 h-6 w-px bg-border" />
+                   <UserMenu userName={userName} userRole={userRole} />
                 </div>
-                <div className="flex items-center gap-1">
-                   <ConnectionIndicator />
-                   <NotificationBell />
-                  <ThemeToggle />
-                  <div className="mx-0.5 h-6 w-px bg-border" />
-                  <UserMenu userName={userName} userRole={userRole} />
-               </div>
-            </header>
+             </header>
 
-             {/* Main content */}
-             <main
-               ref={mainRef}
-               id="main-content"
-               className="flex-1 overflow-y-auto overflow-x-hidden p-4 pb-20 sm:p-6 lg:p-8 lg:pb-8"
-               style={{ scrollbarGutter: "stable" }}
-             >
-               <div className="mx-auto w-full max-w-[1500px]">{children}</div>
-             </main>
-         </div>
+              {/* Main content — flex-1 fills remaining height, scrolls internally */}
+              <main
+                ref={mainRef}
+                id="main-content"
+                className="flex-1 overflow-y-auto overflow-x-hidden p-4 pb-20 sm:p-6 lg:p-8 lg:pb-8"
+                style={{ scrollbarGutter: "stable" }}
+              >
+                <div className="mx-auto w-full max-w-[1500px]">{children}</div>
+              </main>
+          </div>
 
-         {/* Mobile bottom navigation */}
-         <BottomNavigation userRole={userRole} />
-      </div>
-   );
+          {/* Mobile bottom navigation */}
+          <BottomNavigation userRole={userRole} />
+       </div>
+    );
 }
