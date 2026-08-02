@@ -136,7 +136,7 @@ function DashboardCardInner({
    icon,
    lottieAnimation,
    accent = "default",
-   animateCount,
+   animateCount = true,
 }: DashboardCardProps) {
    const Icon = typeof icon === "string" ? iconMap[icon] : icon;
    // Always use lottieMap (direct JSON import) — the lottieAnimation prop
