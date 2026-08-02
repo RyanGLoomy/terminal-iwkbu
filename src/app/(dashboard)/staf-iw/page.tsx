@@ -3,6 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { VerifikasiPOTable } from "@/components/verification/verifikasi-po-table";
 import { VerifikasiArmadaTable } from "@/components/verification/verifikasi-armada-table";
 import { DashboardCard } from "@/components/dashboard/dashboard-card";
+import { FadeIn } from "@/components/ui/fade-in";
 import { Card, CardContent } from "@/components/ui/card";
 import { StafIWStatsChartClient } from "@/components/dashboard/staf-iw-stats-chart-client";
 import { FindingsAgingChart } from "@/components/dashboard/findings-aging-chart";
@@ -173,39 +174,47 @@ export default async function StafIWDashboard() {
 
          {/* ─── Stat cards ─── */}
          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <DashboardCard
-               title="PO Menunggu"
-               value={String(poMenunggu.length)}
-               description="Perlu verifikasi awal"
-                icon="users"
-                lottieAnimation={usersLottie}
-                accent="amber"
-               index={0}
-            />
-            <DashboardCard
-                title="PO Aktif"
-                value={String(poAktif.length)}
-                description="Siap digunakan sebagai pembanding"
-                 icon="shield-check"
-                 accent="green"
-                index={1}
-            />
-             <DashboardCard
-                title="Armada Menunggu"
-                value={String(armadaMenunggu.length)}
-                description="Belum siap dipadankan"
-                 icon="bus"
-                 accent="amber"
-                index={2}
-             />
-            <DashboardCard
-                title="Armada Terverifikasi"
-                value={String(armadaTerverifikasi.length)}
-                description="Data siap untuk rekonsiliasi"
-                 icon="check-circle"
-                 accent="blue"
-                index={3}
-            />
+            <FadeIn delay={0}>
+               <DashboardCard
+                  title="PO Menunggu"
+                  value={String(poMenunggu.length)}
+                  description="Perlu verifikasi awal"
+                   icon="users"
+                   lottieAnimation={usersLottie}
+                   accent="amber"
+                  index={0}
+               />
+            </FadeIn>
+            <FadeIn delay={80}>
+               <DashboardCard
+                   title="PO Aktif"
+                   value={String(poAktif.length)}
+                   description="Siap digunakan sebagai pembanding"
+                    icon="shield-check"
+                    accent="green"
+                   index={1}
+               />
+            </FadeIn>
+            <FadeIn delay={160}>
+               <DashboardCard
+                   title="Armada Menunggu"
+                   value={String(armadaMenunggu.length)}
+                   description="Belum siap dipadankan"
+                    icon="bus"
+                    accent="amber"
+                   index={2}
+               />
+            </FadeIn>
+            <FadeIn delay={240}>
+               <DashboardCard
+                   title="Armada Terverifikasi"
+                   value={String(armadaTerverifikasi.length)}
+                   description="Data siap untuk rekonsiliasi"
+                    icon="check-circle"
+                    accent="blue"
+                   index={3}
+               />
+            </FadeIn>
          </div>
 
          {/* ─── Analytics: Tren & Aktivitas ─── */}

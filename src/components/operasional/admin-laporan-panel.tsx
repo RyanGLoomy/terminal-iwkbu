@@ -15,6 +15,7 @@ import type {
 } from "@/lib/supabase/queries/operasional.types";
 import { DatePicker } from "@/components/ui/date-picker";
 import { DashboardCard } from "@/components/dashboard/dashboard-card";
+import { FadeIn } from "@/components/ui/fade-in";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -440,34 +441,42 @@ export function AdminLaporanPanel({ terminalId }: { terminalId: string }) {
    return (
       <div className="space-y-5">
          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <DashboardCard
-               title="Total Masuk"
-               value={String(totalMasuk)}
-               icon={IconLogin}
-               accent="blue"
-               index={0}
-            />
-            <DashboardCard
-               title="Total Keluar"
-               value={String(totalKeluar)}
-               icon={IconLogout}
-               accent="green"
-               index={1}
-            />
-            <DashboardCard
-               title="Masih di Terminal"
-               value={String(masihDiTerminal)}
-               icon={IconTrendingUp}
-               accent="amber"
-               index={2}
-            />
-            <DashboardCard
-               title="Jumlah PO"
-               value={String(report?.summary.jumlah_po ?? 0)}
-               icon={IconBus}
-               accent="violet"
-               index={3}
-            />
+            <FadeIn delay={0}>
+               <DashboardCard
+                  title="Total Masuk"
+                  value={String(totalMasuk)}
+                  icon={IconLogin}
+                  accent="blue"
+                  index={0}
+               />
+            </FadeIn>
+            <FadeIn delay={80}>
+               <DashboardCard
+                  title="Total Keluar"
+                  value={String(totalKeluar)}
+                  icon={IconLogout}
+                  accent="green"
+                  index={1}
+               />
+            </FadeIn>
+            <FadeIn delay={160}>
+               <DashboardCard
+                  title="Masih di Terminal"
+                  value={String(masihDiTerminal)}
+                  icon={IconTrendingUp}
+                  accent="amber"
+                  index={2}
+               />
+            </FadeIn>
+            <FadeIn delay={240}>
+               <DashboardCard
+                  title="Jumlah PO"
+                  value={String(report?.summary.jumlah_po ?? 0)}
+                  icon={IconBus}
+                  accent="violet"
+                  index={3}
+               />
+            </FadeIn>
          </div>
 
          <Card className="card-interactive border-base-300">

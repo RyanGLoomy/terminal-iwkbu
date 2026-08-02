@@ -5,6 +5,7 @@ import { POArmadaManager } from "@/components/verification/po-armada-manager";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { IconAlertCircle } from "@tabler/icons-react";
 import { DashboardCard } from "@/components/dashboard/dashboard-card";
+import { FadeIn } from "@/components/ui/fade-in";
 import { getPoIwkbuStatus } from "@/lib/supabase/queries/iwkbu-sync.server";
 import { PoComplianceChartClient } from "@/components/dashboard/po-compliance-chart-client";
 import clockLottie from "@/lib/lottie/clock.json";
@@ -126,36 +127,44 @@ export default async function PODashboard() {
          </div>
 
          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <DashboardCard
-               title="Total Armada"
-               value={String(totalArmada)}
-               description={`${armadaTerverifikasi} terverifikasi, ${armadaMenunggu} menunggu`}
-               icon="bus"
-               accent="blue"
-            />
-            <DashboardCard
-               title="IWKBU Patuh"
-               value={String(iwkbuSummary.ready)}
-               description={`${iwkbuSummary.needs_review} perlu tinjauan, ${iwkbuSummary.blocked} diblokir`}
-                icon="shield-check"
-                 accent="green"
-            />
-            <DashboardCard
-               title="Temuan Aktif"
-               value={String(temuanAktif)}
-               description="Open / On Progress"
-                icon="alert-triangle"
-                lottieAnimation={alertTriangleLottie}
-                accent={temuanAktif > 0 ? "amber" : "default"}
-            />
-            <DashboardCard
-               title="Armada Menunggu"
-               value={String(armadaMenunggu)}
-               description="Menunggu verifikasi staf IW"
-                icon="clock"
-                lottieAnimation={clockLottie}
-                accent={armadaMenunggu > 0 ? "violet" : "default"}
-            />
+            <FadeIn delay={0}>
+               <DashboardCard
+                  title="Total Armada"
+                  value={String(totalArmada)}
+                  description={`${armadaTerverifikasi} terverifikasi, ${armadaMenunggu} menunggu`}
+                  icon="bus"
+                  accent="blue"
+               />
+            </FadeIn>
+            <FadeIn delay={80}>
+               <DashboardCard
+                  title="IWKBU Patuh"
+                  value={String(iwkbuSummary.ready)}
+                  description={`${iwkbuSummary.needs_review} perlu tinjauan, ${iwkbuSummary.blocked} diblokir`}
+                   icon="shield-check"
+                    accent="green"
+               />
+            </FadeIn>
+            <FadeIn delay={160}>
+               <DashboardCard
+                  title="Temuan Aktif"
+                  value={String(temuanAktif)}
+                  description="Open / On Progress"
+                   icon="alert-triangle"
+                   lottieAnimation={alertTriangleLottie}
+                   accent={temuanAktif > 0 ? "amber" : "default"}
+               />
+            </FadeIn>
+            <FadeIn delay={240}>
+               <DashboardCard
+                  title="Armada Menunggu"
+                  value={String(armadaMenunggu)}
+                  description="Menunggu verifikasi staf IW"
+                   icon="clock"
+                   lottieAnimation={clockLottie}
+                   accent={armadaMenunggu > 0 ? "violet" : "default"}
+               />
+            </FadeIn>
           </div>
 
           <div className="grid gap-4 lg:grid-cols-2">

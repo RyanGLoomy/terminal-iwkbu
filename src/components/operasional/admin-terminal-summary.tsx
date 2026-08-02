@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import { getTerminalReport } from "@/lib/supabase/queries/operasional.client";
 import { DatePicker } from "@/components/ui/date-picker";
 import { DashboardCard } from "@/components/dashboard/dashboard-card";
+import { FadeIn } from "@/components/ui/fade-in";
 import trendingUpLottie from "@/lib/lottie/trending-up.json";
 import { IconLoader2 } from "@tabler/icons-react";
 
@@ -123,44 +124,54 @@ export function AdminTerminalSummary({
                </div>
             ) : (
                <>
-                  <DashboardCard
-                     title="Kendaraan Masuk"
-                     value={String(totalMasuk)}
-                     icon="bus"
-                     accent="blue"
-                     index={0}
-                  />
-                  <DashboardCard
-                     title="Kendaraan Keluar"
-                     value={String(totalKeluar)}
-                     icon="log-out"
-                     accent="green"
-                     index={1}
-                  />
-                  <DashboardCard
-                     title="Masih di Terminal"
-                     value={String(masihDiTerminal)}
-                      icon="trending-up"
-                      lottieAnimation={trendingUpLottie}
-                      accent="amber"
-                     index={2}
-                  />
-                  <DashboardCard
-                     title="Petugas Aktif"
-                     description="Petugas terdaftar PIN"
-                     value={String(petugasPinCount)}
-                     icon="user-check"
-                     accent="violet"
-                     index={3}
-                  />
-                  <DashboardCard
-                     title="Akun Loket"
-                     description="Device loket terdaftar"
-                     value={String(akunLoketCount)}
-                     icon="monitor"
-                     accent="default"
-                     index={4}
-                  />
+                  <FadeIn delay={0}>
+                     <DashboardCard
+                        title="Kendaraan Masuk"
+                        value={String(totalMasuk)}
+                        icon="bus"
+                        accent="blue"
+                        index={0}
+                     />
+                  </FadeIn>
+                  <FadeIn delay={80}>
+                     <DashboardCard
+                        title="Kendaraan Keluar"
+                        value={String(totalKeluar)}
+                        icon="log-out"
+                        accent="green"
+                        index={1}
+                     />
+                  </FadeIn>
+                  <FadeIn delay={160}>
+                     <DashboardCard
+                        title="Masih di Terminal"
+                        value={String(masihDiTerminal)}
+                         icon="trending-up"
+                         lottieAnimation={trendingUpLottie}
+                         accent="amber"
+                        index={2}
+                     />
+                  </FadeIn>
+                  <FadeIn delay={240}>
+                     <DashboardCard
+                        title="Petugas Aktif"
+                        description="Petugas terdaftar PIN"
+                        value={String(petugasPinCount)}
+                        icon="user-check"
+                        accent="violet"
+                        index={3}
+                     />
+                  </FadeIn>
+                  <FadeIn delay={320}>
+                     <DashboardCard
+                        title="Akun Loket"
+                        description="Device loket terdaftar"
+                        value={String(akunLoketCount)}
+                        icon="monitor"
+                        accent="default"
+                        index={4}
+                     />
+                  </FadeIn>
                </>
             )}
          </div>

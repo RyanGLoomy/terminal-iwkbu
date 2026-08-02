@@ -8,6 +8,7 @@ import { DatePicker } from "@/components/ui/date-picker";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DashboardCard } from "@/components/dashboard/dashboard-card";
+import { FadeIn } from "@/components/ui/fade-in";
 import { Input } from "@/components/ui/input";
 import {
    Table,
@@ -130,27 +131,33 @@ export function AdminRekapPanel({ terminalId }: { terminalId: string }) {
       <div className="space-y-5">
          {/* Summary cards */}
          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            <DashboardCard
-               title="Total Masuk"
-               value={String(totalMasuk)}
-               icon={IconLogin}
-               accent="blue"
-               index={0}
-            />
-            <DashboardCard
-               title="Total Keluar"
-               value={String(totalKeluar)}
-               icon={IconLogout}
-               accent="green"
-               index={1}
-            />
-            <DashboardCard
-               title="Masih di Terminal"
-               value={String(masihDiTerminal)}
-               icon={IconTrendingUp}
-               accent="amber"
-               index={2}
-            />
+            <FadeIn delay={0}>
+               <DashboardCard
+                  title="Total Masuk"
+                  value={String(totalMasuk)}
+                  icon={IconLogin}
+                  accent="blue"
+                  index={0}
+               />
+            </FadeIn>
+            <FadeIn delay={80}>
+               <DashboardCard
+                  title="Total Keluar"
+                  value={String(totalKeluar)}
+                  icon={IconLogout}
+                  accent="green"
+                  index={1}
+               />
+            </FadeIn>
+            <FadeIn delay={160}>
+               <DashboardCard
+                  title="Masih di Terminal"
+                  value={String(masihDiTerminal)}
+                  icon={IconTrendingUp}
+                  accent="amber"
+                  index={2}
+               />
+            </FadeIn>
          </div>
 
          {/* Detail table */}

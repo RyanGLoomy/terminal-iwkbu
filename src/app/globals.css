@@ -411,7 +411,23 @@ select:focus-visible {
   90% { transform: rotate(0deg); }
 }
 .animate-bell-shake {
-  animation: bell-shake 0.8s ease-in-out;
-  animation-iteration-count: 1;
-  transform-origin: top center;
+   animation: bell-shake 0.8s ease-in-out;
+   animation-iteration-count: 1;
+   transform-origin: top center;
+}
+
+/* ─── Staged fade-in-up for dashboard entry animations ─── */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.4s ease-out both;
 }

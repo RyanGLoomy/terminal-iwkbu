@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DashboardCard } from "@/components/dashboard/dashboard-card";
+import { FadeIn } from "@/components/ui/fade-in";
 import alertTriangleLottie from "@/lib/lottie/alert-triangle.json";
 import usersLottie from "@/lib/lottie/users.json";
 import {
@@ -161,41 +162,49 @@ export const RekonsiliasiPanel = memo(function RekonsiliasiPanelContent({
    return (
       <div className="space-y-5">
          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <DashboardCard
-               title="PO Aktif"
-               value={String(poAktif.length)}
-               description="Sumber pembanding utama"
-               icon="users"
-               lottieAnimation={usersLottie}
-               accent="green"
-               index={0}
-            />
-            <DashboardCard
-               title="Armada Total"
-               value={String(stats.totalArmada)}
-               description="Semua data armada aktif"
-               icon="bus"
-               accent="blue"
-               index={1}
-            />
-            <DashboardCard
-               title="Siap Padanan"
-               value={String(stats.armadaTerverifikasi)}
-               description="Data armada terverifikasi"
-               icon="check-circle"
-              
-               accent="green"
-               index={2}
-            />
-            <DashboardCard
-               title="Perlu Perhatian"
-               value={String(stats.armadaMenunggu + stats.poTanpaArmada)}
-               description="Menunggu tindak lanjut"
-               icon="alert-triangle"
-               lottieAnimation={alertTriangleLottie}
-               accent="amber"
-               index={3}
-            />
+            <FadeIn delay={0}>
+               <DashboardCard
+                  title="PO Aktif"
+                  value={String(poAktif.length)}
+                  description="Sumber pembanding utama"
+                  icon="users"
+                  lottieAnimation={usersLottie}
+                  accent="green"
+                  index={0}
+               />
+            </FadeIn>
+            <FadeIn delay={80}>
+               <DashboardCard
+                  title="Armada Total"
+                  value={String(stats.totalArmada)}
+                  description="Semua data armada aktif"
+                  icon="bus"
+                  accent="blue"
+                  index={1}
+               />
+            </FadeIn>
+            <FadeIn delay={160}>
+               <DashboardCard
+                  title="Siap Padanan"
+                  value={String(stats.armadaTerverifikasi)}
+                  description="Data armada terverifikasi"
+                  icon="check-circle"
+                 
+                  accent="green"
+                  index={2}
+               />
+            </FadeIn>
+            <FadeIn delay={240}>
+               <DashboardCard
+                  title="Perlu Perhatian"
+                  value={String(stats.armadaMenunggu + stats.poTanpaArmada)}
+                  description="Menunggu tindak lanjut"
+                  icon="alert-triangle"
+                  lottieAnimation={alertTriangleLottie}
+                  accent="amber"
+                  index={3}
+               />
+            </FadeIn>
          </div>
 
           <Card className="border-base-300">

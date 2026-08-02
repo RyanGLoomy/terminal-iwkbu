@@ -19,6 +19,7 @@ import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DashboardCard } from "@/components/dashboard/dashboard-card";
+import { FadeIn } from "@/components/ui/fade-in";
 import trendingUpLottie from "@/lib/lottie/trending-up.json";
 import { LoadingState } from "@/components/shared/loading-state";
 import { IconActivity, IconLogin, IconLogout, IconLoader2, IconTrendingUp } from "@tabler/icons-react";
@@ -203,31 +204,37 @@ export function PetugasDashboardPanel() {
 
          {/* Stats Cards */}
          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            <DashboardCard
-               title="Kendaraan Masuk"
-               value={String(stats?.total_masuk_hari_ini ?? 0)}
-               icon="log-in"
-               accent="blue"
-               index={0}
-               description="Hari ini"
-            />
-            <DashboardCard
-               title="Kendaraan Keluar"
-               value={String(stats?.total_keluar_hari_ini ?? 0)}
-               icon="log-out"
-               accent="violet"
-               index={1}
-               description="Hari ini"
-            />
-            <DashboardCard
-               title="Total Transaksi"
-               value={String(stats?.total_transaksi_hari_ini ?? 0)}
-                icon="trending-up"
-                lottieAnimation={trendingUpLottie}
-                accent="blue"
-               index={2}
-               description="Masuk + Keluar hari ini"
-            />
+            <FadeIn delay={0}>
+               <DashboardCard
+                  title="Kendaraan Masuk"
+                  value={String(stats?.total_masuk_hari_ini ?? 0)}
+                  icon="log-in"
+                  accent="blue"
+                  index={0}
+                  description="Hari ini"
+               />
+            </FadeIn>
+            <FadeIn delay={80}>
+               <DashboardCard
+                  title="Kendaraan Keluar"
+                  value={String(stats?.total_keluar_hari_ini ?? 0)}
+                  icon="log-out"
+                  accent="violet"
+                  index={1}
+                  description="Hari ini"
+               />
+            </FadeIn>
+            <FadeIn delay={160}>
+               <DashboardCard
+                  title="Total Transaksi"
+                  value={String(stats?.total_transaksi_hari_ini ?? 0)}
+                   icon="trending-up"
+                   lottieAnimation={trendingUpLottie}
+                   accent="blue"
+                  index={2}
+                  description="Masuk + Keluar hari ini"
+               />
+            </FadeIn>
          </div>
 
           {/* Weekly Trend Charts */}

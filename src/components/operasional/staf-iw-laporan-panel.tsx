@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { DashboardCard } from "@/components/dashboard/dashboard-card";
+import { FadeIn } from "@/components/ui/fade-in";
 import alertTriangleLottie from "@/lib/lottie/alert-triangle.json";
 import usersLottie from "@/lib/lottie/users.json";
 import fileTextLottie from "@/lib/lottie/file-text.json";
@@ -155,38 +156,46 @@ export function StafIwLaporanPanel({
    return (
       <div className="space-y-6">
          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <DashboardCard
-               title="PO Aktif"
-               value={String(stats.poAktif)}
-               description={`${stats.poMenunggu} menunggu verifikasi`}
-                icon="users"
-                lottieAnimation={usersLottie}
-                accent="blue"
-            />
-            <DashboardCard
-               title="Armada Terverifikasi"
-               value={String(stats.armadaTerverifikasi)}
-               description={`${belumVerifikasi} menunggu/ditolak`}
-               icon="shield-check"
-              
-               accent="green"
-            />
-            <DashboardCard
-               title="Temuan Terbuka"
-               value={String(open + onProgress)}
-               description={`${open} terbuka · ${onProgress} diproses`}
-                icon="alert-triangle"
-                lottieAnimation={alertTriangleLottie}
-                accent="amber"
-            />
-            <DashboardCard
-               title="Temuan Selesai"
-               value={String(closed)}
-               description="Telah ditindak lanjuti"
-                icon="check-circle"
-               
-                accent="green"
-            />
+            <FadeIn delay={0}>
+               <DashboardCard
+                  title="PO Aktif"
+                  value={String(stats.poAktif)}
+                  description={`${stats.poMenunggu} menunggu verifikasi`}
+                   icon="users"
+                   lottieAnimation={usersLottie}
+                   accent="blue"
+               />
+            </FadeIn>
+            <FadeIn delay={80}>
+               <DashboardCard
+                  title="Armada Terverifikasi"
+                  value={String(stats.armadaTerverifikasi)}
+                  description={`${belumVerifikasi} menunggu/ditolak`}
+                  icon="shield-check"
+                 
+                  accent="green"
+               />
+            </FadeIn>
+            <FadeIn delay={160}>
+               <DashboardCard
+                  title="Temuan Terbuka"
+                  value={String(open + onProgress)}
+                  description={`${open} terbuka · ${onProgress} diproses`}
+                   icon="alert-triangle"
+                   lottieAnimation={alertTriangleLottie}
+                   accent="amber"
+               />
+            </FadeIn>
+            <FadeIn delay={240}>
+               <DashboardCard
+                  title="Temuan Selesai"
+                  value={String(closed)}
+                  description="Telah ditindak lanjuti"
+                   icon="check-circle"
+                  
+                   accent="green"
+               />
+            </FadeIn>
          </div>
 
          <Card>

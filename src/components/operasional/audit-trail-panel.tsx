@@ -22,6 +22,7 @@ import {
    TableRow,
 } from "@/components/ui/table";
 import { DashboardCard } from "@/components/dashboard/dashboard-card";
+import { FadeIn } from "@/components/ui/fade-in";
 import activityLottie from "@/lib/lottie/activity.json";
 import fileTextLottie from "@/lib/lottie/file-text.json";
 import usersLottie from "@/lib/lottie/users.json";
@@ -358,42 +359,50 @@ export function AuditTrailPanel() {
    return (
       <div className="space-y-5">
          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <DashboardCard
-               title="Total Log"
-               value={String(rows.length)}
-               description="Aktivitas pada rentang terpilih"
-                icon="activity"
-                lottieAnimation={activityLottie}
-                accent="blue"
-               index={0}
-            />
-            <DashboardCard
-               title="Pengguna Unik"
-               value={String(uniqueUsers)}
-               description="Akun yang terekam"
-                icon="users"
-                lottieAnimation={usersLottie}
-                accent="violet"
-               index={1}
-            />
-            <DashboardCard
-               title="Log Hari Ini"
-               value={String(todayLogs)}
-               description="Aktivitas tanggal berjalan"
-                icon="calendar"
-                lottieAnimation={calendarLottie}
-               accent="green"
-               index={2}
-            />
-            <DashboardCard
-               title="Temuan & Klarifikasi"
-               value={String(findingLogs)}
-               description="Aktivitas tindak lanjut temuan"
-                icon="file-text"
-                lottieAnimation={fileTextLottie}
-               accent="amber"
-               index={3}
-            />
+            <FadeIn delay={0}>
+               <DashboardCard
+                  title="Total Log"
+                  value={String(rows.length)}
+                  description="Aktivitas pada rentang terpilih"
+                   icon="activity"
+                   lottieAnimation={activityLottie}
+                   accent="blue"
+                  index={0}
+               />
+            </FadeIn>
+            <FadeIn delay={80}>
+               <DashboardCard
+                  title="Pengguna Unik"
+                  value={String(uniqueUsers)}
+                  description="Akun yang terekam"
+                   icon="users"
+                   lottieAnimation={usersLottie}
+                   accent="violet"
+                  index={1}
+               />
+            </FadeIn>
+            <FadeIn delay={160}>
+               <DashboardCard
+                  title="Log Hari Ini"
+                  value={String(todayLogs)}
+                  description="Aktivitas tanggal berjalan"
+                   icon="calendar"
+                   lottieAnimation={calendarLottie}
+                  accent="green"
+                  index={2}
+               />
+            </FadeIn>
+            <FadeIn delay={240}>
+               <DashboardCard
+                  title="Temuan & Klarifikasi"
+                  value={String(findingLogs)}
+                  description="Aktivitas tindak lanjut temuan"
+                   icon="file-text"
+                   lottieAnimation={fileTextLottie}
+                  accent="amber"
+                  index={3}
+               />
+            </FadeIn>
          </div>
 
          <Card className="border-base-300">

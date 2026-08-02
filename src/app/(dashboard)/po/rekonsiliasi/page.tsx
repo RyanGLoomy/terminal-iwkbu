@@ -4,6 +4,7 @@ import { getAllArmada } from "@/lib/supabase/queries/verification.server";
 import type { Armada } from "@/lib/supabase/queries/verification.types";
 import { getPoIwkbuStatus } from "@/lib/supabase/queries/iwkbu-sync.server";
 import { DashboardCard } from "@/components/dashboard/dashboard-card";
+import { FadeIn } from "@/components/ui/fade-in";
 import { RekonsiliasiArmadaTable, type IwkbuSyncData } from "@/components/operasional/rekonsiliasi-armada-table";
 import alertTriangleLottie from "@/lib/lottie/alert-triangle.json";
 
@@ -41,39 +42,47 @@ export default async function PoRekonsiliasiPage() {
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <DashboardCard
-            title="Total Armada"
-            value={String(armada.length)}
-            description="Semua armada terdaftar"
-            icon="bus"
-            accent="blue"
-            index={0}
-          />
-          <DashboardCard
-            title="Terverifikasi"
-            value={String(terverifikasi)}
-            description="Siap untuk rekonsiliasi"
-            icon="check-circle"
-            accent="green"
-            index={1}
-          />
-          <DashboardCard
-            title="IWKBU Patuh"
-            value={String(iwkbuSummary.ready)}
-            description={` dari ${iwkbuSummary.total} tersinkron`}
-            icon="shield-check"
-            accent="green"
-            index={2}
-          />
-          <DashboardCard
-            title="Perlu Perhatian"
-            value={String(iwkbuSummary.needs_review + iwkbuSummary.blocked)}
-            description={`${iwkbuSummary.blocked} diblokir, ${iwkbuSummary.needs_review} perlu tinjauan`}
-             icon="alert-triangle"
-             lottieAnimation={alertTriangleLottie}
-             accent="amber"
-            index={3}
-          />
+          <FadeIn delay={0}>
+            <DashboardCard
+              title="Total Armada"
+              value={String(armada.length)}
+              description="Semua armada terdaftar"
+              icon="bus"
+              accent="blue"
+              index={0}
+            />
+          </FadeIn>
+          <FadeIn delay={80}>
+            <DashboardCard
+              title="Terverifikasi"
+              value={String(terverifikasi)}
+              description="Siap untuk rekonsiliasi"
+              icon="check-circle"
+              accent="green"
+              index={1}
+            />
+          </FadeIn>
+          <FadeIn delay={160}>
+            <DashboardCard
+              title="IWKBU Patuh"
+              value={String(iwkbuSummary.ready)}
+              description={` dari ${iwkbuSummary.total} tersinkron`}
+              icon="shield-check"
+              accent="green"
+              index={2}
+            />
+          </FadeIn>
+          <FadeIn delay={240}>
+            <DashboardCard
+              title="Perlu Perhatian"
+              value={String(iwkbuSummary.needs_review + iwkbuSummary.blocked)}
+              description={`${iwkbuSummary.blocked} diblokir, ${iwkbuSummary.needs_review} perlu tinjauan`}
+               icon="alert-triangle"
+               lottieAnimation={alertTriangleLottie}
+               accent="amber"
+              index={3}
+            />
+          </FadeIn>
         </div>
 
         <RekonsiliasiArmadaTable armada={armada} iwkbuMap={iwkbuMap} />
