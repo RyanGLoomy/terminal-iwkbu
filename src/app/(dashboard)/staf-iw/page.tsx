@@ -11,7 +11,6 @@ import { FindingResolutionTrend } from "@/components/analytics/finding-resolutio
 import { SyncSuccessChart } from "@/components/analytics/sync-success-chart";
 import { PoComplianceOverview } from "@/components/analytics/po-compliance-overview";
 import usersLottie from "@/lib/lottie/users.json";
-import { NotificationPanel } from "@/components/dashboard/notification-panel";
 import {
    getAllPO,
    getAllArmada,
@@ -238,19 +237,14 @@ export default async function StafIWDashboard() {
             )}
          </div>
 
-          {/* ─── Quick stats chart + notifications ─── */}
-          <div className="grid gap-4 lg:grid-cols-3">
-             <div className="lg:col-span-2">
-                <StafIWStatsChartClient
-                   poMenunggu={poMenunggu.length}
-                   poAktif={poAktif.length}
-                   armadaMenunggu={armadaMenunggu.length}
-                   armadaTerverifikasi={armadaTerverifikasi.length}
-                   armadaDitolak={armadaDitolak.length}
-                />
-             </div>
-             <NotificationPanel />
-          </div>
+           {/* ─── Quick stats chart ─── */}
+           <StafIWStatsChartClient
+              poMenunggu={poMenunggu.length}
+              poAktif={poAktif.length}
+              armadaMenunggu={armadaMenunggu.length}
+              armadaTerverifikasi={armadaTerverifikasi.length}
+              armadaDitolak={armadaDitolak.length}
+           />
 
          {/* ─── Verification tabs ─── */}
          <Tabs defaultValue="po-menunggu" className="space-y-4">
