@@ -69,8 +69,10 @@ export default async function RootLayout({
       <html lang="id" suppressHydrationWarning>
          {/* Anti-flash: set data-theme sebelum React hydrate agar tidak ada
              flicker light→dark pada refresh. Script ini berjalan segera
-             setelah DOM parsed, sebelum browser paint. */}
+             setelah DOM parsed, sebelum browser paint. Harus pakai nonce
+             karena CSP tidak mengizinkan unsafe-inline. */}
          <script
+            nonce={nonce}
             dangerouslySetInnerHTML={{
                __html: `(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light'){document.documentElement.setAttribute('data-theme',t==='dark'?'jr-dark':'jr')}else if(window.matchMedia&&window.matchMedia('(prefers-color-scheme:dark)').matches){document.documentElement.setAttribute('data-theme','jr-dark')}}catch(e){}})()`,
             }}
