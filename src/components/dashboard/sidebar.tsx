@@ -126,9 +126,9 @@ export function Sidebar({ userRole, collapsed, onToggleCollapse }: SidebarProps)
                 collapsed ? "w-[72px]" : "w-[264px]",
              )}
          >
-              {/* Header: JR logo + toggle collapse — text always in DOM, opacity fades after width transition */}
-              <div className="relative flex h-14 items-center border-b border-sidebar-border px-4">
-                 <div className={cn("flex items-center gap-3", collapsed ? "w-0 overflow-hidden" : "flex-1 min-w-0")}>
+              {/* Header: JR logo + toggle collapse — text fixed, parent clips */}
+              <div className="relative flex h-14 items-center border-b border-sidebar-border px-4 overflow-hidden">
+                 <div className="flex items-center gap-3 min-w-0">
                     <Image
                        src="/jr-mark.png"
                        alt="Logo Jasa Raharja Banten"
