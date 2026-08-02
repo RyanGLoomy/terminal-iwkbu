@@ -17,11 +17,9 @@ const COLLAPSE_KEY = "sidebar-collapsed";
 
 function getInitialCollapsed(): boolean {
    if (typeof window === "undefined") return false;
-   // Baca dari data attribute yang sudah di-set oleh inline script di layout.tsx
-   // sebelum React hydrate — menghindari flash expanded→collapsed.
-   const attr = document.documentElement.getAttribute("data-sidebar-collapsed");
-   if (attr !== null) return attr === "true";
-   return localStorage.getItem(COLLAPSE_KEY) === "true";
+   // Baca dari data attribute yang sudah di-set oleh server (layout.tsx) via cookie.
+   // Tidak ada flash karena attribute sudah ada di HTML sebelum React hydrate.
+   return document.documentElement.hasAttribute("data-sidebar-collapsed");
 }
 
 interface DashboardShellProps {
@@ -59,6 +57,8 @@ export function DashboardShell({
       const next = !collapsed;
       setCollapsed(next);
       localStorage.setItem(COLLAPSE_KEY, String(next));
+      // Set cookie agar server bisa baca sidebar state saat SSR (anti-flash)
+      document.cookie = `sidebar-collapsed=${next};path=/;max-age=31536000;SameSite=Lax`;
    };
 
    return (

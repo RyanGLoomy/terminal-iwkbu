@@ -36,8 +36,12 @@ const STORAGE_KEY = "theme";
 
 function resolveInitialTheme(): Theme {
   if (typeof window === "undefined") return "light";
-  const saved = localStorage.getItem(STORAGE_KEY);
-  if (saved === "dark" || saved === "light") return saved;
+  // Baca dari data attribute yang sudah di-set oleh server (layout.tsx) via cookie.
+  // Tidak ada flash karena attribute sudah ada di HTML sebelum React hydrate.
+  const current = document.documentElement.getAttribute("data-theme");
+  if (current === "jr-dark") return "dark";
+  if (current === "jr") return "light";
+  // Fallback: OS preference
   return window.matchMedia("(prefers-color-scheme: dark)").matches
     ? "dark"
     : "light";
@@ -88,6 +92,8 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     if (!mounted) return;
     document.documentElement.setAttribute("data-theme", THEME_ATTR[theme]);
     localStorage.setItem(STORAGE_KEY, theme);
+    // Set cookie agar server bisa baca theme saat SSR (anti-flash)
+    document.cookie = `theme=${theme};path=/;max-age=31536000;SameSite=Lax`;
   }, [theme, mounted]);
 
   const setTheme = (next: Theme) => setThemeState(next);

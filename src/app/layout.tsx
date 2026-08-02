@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import Script from "next/script";
-import { headers } from "next/headers";
+import { cookies } from "next/headers";
 import { Plus_Jakarta_Sans, Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "sonner";
@@ -56,29 +55,31 @@ export const viewport: Viewport = {
    ],
 };
 
+const THEME_COOKIE_MAP: Record<string, string> = {
+   light: "jr",
+   dark: "jr-dark",
+};
+
 export default async function RootLayout({
    children,
 }: Readonly<{
    children: React.ReactNode;
 }>) {
-    // Membaca nonce dari proxy.ts agar Next.js otomatis menerapkan nonce ke
-    // semua inline script milik framework. Tanpa ini, CSP script-src 'nonce-...'
-    // memblokir script framework → React gagal hydrate → #418.
-    const nonce = (await headers()).get("x-nonce") ?? undefined;
+    const cookieStore = await cookies();
+    const themeCookie = cookieStore.get("theme")?.value;
+    const sidebarCookie = cookieStore.get("sidebar-collapsed")?.value;
+
+    // Map theme cookie value → DaisyUI data-theme attribute
+    const dataTheme = THEME_COOKIE_MAP[themeCookie ?? ""] ?? "jr";
+    const sidebarCollapsed = sidebarCookie === "true";
 
     return (
-      <html lang="id" suppressHydrationWarning>
-         {/* Anti-flash: set data-theme + data-sidebar sebelum React hydrate
-             agar tidak ada flicker pada refresh. Script berjalan segera
-             setelah DOM parsed, sebelum browser paint. */}
-         <Script
-            id="anti-flash"
-            nonce={nonce}
-            strategy="beforeInteractive"
-            dangerouslySetInnerHTML={{
-               __html: `(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light'){document.documentElement.setAttribute('data-theme',t==='dark'?'jr-dark':'jr')}else if(window.matchMedia&&window.matchMedia('(prefers-color-scheme:dark)').matches){document.documentElement.setAttribute('data-theme','jr-dark')}}if(localStorage.getItem('sidebar-collapsed')==='true')document.documentElement.setAttribute('data-sidebar-collapsed','true')}catch(e){}})()`,
-            }}
-         />
+      <html
+         lang="id"
+         suppressHydrationWarning
+         data-theme={dataTheme}
+         {...(sidebarCollapsed ? { "data-sidebar-collapsed": "true" } : {})}
+      >
          <body
              className={`${jakartaSans.variable} ${geistMono.variable} font-sans antialiased`}
           >
