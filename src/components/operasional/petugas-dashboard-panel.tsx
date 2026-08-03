@@ -1,9 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { formatDateTime } from "@/lib/utils/format-date";
 import dynamic from "next/dynamic";
-import { createClient } from "@/lib/supabase/client";
 import {
    closeShiftSession,
    getActiveShiftSession,
@@ -11,6 +10,7 @@ import {
    openShiftSession,
 } from "@/lib/supabase/queries/operasional.client";
 import type {
+   DailyTrendRow,
    PetugasDashboardRPC,
    ShiftSession,
 } from "@/lib/supabase/queries/operasional.types";
@@ -21,8 +21,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DashboardCard } from "@/components/dashboard/dashboard-card";
 import { FadeIn } from "@/components/ui/fade-in";
 import trendingUpLottie from "@/lib/lottie/trending-up.json";
-import { LoadingState } from "@/components/shared/loading-state";
-import { IconActivity, IconLogin, IconLogout, IconLoader2, IconTrendingUp } from "@tabler/icons-react";
+import { IconActivity, IconLogin, IconLogout, IconLoader2 } from "@tabler/icons-react";
 
 const WeeklyTrendChart = dynamic(
    () =>
@@ -38,27 +37,22 @@ const WeeklyTrendChart = dynamic(
 export function PetugasDashboardPanel({
    initialStats,
    initialSession,
+   weeklyTrendData,
+   userId: serverUserId,
 }: {
    initialStats?: PetugasDashboardRPC | null;
    initialSession?: ShiftSession | null;
+   weeklyTrendData?: DailyTrendRow[];
+   userId?: string;
 } = {}) {
    const [stats, setStats] = useState<PetugasDashboardRPC | null>(initialStats ?? null);
    const [session, setSession] = useState<ShiftSession | null>(initialSession ?? null);
-   const [userId, setUserId] = useState<string | null>(null);
-   const [loading, setLoading] = useState(!initialStats);
    const [actionLoading, setActionLoading] = useState(false);
    const [error, setError] = useState<string | null>(null);
    const [success, setSuccess] = useState<string | null>(null);
-   const hasInitialData = !!initialStats;
 
-   const loadData = async (skipLoading = false) => {
-      if (!skipLoading) setLoading(true);
+   const loadData = async () => {
       try {
-         const supabase = createClient();
-         const {
-            data: { user },
-         } = await supabase.auth.getUser();
-         if (user) setUserId(user.id);
          const [statsData, activeSession] = await Promise.all([
             getPetugasDashboardStatsRPC(),
             getActiveShiftSession(),
@@ -69,24 +63,8 @@ export function PetugasDashboardPanel({
          const message =
             err instanceof Error ? err.message : "Gagal memuat data";
          setError(message);
-      } finally {
-         if (!skipLoading) setLoading(false);
       }
    };
-
-   useEffect(() => {
-      // Skip full reload when server pre-fetched data; just grab userId
-      if (hasInitialData) {
-         createClient()
-            .auth.getUser()
-            .then(({ data: { user } }: { data: { user: { id: string } | null } }) => {
-               if (user) setUserId(user.id);
-            })
-            .catch(() => {});
-         return;
-      }
-      loadData();
-   }, []);
 
    const handleOpenSession = async () => {
       setActionLoading(true);
@@ -129,16 +107,6 @@ export function PetugasDashboardPanel({
          setActionLoading(false);
       }
    };
-
-    if (loading) {
-       return (
-          <LoadingState
-             variant="spinner"
-             text="Memuat dashboard…"
-             className="animate-fade-in p-8"
-          />
-       );
-    }
 
    return (
       <div className="space-y-5">
@@ -254,8 +222,8 @@ export function PetugasDashboardPanel({
             </FadeIn>
          </div>
 
-          {/* Weekly Trend Charts */}
-          <WeeklyTrendChart petugasId={userId ?? undefined} />
+           {/* Weekly Trend Charts */}
+           <WeeklyTrendChart petugasId={serverUserId} initialData={weeklyTrendData} />
       </div>
    );
 }

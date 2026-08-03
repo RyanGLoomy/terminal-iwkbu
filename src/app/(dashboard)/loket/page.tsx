@@ -4,6 +4,7 @@ import { PetugasDashboardPanel } from "@/components/operasional/petugas-dashboar
 import {
    getPetugasDashboardStatsRPC,
    getActiveShiftSession,
+   getWeeklyTrend,
 } from "@/lib/supabase/queries/operasional.server";
 
 export default async function LoketDashboardPage() {
@@ -12,9 +13,10 @@ export default async function LoketDashboardPage() {
       redirect("/login");
    }
 
-   const [initialStats, initialSession] = await Promise.all([
+   const [initialStats, initialSession, weeklyTrendData] = await Promise.all([
       getPetugasDashboardStatsRPC(),
       getActiveShiftSession(),
+      getWeeklyTrend(actor.user.id),
    ]);
 
    return (
@@ -27,7 +29,12 @@ export default async function LoketDashboardPage() {
                Pantau pencatatan operasional harian.
             </p>
          </div>
-         <PetugasDashboardPanel initialStats={initialStats} initialSession={initialSession} />
+         <PetugasDashboardPanel
+            initialStats={initialStats}
+            initialSession={initialSession}
+            weeklyTrendData={weeklyTrendData}
+            userId={actor.user.id}
+         />
       </section>
    );
 }

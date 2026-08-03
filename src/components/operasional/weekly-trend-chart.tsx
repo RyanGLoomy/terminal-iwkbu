@@ -21,14 +21,16 @@ import { IconChartBar, IconTrendingUp } from "@tabler/icons-react";
 
 export function WeeklyTrendChart({
    petugasId,
+   initialData,
 }: {
    petugasId?: string;
+   initialData?: DailyTrendRow[];
 }) {
    const chartId = useId().replace(/:/g, "");
    const masukGradientId = `weekly-trend-masuk-${chartId}`;
    const keluarGradientId = `weekly-trend-keluar-${chartId}`;
-   const [data, setData] = useState<DailyTrendRow[]>([]);
-   const [loading, setLoading] = useState(true);
+   const [data, setData] = useState<DailyTrendRow[]>(initialData ?? []);
+   const [loading, setLoading] = useState(!initialData);
 
    useEffect(() => {
       let mounted = true;

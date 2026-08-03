@@ -5,6 +5,7 @@ import type {
    AdminTerminalStats,
    AdminRekapRow,
    AksiLog,
+   DailyTrendRow,
    PetugasDashboardRPC,
 } from "@/lib/supabase/queries/operasional.types";
 
@@ -162,6 +163,78 @@ export async function getActivityLogs(params: {
 
    if (error) throw error;
    return (data ?? []) as ActivityLog[];
+}
+
+// Server-side weekly trend for SSR pre-fetching
+const DAY_LABELS = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
+
+export async function getWeeklyTrend(
+   petugasId?: string,
+): Promise<DailyTrendRow[]> {
+   const supabase = await createClient();
+
+   const days: DailyTrendRow[] = [];
+   const today = new Date();
+
+   for (let i = 6; i >= 0; i--) {
+      const d = new Date(today);
+      d.setDate(d.getDate() - i);
+      const tanggal = d.toISOString().slice(0, 10);
+      days.push({
+         tanggal,
+         label: DAY_LABELS[d.getDay()],
+         masuk: 0,
+         keluar: 0,
+         total: 0,
+      });
+   }
+
+   const startDate = days[0].tanggal;
+   const endDate = days[days.length - 1].tanggal;
+
+   const start = new Date(`${startDate}T00:00:00`).toISOString();
+   const end = new Date(`${endDate}T23:59:59.999`).toISOString();
+
+   // Fetch masuk counts
+   let masukQuery = supabase
+      .from("kendaraan_masuk")
+      .select("waktu_masuk")
+      .gte("waktu_masuk", start)
+      .lte("waktu_masuk", end);
+   if (petugasId) {
+      masukQuery = masukQuery.eq("petugas_id", petugasId);
+   }
+   const { data: masukRows } = await masukQuery;
+
+   // Fetch keluar counts
+   let keluarQuery = supabase
+      .from("kendaraan_keluar")
+      .select("waktu_keluar")
+      .gte("waktu_keluar", start)
+      .lte("waktu_keluar", end);
+   if (petugasId) {
+      keluarQuery = keluarQuery.eq("petugas_id", petugasId);
+   }
+   const { data: keluarRows } = await keluarQuery;
+
+   // Aggregate by date
+   for (const row of masukRows ?? []) {
+      const date = new Date(row.waktu_masuk).toISOString().slice(0, 10);
+      const entry = days.find((d) => d.tanggal === date);
+      if (entry) entry.masuk++;
+   }
+
+   for (const row of keluarRows ?? []) {
+      const date = new Date(row.waktu_keluar).toISOString().slice(0, 10);
+      const entry = days.find((d) => d.tanggal === date);
+      if (entry) entry.keluar++;
+   }
+
+   for (const day of days) {
+      day.total = day.masuk + day.keluar;
+   }
+
+   return days;
 }
 
 export async function logActivity(
