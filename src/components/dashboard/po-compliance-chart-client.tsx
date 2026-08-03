@@ -11,7 +11,7 @@ const PoComplianceChart = dynamic(
    {
       ssr: false,
       loading: () => (
-         <div className="skeleton-shimmer h-[280px] rounded-xl" />
+         <div className="h-[280px] rounded-xl bg-base-200/50" />
       ),
    },
 );

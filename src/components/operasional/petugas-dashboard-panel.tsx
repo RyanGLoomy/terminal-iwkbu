@@ -31,7 +31,7 @@ const WeeklyTrendChart = dynamic(
       ),
    {
       ssr: false,
-      loading: () => <div className="h-[300px] rounded-xl bg-base-200/30 skeleton-shimmer" />,
+      loading: () => <div className="h-[300px] rounded-xl bg-base-200/50" />,
    },
 );
 

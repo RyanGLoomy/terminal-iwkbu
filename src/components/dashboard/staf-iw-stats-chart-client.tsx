@@ -14,8 +14,8 @@ const StafIWStatsChart = dynamic(
       ssr: false,
       loading: () => (
          <div className="grid gap-5 lg:grid-cols-2">
-            <div className="skeleton-shimmer h-[300px] rounded-xl" />
-            <div className="skeleton-shimmer h-[300px] rounded-xl" />
+            <div className="h-[300px] rounded-xl bg-base-200/50" />
+            <div className="h-[300px] rounded-xl bg-base-200/50" />
          </div>
       ),
    },
