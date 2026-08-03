@@ -35,11 +35,17 @@ const WeeklyTrendChart = dynamic(
    },
 );
 
-export function PetugasDashboardPanel() {
-   const [stats, setStats] = useState<PetugasDashboardRPC | null>(null);
-   const [session, setSession] = useState<ShiftSession | null>(null);
+export function PetugasDashboardPanel({
+   initialStats,
+   initialSession,
+}: {
+   initialStats?: PetugasDashboardRPC | null;
+   initialSession?: ShiftSession | null;
+} = {}) {
+   const [stats, setStats] = useState<PetugasDashboardRPC | null>(initialStats ?? null);
+   const [session, setSession] = useState<ShiftSession | null>(initialSession ?? null);
    const [userId, setUserId] = useState<string | null>(null);
-   const [loading, setLoading] = useState(true);
+   const [loading, setLoading] = useState(!initialStats);
    const [actionLoading, setActionLoading] = useState(false);
    const [error, setError] = useState<string | null>(null);
    const [success, setSuccess] = useState<string | null>(null);

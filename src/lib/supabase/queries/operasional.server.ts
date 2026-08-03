@@ -104,6 +104,27 @@ export async function validateActiveSesi(sesiId: string) {
    return data;
 }
 
+// Server-side active shift session for SSR pre-fetching
+export async function getActiveShiftSession() {
+   const supabase = await createClient();
+   const {
+      data: { user },
+   } = await supabase.auth.getUser();
+   if (!user) return null;
+
+   const { data, error } = await supabase
+      .from("sesi_petugas")
+      .select("*")
+      .eq("petugas_id", user.id)
+      .eq("status", "aktif")
+      .order("waktu_mulai", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+   if (error) throw error;
+   return data as import("./operasional.types").ShiftSession | null;
+}
+
 // Sprint 4: Server-side petugas dashboard stats via RPC
 export async function getPetugasDashboardStatsRPC() {
    const supabase = await createClient();

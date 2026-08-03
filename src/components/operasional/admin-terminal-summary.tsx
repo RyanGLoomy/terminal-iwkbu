@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { getTerminalReport } from "@/lib/supabase/queries/operasional.client";
 import { DatePicker } from "@/components/ui/date-picker";
@@ -13,23 +13,27 @@ export function AdminTerminalSummary({
    terminalId,
    initialPetugasPinCount = 0,
    initialAkunLoketCount = 0,
+   initialTotalMasuk,
+   initialTotalKeluar,
 }: {
    terminalId?: string | null;
    initialPetugasPinCount?: number;
    initialAkunLoketCount?: number;
-}) {
+   initialTotalMasuk?: number;
+   initialTotalKeluar?: number;
+} = {}) {
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
 
     useEffect(() => {
-       const today = new Date().toISOString().slice(0, 10);
-       setStartDate(today);
-       setEndDate(today);
+        const today = new Date().toISOString().slice(0, 10);
+        setStartDate(today);
+        setEndDate(today);
     }, []);
-   const [loading, setLoading] = useState(true);
+   const [loading, setLoading] = useState(initialTotalMasuk === undefined);
    const [error, setError] = useState<string | null>(null);
-   const [totalMasuk, setTotalMasuk] = useState(0);
-   const [totalKeluar, setTotalKeluar] = useState(0);
+   const [totalMasuk, setTotalMasuk] = useState(initialTotalMasuk ?? 0);
+   const [totalKeluar, setTotalKeluar] = useState(initialTotalKeluar ?? 0);
    const [petugasPinCount, setPetugasPinCount] = useState(
       initialPetugasPinCount,
    );
@@ -37,11 +41,18 @@ export function AdminTerminalSummary({
       initialAkunLoketCount,
    );
 
+   const initialLoadedRef = useRef(initialTotalMasuk !== undefined);
+
    useEffect(() => {
       let mounted = true;
 
        const load = async () => {
           if (!startDate || !endDate) return;
+          // Skip the very first fetch when data was pre-loaded from server
+          if (initialLoadedRef.current) {
+             initialLoadedRef.current = false;
+             return;
+          }
           setLoading(true);
           setError(null);
 
@@ -55,47 +66,47 @@ export function AdminTerminalSummary({
                return;
             }
 
-            const report = await getTerminalReport({
-               terminalId,
-               startDate,
-               endDate,
-            });
+             const report = await getTerminalReport({
+                terminalId,
+                startDate,
+                endDate,
+             });
 
-            if (!mounted) return;
+             if (!mounted) return;
 
-            setTotalMasuk(report.summary.total_masuk);
-            setTotalKeluar(report.summary.total_keluar);
-            setPetugasPinCount(initialPetugasPinCount);
-            setAkunLoketCount(initialAkunLoketCount);
+             setTotalMasuk(report.summary.total_masuk);
+             setTotalKeluar(report.summary.total_keluar);
+             setPetugasPinCount(initialPetugasPinCount);
+             setAkunLoketCount(initialAkunLoketCount);
 
-            // petugas PIN count is safe to refresh client-side; akun loket uses
-            // the server-provided admin query because roles may be RLS-protected.
-            const supabase = createClient();
-            const { count: ptCount, error: ptError } = await supabase
-               .from("petugas_terminal")
-               .select("id", { count: "exact", head: true })
-               .eq("terminal_id", terminalId)
-               .eq("is_active", true);
+             // petugas PIN count is safe to refresh client-side; akun loket uses
+             // the server-provided admin query because roles may be RLS-protected.
+             const supabase = createClient();
+             const { count: ptCount, error: ptError } = await supabase
+                .from("petugas_terminal")
+                .select("id", { count: "exact", head: true })
+                .eq("terminal_id", terminalId)
+                .eq("is_active", true);
 
-            if (ptError) throw ptError;
-            if (!mounted) return;
+             if (ptError) throw ptError;
+             if (!mounted) return;
 
-            setPetugasPinCount(ptCount ?? 0);
-         } catch (err: unknown) {
-            if (!mounted) return;
-            setError(
-               err instanceof Error ? err.message : "Gagal memuat ringkasan",
-            );
-         } finally {
-            if (mounted) setLoading(false);
-         }
-      };
+             setPetugasPinCount(ptCount ?? 0);
+          } catch (err: unknown) {
+             if (!mounted) return;
+             setError(
+                err instanceof Error ? err.message : "Gagal memuat ringkasan",
+             );
+          } finally {
+             if (mounted) setLoading(false);
+          }
+       };
 
-      load();
+       load();
 
-      return () => {
-         mounted = false;
-      };
+       return () => {
+          mounted = false;
+       };
    }, [
       startDate,
       endDate,
