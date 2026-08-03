@@ -79,7 +79,7 @@ export function PetugasDashboardPanel({
       if (hasInitialData) {
          createClient()
             .auth.getUser()
-            .then(({ data: { user } }) => {
+            .then(({ data: { user } }: { data: { user: { id: string } | null } }) => {
                if (user) setUserId(user.id);
             })
             .catch(() => {});
