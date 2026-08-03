@@ -13,6 +13,7 @@
    gap, content briefly disappears and the browser scrolls. Locking
    overflow prevents ANY scroll until React is ready. */
 html { overflow: hidden; scroll-behavior: auto; }
+body { overflow: hidden; }
 
 /* ---------------------------------------------------------------------------
  * Tema DaisyUI — "jr" (terang) & "jr-dark" (gelap)
