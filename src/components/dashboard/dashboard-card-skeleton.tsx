@@ -5,7 +5,7 @@ import {
 
 export function DashboardCardSkeleton({ hasDescription = true }: { hasDescription?: boolean }) {
   return (
-    <Card className="skeleton-shimmer">
+    <Card>
       <CardContent className="pb-5 pt-5">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0 space-y-1.5">
