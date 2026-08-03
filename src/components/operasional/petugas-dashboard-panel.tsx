@@ -49,9 +49,10 @@ export function PetugasDashboardPanel({
    const [actionLoading, setActionLoading] = useState(false);
    const [error, setError] = useState<string | null>(null);
    const [success, setSuccess] = useState<string | null>(null);
+   const hasInitialData = !!initialStats;
 
-   const loadData = async () => {
-      setLoading(true);
+   const loadData = async (skipLoading = false) => {
+      if (!skipLoading) setLoading(true);
       try {
          const supabase = createClient();
          const {
@@ -69,11 +70,21 @@ export function PetugasDashboardPanel({
             err instanceof Error ? err.message : "Gagal memuat data";
          setError(message);
       } finally {
-         setLoading(false);
+         if (!skipLoading) setLoading(false);
       }
    };
 
    useEffect(() => {
+      // Skip full reload when server pre-fetched data; just grab userId
+      if (hasInitialData) {
+         createClient()
+            .auth.getUser()
+            .then(({ data: { user } }) => {
+               if (user) setUserId(user.id);
+            })
+            .catch(() => {});
+         return;
+      }
       loadData();
    }, []);
 
