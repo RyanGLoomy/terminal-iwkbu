@@ -138,11 +138,11 @@ export function NotificationPanel() {
             <CardTitle className="flex items-center gap-2 text-sm">
                <IconBell className="h-4 w-4" aria-hidden="true" />
                Notifikasi
-               {unreadCount > 0 && (
-                  <Badge className="bg-error text-error-content text-[10px]">
-                     {unreadCount} baru
-                  </Badge>
-               )}
+                {unreadCount > 0 && (
+                   <Badge className="bg-red-500 text-white dark:bg-red-400 dark:text-red-950 text-[10px]">
+                      {unreadCount} baru
+                   </Badge>
+                )}
             </CardTitle>
             {unreadCount > 0 && (
                <Button

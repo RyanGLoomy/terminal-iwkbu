@@ -206,7 +206,7 @@ export function NotificationBell() {
                    </span>
                {unreadCount > 0 && (
                   <span
-                     className="absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-error px-1 text-[10px] font-bold text-error-content"
+                     className="absolute -top-1 -right-1 flex size-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold leading-none text-white dark:bg-red-400 dark:text-red-950"
                      aria-hidden="true"
                   >
                      {unreadCount > 9 ? "9+" : unreadCount}
@@ -224,7 +224,7 @@ export function NotificationBell() {
                    <div className="flex items-center gap-2">
                       <span className="text-sm font-semibold">Notifikasi</span>
                       {unreadCount > 0 && (
-                         <Badge className="bg-error text-error-content text-[10px]">
+                         <Badge className="bg-red-500 text-white dark:bg-red-400 dark:text-red-950 text-[10px]">
                             {unreadCount} baru
                          </Badge>
                       )}
