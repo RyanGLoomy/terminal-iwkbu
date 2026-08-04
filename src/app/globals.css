@@ -12,12 +12,19 @@
    React #418 recovery tears down + re-renders the page. During the
    gap, content briefly disappears and the browser scrolls. Locking
    overflow prevents ANY scroll until React is ready. */
-/* overflow: clip (not hidden) prevents the browser from ever considering
-   a scrollbar gutter on html/body. overflow: hidden still lets some
-   browsers reserve/toggle gutter space when portaled dropdown menus
-   mount into document.body, causing a brief horizontal shift in <main>. */
-html { overflow: clip; scroll-behavior: auto; }
-body { overflow: clip; }
+/* overflow-y: scroll forces the browser to ALWAYS reserve scrollbar gutter
+   space on the document. overflow: clip did not reliably prevent gutter
+   toggling in all browsers when portaled dropdown menus mount/unmount into
+   document.body, causing a brief horizontal shift in <main>. The scrollbar
+   is visually hidden via scrollbar-color (Firefox) and ::-webkit-scrollbar
+   (Chromium), but the gutter space stays reserved — no layout shift. */
+html {
+  overflow-y: scroll;
+  scroll-behavior: auto;
+  scrollbar-color: transparent transparent; /* hide Firefox scrollbar, keep gutter */
+}
+html::-webkit-scrollbar { display: none; } /* hide Chromium scrollbar, keep gutter */
+body { overflow: hidden; }
 
 /* ---------------------------------------------------------------------------
  * Tema DaisyUI — "jr" (terang) & "jr-dark" (gelap)
