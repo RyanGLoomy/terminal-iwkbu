@@ -12,7 +12,9 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { IconChevronRight, IconChevronDown, IconDownload } from "@tabler/icons-react";
+import { IconChevronRight, IconChevronDown, IconDownload, IconFileSpreadsheet } from "@tabler/icons-react";
+import { exportXlsx } from "@/lib/export/xlsx.client";
+import { toast } from "sonner";
 import type { Armada } from "@/lib/supabase/queries/verification.types";
 
 const verifikasiColor: Record<string, string> = {
@@ -105,6 +107,30 @@ export function RekonsiliasiArmadaTable({
       URL.revokeObjectURL(url);
    };
 
+   const handleExportXlsx = async () => {
+      if (armada.length === 0) {
+         toast.error("Tidak ada data armada untuk diekspor");
+         return;
+      }
+      try {
+         const header = ["No Polisi", "Merk/Tipe", "Status Operasional", "Verifikasi", "IWKBU", "Rekonsiliasi"];
+         const data = armada.map((a: Armada) => [
+            a.nomor_polisi,
+            `${a.merk ?? "-"} ${a.tipe ?? ""}`.trim(),
+            a.status_operasional,
+            a.status_verifikasi,
+            iwkbuMap?.[a.id]?.iwkbu_compliance_status ?? "belum tersinkron",
+            iwkbuMap?.[a.id]?.reconciliation_status ?? "-",
+         ]);
+         await exportXlsx("rekonsiliasi-armada.xlsx", [
+            { name: "Armada", rows: [header, ...data] },
+         ]);
+         toast.success("Data armada diekspor (XLSX)");
+      } catch {
+         toast.error("Gagal mengekspor XLSX");
+      }
+   };
+
    if (armada.length === 0) {
       return (
          <div className="rounded-lg border border-base-300 bg-base-100 overflow-hidden">
@@ -138,10 +164,16 @@ export function RekonsiliasiArmadaTable({
                <Badge className={reconColor.blocked}>blocked</Badge>
                tidak patuh
             </span>
-            <Button variant="outline" size="sm" className="ml-auto h-7 text-xs" onClick={handleExportCSV}>
-               <IconDownload className="size-3.5 mr-1" />
-               CSV
-            </Button>
+            <div className="flex items-center gap-2 ml-auto">
+               <Button variant="outline" size="sm" className="h-7 text-xs" onClick={handleExportXlsx}>
+                  <IconFileSpreadsheet className="size-3.5 mr-1" />
+                  XLSX
+               </Button>
+               <Button variant="outline" size="sm" className="h-7 text-xs" onClick={handleExportCSV}>
+                  <IconDownload className="size-3.5 mr-1" />
+                  CSV
+               </Button>
+            </div>
          </div>
          <Table caption="Daftar rekonsiliasi armada PO">
             <TableHeader>

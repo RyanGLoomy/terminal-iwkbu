@@ -17,7 +17,9 @@ import {
    TableRow,
 } from "@/components/ui/table";
 import type { Armada, PO } from "@/lib/supabase/queries/verification.types";
-import { IconDownload } from "@tabler/icons-react";
+import { IconDownload, IconFileSpreadsheet } from "@tabler/icons-react";
+import { exportXlsx } from "@/lib/export/xlsx.client";
+import { toast } from "sonner";
 
 type ReconciliationRow = {
    po: PO;
@@ -159,6 +161,30 @@ export const RekonsiliasiPanel = memo(function RekonsiliasiPanelContent({
       );
    };
 
+   const handleExportXlsx = async () => {
+      if (rows.length === 0) {
+         toast.error("Tidak ada data untuk diekspor");
+         return;
+      }
+      try {
+         const header = ["Kode PO", "Nama PO", "Armada", "Terverifikasi", "Menunggu", "Status"];
+         const data = rows.map((row) => [
+            row.po.kode_po,
+            row.po.nama_perusahaan,
+            row.totalArmada,
+            row.armadaTerverifikasi,
+            row.armadaMenunggu,
+            getStatusLabel(row.status),
+         ]);
+         await exportXlsx(`rekonsiliasi-data-sumber-${new Date().toISOString().slice(0, 10)}.xlsx`, [
+            { name: "Rekonsiliasi", rows: [header, ...data] },
+         ]);
+         toast.success("Data rekonsiliasi diekspor (XLSX)");
+      } catch {
+         toast.error("Gagal mengekspor XLSX");
+      }
+   };
+
    return (
       <div className="space-y-5">
          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -218,16 +244,28 @@ export const RekonsiliasiPanel = memo(function RekonsiliasiPanelContent({
                       memastikan data pembanding siap digunakan.
                    </p>
                 </div>
-                <Button
-                   variant="outline"
-                   size="sm"
-                   onClick={handleExportCSV}
-                   disabled={rows.length === 0}
-                   className="shrink-0"
-                >
-                   <IconDownload className="h-4 w-4 mr-1.5" aria-hidden="true" />
-                   CSV
-                </Button>
+                <div className="flex gap-2">
+                   <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleExportXlsx}
+                      disabled={rows.length === 0}
+                      className="shrink-0"
+                   >
+                      <IconFileSpreadsheet className="h-4 w-4 mr-1.5" aria-hidden="true" />
+                      XLSX
+                   </Button>
+                   <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleExportCSV}
+                      disabled={rows.length === 0}
+                      className="shrink-0"
+                   >
+                      <IconDownload className="h-4 w-4 mr-1.5" aria-hidden="true" />
+                      CSV
+                   </Button>
+                </div>
              </CardHeader>
             <CardContent>
                <div className="overflow-hidden rounded-lg border border-base-300 bg-base-100">
