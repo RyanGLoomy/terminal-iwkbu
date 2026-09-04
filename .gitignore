@@ -70,3 +70,6 @@ skripsi/
 # tampermonkey presentation scripts (may contain test credentials)
 *.user.js
 scripts/README-presentasi.md
+
+# Documentation screenshots
+screenshots-iwkbu/
